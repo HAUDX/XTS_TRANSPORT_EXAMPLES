@@ -1,0 +1,610 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="fb_Application_GearInPos_old" Id="{77749093-1df0-0b70-2824-b42c1eea1876}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fb_Application_GearInPos_old
+VAR
+  _bReset             : BOOL;
+  _bEnable            : BOOL;
+  _MoverCtrl          : REFERENCE TO ARRAY[1..MAX_MOVER] OF ST_MOVER_CTRL;
+  _MoverState         : REFERENCE TO ARRAY[1..MAX_MOVER] OF ST_MOVER_STATE;
+  _MasterAxis         : REFERENCE TO AXIS_REF;
+
+  _nMover             : UINT;
+  _nTargetStation     : UINT;
+
+  _nProcessState,
+  _nState,
+  _nStateError        : ARRAY[1..MAX_MOVER] OF E_GEAR_IN_POS_STATE;
+
+  _Trigger            : ARRAY[1..MAX_MOVER] OF ST_GEAR_IN_POS_TRIGGER;
+
+
+  _rMechDistDetection : LREAL; // mechanical distance from detection to crossing of XTS and conveyer
+  _rMasterTrigPos,
+  _rMasterActPos,
+  _rMasterDiffTrig    : ARRAY[1..MAX_MOVER] OF LREAL; // latched position from cut detection
+
+  _rSyncDistance,
+  _rMasterStartDistance      : LREAL;
+
+  _nGearDenumerator   : USINT := 1;
+  // modulo position on XTS to scan for new mover
+  _rModPosScan,
+  _rModPosWindow      : LREAL;
+
+  _rModSyncPos        : ARRAY[1..2] OF LREAL;
+
+  _rModSendPos,
+  _rModSendVelo,
+  _rModSendAcc,
+  _rModSendGap        : LREAL;
+
+  _rDetectionMaster,
+  _rOffsetMaster,
+  _rOffsetMover,
+  _rSyncPosMover,
+  _rDistStart,
+  _rDistSync,
+  _rGearNum,
+  _rSendPos           : ARRAY[1..MAX_MOVER] OF LREAL;
+
+  _bSyncStop,
+  _bSyncStart         : ARRAY[1..2] OF BOOL;
+ 
+  _tonGearInTimeout   : ARRAY[1..MAX_MOVER] OF Tc2_Standard.TON;
+  _tGearInTimeout     : TIME := T#20S;
+
+  _tonSyncTimeout     : ARRAY[1..2] OF Tc2_Standard.TON;
+  _tSyncTimeout       : TIME := T#200MS;
+
+  _rAcc,
+  _rDec,
+  _rVelo,
+  _rGap               : LREAL;
+
+  _rtrigReset         : Tc2_Standard.R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[_rtrigReset(CLK:= _bReset);
+
+IF _rtrigReset.Q
+THEN
+  memset(ADR(_nState), 0, SIZEOF(_nState));
+  FOR _nMover := 1 TO MAX_MOVER
+  DO
+    _eTrigger[_nMover]                  := E_POSITION_CUT.LASER_NULL;
+    GVL_XTS.MoverCtrl[_nMover].Cmd      := E_MOVER_CTRL.MOVER_NULL;
+  END_FOR
+END_IF
+
+MasterAxis();
+
+
+FOR _nMover := 1 TO MAX_MOVER
+DO
+  _nProcessState[_nMover]                   := _nState[_nMover];
+
+  CASE _nState[_nMover] OF
+    E_ProcessGearInPos.GEAR_INIT:
+      //_bSyncStop[LASER_FRONT]               := TRUE;
+      //_bSyncStop[LASER_BACK]                := TRUE;
+      IF bEnable
+      THEN
+        _nState[_nMover]                    := E_ProcessGearInPos.GEAR_SCAN;
+      END_IF 
+
+    E_ProcessGearInPos.GEAR_SCAN:
+      IF NOT bEnable
+      THEN
+        _nState[_nMover]                    := E_ProcessGearInPos.GEAR_INIT;
+
+      ELSE
+        IF (MoverState[_nMover].rModuloActPos > _rModPosScan - _rModPosWindow/2) AND
+           (MoverState[_nMover].rModuloActPos < _rModPosScan + _rModPosWindow/2)
+        THEN
+          MoverCtrl[_nMover].eMoverOrder    := e_MoverOrder.Mover_Null;
+          MoverCtrl[_nMover].eOrderFlow     := e_MoverOrder.Mover_Null;
+  
+          IF (_eTrigger[_nMover] > E_POSITION_CUT.LASER_NULL)
+          THEN
+            _bSyncStop[_eTrigger[_nMover]]  := TRUE;
+
+            _rDetectionMaster [_nMover]     := _rMasterTrigPos[_nMover] 
+                                             + _rMechDistDetection[_eTrigger[_nMover]];
+    
+            _rSyncPosMover    [_nMover]     := _rModSyncPos[_eTrigger[_nMover]];
+            _rSendPos         [_nMover]     := _rModSendPos;
+
+            _nState           [_nMover]     := E_ProcessGearInPos.GEAR_MOVER_DATA;
+          END_IF
+        END_IF
+      END_IF
+  END_CASE
+  CASE _nState[_nMover] OF
+    E_ProcessGearInPos.GEAR_MOVER_DATA:
+      IF (MoverState[_nMover].eMoverOrder = e_MoverOrder.Mover_Null) OR
+         (MoverState[_nMover].eMoverOrder = e_MoverOrder.Mover_To_Station)
+      THEN
+        _tonGearInTimeout [_nMover](IN      := FALSE, 
+                                    PT      := _tGearInTimeout);
+
+        MoverCtrl[_nMover].rGearNumerator   := TO_REAL(_rGearNum[_nMover]);
+        MoverCtrl[_nMover].iGearDenumerator := TO_USINT(_nGearDenumerator);
+
+        _rMasterActPos   [_nMover]          := MasterAxis.NcToPlc.ActPos;
+        _rMasterDiffTrig [_nMover]          := _rDetectionMaster[_nMover]
+                                             - _rMasterActPos   [_nMover] 
+                                             + _rOffsetMaster   [_nMover];
+
+        MoverCtrl[_nMover].rPosVal[1]       := TO_REAL(_rDetectionMaster[_nMover] - _rMasterActPos[_nMover] + _rOffsetMaster[_nMover]);
+        //MoverCtrl[_nMover].rPosVal[1]       := TO_REAL(_rMechDistDetection[_eTrigger[_nMover]] + _rOffsetMaster[_nMover]);
+        MoverCtrl[_nMover].rPosVal[2]       := TO_REAL(_rSyncPosMover [_nMover] + _rOffsetMover [_nMover]);
+        MoverCtrl[_nMover].rPosVal[3]       := TO_REAL(_rMasterStartDistance);
+        MoverCtrl[_nMover].rPosVal[4]       := TO_REAL(_rSendPos      [_nMover]);
+
+        MoverCtrl[_nMover].rAcc             := TO_REAL(_rAcc);
+        MoverCtrl[_nMover].rGap             := TO_REAL(_rGap);
+        MoverCtrl[_nMover].rVelo            := TO_REAL(_rVelo);
+
+        MoverCtrl[_nMover].iMasterId        := TO_USINT(_nMasterIndex);
+
+        _nState  [_nMover]                  := E_ProcessGearInPos.GEAR_START;
+      END_IF
+  END_CASE
+  CASE _nState[_nMover] OF
+    E_ProcessGearInPos.GEAR_START:
+      MoverCtrl[_nMover].eMoverOrder        := e_MoverOrder.Mover_GearInPosCa;
+      //_tonGearInTimeout [_nMover](IN        := TRUE);
+
+      IF _tonGearInTimeout[_nMover].Q
+      THEN
+        // sync timeout --> stop mover
+        MoverCtrl   [_nMover].eMoverOrder   := e_MoverOrder.Mover_Halt;
+        _nStateError[_nMover]               := _nState[_nMover];
+        _nState     [_nMover]               := E_ProcessGearInPos.GEAR_ERROR;
+
+      ELSIF (MoverState[_nMover].eMoverOrder = e_MoverOrder.Mover_GearInPosCa 
+                                          + e_MoverOrder.Mover_Sync)
+      THEN
+        // wait for sync from GearInPosCA
+        _tonGearInTimeout [_nMover](IN      := FALSE);
+        _rDistStart[_nMover]                := MasterAxis.NcToPlc.ActPos;
+        _bSyncStop[_eTrigger[_nMover]]      := FALSE;
+
+        _nState[_nMover]                    := E_ProcessGearInPos.GEAR_SYNC;
+
+      ELSIF (MoverState[_nMover].eMoverOrder = e_MoverOrder.Mover_GearInPosCa 
+                                          + e_MoverOrder.Mover_Error)
+      THEN
+        _nStateError[_nMover]               := _nState[_nMover];
+        _nState[_nMover]                    := E_ProcessGearInPos.GEAR_ERROR;
+      END_IF
+  END_CASE
+  CASE _nState[_nMover] OF
+    E_ProcessGearInPos.GEAR_SYNC:
+      _bSyncStart[_eTrigger[_nMover]]       := TRUE; // signal for extern use
+      _bSyncStop [_eTrigger[_nMover]]       := FALSE;
+      _rDistSync[_nMover]                   := MasterAxis.NcToPlc.ActPos - _rDistStart[_nMover];
+
+      IF MoverState[_nMover].bMoverStandstill OR
+         (MasterAxis.NcToPlc.ActVelo < 10.0)
+      THEN
+        _tonSyncTimeout[1](IN:= TRUE, PT:= _tSyncTimeout);
+        IF _tonSyncTimeout[1].Q
+        THEN
+          _bSyncStart[_eTrigger[_nMover]]       := FALSE;
+          _bSyncStop [_eTrigger[_nMover]]       := TRUE;
+        END_IF
+      ELSE
+        _tonSyncTimeout[1](IN:= FALSE, PT:= _tSyncTimeout);
+      END_IF
+
+      IF MoverState[_nMover].bMoverAvoidingCollision
+      THEN
+        _tonSyncTimeout[2](IN:= TRUE, PT:= _tSyncTimeout);
+        IF _tonSyncTimeout[2].Q
+        THEN
+          _bSyncStart[_eTrigger[_nMover]]       := FALSE;
+          _bSyncStop [_eTrigger[_nMover]]       := TRUE;
+        END_IF
+      ELSE
+        _tonSyncTimeout[2](IN:= FALSE, PT:= _tSyncTimeout);
+      END_IF
+
+      IF (_rDistSync[_nMover] > _rSyncDistance)
+      THEN
+        _nState[_nMover]                    := E_ProcessGearInPos.GEAR_SEND;
+
+      ELSIF MoverState[_nMover].bMoverError OR
+            MasterAxis.Status.Error
+      THEN
+        _bSyncStart[_eTrigger[_nMover]]     := FALSE;
+        _bSyncStop [_eTrigger[_nMover]]     := TRUE;
+        _nStateError[_nMover]               := _nState[_nMover];
+        _nState[_nMover]                    := E_ProcessGearInPos.GEAR_ERROR;
+      END_IF
+  END_CASE
+  CASE _nState[_nMover] OF
+    E_ProcessGearInPos.GEAR_SEND:
+      _bSyncStart[_eTrigger[_nMover]]       := FALSE;
+      _bSyncStop [_eTrigger[_nMover]]       := TRUE;
+
+      MoverCtrl[_nMover].eOrderFlow         := e_MoverOrder.Mover_GO;
+      MoverCtrl[_nMover].rAcc               := TO_REAL(_rModSendAcc);
+      MoverCtrl[_nMover].rGap               := TO_REAL(_rModSendGap);
+      MoverCtrl[_nMover].rVelo              := TO_REAL(_rModSendVelo);
+
+      IF (MoverState[_nMover].eMoverOrder = e_MoverOrder.Mover_GearInPosCa 
+                                          + e_MoverOrder.Mover_Done)
+      THEN
+        MoverCtrl[_nMover].eMoverOrder      := e_MoverOrder.Mover_To_Station;
+        MoverCtrl[_nMover].eOrderFlow       := e_MoverOrder.Mover_Leave;
+        MoverCtrl[_nMover].iTargetStation   := TO_USINT(_nTargetStation);
+        _nState[_nMover]                    := E_ProcessGearInPos.GEAR_TO_STATION;
+      END_IF
+  END_CASE
+  CASE _nState[_nMover] OF
+    E_ProcessGearInPos.GEAR_TO_STATION:
+        IF (MoverState[_nMover].eMoverOrder = e_MoverOrder.Mover_To_Station)
+        THEN
+          _nState[_nMover]                := E_ProcessGearInPos.GEAR_SCAN;
+          _eTrigger[_nMover]              := E_POSITION_CUT.LASER_NULL;
+        END_IF
+  END_CASE
+END_FOR
+]]></ST>
+    </Implementation>
+    <Folder Name="Properties" Id="{88be4211-c78a-096c-2e68-63bb6f1f9218}" />
+    <Property Name="InSync" Id="{9f2da3aa-c732-0e38-0f95-0a9f74c8d5b9}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY InSync : ARRAY[1..2] OF BOOL]]></Declaration>
+      <Get Name="Get" Id="{b6ddd422-3869-026a-32d9-9bd63dc24566}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InSync := _bSyncStart;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MasterSyncPosOffset" Id="{25f7b790-b59e-0b5a-1ac2-e7740ef601ed}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY MasterSyncPosOffset : pointer to ARRAY[1..GVL_XTS.MAX_XPU_MOVER] OF LREAL]]></Declaration>
+      <Get Name="Get" Id="{0f20a16c-5057-0dff-0a45-0ea1575a7776}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MasterSyncPosOffset := ADR(_rOffsetMaster);
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoverSyncPosOffset" Id="{72f67f8d-bf01-0d33-1593-9f9560d27b00}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY MoverSyncPosOffset : pointer to ARRAY[1..GVL_XTS.MAX_XPU_MOVER] OF LREAL]]></Declaration>
+      <Get Name="Get" Id="{b0048afc-c8e7-0cdb-2f51-5ba8a61fabe3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoverSyncPosOffset := ADR(_rOffsetMover);
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MoverTrigger" Id="{3d48045e-8040-0f8c-38ba-cb12d450dda5}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY MoverTrigger : POINTER TO ARRAY[1..GVL_XTS.MAX_XPU_MOVER] OF E_POSITION_CUT
+]]></Declaration>
+      <Get Name="Get" Id="{3e544360-5746-07cf-1932-ca0b981b0190}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoverTrigger := ADR(_eTrigger);
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="NoSync" Id="{e6fefae6-20e0-0bc6-3c20-83ae2c5bdd45}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY NoSync : array[1..2] of bool]]></Declaration>
+      <Get Name="Get" Id="{b065464a-6d58-071b-213f-450059eabc6e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[NoSync := _bSyncStop;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ProcessState" Id="{99a786f5-d9b6-02e7-2561-e5f878c6cc2e}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY ProcessState : pointer to ARRAY[1..GVL_XTS.MAX_XPU_MOVER] OF E_ProcessGearInPos]]></Declaration>
+      <Get Name="Get" Id="{a58a0f72-96e5-0d80-373e-5a9ac8510b91}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ProcessState := ADR(_nProcessState);
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ScanPos" Id="{4a7eee3d-6c95-0bb5-31ec-c1c0b88fd2ca}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY ScanPos : LREAL]]></Declaration>
+      <Get Name="Get" Id="{df48a115-5e7a-0be8-3895-40d2293f6e23}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ScanPos := _rModPosScan;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{523ddd1b-d2c4-04e6-1c6e-ba109047fef9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rModPosScan := ScanPos;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ScanPosWindow" Id="{2458cbcd-5b88-0951-0f9f-ddd7f40d3efb}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY ScanPosWindow : LREAL]]></Declaration>
+      <Get Name="Get" Id="{e0f23650-d675-0c16-0c93-baaa68b2e59a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ScanPosWindow := _rModPosWindow;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b0230e9f-8976-0feb-3923-f2e8d5738a23}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rModPosWindow := ScanPosWindow;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SendAccMover" Id="{76254857-c718-0f96-0d64-31f64455487f}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY SendAccMover : LREAL]]></Declaration>
+      <Get Name="Get" Id="{7d67e0f9-b06c-05a9-1ad5-a12e44302834}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SendAccMover := _rModSendAcc;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{9f1cf867-51d9-03fd-2307-4ce1595e008e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rModSendAcc := SendAccMover;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SendGapMover" Id="{98071766-1146-0853-36bc-2168e11230da}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY SendGapMover : LREAL]]></Declaration>
+      <Get Name="Get" Id="{13eb21f0-41d5-05d6-2d35-f1a04f76e55d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SendGapMover := _rModSendGap;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{db11b9cd-89d4-0875-36bb-03b2549ef996}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rModSendGap := SendGapMover;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SendPosMover" Id="{c5108e6a-eb1a-0767-0231-d00240af5d18}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY SendPosMover : LREAL]]></Declaration>
+      <Get Name="Get" Id="{a02eef27-f85b-005c-1cb3-e9a95bfae778}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SendPosMover := _rModSendPos;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ccb4dd9b-ea6b-0758-30ae-71756769855a}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rModSendPos := SendPosMover;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SendTarget" Id="{1115eef9-1747-0872-209b-092e09827d78}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY SendTarget : UINT]]></Declaration>
+      <Get Name="Get" Id="{13276ce6-3873-0ba2-2569-4509a0ec75e0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SendTarget := _nTargetStation;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{f332ab8f-963f-0b2a-04f4-706a95bbfe9e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_nTargetStation := SendTarget;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SendVeloMover" Id="{84e1da2c-1f71-0659-0a8a-dd1c4d316a67}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY SendVeloMover : LREAL]]></Declaration>
+      <Get Name="Get" Id="{a3053ed0-f3cf-06c2-0cb2-2995a8bc97ac}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SendVeloMover := _rModSendVelo;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{6aa4c297-2d61-0c71-0184-e644233caef2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rModSendVelo := SendVeloMover;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SyncDistance" Id="{0c148d9b-ab19-0b31-366d-dbed54500312}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY SyncDistance : LREAL]]></Declaration>
+      <Get Name="Get" Id="{010bc8a9-ad73-0328-2cce-a4fc605ebc19}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SyncDistance := _rSyncDistance;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b5dbfa76-a9c3-0c71-0e18-cee9ac1be77a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rSyncDistance := SyncDistance;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SyncPosMover" Id="{29d4ed9f-61c9-0a21-0a6b-18c5fa2ae9ff}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY SyncPosMover : POINTER TO ARRAY[1..2] OF LREAL]]></Declaration>
+      <Get Name="Get" Id="{a01858f7-aed2-0c7b-365e-3bb8da357e58}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SyncPosMover := ADR(_rModSyncPos);
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="fb_Application_GearInPos_old">
+      <LineId Id="1634" Count="186" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.InSync.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.MasterSyncPosOffset.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.MoverSyncPosOffset.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.MoverTrigger.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.NoSync.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.ProcessState.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.ScanPos.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.ScanPos.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.ScanPosWindow.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.ScanPosWindow.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SendAccMover.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SendAccMover.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SendGapMover.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SendGapMover.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SendPosMover.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SendPosMover.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SendTarget.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SendTarget.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SendVeloMover.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SendVeloMover.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SyncDistance.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SyncDistance.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Application_GearInPos_old.SyncPosMover.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

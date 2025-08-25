@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="ST_GEAR_IN_POS_SETUP" Id="{dcf08da6-d880-4ce1-9521-322c0424badc}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_GEAR_IN_POS_SETUP :
+STRUCT
+  rMeasuredDistance         : LREAL;  // machine setup: measured distance between trigger detection (any signal) to crossing point of XTS and conveyer
+  rSyncDisance              : LREAL;  // insync movement distance
+
+  bSyncMaster               : BIT;    // insync distance used on MasterAxis
+  bSyncSlave                : BIT;    // insync distance used on XTS (slave)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

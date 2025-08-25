@@ -1,0 +1,623 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="MAIN" Id="{f2e9720a-bda2-4399-8c7d-d9b6e11179c8}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2024.03.18
+//
+//  - XTS_TRANSPORT_LAYER
+//  - transport layer members:
+//    - CaGroup
+//      - access to Group functions
+//
+//    - Mover
+//      - access to MC and CA motion functions
+//
+//    - Xpu (ProcessingUnit)
+//      - access to TcCOM Objects in Environment
+//
+//    - Transport Control Unit
+//      - coordinates members to get XTS in defined states
+//
+//    - Xts Stations
+//      - handshakes with extern control for mover transport
+//
+//  - global datafields for mrmbers in GVL_XTS namespace
+//  - global interface datafields for use in members
+//  - structures are assigned by reference for every member
+//
+//---------------------------------------------------------------------------------------------------------------
+// HAUD 2024 05 29
+//
+//    XTS_TRANSPORT_LAYER project
+//    
+//    MIT License
+//    
+//    Copyright (c) 2024 HAUD
+//    
+//    Permission is hereby granted, free of charge, to any person obtaining a copy
+//    of this software and associated documentation files (the "Software"), to deal
+//    in the Software without restriction, including without limitation the rights
+//    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//    copies of the Software, and to permit persons to whom the Software is
+//    furnished to do so, subject to the following conditions:
+//    
+//    The above copyright notice and this permission notice shall be included in all
+//    copies or substantial portions of the Software.
+//    
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//    SOFTWARE.
+//---------------------------------------------------------------------------------------------------------------
+PROGRAM MAIN
+VAR
+	bInit 				: BOOL;
+  eInit         : E_PROGRESS;
+  wInit         : DWORD;
+
+  nXpu,
+  nXpuSelected,
+  nStation,
+	nMover,
+  nMoverSelected,
+  nStationSelected,
+  nStationParameter   : UINT;
+
+  sStationText        : STRING(30);
+
+  eTransportState     : E_XTS_TRANSPORT_STATE;
+  eTransportResult    : E_PROGRESS;
+
+  eXpuState           : E_XPU_STATE;
+  eXpuResult          : E_PROGRESS;
+  eXpuCheck           : E_XPU_CHECK;
+
+  eMoverState         : E_MOVER_STATE;
+  eMoverResult        : E_PROGRESS;
+
+  sCaGroupState,
+  sTransportState,
+  sTransportCheck,
+  sTransportResult,
+  sXpuState,
+  sXpuResult,
+  sXpuCheck,
+  sXpuOpMode,
+  sXpuMoverdetectionMode,
+  sXpuMoverAssignement,
+  sMoverState,
+  sMoverResult,
+  sStationState,
+  sStationStateMask,
+  sStationCtrlMask        : STRING;
+
+  bStationEnable,
+  bStationEnter,
+  bStationStart,
+  bStationDone,
+  bStationOut,
+  bStationGone            : BOOL;
+
+  tStationSelectedQueue   : ARRAY[1..MAX_LIST_NODES] OF ST_STATION_MOVER_DATA;
+
+  tonWriteLog             : ARRAY[1..MAX_XPU] OF Tc2_Standard.TON;
+  tWriteLog               : TIME := T#5S;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//############################################################################
+// Local time; used for timestamps
+//############################################################################
+GVL_MSG.fbLocalTime(
+                    sLocalTime          => GVL_MSG.sLocalTime, 
+                    dtLocalTime         => GVL_MSG.dtLocalTime);
+//############################################################################
+
+//############################################################################
+// 	example for init sequence
+//############################################################################	
+IF NOT bInit
+THEN
+  CASE eInit
+  OF
+    E_PROGRESS.PROGRESS_INVALID,
+    E_PROGRESS.PROGRESS_DONE:         // clear command interface
+      wInit                                   := 0;
+      eInit                                   := E_PROGRESS.PROGRESS_BUSY;
+      FOR nXpu := 1 TO MAX_XPU
+      DO
+        GVL_XTS.XpuCtrl[nXpu].Cmd             := E_XPU_CTRL.XTS_CMD_NULL;
+        GVL_MSG.MessageLevelXpu               := GVL_MSG.MessageLevel;
+        GVL_XTS.CaGroup[nXpu].MessageLevel    := GVL_MSG.MessageLevel;
+
+        FOR nStation := 1 TO MAX_STATION
+        DO
+          GVL_MSG.MessageLevelStations[nXpu][nStation]:= GVL_MSG.MessageLevel;
+        END_FOR
+        FOR nMover := 1 TO MAX_MOVER
+        DO
+          GVL_MSG.MessageLevelMovers[nXpu][nMover]    := GVL_MSG.MessageLevel;
+        END_FOR
+      END_FOR
+
+    E_PROGRESS.PROGRESS_BUSY:         // init Xpu, ProcessingUnit, MotorModules
+      eInit                                   := E_PROGRESS.PROGRESS_PREPARE;
+      FOR nXpu := 1 TO MAX_XPU
+      DO
+        GVL_XTS.XpuCtrl[nXpu].Cmd             := E_XPU_CTRL.XTS_CMD_INIT;
+      END_FOR
+
+    E_PROGRESS.PROGRESS_PREPARE:      // wait for init to be done
+      FOR nXpu := 1 TO MAX_XPU
+      DO
+        IF (GVL_XTS.XpuState[nXpu].State      = E_XPU_STATE.XTS_INIT + E_PROGRESS.PROGRESS_DONE)
+        THEN
+          wInit := Tc2_System.SETBIT32(wInit, TO_SINT(nXpu-1));
+        END_IF
+      END_FOR
+      IF (wInit = TO_DWORD(EXPT(2,MAX_XPU))-1)
+      THEN
+        eInit                                 := E_PROGRESS.PROGRESS_STARTUP;
+      END_IF
+
+    E_PROGRESS.PROGRESS_STARTUP:      // assign mover interfaces
+      eInit                                   := E_PROGRESS.PROGRESS_CHECK;
+      FOR nXpu := 1 TO MAX_XPU
+      DO
+        GVL_XTS.XpuCtrl[nXpu].Cmd             := E_XPU_CTRL.XTS_IDLE;
+        FOR nMover := 1 TO MAX_MOVER
+        DO
+          GVL_XTS.MoverItf[nXpu][nMover]      := GVL_XTS.Mover[nXpu][nMover];
+        END_FOR
+      END_FOR
+
+
+    E_PROGRESS.PROGRESS_CHECK:        // assign CaGroup interface
+      eInit                                   := E_PROGRESS.PROGRESS_OCCUPIED;
+      GVL_XTS.CaGroupItf[nXpu]                := GVL_XTS.CaGroup[nXpu];
+
+    E_PROGRESS.PROGRESS_OCCUPIED:     // StartStation for XtsTransportCtrl.Cmd := E_XTS_TRANSPORT_CTRL.CMD_TRANSPORT_START;
+      eInit                                   := E_PROGRESS.PROGRESS_WORKING;
+      // where to start?
+
+      // Start Position parameters
+      GVL_XTS.StationStart[1].rPosWait           :=     10.0;
+      GVL_XTS.StationStart[1].rGap               :=    150.0;
+      GVL_XTS.StationStart[1].rVelo              :=   1250.0;
+      GVL_XTS.StationStart[1].rAccDec            :=  12000.0;
+      GVL_XTS.StationStart[1].rJerk              := 400000.0;
+      GVL_XTS.XtsTransport[1].StationStartIndex  := 1;
+
+      // Start Position parameters
+      GVL_XTS.StationStart[2].rPosWait           :=     10.0;
+      GVL_XTS.StationStart[2].rGap               :=    150.0;
+      GVL_XTS.StationStart[2].rVelo              :=   1250.0;
+      GVL_XTS.StationStart[2].rAccDec            :=  12000.0;
+      GVL_XTS.StationStart[2].rJerk              := 400000.0;
+      GVL_XTS.XtsTransport[2].StationStartIndex  := 1;
+
+    E_PROGRESS.PROGRESS_WORKING:
+      // hard coded XTS Station parameter are here:
+      StationParameterInit();
+
+      // initialization of XtsTransport is done here:
+      bInit                                   := TRUE;
+      eInit                                   := E_PROGRESS.PROGRESS_DONE;
+  END_CASE
+END_IF
+
+//############################################################################
+// 	XTS Transport Unit
+//############################################################################
+//  - main control function block for transport layer
+//  - requires access to member controls
+//    - Xpu
+//    - CaGroup
+//    - Mover
+//    - Station Control
+//    - Station LinkedList Interface
+//############################################################################
+//
+// cyclic call
+FOR nXpu := 1 TO MAX_XPU
+DO
+  GVL_XTS.XtsTransport[nXpu].XpuInstance        := nXpu;
+
+  GVL_XTS.XtsTransport[nXpu]();
+  
+  // main control
+  GVL_XTS.XtsTransport[nXpu].Ctrl               REF= GVL_XTS.XtsTransportCtrl[nXpu];   // main control
+  GVL_XTS.XtsTransport[nXpu].State              REF= GVL_XTS.XtsTransportState[nXpu];  // main state
+                                          
+  // member controls                      
+  GVL_XTS.XtsTransport[nXpu].XpuCtrl            REF= GVL_XTS.XpuCtrl[nXpu];
+  GVL_XTS.XtsTransport[nXpu].XpuState           REF= GVL_XTS.XpuState[nXpu];
+  GVL_XTS.XtsTransport[nXpu].XpuInfo            REF= GVL_XTS.XpuInfo[nXpu];
+                                          
+  GVL_XTS.XtsTransport[nXpu].GroupItf           :=   GVL_XTS.CaGroupItf[nXpu];
+  GVL_XTS.XtsTransport[nXpu].GroupInfo          REF= GVL_XTS.CaGroupInfo[nXpu];
+                                          
+  GVL_XTS.XtsTransport[nXpu].MoverItf           REF= GVL_XTS.MoverItf[nXpu];
+  GVL_XTS.XtsTransport[nXpu].MoverInfo          REF= GVL_XTS.MoverInfo[nXpu];
+  GVL_XTS.XtsTransport[nXpu].MoverLastPosition  REF= GVL_XTS.LastPosition[nXpu];
+  GVL_XTS.XtsTransport[nXpu].MoverLastGap       REF= GVL_XTS.LastGap[nXpu];
+                                          
+  GVL_XTS.XtsTransport[nXpu].StationStart       REF= GVL_XTS.StationStart[nXpu];      // start position for E_XTS_TRANSPORT_CTRL.CMD_TRANSPORT_START
+  GVL_XTS.XtsTransport[nXpu].StationCtrlItf     REF= GVL_XTS.StationCtrlItf[nXpu];    // station interfaces are required for accessing station methods
+  GVL_XTS.XtsTransport[nXpu].StationListsItf    REF= GVL_XTS.StationListItf[nXpu];    // list interface is required for access to linked list methods
+  GVL_XTS.XtsTransport[nXpu].StationControl     REF= GVL_XTS.StationCtrl[nXpu];
+  GVL_XTS.XtsTransport[nXpu].StationState       REF= GVL_XTS.StationState[nXpu];
+  //############################################################################
+  
+  
+  
+  //############################################################################
+  // 	XTS Stations
+  //############################################################################	
+  FOR nStation := 1 TO MAX_STATION
+  DO
+    GVL_XTS.Station[nXpu][nStation].XpuInstance := nXpu;
+    GVL_XTS.Station[nXpu][nStation].StationId   := nStation;
+    GVL_XTS.Station[nXpu][nStation].MessageLevel:= GVL_MSG.MessageLevelStations[nXpu][nStation];
+  
+    GVL_XTS.StationListItf[nXpu][nStation]      := GVL_XTS.StationList[nXpu][nStation];   // interfaces for list methods
+    GVL_XTS.StationCtrlItf[nXpu][nStation]      := GVL_XTS.Station[nXpu][nStation];       // interfaces for station methods
+  
+    GVL_XTS.Station[nXpu][nStation].Ctrl        REF= GVL_XTS.StationCtrl[nXpu];           // station ctrl from extern
+    GVL_XTS.Station[nXpu][nStation].State       REF= GVL_XTS.StationState[nXpu];          // station state to extern
+  
+    GVL_XTS.Station[nXpu][nStation].ItfStations REF= GVL_XTS.StationListItf[nXpu];        // give every station all list interfaces for writing mover tickets
+    GVL_XTS.Station[nXpu][nStation].ItfMover    REF= GVL_XTS.MoverItf[nXpu];              // give every station all mover interfaces for movement in / out of station
+    GVL_XTS.Station[nXpu][nStation].Mover       REF= GVL_XTS.AxisRefMover[nXpu];          // AXIS_REF to read infos from
+    GVL_XTS.Station[nXpu][nStation].MoverOffset REF= GVL_XTS.PositionOffset[nXpu];        // static offsets for all stations, all movers, all stop positions
+  
+  
+    GVL_XTS.Station[nXpu][nStation].StationParameter  REF= GVL_XTS.StationParameter[nXpu];// give every station all station parameters for sending to WaitPos of target station
+  
+    // cyclic call
+    GVL_XTS.Station[nXpu][nStation].Cycle();                                        // cycle for handshaking with extern
+  
+    // Queue data for each station
+    GVL_XTS.StationQueue[nXpu][nStation]        := GVL_XTS.StationListItf[nXpu][nStation].Data;
+  END_FOR
+  //############################################################################
+  
+  
+  
+  //############################################################################
+  // 	XPU environment
+  //############################################################################	
+  GVL_XTS.Xpu[nXpu].XpuInstance               :=   nXpu;
+  GVL_XTS.Xpu[nXpu].MessageLevel              :=   GVL_MSG.MessageLevelXpu;
+  
+  GVL_XTS.Xpu[nXpu].Ctrl                      REF= GVL_XTS.XpuCtrl[nXpu];
+  GVL_XTS.Xpu[nXpu].State                     REF= GVL_XTS.XpuState[nXpu];
+  GVL_XTS.Xpu[nXpu].XpuModuleInfoData         REF= GVL_XTS.XpuModules[nXpu];
+  
+  GVL_XTS.Xpu[nXpu].CaGroupOID                :=   GVL_XTS.CaGroup[nXpu].GroupInfo.CaGroupOID;
+  
+  // cyclic call
+  GVL_XTS.Xpu[nXpu]();
+  GVL_XTS.XpuInfo[nXpu]                       :=   GVL_XTS.Xpu[nXpu].XpuInfo;
+  //############################################################################
+  
+  
+  //############################################################################	
+  // 	CA-Group Class
+  //############################################################################
+  GVL_XTS.CaGroup[nXpu].XpuInstance           := nXpu; // for every XPU there must be a CA group in this example	
+  // assignment
+  GVL_XTS.CaGroup[nXpu].AxisRef               REF= GVL_XTS.AxisRefMover[nXpu];
+  // Interface to Mover methods
+  GVL_XTS.CaGroup[nXpu].MoverItf              REF= GVL_XTS.MoverItf[nXpu]; 
+  
+  GVL_XTS.CaGroup[nXpu].GroupRef              REF= GVL_XTS.CaGroupRef[nXpu];
+  
+  // cyclic call
+  GVL_XTS.CaGroup[nXpu].InfoCycle(TRUE); // read group status
+  
+  // InfoData from group
+  GVL_XTS.CaGroupInfo[nXpu]                   :=   GVL_XTS.CaGroup[nXpu].GroupInfo;
+  
+  // Interface of CaGroup
+  GVL_XTS.CaGroupItf[nXpu]                    :=   GVL_XTS.CaGroup[nXpu];
+  //############################################################################
+  
+  
+  //############################################################################
+  // Mover Class	
+  //############################################################################	
+  FOR nMover := 1 TO MAX_MOVER
+  DO
+    GVL_XTS.Mover[nXpu][nMover].XpuInstance   :=   nXpu;
+    GVL_XTS.Mover[nXpu][nMover].MoverId       :=   nMover;
+    GVL_XTS.Mover[nXpu][nMover].RailLength    :=   GVL_XTS.Xpu[nXpu].RailLength;  // mover needs RailLength, in order to calc absolute position from modulo input
+    GVL_XTS.Mover[nXpu][nMover].MessageLevel  :=   GVL_MSG.MessageLevelMovers[nXpu][nMover];
+  
+    GVL_XTS.Mover[nXpu][nMover].Ctrl          REF= GVL_XTS.MoverCtrl[nXpu];       // mover control from extern
+    GVL_XTS.Mover[nXpu][nMover].State         REF= GVL_XTS.MoverState[nXpu];      // mover state to extern
+  
+    GVL_XTS.Mover[nXpu][nMover].MoveData      REF= GVL_XTS.MoveData[nXpu];        // dyn constraints for extern to write
+    GVL_XTS.Mover[nXpu][nMover].GearData      REF= GVL_XTS.GearData[nXpu];        // GearIn/GearInPosCa data fro extern to write
+  
+    // assignment	
+    GVL_XTS.Mover[nXpu][nMover].Mover         REF= GVL_XTS.AxisRefMover[nXpu][nMover];  // axis reference to Mover function block
+    GVL_XTS.Mover[nXpu][nMover].LastGap       REF= GVL_XTS.LastGap[nXpu][nMover];       // reference to last used gap value datafield
+    GVL_XTS.Mover[nXpu][nMover].LastPosition  REF= GVL_XTS.LastPosition[nXpu][nMover];  // reference to last position datafield
+  
+    GVL_XTS.Mover[nXpu][nMover].MoverInfo		  REF= GVL_XTS.MoverInfo[nXpu][nMover];     // refernence to mover info data (ActPos, SetPos, ...)
+  
+    GVL_XTS.MoverItf[nXpu][nMover]            :=   GVL_XTS.Mover[nXpu][nMover];
+  
+    // cyclic call
+    GVL_XTS.Mover[nXpu][nMover].Cycle();  // call AXIS_REF()
+    GVL_XTS.Mover[nXpu][nMover]();        // call Ctrl/State
+  END_FOR
+  //############################################################################
+  // /logging
+  //############################################################################
+  tonWriteLog[nXpu](IN:= TRUE, PT := tWriteLog);
+  
+  IF (tonWriteLog[nXpu].Q)
+  THEN
+    GVL_MSG.MessageData[nXpu].bWriteFile      := TRUE;
+    tonWriteLog[nXpu](IN:= FALSE);
+  END_IF
+  
+  //-----------------------------------------------------------------------------------------------------------------
+  // write message list to file
+  //-----------------------------------------------------------------------------------------------------------------
+  GVL_MSG.MessageData[nXpu](
+              pList			        := ADR(GVL_MSG.Messages[nXpu]),
+              pLocalTime        := ADR(GVL_MSG.dtLocalTime),
+              nXpu              := nXpu,
+              bBusy=> );
+  
+  // clear write trigger
+  IF GVL_MSG.MessageData[nXpu].bWriteFile AND
+     GVL_MSG.MessageData[nXpu].bDone
+  THEN
+    GVL_MSG.MessageData[nXpu].bWriteFile      := FALSE;
+  END_IF
+  //############################################################################
+  // logging/
+  //############################################################################
+END_FOR
+
+//############################################################################
+//############################################################################
+// Visualization data	
+//############################################################################	
+nXpuSelected                          := SEL((nXpuSelected<1), nXpuSelected, 1);
+nXpuSelected                          := SEL((nXpuSelected>MAX_XPU), nXpuSelected, MAX_XPU);
+// get enumerations from XPU for visu:
+eTransportState                       := f_GetState   (GVL_XTS.XtsTransportState[nXpuSelected].State);
+eTransportResult                      := f_GetProgress(GVL_XTS.XtsTransportState[nXpuSelected].State);
+
+eXpuState                             := f_GetState   (GVL_XTS.XpuState[nXpuSelected].State);
+eXpuResult                            := f_GetProgress(GVL_XTS.XpuState[nXpuSelected].State);
+
+eXpuCheck                             := GVL_XTS.XpuState[nXpuSelected].Check;
+
+// display xpu state and result in visu
+// get strings and info
+sCaGroupState                         := TO_STRING(GVL_XTS.CaGroupInfo[nXpuSelected].CaGroupState);
+
+sTransportState                       := TO_STRING(eTransportState);
+sTransportCheck                       := TO_STRING(GVL_XTS.XtsTransportState[nXpuSelected].Check);
+sTransportResult                      := TO_STRING(eTransportResult);
+
+sXpuState                             := TO_STRING(eXpuState);
+sXpuResult                            := TO_STRING(eXpuResult);
+sXpuCheck                             := TO_STRING(eXpuCheck);
+
+sXpuOpMode                            := GVL_XTS.Xpu[nXpuSelected].OpModeToString();
+sXpuMoverdetectionMode                := GVL_XTS.Xpu[nXpuSelected].IdDetectionModeToString();
+sXpuMoverAssignement                  := GVL_XTS.Xpu[nXpuSelected].MoverPositionAssignementToString();
+
+nMoverSelected                        := SEL((nMoverSelected<1), nMoverSelected, 1);
+nMoverSelected                        := SEL((nMoverSelected>MAX_MOVER), nMoverSelected, MAX_MOVER);
+
+nStationSelected                      := SEL((nStationSelected<1), nStationSelected, 1);
+nStationSelected                      := SEL((nStationSelected>MAX_STATION), nStationSelected, MAX_STATION);
+
+bStationEnable                        := SEL((GVL_XTS.StationCtrl[nXpuSelected][nStationSelected].eCmd = E_STATION_CTRL.STATION_ENABLE),        FALSE, TRUE);
+bStationEnter                         := SEL((GVL_XTS.StationCtrl[nXpuSelected][nStationSelected].eCmd = E_STATION_CTRL.STATION_MOVER_ENTER),   FALSE, TRUE);
+bStationStart                         := SEL((GVL_XTS.StationCtrl[nXpuSelected][nStationSelected].eCmd = E_STATION_CTRL.STATION_PROCESS_START), FALSE, TRUE);
+bStationDone                          := SEL((GVL_XTS.StationCtrl[nXpuSelected][nStationSelected].eCmd = E_STATION_CTRL.STATION_PROCESS_DONE),  FALSE, TRUE);
+bStationOut                           := SEL((GVL_XTS.StationCtrl[nXpuSelected][nStationSelected].eCmd = E_STATION_CTRL.STATION_MOVER_OUT),     FALSE, TRUE);
+bStationGone                          := SEL((GVL_XTS.StationCtrl[nXpuSelected][nStationSelected].eCmd = E_STATION_CTRL.STATION_MOVER_GONE),    FALSE, TRUE);
+
+eMoverState                           := f_GetState   (GVL_XTS.MoverState[nXpuSelected][nMoverSelected].State);
+eMoverResult                          := f_GetProgress(GVL_XTS.MoverState[nXpuSelected][nMoverSelected].State);
+
+sMoverState                           := TO_STRING(eMoverState);
+sMoverResult                          := TO_STRING(eMoverResult);
+
+sStationState                         := TO_STRING(GVL_XTS.StationState[nXpuSelected][nStationSelected].eState);
+sStationStateMask                     := Tc2_Utilities.BYTE_TO_BINSTR(GVL_XTS.StationState[nXpuSelected][nStationSelected].nMask, 8);
+sStationCtrlMask                      := Tc2_Utilities.BYTE_TO_BINSTR(GVL_XTS.StationCtrl[nXpuSelected][nStationSelected].nMask, 8);
+
+tStationSelectedQueue                 := GVL_XTS.StationQueue[nXpuSelected][nStationSelected];
+
+]]></ST>
+    </Implementation>
+    <Action Name="StationParameterInit" Id="{fd54c47d-a317-435a-a9c8-7d9f9b1d1ea9}">
+      <Implementation>
+        <ST><![CDATA[//-----------------------------------------------------------------------------
+//
+//  HAUD 2025.08.18
+//
+//  - hard coded station parameters as example
+//  - TODO: xml DataServer implementation for station parameter read/write
+//
+//  - reminder: (this you HAVE to check manually when setting up the transport)
+//-----------------------------------------------------------------------------
+//    - DO NOT place the modulo turn within the range of a station
+//
+//    - in case the extern process requires multiple xts stations, 
+//      - the range must be closed and in strict order
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
+FOR nXpu := 1 TO MAX_XPU
+DO
+  //-----------------------------------------------------------------------------------------------------------------------------------------
+  nStationParameter := 1;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rPosWait              :=    140.0; // absolute modulo position
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].nConfiguredStopCount  :=      1;   // how many stops the mover has to make in this station
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rPosStop[1]           :=    235.0; // relative to rPosWait
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rReleaseDistance      :=     75.0; // relative to Mover.ActPos
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rGap                  :=    105.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rVelo                 :=   1250.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rAccDec               :=  17500.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rJerk                 := 600000.0;
+  
+  //-----------------------------------------------------------------------------------------------------------------------------------------
+  nStationParameter := 2;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rPosWait              :=   1890.0; // absolute modulo position
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].nConfiguredStopCount  :=      1;   // how many stops the mover has to make in this station
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rPosStop[1]           :=    235.0; // relative to rPosWait
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rReleaseDistance      :=    350.0; // relative to Mover.ActPos
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rGap                  :=    105.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rVelo                 :=   1250.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rAccDec               :=  17500.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rJerk                 := 600000.0;
+  
+  //-----------------------------------------------------------------------------------------------------------------------------------------
+  nStationParameter := 3;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rPosWait              :=   2640.0; // absolute modulo position
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].nConfiguredStopCount  :=      1;   // how many stops the mover has to make in this station
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rPosStop[1]           :=    235.0; // relative to rPosWait
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rReleaseDistance      :=    150.0; // relative to Mover.ActPos
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rGap                  :=    105.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rVelo                 :=   1500.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rAccDec               :=  17500.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rJerk                 := 600000.0;
+  
+  //-----------------------------------------------------------------------------------------------------------------------------------------
+  nStationParameter := 4;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rPosWait              :=   3640.0; // absolute modulo position
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].nConfiguredStopCount  :=      1;   // how many stops the mover has to make in this station
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rPosStop[1]           :=    235.0; // relative to rPosWait
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rReleaseDistance      :=    100.0; // relative to Mover.ActPos
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rGap                  :=    105.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rVelo                 :=   1500.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rAccDec               :=  17500.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rJerk                 := 600000.0;
+  
+  //-----------------------------------------------------------------------------------------------------------------------------------------
+  nStationParameter := 5;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rPosWait              :=   4890.0; // absolute modulo position
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].nConfiguredStopCount  :=      1;   // how many stops the mover has to make in this station
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rPosStop[1]           :=    235.0; // relative to rPosWait
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rReleaseDistance      :=     50.0; // relative to Mover.ActPos
+  
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rGap                  :=    105.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rVelo                 :=   1500.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rAccDec               :=  17500.0;
+  GVL_XTS.StationParameter[nXpu][nStationParameter].rJerk                 := 600000.0;
+END_FOR
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="MAIN">
+      <LineId Id="3325" Count="16" />
+      <LineId Id="3734" Count="0" />
+      <LineId Id="3342" Count="0" />
+      <LineId Id="3735" Count="1" />
+      <LineId Id="3343" Count="2" />
+      <LineId Id="3766" Count="0" />
+      <LineId Id="3346" Count="11" />
+      <LineId Id="3737" Count="1" />
+      <LineId Id="3358" Count="0" />
+      <LineId Id="3739" Count="0" />
+      <LineId Id="3359" Count="1" />
+      <LineId Id="3741" Count="1" />
+      <LineId Id="3746" Count="1" />
+      <LineId Id="3745" Count="0" />
+      <LineId Id="3748" Count="0" />
+      <LineId Id="3744" Count="0" />
+      <LineId Id="3361" Count="2" />
+      <LineId Id="3365" Count="3" />
+      <LineId Id="3750" Count="1" />
+      <LineId Id="3762" Count="0" />
+      <LineId Id="3758" Count="3" />
+      <LineId Id="3756" Count="0" />
+      <LineId Id="3749" Count="0" />
+      <LineId Id="3373" Count="7" />
+      <LineId Id="3382" Count="6" />
+      <LineId Id="3773" Count="7" />
+      <LineId Id="3389" Count="0" />
+      <LineId Id="3781" Count="0" />
+      <LineId Id="3390" Count="22" />
+      <LineId Id="3764" Count="1" />
+      <LineId Id="3763" Count="0" />
+      <LineId Id="3782" Count="0" />
+      <LineId Id="3413" Count="32" />
+      <LineId Id="3771" Count="0" />
+      <LineId Id="3446" Count="47" />
+      <LineId Id="3769" Count="0" />
+      <LineId Id="3494" Count="22" />
+      <LineId Id="3770" Count="0" />
+      <LineId Id="3517" Count="22" />
+      <LineId Id="3890" Count="14" />
+      <LineId Id="3917" Count="0" />
+      <LineId Id="3905" Count="0" />
+      <LineId Id="3918" Count="0" />
+      <LineId Id="3906" Count="10" />
+      <LineId Id="3540" Count="2" />
+      <LineId Id="3575" Count="2" />
+      <LineId Id="3767" Count="1" />
+      <LineId Id="3578" Count="49" />
+      <LineId Id="491" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.StationParameterInit">
+      <LineId Id="2" Count="2" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="17" Count="5" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="33" Count="12" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="46" Count="12" />
+      <LineId Id="62" Count="28" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

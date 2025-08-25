@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <Itf Name="I_XtsProcess_Station" Id="{7e6974e1-9081-4369-af45-d77e111a3519}">
+    <Declaration><![CDATA[INTERFACE I_XtsProcess_Station
+]]></Declaration>
+  </Itf>
+</TcPlcObject>

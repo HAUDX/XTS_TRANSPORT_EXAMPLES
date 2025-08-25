@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="ST_GEAR_IN_POS_TRIGGER" Id="{b092f419-1d60-44ed-8cf9-27a4847b5346}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_GEAR_IN_POS_TRIGGER :
+STRUCT
+  bStart              : BIT;
+
+  rTriggerPosition    : LREAL; // ActPos of MasterAxis at the time of trigger detection
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
