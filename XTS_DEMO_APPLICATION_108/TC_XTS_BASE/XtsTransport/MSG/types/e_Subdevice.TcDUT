@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <DUT Name="e_Subdevice" Id="{b4255e95-d04d-4216-a935-7528bf2b6255}">
     <Declaration><![CDATA[{attribute 'strict'}
 {attribute 'to_string'}
@@ -155,16 +155,10 @@ TYPE e_Subdevice :
 
   Instance_Command              := 12000,
   Instance_BufferInfeed,
-  Instance_BufferInfeed_CheckDisabled,
-  Instance_BufferInfeed_CheckEnabled,
-  Instance_BufferInfeed_CheckInfeed,
-  Instance_BufferInfeed_CheckOutfeed,
-  Instance_BufferInfeed_CheckTarget,
   Instance_Infeed,
   Instance_BufferOutfeed,
   Instance_Outfeed,
-  Instance_Sender_Fast,
-  Instance_Sender_BufferInfeed,
+  Instance_Sender_Buffer,
 
   Application                 := 13000,
   Application_Check,

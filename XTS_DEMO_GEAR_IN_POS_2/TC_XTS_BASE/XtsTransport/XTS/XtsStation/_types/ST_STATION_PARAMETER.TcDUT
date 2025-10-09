@@ -3,9 +3,10 @@
   <DUT Name="ST_STATION_PARAMETER" Id="{2979b824-0e00-4594-8c54-840b7431832e}">
     <Declaration><![CDATA[TYPE ST_STATION_PARAMETER :
 STRUCT
+  eType             : E_STATION_TYPE; // StationProcess or StationGearInPos
   sText             : STRING(80);     // only description
-  rPosWait          : REAL;       // start of station, a sending station is using this value to send mover to
-  rReleaseDistance  : REAL;       // distance mover has to travel (from ActPos) in order for station to go back to mover detection
+  rPosWait          : REAL;           // start of station, a sending station is using this value to send mover to
+  rReleaseDistance  : REAL;           // distance mover has to travel (from ActPos) in order for station to go back to mover detection
 
   rGap              : REAL;
   rVelo             : REAL;

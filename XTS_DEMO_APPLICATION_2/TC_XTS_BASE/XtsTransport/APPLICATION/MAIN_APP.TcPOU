@@ -588,7 +588,7 @@ ItfProcessCollector[SenderBufferInfeed.ProcessId].StationFirst  := 52;
 ItfProcessCollector[SenderBufferInfeed.ProcessId].StationLast   := 52;
 
 _nStnFrst                                 := ProcessCollector[SenderBufferInfeed.ProcessId].StationFirst;
-SenderBufferInfeed.CheckPosition          := GVL_XTS.StationParameter[_nStnFrst].rPosWait - 250.0;
+SenderBufferInfeed.CheckPosition          := GVL_XTS.StationParameter[_nStnFrst].rPosWait - 1250.0;
 //-------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------
 //*************************************************************************************************************]]></ST>

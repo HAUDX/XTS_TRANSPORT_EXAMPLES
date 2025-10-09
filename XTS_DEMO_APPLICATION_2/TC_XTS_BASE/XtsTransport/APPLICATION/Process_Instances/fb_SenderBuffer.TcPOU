@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="fb_SenderBuffer" Id="{0c3bbcb7-2e32-448d-927f-70f07eaaefdd}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -248,9 +248,9 @@ OF
             f_MessageSet(_stMsg);
 
           ELSE
-            IF (_MessageLevel = E_MessageType.eMessageVerbose)
+            IF (_MessageLevel > E_MessageType.eMessageWarning)
             THEN
-              _stMsg.eType            := E_MessageType.eMessageVerbose;
+              _stMsg.eType            := E_MessageType.eMessageInfo;
               _stMsg.eSubdevice       := e_Subdevice.Process_LinkedList_GetHead;
               _stMsg.iErrorNumber     := 0;
               _stMsg.sText            := concat(TO_STRING(_eStateInstance), ': ');
@@ -372,21 +372,24 @@ OF
               _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_SEND;  // send mover to outfeed process
               _eStateProgress         := E_PROGRESS.PROGRESS_PREPARE;           // go check sending of mover
   
-              IF (_MessageLevel = E_MessageType.eMessageVerbose)
+              IF (_MessageLevel > E_MessageType.eMessageWarning)
               THEN
-                _stMsg.eType          := E_MessageType.eMessageVerbose;
+                _stMsg.eType          := E_MessageType.eMessageInfo;
                 _stMsg.eSubdevice     := e_Subdevice.Instance_Sender_BufferInfeed;
                 _stMsg.iErrorNumber   := 0;
                 _stMsg.sText          := concat(TO_STRING(_Ctrl.Cmd), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                 f_MessageSet(_stMsg);
-  
-                _stMsg.eType          := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice     := e_Subdevice.Instance_Sender_BufferInfeed;
-                _stMsg.iErrorNumber   := 0;
-                _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
-                _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
-                f_MessageSet(_stMsg);
+
+                IF (_MessageLevel = E_MessageType.eMessageVerbose)
+                THEN
+                  _stMsg.eType          := E_MessageType.eMessageVerbose;
+                  _stMsg.eSubdevice     := e_Subdevice.Instance_Sender_BufferInfeed;
+                  _stMsg.iErrorNumber   := 0;
+                  _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
+                  _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
+                  f_MessageSet(_stMsg);
+                END_IF
               END_IF
           END_CASE
         END_CASE
@@ -408,9 +411,9 @@ OF
                 _eStateInstance       := E_INSTANCE_STATE.FINISH;     // go send mover
                 _eStateProgress       := E_PROGRESS.PROGRESS_INIT;    // reset substate
   
-                IF (_MessageLevel = E_MessageType.eMessageVerbose)
+                IF (_MessageLevel > E_MessageType.eMessageWarning)
                 THEN
-                  _stMsg.eType        := E_MessageType.eMessageVerbose;
+                  _stMsg.eType        := E_MessageType.eMessageInfo;
                   _stMsg.eSubdevice   := e_Subdevice.Instance_Sender_BufferInfeed;
                   _stMsg.iErrorNumber := 0;
                   _stMsg.sText        := concat(TO_STRING(_eStateInstance), ': ');
@@ -522,6 +525,16 @@ OF
               THEN
                 _eStateProgress             := E_PROGRESS.PROGRESS_ERROR;
               ELSE
+                IF (_MessageLevel > E_MessageType.eMessageWarning)
+                THEN
+                  _stMsg.eType        := E_MessageType.eMessageInfo;
+                  _stMsg.eSubdevice   := e_Subdevice.Instance_Sender_BufferInfeed;
+                  _stMsg.iErrorNumber := 0;
+                  _stMsg.sText        := concat('RemoveGeadValue()', ': ');
+                  _stMsg.sText        := concat(_stMsg.sText, TO_STRING(_eStateProgress));
+                  f_MessageSet(_stMsg);
+                END_IF
+
                 _eStateInstance             := E_INSTANCE_STATE.DISABLED;
                 _eStateProgress             := E_PROGRESS.PROGRESS_INIT;
               END_IF
@@ -608,12 +621,18 @@ END_VAR
       <LineId Id="4551" Count="1" />
       <LineId Id="4480" Count="14" />
       <LineId Id="4496" Count="3" />
-      <LineId Id="4045" Count="116" />
+      <LineId Id="4045" Count="59" />
+      <LineId Id="4566" Count="0" />
+      <LineId Id="4557" Count="8" />
+      <LineId Id="4112" Count="49" />
       <LineId Id="4556" Count="0" />
       <LineId Id="4163" Count="14" />
       <LineId Id="4183" Count="57" />
       <LineId Id="4311" Count="5" />
-      <LineId Id="4323" Count="7" />
+      <LineId Id="4323" Count="4" />
+      <LineId Id="4569" Count="8" />
+      <LineId Id="4567" Count="0" />
+      <LineId Id="4328" Count="2" />
       <LineId Id="4320" Count="1" />
       <LineId Id="4249" Count="5" />
       <LineId Id="139" Count="0" />

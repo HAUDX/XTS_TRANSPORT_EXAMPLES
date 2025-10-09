@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="fb_BufferOutfeed" Id="{ef2b7354-0dce-40f0-b7c4-f4e8e6320831}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -259,9 +259,9 @@ OF
         THEN
           _eStateProgress             := E_PROGRESS.PROGRESS_CHECK;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageError)
           THEN
-            _stMsg.eType              := E_MessageType.eMessageVerbose;
+            _stMsg.eType              := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice         := e_Subdevice.Process_StationQueue_Check;
             _stMsg.iErrorNumber       := 0;
             _stMsg.sText              := concat(TO_STRING(_eStateInstance), ': ');
@@ -294,7 +294,7 @@ OF
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed_CheckDisabled;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferOutfeed;
                 _stMsg.iErrorNumber   := 0;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));

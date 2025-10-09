@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="fb_Infeed" Id="{6f6c1e2e-6349-416d-b058-49b3b2e87285}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -257,9 +257,9 @@ OF
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                 f_MessageSet(_stMsg);
               ELSE
-                IF (_MessageLevel = E_MessageType.eMessageVerbose)
+                IF (_MessageLevel > E_MessageType.eMessageWarning)
                 THEN
-                  _stMsg.eType        := E_MessageType.eMessageVerbose;
+                  _stMsg.eType        := E_MessageType.eMessageInfo;
                   _stMsg.eSubdevice   := e_Subdevice.Process_LinkedList_AddTail;
                   _stMsg.iErrorNumber := 0;
                   _stMsg.sText        := concat(TO_STRING(_eStateInstance), ': ');

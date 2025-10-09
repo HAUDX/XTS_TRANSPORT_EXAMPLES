@@ -8,6 +8,13 @@
 *.graphml
 *.pptx
 *.vsidx
+*.7z
+*.tnzip
+*.tszip
+
+*/.vs/
+/XTS_DEMO_APPLICATION_2/.vs
+/XTS_DEMO_APPLICATION_108/.vs/TC_XTS_BASE/v17
 
 # Build results
 [Dd]ebug/
@@ -189,3 +196,6 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+
+*.bin

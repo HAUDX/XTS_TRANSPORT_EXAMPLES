@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="fb_Outfeed" Id="{0ebf429e-82e9-4523-8b3c-80e3eae4df8a}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -183,7 +183,7 @@ OF
             IF (_MessageLevel = E_MessageType.eMessageVerbose)
             THEN
               _stMsg.eType            := E_MessageType.eMessageVerbose;
-              _stMsg.eSubdevice       := e_Subdevice.Instance_BufferOutfeed;
+              _stMsg.eSubdevice       := e_Subdevice.Instance_Outfeed;
               _stMsg.iErrorNumber     := 0;
               _stMsg.sText            := concat(TO_STRING(_eStateInstance), ': ');
               _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -263,7 +263,7 @@ OF
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed_CheckDisabled;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_Outfeed;
                 _stMsg.iErrorNumber   := 0;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -304,7 +304,7 @@ OF
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferOutfeed;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_Outfeed;
                 _stMsg.iErrorNumber   := 0;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -332,7 +332,7 @@ OF
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferOutfeed;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_Outfeed;
                 _stMsg.iErrorNumber   := 0;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -362,7 +362,7 @@ OF
                   IF (_MessageLevel = E_MessageType.eMessageVerbose)
                   THEN
                     _stMsg.eType        := E_MessageType.eMessageVerbose;
-                    _stMsg.eSubdevice   := e_Subdevice.Instance_BufferOutfeed;
+                    _stMsg.eSubdevice   := e_Subdevice.Instance_Outfeed;
                     _stMsg.iErrorNumber := 0;
                     _stMsg.sText        := concat(TO_STRING(_eStateInstance), ': ');
                     _stMsg.sText        := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -391,7 +391,7 @@ OF
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferOutfeed;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_Outfeed;
                 _stMsg.iErrorNumber   := 0;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -430,7 +430,7 @@ OF
                   IF (_MessageLevel = E_MessageType.eMessageVerbose)
                   THEN
                     _stMsg.eType        := E_MessageType.eMessageVerbose;
-                    _stMsg.eSubdevice   := e_Subdevice.Instance_BufferOutfeed;
+                    _stMsg.eSubdevice   := e_Subdevice.Instance_Outfeed;
                     _stMsg.iErrorNumber := 0;
                     _stMsg.sText        := concat(TO_STRING(_eStateInstance), ': ');
                     _stMsg.sText        := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -461,7 +461,7 @@ OF
                   IF (_MessageLevel = E_MessageType.eMessageVerbose)
                   THEN
                     _stMsg.eType        := E_MessageType.eMessageVerbose;
-                    _stMsg.eSubdevice   := e_Subdevice.Instance_BufferOutfeed;
+                    _stMsg.eSubdevice   := e_Subdevice.Instance_Outfeed;
                     _stMsg.iErrorNumber := 0;
                     _stMsg.sText        := concat(TO_STRING(_eStateInstance), ': ');
                     _stMsg.sText        := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -513,7 +513,7 @@ OF
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferOutfeed;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_Outfeed;
                 _stMsg.iErrorNumber   := 0;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -530,7 +530,7 @@ OF
             IF (_MessageLevel = E_MessageType.eMessageVerbose)
             THEN
               _stMsg.eType            := E_MessageType.eMessageVerbose;
-              _stMsg.eSubdevice       := e_Subdevice.Instance_BufferOutfeed;
+              _stMsg.eSubdevice       := e_Subdevice.Instance_Outfeed;
               _stMsg.iErrorNumber     := 0;
               _stMsg.sText            := concat(TO_STRING(_eStateInstance), ': ');
               _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eStateProgress));

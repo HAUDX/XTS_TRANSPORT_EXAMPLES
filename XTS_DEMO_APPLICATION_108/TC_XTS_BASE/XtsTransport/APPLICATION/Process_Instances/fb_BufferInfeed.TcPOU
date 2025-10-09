@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="fb_BufferInfeed" Id="{8f83a517-0564-4150-8e42-db4c72a4f053}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -250,9 +250,9 @@ OF
             f_MessageSet(_stMsg);
 
           ELSE
-            IF (_MessageLevel = E_MessageType.eMessageVerbose)
+            IF (_MessageLevel > E_MessageType.eMessageError)
             THEN
-              _stMsg.eType            := E_MessageType.eMessageVerbose;
+              _stMsg.eType            := E_MessageType.eMessageInfo;
               _stMsg.eSubdevice       := e_Subdevice.Process_LinkedList_GetHead;
               _stMsg.iErrorNumber     := 0;
               _stMsg.sText            := concat(TO_STRING(_eStateInstance), ': ');
@@ -310,7 +310,7 @@ OF
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed_CheckDisabled;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed;
                 _stMsg.iErrorNumber   := 0;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -352,7 +352,7 @@ OF
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed_CheckEnabled;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed;
                 _stMsg.iErrorNumber   := 0;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -393,7 +393,7 @@ OF
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed_CheckInfeed;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed;
                 _stMsg.iErrorNumber   := 0;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -438,7 +438,7 @@ OF
           IF (_MessageLevel = E_MessageType.eMessageVerbose)
           THEN
             _stMsg.eType              := E_MessageType.eMessageVerbose;
-            _stMsg.eSubdevice         := e_Subdevice.Instance_BufferInfeed_CheckTarget;
+            _stMsg.eSubdevice         := e_Subdevice.Instance_BufferInfeed;
             _stMsg.iErrorNumber       := _idx;
             _stMsg.sText              := concat('_ProcessData.wTarget: ', 
                                          _ItfProcessCollector[_nProcess].BitsToString(_ProcessData.wTarget));
@@ -491,7 +491,10 @@ OF
           E_PROCESS_STATE.PROCESS_DISABLE:
             IF (_ProcessData.wTarget <> 0)
             THEN
-              _eStateProgress         := E_PROGRESS.PROGRESS_OCCUPIED;
+              //_eStateProgress         := E_PROGRESS.PROGRESS_OCCUPIED;
+              _eStateInstance             := E_INSTANCE_STATE.DETECTION;
+              _eStateProgress             := E_PROGRESS.PROGRESS_CHECK;
+
             ELSE
               // job done, all movers were sent
               // job done, delete from top of my list
@@ -536,10 +539,10 @@ OF
         ELSE
           _eStateProgress             := E_PROGRESS.PROGRESS_DONE;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageError)
           THEN
-            _stMsg.eType              := E_MessageType.eMessageVerbose;
-            _stMsg.eSubdevice         := e_Subdevice.Instance_BufferInfeed;
+            _stMsg.eType              := E_MessageType.eMessageInfo;
+            _stMsg.eSubdevice         := e_Subdevice.Process_LinkedList_AddTail;
             _stMsg.iErrorNumber       := _nProcessTarget;
             _stMsg.sText              := concat(TO_STRING(_eStateInstance), ': ');
             _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -621,7 +624,10 @@ END_VAR
     </Property>
     <LineIds Name="fb_BufferInfeed">
       <LineId Id="7165" Count="332" />
-      <LineId Id="7500" Count="177" />
+      <LineId Id="7500" Count="109" />
+      <LineId Id="7679" Count="1" />
+      <LineId Id="7678" Count="0" />
+      <LineId Id="7610" Count="67" />
       <LineId Id="139" Count="0" />
     </LineIds>
     <LineIds Name="fb_BufferInfeed.CheckPosition.Get">

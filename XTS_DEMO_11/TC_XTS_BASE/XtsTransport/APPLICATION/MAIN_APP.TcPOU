@@ -58,9 +58,10 @@ VAR
 
 
   // tons for painting scopes in documentation
+  tonStart,
   tonEnable,
   tonEnter,
-  tonOut        : TON;
+  tonOut        : ARRAY[1..MAX_STATION] OF TON;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -188,9 +189,13 @@ OF
     END_IF
 
   170:
-    tonEnable(in:=FALSE, pt:=T#20MS);
-    tonEnter(in:=FALSE, pt:=T#20MS);
-    tonOut(in:=FALSE, pt:=T#20MS);
+    FOR nStation := 1 TO MAX_STATION
+    DO
+      tonStart[nStation](in:=FALSE, pt:=T#20MS);
+      tonEnable[nStation](in:=FALSE, pt:=T#20MS);
+      tonEnter[nStation](in:=FALSE, pt:=T#20MS);
+      tonOut[nStation](in:=FALSE, pt:=T#20MS);
+    END_FOR
     nState                            := 2000;
 
   1000:                               // automatic handshakes with XtsStations
@@ -244,19 +249,20 @@ OF
       CASE GVL_XTS.StationState[nStation].eState
       OF
         E_STATION_STATE.STATION_DISABLE:          // switch on XtsStation
-          tonEnable(in:=TRUE, pt:=T#20MS);
+          tonStart[nStation](in:=FALSE, pt:=T#20MS);
+          tonEnable[nStation](in:=TRUE, pt:=T#20MS);
 
-          IF tonEnable.Q
+          IF tonEnable[nStation].Q
           THEN
             GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_ENABLE;
           END_IF
 
         E_STATION_STATE.STATION_MOVER_ENTER:      // let mover enter
           // mover was detected in list and station is asking for mover entry
-          tonEnable(in:=FALSE, pt:=T#20MS);
-          tonEnter(in:=TRUE, pt:=T#20MS);
+          tonEnable[nStation](in:=FALSE, pt:=T#20MS);
+          tonEnter[nStation](in:=TRUE, pt:=T#20MS);
 
-          IF tonEnter.Q
+          IF tonEnter[nStation].Q
           THEN
             GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_ENTER;  // allow entry
             //GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_SEND;  // no process handshake, direct state change to MOVER_OUT 
@@ -264,13 +270,20 @@ OF
 
         E_STATION_STATE.STATION_PROCESS_START:    // first process handshake, clear timer
           // mover has arrived and is in standstill, ready for process
-          tonEnter(in:=FALSE, pt:=T#20MS); 
+          tonEnter[nStation](in:=FALSE, pt:=T#20MS); 
           tonProcess[nStation](
                               IN                  :=FALSE, 
                               PT                  :=tProcess[nStation]);
-          GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_PROCESS_START;
+
+          tonStart[nStation](in:=TRUE, pt:=T#20MS);
+          IF tonStart[nStation].Q
+          THEN
+            GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_PROCESS_START;
+          END_IF
 
         E_STATION_STATE.STATION_PROCESS_DONE:     // second process handshake, timer runs now
+          tonStart[nStation](in:=FALSE, pt:=T#20MS);
+          tonOut[nStation](in:=FALSE, pt:=T#20MS);
           tonProcess[nStation](
                               IN                  :=TRUE, 
                               PT                  :=tProcess[nStation]);
@@ -283,9 +296,9 @@ OF
           // when sending out mover, the data on Ctrl struct is absolute important
           // before allowing the outfeed of the mover, the data on Ctrl struct must be entered correctly
           // Ctrl.nTargetStation allows for flexible mover transport, this is fully depending on you to make sense aside this example
-          tonOut(in:=TRUE, pt:=T#20MS);
+          tonOut[nStation](in:=TRUE, pt:=T#20MS);
 
-          IF tonOut.Q
+          IF tonOut[nStation].Q
           THEN
             GVL_XTS.StationCtrl[nStation].nTargetStation  := TO_USINT(nTarget[nStation]); // static in this example
             GVL_XTS.StationCtrl[nStation].nMask     := 2#1; // bitmask for mover ticket to next XtsStation; if you use more than one StopPos[] in XtsStation
@@ -294,7 +307,7 @@ OF
           END_IF
 
         E_STATION_STATE.STATION_MOVER_GONE:       // mover has travelled ReleaseDistance, XtsStation is now empty and ready for the next mover in queue
-          tonOut(in:=FALSE, pt:=T#20MS);
+          tonOut[nStation](in:=FALSE, pt:=T#20MS);
           GVL_XTS.StationCtrl[nStation].nTargetStation  := 0;                           // clear target after mover left the station
           GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_GONE; // last handshake for empty station
       END_CASE
@@ -438,7 +451,10 @@ END_CASE
       <LineId Id="183" Count="1" />
       <LineId Id="187" Count="0" />
       <LineId Id="154" Count="0" />
+      <LineId Id="565" Count="1" />
+      <LineId Id="568" Count="0" />
       <LineId Id="487" Count="2" />
+      <LineId Id="567" Count="0" />
       <LineId Id="188" Count="0" />
       <LineId Id="190" Count="0" />
       <LineId Id="189" Count="0" />
@@ -477,6 +493,7 @@ END_CASE
       <LineId Id="197" Count="0" />
       <LineId Id="194" Count="0" />
       <LineId Id="491" Count="6" />
+      <LineId Id="557" Count="0" />
       <LineId Id="537" Count="0" />
       <LineId Id="544" Count="0" />
       <LineId Id="536" Count="0" />
@@ -492,7 +509,16 @@ END_CASE
       <LineId Id="550" Count="0" />
       <LineId Id="504" Count="2" />
       <LineId Id="551" Count="0" />
-      <LineId Id="507" Count="17" />
+      <LineId Id="507" Count="2" />
+      <LineId Id="559" Count="0" />
+      <LineId Id="558" Count="0" />
+      <LineId Id="560" Count="1" />
+      <LineId Id="510" Count="0" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="511" Count="1" />
+      <LineId Id="563" Count="0" />
+      <LineId Id="556" Count="0" />
+      <LineId Id="513" Count="11" />
       <LineId Id="543" Count="0" />
       <LineId Id="552" Count="0" />
       <LineId Id="525" Count="0" />

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="fb_GearInPos" Id="{19435571-e5f3-4c9b-9865-7e07690fce00}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2025.08.20
+//
+//  - XTS_TRANSPORT_LAYER
+//
+//  fb_GearInPos
+//  - inherits fb_StationBase 
+//  - uses ST_STATION_PARAMETER
+//  - uses StationId in array of stations
+//    - sending stations may use it as target
+//
+//  - StationId, LinkedList and variables are used
+//
+//
+//  - Mover detection is done via LinkedList of StationId
+//
+//  - ST_STATION_CTRL.nTargetStation:
+//    - static target
+//      - if changing targets are required --> use a distributor station after this
+//
+//  - ST_STATION_CTRL.nMask:
+//    - not used
+//
+//  - ST_STATION_CTRL.rOffset:
+//    - not used
+//
+//  - ST_STATION_MOVER_DATA:
+//    - used for entering data in target station
+//
+//  ST_STATION_PARAMETER ==> ST_GEAR_DATA
+//  - position and distances are used on GearInPos parameter for XTS sync position
+//    - PosWait  + PosStop[1] + MoverOffset[][][] ==> rModuloSyncPosSlave
+//
+//  
+//
+//---------------------------------------------------------------------------------------------------------------
+// This SOFTWARE is provided as an Exemple by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no 
+// representations or warranties of any kind concerning the safety, suitability, lack of viruses, inaccuracies, 
+// typographical errors, or other harmful components of this SOFTWARE. There are inherent dangers in the use of 
+// any software, and you are solely responsible for determining whether this SOFTWARE is compatible with your 
+// equipment and other software installed on your equipment. You are also solely responsible for the protection 
+// of your equipment and backup of your data, and THE PROVIDER will not be liable for any damages you may suffer 
+// in connection with using, modifying, or distributing this SOFTWARE.
+//---------------------------------------------------------------------------------------------------------------
+FUNCTION_BLOCK fb_GearInPos EXTENDS fb_StationBase
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <LineIds Name="fb_GearInPos">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
