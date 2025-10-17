@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_MessageType" Id="{7afee4f1-5292-4a2f-82ee-5fe2e276aae6}">
+    <Declaration><![CDATA[{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_MessageType :
+(
+  eMessageEmpty,
+  eMessageError,
+  eMessageWarning,
+  eMessageInfo,
+  eMessageVerbose
+)DINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

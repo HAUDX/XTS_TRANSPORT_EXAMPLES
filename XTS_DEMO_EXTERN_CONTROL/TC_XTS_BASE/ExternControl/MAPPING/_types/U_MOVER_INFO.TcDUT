@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="U_MOVER_INFO" Id="{97efcfa5-6261-4777-bf2e-39280a221193}">
+    <Declaration><![CDATA[TYPE U_MOVER_INFO :
+UNION
+  stInfo              : ARRAY[1..MAX_MOVER] OF ST_MOVER_INFO;
+
+  byInfo    AT %I*    : ARRAY[1..MAX_MOVER] OF
+                        ARRAY[1..SIZEOF(ST_MOVER_INFO)] OF BYTE;
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

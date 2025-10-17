@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_XTS" Id="{f2b8a58d-9656-44d2-b50a-48e1d25f3a75}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+// HAUD 2025 10 13
+//
+//    XTS_TRANSPORT_LAYER Extern Control project
+//    
+//    MIT License
+//    
+//    Copyright (c) 2025 HAUD
+//    
+//    Permission is hereby granted, free of charge, to any person obtaining a copy
+//    of this software and associated documentation files (the "Software"), to deal
+//    in the Software without restriction, including without limitation the rights
+//    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//    copies of the Software, and to permit persons to whom the Software is
+//    furnished to do so, subject to the following conditions:
+//    
+//    The above copyright notice and this permission notice shall be included in all
+//    copies or substantial portions of the Software.
+//    
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//    SOFTWARE.
+
+  Version             : STRING  := '4.00.11';
+
+  MAX_MOVER           : UINT    := 10;
+  MAX_STATION         : UINT    := 5;
+  MAX_STATION_NEST    : UINT    := TO_UINT(SIZEOF(ST_STATION_STATE.nMask)*8);
+END_VAR
+{attribute 'qualified_only'}
+VAR_GLOBAL
+  //---------------------------------------------------------------------------
+  // XTS Station
+  //  - handshakes mover in station with extern control
+
+  // ctrl / state datafields for extern control
+  StationCtrl         : ARRAY[1..MAX_STATION] OF ST_STATION_CTRL;   // control for extern to write
+  StationState        : ARRAY[1..MAX_STATION] OF ST_STATION_STATE;  // state for extern to read
+
+  // station parameter
+  StationParameter    : ARRAY[1..MAX_STATION] OF ST_STATION_PARAMETER; // XtsStation (fb_Station) positions and dyn constraints
+
+  // static position offsets in stations
+  PositionOffset      : ARRAY[1..MAX_STATION] OF T_NEST_OFFSET; // added to PosStop[] in XtsStation
+
+
+  //---------------------------------------------------------------------------
+  // XTS
+  // XTS TransportUnit
+
+  XtsTransportCtrl    : ST_XTS_TRANSPORT_CTRL;    // control of XTS transport for extern to write
+  XtsTransportState   : ST_XTS_TRANSPORT_STATE;   // state   of XTS transport for extern to read
+
+
+  //---------------------------------------------------------------------------
+  MoverCtrl       : ARRAY[1..MAX_MOVER] OF ST_MOVER_CTRL;   // control of individual mover for extern to write
+  MoverState      : ARRAY[1..MAX_MOVER] OF ST_MOVER_STATE;  // state   of individual mover for extern to read
+
+  MoverInfo       : ARRAY[1..MAX_MOVER] OF ST_MOVER_INFO;   // cyclic info about mover for extern to read
+
+  MoveData        : ARRAY[1..MAX_MOVER] OF ST_MOVE_DATA;    // dynamic constraints for move commands
+  GearData        : ARRAY[1..MAX_MOVER] OF ST_GEAR_DATA;    // dynamic constraints and positions for GearIn/GearInPosCa
+  
+  //---------------------------------------------------------------------------
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

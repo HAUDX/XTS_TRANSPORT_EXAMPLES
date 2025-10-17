@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_XTS_TRANSPORT_STATE" Id="{4b424187-af2f-4d26-8075-6001541d617e}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_XTS_TRANSPORT_STATE :
+STRUCT
+  State         : E_XTS_TRANSPORT_STATE;  // combined value of state and result(e_progress); (hint: extract state value by mod division)
+  Check         : E_XTS_TRANSPORT_CHECK;
+
+  XpuState      : ST_XPU_STATE;
+  XpuInfo       : ST_XPU_INFO;
+  GroupInfo     : ST_GROUP_INFO; 
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

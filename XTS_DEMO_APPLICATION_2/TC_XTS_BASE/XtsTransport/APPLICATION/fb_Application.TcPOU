@@ -181,14 +181,10 @@ _State.InstanceStates           REF= _InstanceState;
       _tProcess[E_INSTANCE.INFEED]           := T#500MS;
       _tProcess[E_INSTANCE.OUTFEED_ROBOT_R1] := T#800MS;
       _tProcess[E_INSTANCE.OUTFEED_ROBOT_R2] := T#800MS;
-    5:
+  ELSE
       _tProcess[E_INSTANCE.INFEED]           := T#450MS;
       _tProcess[E_INSTANCE.OUTFEED_ROBOT_R1] := T#600MS;
       _tProcess[E_INSTANCE.OUTFEED_ROBOT_R2] := T#600MS;
-  ELSE
-      _tProcess[E_INSTANCE.INFEED]           := T#800MS;
-      _tProcess[E_INSTANCE.OUTFEED_ROBOT_R1] := T#800MS;
-      _tProcess[E_INSTANCE.OUTFEED_ROBOT_R2] := T#800MS;
   END_CASE
 //END_IF
 
@@ -2507,7 +2503,6 @@ END_VAR
       <LineId Id="544" Count="14" />
       <LineId Id="565" Count="3" />
       <LineId Id="752" Count="3" />
-      <LineId Id="758" Count="3" />
       <LineId Id="560" Count="4" />
       <LineId Id="543" Count="0" />
       <LineId Id="685" Count="1" />

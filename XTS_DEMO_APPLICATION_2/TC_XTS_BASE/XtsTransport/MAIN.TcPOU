@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="MAIN" Id="{f2e9720a-bda2-4399-8c7d-d9b6e11179c8}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -3743,9 +3743,9 @@ GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1250.0;]]
 
 FOR nStationParameter := 1 TO MAX_STATION
 DO
-  GVL_XTS.StationParameter[nStationParameter].rVelo               :=   1000.0;
+  GVL_XTS.StationParameter[nStationParameter].rVelo               :=  3500.0;
   GVL_XTS.StationParameter[nStationParameter].rAccDec             :=  rAcc;
-  GVL_XTS.StationParameter[nStationParameter].rJerk               := 100000.0;
+  GVL_XTS.StationParameter[nStationParameter].rJerk               := 120000.0;
 END_FOR 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -4348,6 +4348,7 @@ GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=      0.0; /
 
 GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=    -10.0; // relative to Mover.ActPos
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=     76.0;
+GVL_XTS.StationParameter[nStationParameter].rJerk                 := 400000.0;
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -4366,7 +4367,7 @@ GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=    -10.0; /
 
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=     76.0;
 GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1500.0;
-
+GVL_XTS.StationParameter[nStationParameter].rJerk                 := 400000.0;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -4384,6 +4385,7 @@ GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=    -10.0; /
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=    76.0;
 
 GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1250.0;
+GVL_XTS.StationParameter[nStationParameter].rJerk                 := 400000.0;
 ]]></ST>
       </Implementation>
     </Action>
@@ -4521,7 +4523,8 @@ GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1250.0;
       <LineId Id="3952" Count="6" />
       <LineId Id="3081" Count="12" />
       <LineId Id="3095" Count="0" />
-      <LineId Id="3099" Count="9" />
+      <LineId Id="4108" Count="0" />
+      <LineId Id="3100" Count="8" />
       <LineId Id="3110" Count="0" />
       <LineId Id="3114" Count="9" />
       <LineId Id="3125" Count="0" />
@@ -4613,6 +4616,7 @@ GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1250.0;
       <LineId Id="3832" Count="0" />
       <LineId Id="3835" Count="33" />
       <LineId Id="3870" Count="0" />
+      <LineId Id="4109" Count="0" />
       <LineId Id="3944" Count="1" />
       <LineId Id="3875" Count="15" />
       <LineId Id="3892" Count="14" />
@@ -4620,6 +4624,7 @@ GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1250.0;
       <LineId Id="3912" Count="0" />
       <LineId Id="3938" Count="0" />
       <LineId Id="27" Count="0" />
+      <LineId Id="4110" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

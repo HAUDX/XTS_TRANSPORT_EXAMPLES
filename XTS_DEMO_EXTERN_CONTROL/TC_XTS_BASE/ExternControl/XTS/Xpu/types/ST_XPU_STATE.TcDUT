@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_XPU_STATE" Id="{9aa51e58-7480-419f-a3a4-b2d099f2a810}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_XPU_STATE :
+STRUCT
+  Init            : E_XPU_INIT;
+  State           : E_XPU_STATE;
+  Check           : E_XPU_CHECK;  // cyclic check result
+  DcLink          : BIT;          // power all motor modules is ON
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

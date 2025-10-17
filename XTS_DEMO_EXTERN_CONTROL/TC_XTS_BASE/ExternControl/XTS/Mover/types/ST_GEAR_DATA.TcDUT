@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_GEAR_DATA" Id="{00466c60-8464-47ca-be5c-f3cf246792b3}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_GEAR_DATA :
+STRUCT
+  rDeltaToMasterPos       : LREAL;
+  rModuloSyncPosSlave     : LREAL;
+  rMasterStartDistance    : LREAL;
+  rGearNumerator          : LREAL;
+  iGearDenumerator        : USINT  := 1;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

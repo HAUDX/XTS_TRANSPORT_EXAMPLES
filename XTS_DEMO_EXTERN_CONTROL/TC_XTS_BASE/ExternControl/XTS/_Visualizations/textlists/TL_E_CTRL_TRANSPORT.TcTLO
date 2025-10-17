@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <TextList Name="TL_E_CTRL_TRANSPORT" Id="{42fecaab-9afc-422f-8957-dc277fcff57b}">
+    <XmlArchive>
+      <Data>
+        <o xml:space="preserve" t="TextListObject">
+          <v n="UniqueIdGenerator">"0"</v>
+          <l n="TextList" t="ArrayList" cet="TextListRow">
+            <o>
+              <v n="TextID">"0"</v>
+              <v n="TextDefault">"CMD_NULL"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"10"</v>
+              <v n="TextDefault">"CMD_INIT"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"11"</v>
+              <v n="TextDefault">"CMD_IDLE"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"20"</v>
+              <v n="TextDefault">"CMD_MOVER_ENABLE"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"21"</v>
+              <v n="TextDefault">"CMD_MOVER_DISABLE"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"22"</v>
+              <v n="TextDefault">"CMD_MOVER_HALT_CA"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"23"</v>
+              <v n="TextDefault">"CMD_MOVER_STOP"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"30"</v>
+              <v n="TextDefault">"CMD_GROUP_CLEAR"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"31"</v>
+              <v n="TextDefault">"CMD_GROUP_BUILD"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"32"</v>
+              <v n="TextDefault">"CMD_GROUP_ENABLE"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"33"</v>
+              <v n="TextDefault">"CMD_GROUP_STOP"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"40"</v>
+              <v n="TextDefault">"CMD_TRANSPORT_START"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"41"</v>
+              <v n="TextDefault">"CMD_TRANSPORT_RESTART"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">""</v>
+              <v n="TextDefault">""</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+          </l>
+          <l n="Languages" t="ArrayList" />
+          <v n="GuidInit">{6bb1fa71-77f9-4a12-9284-287f90500ced}</v>
+          <v n="GuidReInit">{6376148a-7e57-4364-81b3-963afa284e07}</v>
+          <v n="GuidExitX">{513f1009-b833-4cc3-9eb5-459feebcc79b}</v>
+        </o>
+      </Data>
+      <TypeList>
+        <Type n="ArrayList">System.Collections.ArrayList</Type>
+        <Type n="Guid">System.Guid</Type>
+        <Type n="String">System.String</Type>
+        <Type n="TextListObject">{2bef0454-1bd3-412a-ac2c-af0f31dbc40f}</Type>
+        <Type n="TextListRow">{53da1be7-ad25-47c3-b0e8-e26286dad2e0}</Type>
+      </TypeList>
+    </XmlArchive>
+  </TextList>
+</TcPlcObject>

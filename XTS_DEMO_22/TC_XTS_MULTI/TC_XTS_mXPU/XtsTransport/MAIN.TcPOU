@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="MAIN" Id="{f2e9720a-bda2-4399-8c7d-d9b6e11179c8}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -145,20 +145,22 @@ THEN
       END_FOR
 
     E_PROGRESS.PROGRESS_BUSY:         // init Xpu, ProcessingUnit, MotorModules
-      eInit                                   := E_PROGRESS.PROGRESS_PREPARE;
-      FOR nXpu := 1 TO MAX_XPU
-      DO
-        GVL_XTS.XpuCtrl[nXpu].Cmd             := E_XPU_CTRL.XTS_CMD_INIT;
-      END_FOR
+      GVL_XTS.XpuCtrl[1].Cmd                  := E_XPU_CTRL.XTS_CMD_INIT;
+
+      IF (GVL_XTS.XpuState[1].State      = E_XPU_STATE.XTS_INIT + E_PROGRESS.PROGRESS_DONE)
+      THEN
+        wInit := Tc2_System.SETBIT32(wInit, TO_SINT(1-1));
+        eInit                                 := E_PROGRESS.PROGRESS_PREPARE;
+      END_IF
+
 
     E_PROGRESS.PROGRESS_PREPARE:      // wait for init to be done
-      FOR nXpu := 1 TO MAX_XPU
-      DO
-        IF (GVL_XTS.XpuState[nXpu].State      = E_XPU_STATE.XTS_INIT + E_PROGRESS.PROGRESS_DONE)
-        THEN
-          wInit := Tc2_System.SETBIT32(wInit, TO_SINT(nXpu-1));
-        END_IF
-      END_FOR
+      GVL_XTS.XpuCtrl[2].Cmd                  := E_XPU_CTRL.XTS_CMD_INIT;
+      IF (GVL_XTS.XpuState[2].State      = E_XPU_STATE.XTS_INIT + E_PROGRESS.PROGRESS_DONE)
+      THEN
+        wInit := Tc2_System.SETBIT32(wInit, TO_SINT(2-1));
+      END_IF
+
       IF (wInit = TO_DWORD(EXPT(2,MAX_XPU))-1)
       THEN
         eInit                                 := E_PROGRESS.PROGRESS_STARTUP;
@@ -546,12 +548,15 @@ END_FOR
       <LineId Id="3735" Count="1" />
       <LineId Id="3343" Count="2" />
       <LineId Id="3766" Count="0" />
-      <LineId Id="3346" Count="11" />
-      <LineId Id="3737" Count="1" />
-      <LineId Id="3358" Count="0" />
-      <LineId Id="3739" Count="0" />
+      <LineId Id="3346" Count="10" />
+      <LineId Id="3920" Count="0" />
+      <LineId Id="3922" Count="0" />
+      <LineId Id="3924" Count="2" />
+      <LineId Id="3928" Count="0" />
+      <LineId Id="3927" Count="0" />
+      <LineId Id="3919" Count="0" />
       <LineId Id="3359" Count="1" />
-      <LineId Id="3741" Count="1" />
+      <LineId Id="3929" Count="0" />
       <LineId Id="3746" Count="1" />
       <LineId Id="3745" Count="0" />
       <LineId Id="3748" Count="0" />

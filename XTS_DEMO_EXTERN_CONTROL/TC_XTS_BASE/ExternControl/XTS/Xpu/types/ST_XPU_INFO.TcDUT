@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_XPU_INFO" Id="{450ae04d-4a32-4660-96fd-8e81ed82cc22}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_XPU_INFO :
+STRUCT
+  AllPositionsValid   : BIT;
+  IdDetectionError    : BIT;
+  IdDetectionValid    : BIT;
+  IdDetectionActive   : BIT;
+
+  OperationMode       : UINT;
+
+  IdDetectionMode           : UINT;
+  MoverPositionAssignement  : UINT;
+
+  nDetectedAxisCount  : UINT;
+  nExpectedAxisCount  : UINT;
+
+  nParameterSetCount  : UINT;
+  
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

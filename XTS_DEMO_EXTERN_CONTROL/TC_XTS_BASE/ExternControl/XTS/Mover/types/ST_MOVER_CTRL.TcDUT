@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_MOVER_CTRL" Id="{f267ab61-f2f3-4868-9a62-edd86df3375b}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_MOVER_CTRL :
+STRUCT
+  Cmd             : E_MOVER_CTRL;  // order to execute on mover
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

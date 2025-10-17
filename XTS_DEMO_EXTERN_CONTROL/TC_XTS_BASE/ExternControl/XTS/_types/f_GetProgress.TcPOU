@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="f_GetProgress" Id="{7f3eef9d-e7b8-477d-b4b0-e3a26244ad7d}" SpecialFunc="None">
+    <Declaration><![CDATA[// global function to extract e_progress from combined value
+FUNCTION f_GetProgress : uint
+VAR_INPUT
+  state     : UINT;
+END_VAR
+VAR
+  nP        : uint;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+nP := state / E_PROGRESS.PROGRESS_INIT;
+
+f_GetProgress := nP * E_PROGRESS.PROGRESS_INIT;
+]]></ST>
+    </Implementation>
+    <LineIds Name="f_GetProgress">
+      <LineId Id="1" Count="4" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{d9c140f5-c6a5-496e-a32b-6b2970c78b2c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+  eInit                 : E_PROGRESS;
+  eXtsMainInit  AT%I*   : E_PROGRESS;
+
+  MessageLevelXpu            AT %Q*     : E_MessageType := E_MessageType.eMessageVerbose;
+  MessageLevelGroup          AT %Q*     : E_MessageType := E_MessageType.eMessageVerbose;
+  MessageLevelTransport      AT %Q*     : E_MessageType := E_MessageType.eMessageVerbose;
+  MessageLevelStations       AT %Q*     : ARRAY[1..MAX_STATION] OF E_MessageType;
+
+
+// VISUALIZATION VARS
+  nStation,
+	nMover,
+  nMoverSelected,
+  nStationSelected,
+  nStationParameter   : UINT;
+
+  stXpuStrings        : ST_XPU_STRINGS;
+  sStationText        : STRING(30);
+
+  eTransportState     : E_XTS_TRANSPORT_STATE;
+  eTransportResult    : E_PROGRESS;
+
+  eXpuState           : E_XPU_STATE;
+  eXpuResult          : E_PROGRESS;
+  eXpuCheck           : E_XPU_CHECK;
+
+  eMoverState         : E_MOVER_STATE;
+  eMoverResult        : E_PROGRESS;
+
+  sCaGroupState,
+  sTransportState,
+  sTransportCheck,
+  sTransportResult,
+  sMoverState,
+  sMoverResult,
+  sStationState,
+  sStationStateMask,
+  sStationCtrlMask        : STRING;
+
+  bStationEnable,
+  bStationEnter,
+  bStationStart,
+  bStationDone,
+  bStationOut,
+  bStationGone            : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+CASE eXtsMainInit
+OF
+  E_PROGRESS.PROGRESS_DONE:
+    eInit                   := E_PROGRESS.PROGRESS_DONE;
+    MAIN_APP();
+
+  ELSE
+    eInit                   := eXtsMainInit;
+END_CASE
+
+
+
+
+
+
+//############################################################################
+// Visualization data	
+//############################################################################	
+// get enumerations from XPU for visu:
+eTransportState                       := f_GetState   (GVL_XTS.XtsTransportState.State);
+eTransportResult                      := f_GetProgress(GVL_XTS.XtsTransportState.State);
+
+eXpuState                             := f_GetState   (GVL_XTS.XtsTransportState.XpuState.State);
+eXpuResult                            := f_GetProgress(GVL_XTS.XtsTransportState.XpuState.State);
+
+eXpuCheck                             := GVL_XTS.XtsTransportState.XpuState.Check;
+
+// display xpu state and result in visu
+// get strings and info
+sCaGroupState                         := TO_STRING(GVL_XTS.XtsTransportState.GroupInfo.CaGroupState);
+
+sTransportState                       := TO_STRING(eTransportState);
+sTransportCheck                       := TO_STRING(GVL_XTS.XtsTransportState.Check);
+sTransportResult                      := TO_STRING(eTransportResult);
+
+stXpuStrings.sXpuState                := TO_STRING(eXpuState);
+stXpuStrings.sXpuResult               := TO_STRING(eXpuResult);
+stXpuStrings.sXpuCyclicCheck          := TO_STRING(eXpuCheck);
+
+stXpuStrings.sXpuOpMode               := TO_STRING(GVL_XTS.XtsTransportState.XpuInfo.OperationMode);
+stXpuStrings.sXpuMoverId_DetectionMode:= TO_STRING(GVL_XTS.XtsTransportState.XpuInfo.IdDetectionMode);
+stXpuStrings.sXpuMoverPosAssignement  := TO_STRING(GVL_XTS.XtsTransportState.XpuInfo.MoverPositionAssignement);
+
+nMoverSelected                        := SEL((nMoverSelected<1), nMoverSelected, 1);
+nMoverSelected                        := SEL((nMoverSelected>MAX_MOVER), nMoverSelected, MAX_MOVER);
+
+nStationSelected                      := SEL((nStationSelected<1), nStationSelected, 1);
+nStationSelected                      := SEL((nStationSelected>MAX_STATION), nStationSelected, MAX_STATION);
+
+bStationEnable                        := SEL((GVL_XTS.StationCtrl[nStationSelected].eCmd = E_STATION_CTRL.STATION_ENABLE),        FALSE, TRUE);
+bStationEnter                         := SEL((GVL_XTS.StationCtrl[nStationSelected].eCmd = E_STATION_CTRL.STATION_MOVER_ENTER),   FALSE, TRUE);
+bStationStart                         := SEL((GVL_XTS.StationCtrl[nStationSelected].eCmd = E_STATION_CTRL.STATION_PROCESS_START), FALSE, TRUE);
+bStationDone                          := SEL((GVL_XTS.StationCtrl[nStationSelected].eCmd = E_STATION_CTRL.STATION_PROCESS_DONE),  FALSE, TRUE);
+bStationOut                           := SEL((GVL_XTS.StationCtrl[nStationSelected].eCmd = E_STATION_CTRL.STATION_MOVER_OUT),     FALSE, TRUE);
+bStationGone                          := SEL((GVL_XTS.StationCtrl[nStationSelected].eCmd = E_STATION_CTRL.STATION_MOVER_GONE),    FALSE, TRUE);
+
+eMoverState                           := f_GetState   (GVL_XTS.MoverState[nMoverSelected].State);
+eMoverResult                          := f_GetProgress(GVL_XTS.MoverState[nMoverSelected].State);
+
+sMoverState                           := TO_STRING(eMoverState);
+sMoverResult                          := TO_STRING(eMoverResult);
+
+sStationState                         := TO_STRING(GVL_XTS.StationState[nStationSelected].eState);
+sStationStateMask                     := Tc2_Utilities.BYTE_TO_BINSTR(GVL_XTS.StationState[nStationSelected].nMask, 8);
+sStationCtrlMask                      := Tc2_Utilities.BYTE_TO_BINSTR(GVL_XTS.StationCtrl[nStationSelected].nMask, 8);
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="1" Count="69" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

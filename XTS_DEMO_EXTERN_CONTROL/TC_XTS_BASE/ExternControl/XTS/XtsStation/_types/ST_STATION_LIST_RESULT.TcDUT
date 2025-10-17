@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_STATION_LIST_RESULT" Id="{cc33d9e7-32d2-4db9-8234-7444dcb16a8f}">
+    <Declaration><![CDATA[TYPE ST_STATION_LIST_RESULT :
+STRUCT
+  wState    : WORD;   // wState == 0 --> all ok
+  nIndex    : ULINT;
+  stData    : ST_STATION_MOVER_DATA;  // copy of list entry
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

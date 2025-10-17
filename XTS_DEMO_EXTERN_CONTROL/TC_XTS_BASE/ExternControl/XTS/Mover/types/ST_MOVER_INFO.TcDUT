@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_MOVER_INFO" Id="{a7b7229d-fa4f-4af4-8a73-b0b4a06ba838}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_MOVER_INFO :
+STRUCT
+  bMoverEnabled           : BIT;    // Axis[i].Status.ControlLoopClosed
+  bMoverError             : BIT;    // Axis[i].Status.Error
+  bMoverCoupled           : BIT;    // Axis[i].Status.Coupled OR _fbGearInPosCa[i].InSync
+  bMoverStandstill        : BIT;    // Axis[i].Status.NotMoving
+  bMoverAvoidingCollision : BIT;    // Axis[i].NcToPlc.StateDWord2.0
+  bMoverInTarget          : BIT;    // Axis[i].NcToPlc.ActPos == rLastSetPos[i]
+
+  rModuloActPos           : REAL;   // TO_REAL(Axis[i].NcToPlc.ModuloActPos)
+  rAbsActPos              : REAL;   // TO_REAL(Axis[i].NcToPlc.ActPos)
+  rAbsTargetPos           : REAL;   // TO_REAL(rLastSetPos[i])
+  rModuloTargetPos        : REAL;   // TO_REAL(Tc2_Math.LMOD(_rLastSetPos[i], _RailLength))
+
+  nErrorId                : UDINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

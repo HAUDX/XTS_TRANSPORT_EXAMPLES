@@ -1,0 +1,545 @@
+<?xml version="1.0"?>
+<ISO15745Profile xmlns="http://www.profibus.com/GSDML/2003/11/DeviceProfile" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.profibus.com/GSDML/2003/11/DeviceProfile ..\xsd\GSDML-DeviceProfile-V2.44.xsd">
+	<!--***** GSDML was created by TwinCAT *****
+ Original GSDML: GSDML-V2.44-beckhoff-EL6633-20241219.xml
+ TwinCAT Version: v3.1 (Build 4026.16)
+ Writer Version: 3
+ ***************************************************-->
+	<ProfileHeader>
+		<ProfileIdentification>PROFINET Device Profile</ProfileIdentification>
+		<ProfileRevision>1.00</ProfileRevision>
+		<ProfileName>Device Profile for PROFINET Devices</ProfileName>
+		<ProfileSource>PROFIBUS Nutzerorganisation e. V. (PNO)</ProfileSource>
+		<ProfileClassID>Device</ProfileClassID>
+		<ISO15745Reference>
+			<ISO15745Part>4</ISO15745Part>
+			<ISO15745Edition>1</ISO15745Edition>
+			<ProfileTechnology>GSDML</ProfileTechnology>
+		</ISO15745Reference>
+	</ProfileHeader>
+	<ProfileBody>
+		<DeviceIdentity VendorID="0x0120" DeviceID="0x19E9">
+			<InfoText TextId="IDT_FamilyDescription"/>
+			<VendorName Value="Beckhoff Automation"/>
+		</DeviceIdentity>
+		<DeviceFunction>
+			<Family MainFamily="I/O" ProductFamily="EL Device"/>
+		</DeviceFunction>
+		<ApplicationProcess>
+			<DeviceAccessPointList>
+				<DeviceAccessPointItem ID="DAP 1" PhysicalSlots="0..5" ModuleIdentNumber="0x00000001" PNIO_Version="V2.44" MinDeviceInterval="32" ImplementationType="Software Implementation V2.44" DNS_CompatibleName="el6633-0010" FixedInSlots="0" ObjectUUID_LocalIndex="0" RequiredSchemaVersion="V2.1" MultipleWriteSupported="true" DeviceAccessSupported="true" NumberOfDeviceAccessAR="1" SharedInputSupported="true" SharedDeviceSupported="true" CheckDeviceID_Allowed="true" LLDP_NoD_Supported="true" NameOfStationNotTransferable="false" ResetToFactoryModes="2 4" AutoConfigurationSupported="true" CIR_Supported="true" PrmBeginPrmEndSequenceSupported="true" PROFIenergyASE_Supported="true">
+					<ModuleInfo>
+						<Name TextId="IDT_MODULE_NAME_DAP1"/>
+						<InfoText TextId="IDT_INFO_DAP1"/>
+						<VendorName Value="Beckhoff Automation"/>
+						<OrderNumber Value="EL6633-0010"/>
+						<HardwareRelease Value="1"/>
+						<SoftwareRelease Value="V01.*"/>
+					</ModuleInfo>
+					<CertificationInfo ConformanceClass="B" ApplicationClass="EnergySaving" NetloadClass="III"/>
+					<SubslotList>
+						<SubslotItem SubslotNumber="32768" TextId="IDT_Interface_SM"/>
+						<SubslotItem SubslotNumber="32769" TextId="IDT_Port1_SM"/>
+						<SubslotItem SubslotNumber="32770" TextId="IDT_Port2_SM"/>
+					</SubslotList>
+					<IOConfigData MaxInputLength="1440" MaxOutputLength="1440" MaxDataLength="2880"/>
+					<UseableModules>
+						<ModuleItemRef ModuleItemTarget="MOD_1" AllowedInSlots="1" FixedInSlots="1"/>
+						<ModuleItemRef ModuleItemTarget="MOD_2" AllowedInSlots="3" FixedInSlots="3"/>
+						<ModuleItemRef ModuleItemTarget="MOD_3" AllowedInSlots="2" FixedInSlots="2"/>
+						<ModuleItemRef ModuleItemTarget="MOD_4" AllowedInSlots="4" FixedInSlots="4"/>
+						<ModuleItemRef ModuleItemTarget="MOD_5" AllowedInSlots="5" FixedInSlots="5"/>
+					</UseableModules>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="DAP 8" SubmoduleIdentNumber="0x00000002" Writeable_IM_Records="1 2 3 4" MayIssueProcessAlarm="true" IM5_Supported="true">
+							<IOData>
+								<Input>
+									<DataItem DataType="Unsigned16" TextId="ECCycleCounter"/>
+									<DataItem DataType="OctetString" Length="2" TextId="ECState"/>
+								</Input>
+							</IOData>
+							<RecordDataList/>
+							<ModuleInfo>
+								<Name TextId="IDT_MODULE_NAME_DAP1"/>
+								<InfoText TextId="IDT_INFO_DAP1"/>
+							</ModuleInfo>
+							<PROFIenergy ProfileVersion="V1.2" EntityClass="Class1" EntitySubclass="Subclass2" PESAP_uses_PROFIenergyASE="true">
+								<EnergySavingModeList>
+									<EnergySavingModeItem ID="1" TimeToPause="1000" RTTO="1000" TimeMinLengthOfStay="30000"/>
+									<EnergySavingModeItem ID="255" TimeToPause="0" RTTO="0" TimeMinLengthOfStay="0"/>
+								</EnergySavingModeList>
+							</PROFIenergy>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+					<SystemDefinedSubmoduleList>
+						<InterfaceSubmoduleItem ID="ID_INTERFACE_V244" SupportedRT_Classes="RT_CLASS_1" SupportedProtocols="SNMP;LLDP" SupportedServiceProtocols="CLRPC;RSI" NetworkComponentDiagnosisSupported="false" SubslotNumber="32768" TextId="IDT_MODULE_NAME_DAP1" SubmoduleIdentNumber="0x00008000" PTP_BoundarySupported="true" DCP_BoundarySupported="true" PDEV_CombinedObjectSupported="true">
+							<ApplicationRelations StartupMode="Advanced;Legacy" NumberOfAR="2">
+								<TimingProperties SendClock="32 64 128" ReductionRatio="1 2 4 8 16 32 64 128 256 512"/>
+							</ApplicationRelations>
+							<MediaRedundancy SupportedRole="Client" AdditionalProtocolsSupported="false"/>
+						</InterfaceSubmoduleItem>
+						<PortSubmoduleItem ID="ID_PORT1_V244" SubslotNumber="32769" LinkStateDiagnosisCapability="Up+Down" PortDeactivationSupported="false" TextId="IDT_Port1" SubmoduleIdentNumber="0x00008001" MAUTypes="16 30" CheckMAUTypeSupported="true" IsDefaultRingport="true">
+							<MAUTypeList>
+								<MAUTypeItem Value="16" AdjustSupported="true"/>
+								<MAUTypeItem Value="30" AdjustSupported="true"/>
+							</MAUTypeList>
+						</PortSubmoduleItem>
+						<PortSubmoduleItem ID="ID_PORT2_V244" SubslotNumber="32770" LinkStateDiagnosisCapability="Up+Down" PortDeactivationSupported="false" TextId="IDT_Port2" SubmoduleIdentNumber="0x00008002" MAUTypes="16 30" CheckMAUTypeSupported="true" IsDefaultRingport="true">
+							<MAUTypeList>
+								<MAUTypeItem Value="16" AdjustSupported="true"/>
+								<MAUTypeItem Value="30" AdjustSupported="true"/>
+							</MAUTypeList>
+						</PortSubmoduleItem>
+					</SystemDefinedSubmoduleList>
+					<Graphics>
+						<GraphicItemRef Type="DeviceSymbol" GraphicItemTarget="1"/>
+					</Graphics>
+					<AssetManagement/>
+					<SystemRedundancy DeviceType="S2" DeviceTypes="S2" MaxSwitchOverTime="30" RT_InputOnBackupAR_Supported="true" NumberOfAR_Sets="1" S2MaxInputOnBackupDelay="30" MinRDHT="100"/>
+				</DeviceAccessPointItem>
+			</DeviceAccessPointList>
+			<ModuleList>
+				<ModuleItem ID="MOD_1" ModuleIdentNumber="0x00000500">
+					<ModuleInfo CategoryRef="Byte Module">
+						<Name TextId="ID_CONF_TEXT_1"/>
+						<InfoText TextId="IDT_INFO_Module5"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="MOD_1_1" SubmoduleIdentNumber="0x00000001" MayIssueProcessAlarm="true">
+							<IOData>
+								<Output>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_2"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_3"/>
+								</Output>
+							</IOData>
+							<RecordDataList/>
+							<ModuleInfo>
+								<Name TextId="ID_CONF_TEXT_4"/>
+								<InfoText TextId="IDT_INFO_Module5"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<ModuleItem ID="MOD_2" ModuleIdentNumber="0x00000702">
+					<ModuleInfo CategoryRef="Byte Module">
+						<Name TextId="ID_CONF_TEXT_5"/>
+						<InfoText TextId="IDT_INFO_Module2E"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="MOD_2_1" SubmoduleIdentNumber="0x00000001" MayIssueProcessAlarm="true">
+							<IOData>
+								<Input>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_6"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_7"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_8"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_9"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_10"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_11"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_12"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_13"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_14"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_15"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_16"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_17"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_18"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_19"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_20"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_21"/>
+								</Input>
+								<Output>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_2"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_3"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_22"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_23"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_24"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_25"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_26"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_27"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_28"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_29"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_30"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_31"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_32"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_33"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_34"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_35"/>
+								</Output>
+							</IOData>
+							<RecordDataList/>
+							<ModuleInfo>
+								<Name TextId="ID_CONF_TEXT_36"/>
+								<InfoText TextId="IDT_INFO_Module2E"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<ModuleItem ID="MOD_3" ModuleIdentNumber="0x0000070C">
+					<ModuleInfo CategoryRef="Byte Module">
+						<Name TextId="ID_CONF_TEXT_37"/>
+						<InfoText TextId="IDT_INFO_Module32"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="MOD_3_1" SubmoduleIdentNumber="0x00000001" MayIssueProcessAlarm="true">
+							<IOData>
+								<Input>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_6"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_7"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_8"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_9"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_10"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_11"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_12"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_13"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_14"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_15"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_16"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_17"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_18"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_19"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_20"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_21"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_38"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_39"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_40"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_41"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_42"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_43"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_44"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_45"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_46"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_47"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_48"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_49"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_50"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_51"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_52"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_53"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_54"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_55"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_56"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_57"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_58"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_59"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_60"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_61"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_62"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_63"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_64"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_65"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_66"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_67"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_68"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_69"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_70"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_71"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_72"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_73"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_74"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_75"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_76"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_77"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_78"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_79"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_80"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_81"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_82"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_83"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_84"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_85"/>
+								</Input>
+							</IOData>
+							<RecordDataList/>
+							<ModuleInfo>
+								<Name TextId="ID_CONF_TEXT_86"/>
+								<InfoText TextId="IDT_INFO_Module32"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<ModuleItem ID="MOD_4" ModuleIdentNumber="0x0000070F">
+					<ModuleInfo CategoryRef="Byte Module">
+						<Name TextId="ID_CONF_TEXT_87"/>
+						<InfoText TextId="IDT_INFO_Module2A"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="MOD_4_1" SubmoduleIdentNumber="0x00000001" MayIssueProcessAlarm="true">
+							<IOData>
+								<Output>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_2"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_3"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_22"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_23"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_24"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_25"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_26"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_27"/>
+								</Output>
+							</IOData>
+							<RecordDataList/>
+							<ModuleInfo>
+								<Name TextId="ID_CONF_TEXT_4"/>
+								<InfoText TextId="IDT_INFO_Module2A"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+				<ModuleItem ID="MOD_5" ModuleIdentNumber="0x00000708">
+					<ModuleInfo CategoryRef="Byte Module">
+						<Name TextId="ID_CONF_TEXT_88"/>
+						<InfoText TextId="IDT_INFO_Module2C"/>
+					</ModuleInfo>
+					<VirtualSubmoduleList>
+						<VirtualSubmoduleItem ID="MOD_5_1" SubmoduleIdentNumber="0x00000001" MayIssueProcessAlarm="true">
+							<IOData>
+								<Input>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_6"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_7"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_8"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_9"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_10"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_11"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_12"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_13"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_14"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_15"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_16"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_17"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_18"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_19"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_20"/>
+									<DataItem DataType="Unsigned8" UseAsBits="false" TextId="ID_CONF_TEXT_21"/>
+								</Input>
+							</IOData>
+							<RecordDataList/>
+							<ModuleInfo>
+								<Name TextId="ID_CONF_TEXT_86"/>
+								<InfoText TextId="IDT_INFO_Module2C"/>
+							</ModuleInfo>
+						</VirtualSubmoduleItem>
+					</VirtualSubmoduleList>
+				</ModuleItem>
+			</ModuleList>
+			<GraphicsList>
+				<GraphicItem ID="1" GraphicFile="GSDML-0120-19E9-EL6633"/>
+				<GraphicItem ID="2" GraphicFile="GSDML-0120-19E9-EL6633"/>
+			</GraphicsList>
+			<CategoryList>
+				<CategoryItem ID="Byte Module" TextId="Byte Module"/>
+			</CategoryList>
+			<ExternalTextList>
+				<PrimaryLanguage>
+					<Text TextId="IDT_FamilyDescription" Value="EL products, protection type IP20"/>
+					<Text TextId="IDT_MODULE_NAME_DAP1" Value="EL6633-0010 V2.44"/>
+					<Text TextId="IDT_Interface_SM" Value="X1"/>
+					<Text TextId="IDT_Port1_SM" Value="X1 P1"/>
+					<Text TextId="IDT_Port2_SM" Value="X1 P2"/>
+					<Text TextId="IDT_Port1" Value="Port 1"/>
+					<Text TextId="IDT_Port2" Value="Port 2"/>
+					<Text TextId="IDT_INFO_DAP1" Value="PROFINET I/O device - EtherCAT slave terminal, V2.44, port diagnostic, MRP, shared device, system redundancy and PROFIenergy supported"/>
+					<Text TextId="ECCycleCounter" Value="ECCycleCounter"/>
+					<Text TextId="ECState" Value="ECStatus"/>
+					<Text TextId="Byte Module" Value="Byte modules"/>
+					<Text TextId="IDT_INFO_Module5" Value="2 Byte Output"/>
+					<Text TextId="IDT_INFO_Module2A" Value="8 Byte Output"/>
+					<Text TextId="IDT_INFO_Module2C" Value="16 Byte Input"/>
+					<Text TextId="IDT_INFO_Module2E" Value="16 Byte In- and Output"/>
+					<Text TextId="IDT_INFO_Module32" Value="64 Byte Input"/>
+					<Text TextId="ID_CONF_TEXT_1" Value="XtsTransportCtrl"/>
+					<Text TextId="ID_CONF_TEXT_2" Value="1 Byte Output[0]"/>
+					<Text TextId="ID_CONF_TEXT_3" Value="1 Byte Output[1]"/>
+					<Text TextId="ID_CONF_TEXT_4" Value="Ctrl"/>
+					<Text TextId="ID_CONF_TEXT_5" Value="XtsStation_1"/>
+					<Text TextId="ID_CONF_TEXT_6" Value="1 Byte Input[0]"/>
+					<Text TextId="ID_CONF_TEXT_7" Value="1 Byte Input[1]"/>
+					<Text TextId="ID_CONF_TEXT_8" Value="1 Byte Input[2]"/>
+					<Text TextId="ID_CONF_TEXT_9" Value="1 Byte Input[3]"/>
+					<Text TextId="ID_CONF_TEXT_10" Value="1 Byte Input[4]"/>
+					<Text TextId="ID_CONF_TEXT_11" Value="1 Byte Input[5]"/>
+					<Text TextId="ID_CONF_TEXT_12" Value="1 Byte Input[6]"/>
+					<Text TextId="ID_CONF_TEXT_13" Value="1 Byte Input[7]"/>
+					<Text TextId="ID_CONF_TEXT_14" Value="1 Byte Input[8]"/>
+					<Text TextId="ID_CONF_TEXT_15" Value="1 Byte Input[9]"/>
+					<Text TextId="ID_CONF_TEXT_16" Value="1 Byte Input[10]"/>
+					<Text TextId="ID_CONF_TEXT_17" Value="1 Byte Input[11]"/>
+					<Text TextId="ID_CONF_TEXT_18" Value="1 Byte Input[12]"/>
+					<Text TextId="ID_CONF_TEXT_19" Value="1 Byte Input[13]"/>
+					<Text TextId="ID_CONF_TEXT_20" Value="1 Byte Input[14]"/>
+					<Text TextId="ID_CONF_TEXT_21" Value="1 Byte Input[15]"/>
+					<Text TextId="ID_CONF_TEXT_22" Value="1 Byte Output[2]"/>
+					<Text TextId="ID_CONF_TEXT_23" Value="1 Byte Output[3]"/>
+					<Text TextId="ID_CONF_TEXT_24" Value="1 Byte Output[4]"/>
+					<Text TextId="ID_CONF_TEXT_25" Value="1 Byte Output[5]"/>
+					<Text TextId="ID_CONF_TEXT_26" Value="1 Byte Output[6]"/>
+					<Text TextId="ID_CONF_TEXT_27" Value="1 Byte Output[7]"/>
+					<Text TextId="ID_CONF_TEXT_28" Value="1 Byte Output[8]"/>
+					<Text TextId="ID_CONF_TEXT_29" Value="1 Byte Output[9]"/>
+					<Text TextId="ID_CONF_TEXT_30" Value="1 Byte Output[10]"/>
+					<Text TextId="ID_CONF_TEXT_31" Value="1 Byte Output[11]"/>
+					<Text TextId="ID_CONF_TEXT_32" Value="1 Byte Output[12]"/>
+					<Text TextId="ID_CONF_TEXT_33" Value="1 Byte Output[13]"/>
+					<Text TextId="ID_CONF_TEXT_34" Value="1 Byte Output[14]"/>
+					<Text TextId="ID_CONF_TEXT_35" Value="1 Byte Output[15]"/>
+					<Text TextId="ID_CONF_TEXT_36" Value="Ctrl_State"/>
+					<Text TextId="ID_CONF_TEXT_37" Value="XtsTransportState"/>
+					<Text TextId="ID_CONF_TEXT_38" Value="1 Byte Input[16]"/>
+					<Text TextId="ID_CONF_TEXT_39" Value="1 Byte Input[17]"/>
+					<Text TextId="ID_CONF_TEXT_40" Value="1 Byte Input[18]"/>
+					<Text TextId="ID_CONF_TEXT_41" Value="1 Byte Input[19]"/>
+					<Text TextId="ID_CONF_TEXT_42" Value="1 Byte Input[20]"/>
+					<Text TextId="ID_CONF_TEXT_43" Value="1 Byte Input[21]"/>
+					<Text TextId="ID_CONF_TEXT_44" Value="1 Byte Input[22]"/>
+					<Text TextId="ID_CONF_TEXT_45" Value="1 Byte Input[23]"/>
+					<Text TextId="ID_CONF_TEXT_46" Value="1 Byte Input[24]"/>
+					<Text TextId="ID_CONF_TEXT_47" Value="1 Byte Input[25]"/>
+					<Text TextId="ID_CONF_TEXT_48" Value="1 Byte Input[26]"/>
+					<Text TextId="ID_CONF_TEXT_49" Value="1 Byte Input[27]"/>
+					<Text TextId="ID_CONF_TEXT_50" Value="1 Byte Input[28]"/>
+					<Text TextId="ID_CONF_TEXT_51" Value="1 Byte Input[29]"/>
+					<Text TextId="ID_CONF_TEXT_52" Value="1 Byte Input[30]"/>
+					<Text TextId="ID_CONF_TEXT_53" Value="1 Byte Input[31]"/>
+					<Text TextId="ID_CONF_TEXT_54" Value="1 Byte Input[32]"/>
+					<Text TextId="ID_CONF_TEXT_55" Value="1 Byte Input[33]"/>
+					<Text TextId="ID_CONF_TEXT_56" Value="1 Byte Input[34]"/>
+					<Text TextId="ID_CONF_TEXT_57" Value="1 Byte Input[35]"/>
+					<Text TextId="ID_CONF_TEXT_58" Value="1 Byte Input[36]"/>
+					<Text TextId="ID_CONF_TEXT_59" Value="1 Byte Input[37]"/>
+					<Text TextId="ID_CONF_TEXT_60" Value="1 Byte Input[38]"/>
+					<Text TextId="ID_CONF_TEXT_61" Value="1 Byte Input[39]"/>
+					<Text TextId="ID_CONF_TEXT_62" Value="1 Byte Input[40]"/>
+					<Text TextId="ID_CONF_TEXT_63" Value="1 Byte Input[41]"/>
+					<Text TextId="ID_CONF_TEXT_64" Value="1 Byte Input[42]"/>
+					<Text TextId="ID_CONF_TEXT_65" Value="1 Byte Input[43]"/>
+					<Text TextId="ID_CONF_TEXT_66" Value="1 Byte Input[44]"/>
+					<Text TextId="ID_CONF_TEXT_67" Value="1 Byte Input[45]"/>
+					<Text TextId="ID_CONF_TEXT_68" Value="1 Byte Input[46]"/>
+					<Text TextId="ID_CONF_TEXT_69" Value="1 Byte Input[47]"/>
+					<Text TextId="ID_CONF_TEXT_70" Value="1 Byte Input[48]"/>
+					<Text TextId="ID_CONF_TEXT_71" Value="1 Byte Input[49]"/>
+					<Text TextId="ID_CONF_TEXT_72" Value="1 Byte Input[50]"/>
+					<Text TextId="ID_CONF_TEXT_73" Value="1 Byte Input[51]"/>
+					<Text TextId="ID_CONF_TEXT_74" Value="1 Byte Input[52]"/>
+					<Text TextId="ID_CONF_TEXT_75" Value="1 Byte Input[53]"/>
+					<Text TextId="ID_CONF_TEXT_76" Value="1 Byte Input[54]"/>
+					<Text TextId="ID_CONF_TEXT_77" Value="1 Byte Input[55]"/>
+					<Text TextId="ID_CONF_TEXT_78" Value="1 Byte Input[56]"/>
+					<Text TextId="ID_CONF_TEXT_79" Value="1 Byte Input[57]"/>
+					<Text TextId="ID_CONF_TEXT_80" Value="1 Byte Input[58]"/>
+					<Text TextId="ID_CONF_TEXT_81" Value="1 Byte Input[59]"/>
+					<Text TextId="ID_CONF_TEXT_82" Value="1 Byte Input[60]"/>
+					<Text TextId="ID_CONF_TEXT_83" Value="1 Byte Input[61]"/>
+					<Text TextId="ID_CONF_TEXT_84" Value="1 Byte Input[62]"/>
+					<Text TextId="ID_CONF_TEXT_85" Value="1 Byte Input[63]"/>
+					<Text TextId="ID_CONF_TEXT_86" Value="State"/>
+					<Text TextId="ID_CONF_TEXT_87" Value="XtsStationCtrl_2"/>
+					<Text TextId="ID_CONF_TEXT_88" Value="XtsStationState_2"/>
+				</PrimaryLanguage>
+				<Language xml:lang="de">
+					<Text TextId="IDT_FamilyDescription" Value="EL Produkte, Schutzart IP20"/>
+					<Text TextId="IDT_MODULE_NAME_DAP1" Value="EL6633-0010 V2.44"/>
+					<Text TextId="IDT_Interface_SM" Value="X1"/>
+					<Text TextId="IDT_Port1_SM" Value="X1 P1"/>
+					<Text TextId="IDT_Port2_SM" Value="X1 P2"/>
+					<Text TextId="IDT_Port1" Value="Port 1"/>
+					<Text TextId="IDT_Port2" Value="Port 2"/>
+					<Text TextId="IDT_INFO_DAP1" Value="PROFINET I/O Device - EtherCAT Slave Klemme, V2.44, 2 Port Diagnose, MRP,  'shared device', Systemredundanz und PROFIenergy wird unterstuetzt "/>
+					<Text TextId="ECCycleCounter" Value="ECCycleCounter"/>
+					<Text TextId="ECState" Value="ECStatus"/>
+					<Text TextId="Byte Module" Value="Byte Module"/>
+					<Text TextId="IDT_INFO_Module5" Value="2 Byte Ausgang"/>
+					<Text TextId="IDT_INFO_Module2A" Value="8 Byte Ausgang"/>
+					<Text TextId="IDT_INFO_Module2C" Value="16 Byte Eingang"/>
+					<Text TextId="IDT_INFO_Module2E" Value="16 Byte Ein- und Ausgang"/>
+					<Text TextId="IDT_INFO_Module32" Value="64 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_1" Value="2 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_2" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_3" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_4" Value="2 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_5" Value="16 Byte Ein- und Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_6" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_7" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_8" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_9" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_10" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_11" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_12" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_13" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_14" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_15" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_16" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_17" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_18" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_19" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_20" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_21" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_22" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_23" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_24" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_25" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_26" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_27" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_28" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_29" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_30" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_31" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_32" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_33" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_34" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_35" Value="1 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_36" Value="16 Byte Ein- und Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_37" Value="64 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_38" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_39" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_40" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_41" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_42" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_43" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_44" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_45" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_46" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_47" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_48" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_49" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_50" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_51" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_52" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_53" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_54" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_55" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_56" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_57" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_58" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_59" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_60" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_61" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_62" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_63" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_64" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_65" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_66" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_67" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_68" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_69" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_70" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_71" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_72" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_73" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_74" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_75" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_76" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_77" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_78" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_79" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_80" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_81" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_82" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_83" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_84" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_85" Value="1 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_86" Value="64 Byte Eingang"/>
+					<Text TextId="ID_CONF_TEXT_87" Value="8 Byte Ausgang"/>
+					<Text TextId="ID_CONF_TEXT_88" Value="16 Byte Eingang"/>
+				</Language>
+			</ExternalTextList>
+		</ApplicationProcess>
+	</ProfileBody>
+</ISO15745Profile>

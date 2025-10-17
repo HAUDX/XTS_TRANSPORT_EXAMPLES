@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GlobalTextList Name="GlobalTextList" Id="{bc46dd59-4c78-4d76-b738-f4fa883c58eb}">
+    <XmlArchive>
+      <Data>
+        <o xml:space="preserve" t="GlobalTextListObject">
+          <l n="TextList" t="ArrayList" cet="TextListRow">
+            <o>
+              <v n="TextID">"17"</v>
+              <v n="TextDefault">" STATION_ENABLE"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"34"</v>
+              <v n="TextDefault">" STATION_MOVER_ENTER"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"452"</v>
+              <v n="TextDefault">" STATION_MOVER_GONE"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"75"</v>
+              <v n="TextDefault">" STATION_MOVER_OUT"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"598"</v>
+              <v n="TextDefault">" STATION_PROCESS_DONE"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"750"</v>
+              <v n="TextDefault">" STATION_PROCESS_START"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"191"</v>
+              <v n="TextDefault">"%d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"836"</v>
+              <v n="TextDefault">"%s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"704"</v>
+              <v n="TextDefault">"All Positions Valid"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"562"</v>
+              <v n="TextDefault">"AllAxisStanding"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"878"</v>
+              <v n="TextDefault">"AxisCount Enabled: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"162"</v>
+              <v n="TextDefault">"AxisCount: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"516"</v>
+              <v n="TextDefault">"CA GroupInfo"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"914"</v>
+              <v n="TextDefault">"ConstantVelocity"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"929"</v>
+              <v n="TextDefault">"Control"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"707"</v>
+              <v n="TextDefault">"CyclicCheck: %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"660"</v>
+              <v n="TextDefault">"DC Link All Modules"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"359"</v>
+              <v n="TextDefault">"Decelerating"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"843"</v>
+              <v n="TextDefault">"Detected AxisCount: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"720"</v>
+              <v n="TextDefault">"eDevice"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"721"</v>
+              <v n="TextDefault">"eSubdevice"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"719"</v>
+              <v n="TextDefault">"eType"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"772"</v>
+              <v n="TextDefault">"Expected AxisCount: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"48"</v>
+              <v n="TextDefault">"GroupDisabled"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"915"</v>
+              <v n="TextDefault">"GroupError"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"495"</v>
+              <v n="TextDefault">"GroupErrorId: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"975"</v>
+              <v n="TextDefault">"GroupErrorStop"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"940"</v>
+              <v n="TextDefault">"GroupHoming"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"300"</v>
+              <v n="TextDefault">"GroupMoving"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"807"</v>
+              <v n="TextDefault">"GroupNotReady"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"438"</v>
+              <v n="TextDefault">"GroupStandby"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"226"</v>
+              <v n="TextDefault">"GroupStatusBusy"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"204"</v>
+              <v n="TextDefault">"GroupStatusValid"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"973"</v>
+              <v n="TextDefault">"GroupStopping"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"942"</v>
+              <v n="TextDefault">"GVL_XTS.CaGroupInfo"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"680"</v>
+              <v n="TextDefault">"ID Detection Active"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"238"</v>
+              <v n="TextDefault">"ID Detection Error"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"526"</v>
+              <v n="TextDefault">"ID Detection Mode: %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"29"</v>
+              <v n="TextDefault">"ID Detection Valid"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"722"</v>
+              <v n="TextDefault">"iErrorNumber"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"616"</v>
+              <v n="TextDefault">"InPosition"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"779"</v>
+              <v n="TextDefault">"Mask: %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"726"</v>
+              <v n="TextDefault">"McGroupState:      %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"387"</v>
+              <v n="TextDefault">"Mover ID: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"297"</v>
+              <v n="TextDefault">"Mover Position Assignement: %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"427"</v>
+              <v n="TextDefault">"Offset: %.3f"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"312"</v>
+              <v n="TextDefault">"Operation Mode: %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"320"</v>
+              <v n="TextDefault">"Queue: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"231"</v>
+              <v n="TextDefault">"State"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"724"</v>
+              <v n="TextDefault">"sText"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"567"</v>
+              <v n="TextDefault">"Target Station: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"723"</v>
+              <v n="TextDefault">"tTime"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"275"</v>
+              <v n="TextDefault">"XPU Command"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"227"</v>
+              <v n="TextDefault">"XpuResult:   %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"96"</v>
+              <v n="TextDefault">"XpuState:    %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"884"</v>
+              <v n="TextDefault">"XTS Station"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"572"</v>
+              <v n="TextDefault">"XTS Transport Check:  %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"500"</v>
+              <v n="TextDefault">"XTS Transport Command"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"395"</v>
+              <v n="TextDefault">"XTS Transport Result: %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"798"</v>
+              <v n="TextDefault">"XTS Transport State:  %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+          </l>
+          <l n="Languages" t="ArrayList" />
+          <v n="GuidInit">{6d80951c-e09d-4c96-9920-7991f9a4bb7e}</v>
+          <v n="GuidReInit">{09d803f0-408e-419b-9d67-9db9a07e8e39}</v>
+          <v n="GuidExitX">{782141a0-0996-497c-976e-083dbe68718f}</v>
+        </o>
+      </Data>
+      <TypeList>
+        <Type n="ArrayList">System.Collections.ArrayList</Type>
+        <Type n="GlobalTextListObject">{63784cbb-9ba0-45e6-9d69-babf3f040511}</Type>
+        <Type n="Guid">System.Guid</Type>
+        <Type n="String">System.String</Type>
+        <Type n="TextListRow">{53da1be7-ad25-47c3-b0e8-e26286dad2e0}</Type>
+      </TypeList>
+    </XmlArchive>
+  </GlobalTextList>
+</TcPlcObject>
