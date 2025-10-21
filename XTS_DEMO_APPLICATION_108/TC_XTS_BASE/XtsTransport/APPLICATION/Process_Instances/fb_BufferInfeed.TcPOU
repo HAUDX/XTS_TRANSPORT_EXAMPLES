@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="fb_BufferInfeed" Id="{8f83a517-0564-4150-8e42-db4c72a4f053}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -492,8 +492,11 @@ OF
             IF (_ProcessData.wTarget <> 0)
             THEN
               //_eStateProgress         := E_PROGRESS.PROGRESS_OCCUPIED;
-              _eStateInstance             := E_INSTANCE_STATE.DETECTION;
-              _eStateProgress             := E_PROGRESS.PROGRESS_CHECK;
+              _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_ENABLE; // switch on my state machine in _ItfProcessCollector
+              _Ctrl.ActivateStation   := 1;                             // enable my XtsStation in _ItfProcessCollector (BufferInfeed has only one XtsStation)
+
+              _eStateInstance         := E_INSTANCE_STATE.ENABLED;      // go check if my process is switched on
+              _eStateProgress         := E_PROGRESS.PROGRESS_INIT;      // reset substate
 
             ELSE
               // job done, all movers were sent
@@ -623,11 +626,7 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_BufferInfeed">
-      <LineId Id="7165" Count="332" />
-      <LineId Id="7500" Count="109" />
-      <LineId Id="7679" Count="1" />
-      <LineId Id="7678" Count="0" />
-      <LineId Id="7610" Count="67" />
+      <LineId Id="7681" Count="516" />
       <LineId Id="139" Count="0" />
     </LineIds>
     <LineIds Name="fb_BufferInfeed.CheckPosition.Get">

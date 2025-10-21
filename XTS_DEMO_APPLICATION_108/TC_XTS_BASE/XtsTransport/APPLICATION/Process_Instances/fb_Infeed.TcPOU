@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="fb_Infeed" Id="{6f6c1e2e-6349-416d-b058-49b3b2e87285}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -42,7 +42,10 @@ VAR
   _idx                          : UINT;
   _nTargetIndex                 : ARRAY[1..SIZEOF(T_PROCESS)*8] OF USINT; // helper var to copy to my process (_ItfProcessCollector[_nProcess].TargetIndex)
 
-  _bSendEarly                   : Bool;
+  _bSendEarly                   : BOOL;
+
+  _rJerkInfeed                 : LREAL := 300000.0;
+  _rJerkOutfeed                : LREAL := 120000.0;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -257,9 +260,9 @@ OF
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                 f_MessageSet(_stMsg);
               ELSE
-                IF (_MessageLevel = E_MessageType.eMessageVerbose)
+                IF (_MessageLevel > E_MessageType.eMessageWarning)
                 THEN
-                  _stMsg.eType        := E_MessageType.eMessageVerbose;
+                  _stMsg.eType        := E_MessageType.eMessageInfo;
                   _stMsg.eSubdevice   := e_Subdevice.Process_LinkedList_AddTail;
                   _stMsg.iErrorNumber := 0;
                   _stMsg.sText        := concat(TO_STRING(_eStateInstance), ': ');
@@ -297,6 +300,11 @@ OF
               // now the preparation may begin
               _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_ENABLE; // switch on my state machine in _ItfProcessCollector
               _Ctrl.ActivateStation   := _ProcessData.wTarget;          // get active stations from list result
+
+              FOR _idx := _ItfProcessCollector[_nProcess].StationLast TO _ItfProcessCollector[_nProcess].StationFirst BY (-1)
+              DO
+                GVL_XTS.StationParameter[_idx].rJerk := _rJerkInfeed;
+              END_FOR
 
               _eStateInstance         := E_INSTANCE_STATE.ENABLED;      // go check if my process is switched on
               _eStateProgress         := E_PROGRESS.PROGRESS_INIT;      // reset substate
@@ -480,6 +488,11 @@ OF
                 E_INSTANCE_CMD.WORK:
                   _Ctrl.Cmd             := E_PROCESS_CTRL.PROCESS_START;
                   _eStateProgress       := E_PROGRESS.PROGRESS_CHECK;
+
+                  FOR _idx := _ItfProcessCollector[_nProcess].StationLast TO _ItfProcessCollector[_nProcess].StationFirst BY (-1)
+                  DO
+                    GVL_XTS.StationParameter[_idx].rJerk := _rJerkOutfeed;
+                  END_FOR
   
                   IF (_MessageLevel = E_MessageType.eMessageVerbose)
                   THEN
@@ -662,39 +675,7 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_Infeed">
-      <LineId Id="2973" Count="22" />
-      <LineId Id="3485" Count="0" />
-      <LineId Id="2996" Count="95" />
-      <LineId Id="3668" Count="1" />
-      <LineId Id="3092" Count="15" />
-      <LineId Id="3109" Count="26" />
-      <LineId Id="3481" Count="1" />
-      <LineId Id="3480" Count="0" />
-      <LineId Id="3483" Count="1" />
-      <LineId Id="3138" Count="1" />
-      <LineId Id="3478" Count="1" />
-      <LineId Id="3140" Count="17" />
-      <LineId Id="3718" Count="0" />
-      <LineId Id="3750" Count="28" />
-      <LineId Id="3640" Count="0" />
-      <LineId Id="3159" Count="94" />
-      <LineId Id="3255" Count="1" />
-      <LineId Id="3273" Count="8" />
-      <LineId Id="3283" Count="2" />
-      <LineId Id="3486" Count="10" />
-      <LineId Id="3533" Count="4" />
-      <LineId Id="3711" Count="0" />
-      <LineId Id="3720" Count="3" />
-      <LineId Id="3725" Count="0" />
-      <LineId Id="3727" Count="22" />
-      <LineId Id="3724" Count="0" />
-      <LineId Id="3548" Count="0" />
-      <LineId Id="3527" Count="2" />
-      <LineId Id="3286" Count="172" />
-      <LineId Id="3577" Count="2" />
-      <LineId Id="3587" Count="11" />
-      <LineId Id="3584" Count="0" />
-      <LineId Id="3471" Count="5" />
+      <LineId Id="3779" Count="586" />
       <LineId Id="139" Count="0" />
     </LineIds>
     <LineIds Name="fb_Infeed.Clear">

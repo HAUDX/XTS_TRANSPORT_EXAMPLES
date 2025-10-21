@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="fb_Instance" Id="{02367fcb-67b8-497b-8382-1c3639f01a80}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -66,7 +66,7 @@
 // of your equipment and backup of your data, and THE PROVIDER will not be liable for any damages you may suffer //
 // in connection with using, modifying, or distributing this SOFTWARE.                                           //
 //---------------------------------------------------------------------------------------------------------------//
-FUNCTION_BLOCK fb_Instance
+FUNCTION_BLOCK ABSTRACT fb_Instance
 VAR
   // process index
   _nProcess               : E_INSTANCE;           // whoami
