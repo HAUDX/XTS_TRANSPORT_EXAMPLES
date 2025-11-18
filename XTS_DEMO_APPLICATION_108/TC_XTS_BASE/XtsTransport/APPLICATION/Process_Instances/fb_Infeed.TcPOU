@@ -77,6 +77,7 @@ THEN
         _eStateProgress               := E_PROGRESS.PROGRESS_INIT;
       END_IF
   END_CASE
+  CmdLog();
   _eCmdOld                            := _eCmd;
 END_IF
 //-----------------------------------------------------------------------------
@@ -675,7 +676,9 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_Infeed">
-      <LineId Id="3779" Count="586" />
+      <LineId Id="3779" Count="27" />
+      <LineId Id="4366" Count="0" />
+      <LineId Id="3807" Count="558" />
       <LineId Id="139" Count="0" />
     </LineIds>
     <LineIds Name="fb_Infeed.Clear">

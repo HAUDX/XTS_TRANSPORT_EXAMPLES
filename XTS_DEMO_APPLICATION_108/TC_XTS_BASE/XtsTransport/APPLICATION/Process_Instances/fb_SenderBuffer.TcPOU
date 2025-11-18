@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="fb_SenderBuffer" Id="{0c3bbcb7-2e32-448d-927f-70f07eaaefdd}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -84,6 +84,7 @@ THEN
         _eStateInstance               := E_INSTANCE_STATE.DISABLED;
         _eStateProgress               := E_PROGRESS.PROGRESS_INIT;
   END_CASE
+  CmdLog();
   _eCmdOld                            := _eCmd;
 END_IF
 //-----------------------------------------------------------------------------
@@ -617,7 +618,9 @@ END_VAR
       <LineId Id="4302" Count="0" />
       <LineId Id="4301" Count="0" />
       <LineId Id="4303" Count="1" />
-      <LineId Id="3882" Count="103" />
+      <LineId Id="3882" Count="0" />
+      <LineId Id="4584" Count="0" />
+      <LineId Id="3883" Count="102" />
       <LineId Id="4503" Count="1" />
       <LineId Id="3989" Count="11" />
       <LineId Id="4549" Count="0" />

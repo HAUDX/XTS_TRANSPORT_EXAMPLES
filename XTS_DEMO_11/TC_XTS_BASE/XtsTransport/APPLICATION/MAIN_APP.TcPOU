@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="MAIN_APP" Id="{a42cfa77-97a5-4ec9-b576-fd1e63c4d66c}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -62,10 +62,34 @@ VAR
   tonEnable,
   tonEnter,
   tonOut        : ARRAY[1..MAX_STATION] OF TON;
+
+  // example work vars
+  eTransportState,
+  eTransportStateOld    : E_XTS_TRANSPORT_STATE;
+
+  eExecState            : E_XTS_TRANSPORT_STATE;
+  eExecResult           : e_progress;
+  stMsg                 : ST_Message;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//-----------------------------------------------------------------------------
+      <ST><![CDATA[//-----------------------------------------------------------------------------------------------------------------
+// STATE EXAMPLE EVAL START
+//-----------------------------------------------------------------------------------------------------------------
+// EXAMPLE of how to react to operation modes 
+//  you have to split cases yourself, I simply set a message here for illustration
+//    
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+YourStateExample();
+//-----------------------------------------------------------------------------------------------------------------
+// STATE EXAMPLE EVAL END
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
 // wait for initialization to be complete before work may start
 //-----------------------------------------------------------------------------
 IF NOT (Main.eInit = E_PROGRESS.PROGRESS_DONE)
@@ -378,7 +402,43 @@ END_CASE
 
 ]]></ST>
     </Implementation>
+    <Action Name="YourStateExample" Id="{069dea4c-97b0-4109-a203-2c8eecf988a6}">
+      <Implementation>
+        <ST><![CDATA[
+
+eTransportState   := GVL_XTS.XtsTransportState.State;
+IF (eTransportState <> eTransportStateOld)
+THEN
+
+  eExecResult           := f_GetProgress(GVL_XTS.XtsTransportState.State);
+  eExecState            := f_GetState(GVL_XTS.XtsTransportState.State);
+
+
+  stMsg.eType           := E_MessageType.eMessageInfo;
+  stMsg.eDevice         := e_Device.General;
+  stMsg.eSubdevice      := e_Subdevice.General;
+  stMsg.iErrorNumber    := eExecState;
+  stMsg.sText           := 'ExampleEvalMachine :';
+  stMsg.sText           := concat(stMsg.sText, TO_STRING(eExecState));
+  stMsg.sText           := concat(stMsg.sText, ': ');
+  stMsg.sText           := concat(stMsg.sText, TO_STRING(eExecResult));
+
+
+  IF (GVL_MSG.MessageLevel > E_MessageType.eMessageError)
+  THEN
+    f_MessageSet(stMsg);
+  END_IF
+
+  eTransportStateOld := eTransportState;
+END_IF
+]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="MAIN_APP">
+      <LineId Id="572" Count="7" />
+      <LineId Id="731" Count="0" />
+      <LineId Id="721" Count="3" />
+      <LineId Id="570" Count="1" />
       <LineId Id="373" Count="0" />
       <LineId Id="358" Count="0" />
       <LineId Id="375" Count="0" />
@@ -568,6 +628,14 @@ END_CASE
       <LineId Id="113" Count="0" />
       <LineId Id="47" Count="0" />
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN_APP.YourStateExample">
+      <LineId Id="1" Count="4" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="147" Count="10" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="136" Count="8" />
     </LineIds>
   </POU>
 </TcPlcObject>

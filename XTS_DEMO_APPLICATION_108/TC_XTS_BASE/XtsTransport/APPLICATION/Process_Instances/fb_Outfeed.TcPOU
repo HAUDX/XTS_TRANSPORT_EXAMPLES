@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="fb_Outfeed" Id="{0ebf429e-82e9-4523-8b3c-80e3eae4df8a}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -76,6 +76,7 @@ THEN
         _eStateProgress               := E_PROGRESS.PROGRESS_INIT;
       END_IF
   END_CASE
+  CmdLog();
   _eCmdOld                            := _eCmd;
 END_IF
 //-----------------------------------------------------------------------------
@@ -609,7 +610,9 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_Outfeed">
-      <LineId Id="4178" Count="32" />
+      <LineId Id="4178" Count="27" />
+      <LineId Id="4835" Count="0" />
+      <LineId Id="4206" Count="4" />
       <LineId Id="4606" Count="1" />
       <LineId Id="4219" Count="87" />
       <LineId Id="4310" Count="5" />
