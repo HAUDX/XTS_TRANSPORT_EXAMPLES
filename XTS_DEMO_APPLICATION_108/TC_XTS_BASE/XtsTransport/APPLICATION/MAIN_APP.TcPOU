@@ -16,8 +16,16 @@ VAR
   eInit                       : E_PROGRESS;   // application startup state info
   nProcess                    : uint;
 
+  tonWriteLog                 : Tc2_Standard.TON;
+  tWriteLog                   : TIME := T#1S;
+
+  stMsg                       : ST_Message;
+
   _nBufferOutfeedTarget       : ARRAY[1..2] OF E_INSTANCE;
   _nStnFrst                   : UDINT;
+
+  eMsgState                   : e_message_state;
+  eMsgProgress                : E_PROGRESS;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -33,8 +41,14 @@ THEN
   DO
     GVL_MSG.MessageLevelProcess[nProcess]                   := GVL_MSG.MessageLevel;
   END_FOR
+  ApplicationMain.MessageLevel                              := GVL_MSG.MessageLevel;
+
   RETURN; 
 END_IF
+//-----------------------------------------------------------------------------------------------------------------
+// set MAIN_APP message device identification
+//-----------------------------------------------------------------------------------------------------------------
+stMsg.eDevice                                               := e_Device.Application;
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
@@ -121,14 +135,34 @@ OF
     //---------------------------------------------------------------------------------------------------------------
     // first cycle startup
     //---------------------------------------------------------------------------------------------------------------
+    GVL_APPLICATION.AppControl.Cmd            := E_INSTANCE_CMD.NULL;
+    eInit                                     := E_PROGRESS.PROGRESS_INIT;
+
     IF (GVL_APPLICATION.bOutput_R1R2)
     THEN
       ProcessInit_R1R2();
+
+      stMsg.eType                             := E_MessageType.eMessageInfo;
+      stMsg.eSubdevice                        := e_Subdevice.General;
+      stMsg.iErrorNumber                      := eInit;
+      stMsg.sText                             := concat('MAIN_APP.eInit: ', TO_STRING(eInit));
+      stMsg.sText                             := concat(stMsg.sText, ': ');
+      stMsg.sText                             := concat(stMsg.sText, TO_STRING(E_INSTANCE.OUTFEED_ROBOT_R1));
+      stMsg.sText                             := concat(stMsg.sText, ': ');
+      stMsg.sText                             := concat(stMsg.sText, TO_STRING(E_INSTANCE.OUTFEED_ROBOT_R2));
+      f_MessageSet(stMsg);
     ELSE
+
       ProcessInit_CLAMP();
+
+      stMsg.eType                             := E_MessageType.eMessageInfo;
+      stMsg.eSubdevice                        := e_Subdevice.General;
+      stMsg.iErrorNumber                      := eInit;
+      stMsg.sText                             := concat('MAIN_APP.eInit: ', TO_STRING(eInit));
+      stMsg.sText                             := concat(stMsg.sText, ': ');
+      stMsg.sText                             := concat(stMsg.sText, TO_STRING(E_INSTANCE.OUTFEED_ROBOT_R1));
+      f_MessageSet(stMsg);
     END_IF
-    GVL_APPLICATION.AppControl.Cmd            := E_INSTANCE_CMD.NULL;
-    eInit                                     := E_PROGRESS.PROGRESS_INIT;
 
 
   E_PROGRESS.PROGRESS_INIT:
@@ -166,8 +200,56 @@ DO
   GVL_APPLICATION.ItfProcessCollector[nProcess].Cycle();    // collect XtsStation states, 
                                                             // manage ctrl input from process to XtsStations
 END_FOR
-
 //-----------------------------------------------------------------------------------------------------------------
+//############################################################################
+// /logging
+//############################################################################
+GVL_MSG.ApplicationMessageData.Ctrl           REF= GVL_MSG.ApplicationMessageCtrl;
+GVL_MSG.ApplicationMessageData.State          REF= GVL_MSG.ApplicationMessageState;
+
+GVL_MSG.ApplicationMessageData.MessageIndex   REF= GVL_MSG.MessageApplicationIndex;
+GVL_MSG.ApplicationMessageData.ErrorIndex     REF= GVL_MSG.MessageApplicationError;
+
+GVL_MSG.ApplicationMessageData.DirRoot        :=   ADR(GVL_MSG.LOG_DIR);
+GVL_MSG.ApplicationMessageData.FileRoot       :=   ADR(GVL_MSG.LOG_FILE_APP);
+
+GVL_MSG.ApplicationMessageData.MsgList        :=   ADR(GVL_MSG.ApplicationMessages);
+GVL_MSG.ApplicationMessageData.LocalTime      :=   ADR(GVL_MSG.dtLocalTime);
+
+GVL_MSG.ApplicationMessageData();
+
+eMsgState                                     := f_GetState   (GVL_MSG.ApplicationMessageState.State);
+eMsgProgress                                  := f_GetProgress(GVL_MSG.ApplicationMessageState.State);
+
+
+CASE eMsgState
+OF
+  E_MESSAGE_STATE.MSG_STATE_NULL:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_INVALID,
+      E_PROGRESS.PROGRESS_DONE:
+        IF (GVL_MSG.MessageApplicationIndex > GVL_MSG.MAX_MESSAGE/10) OR
+           (GVL_MSG.MessageApplicationError > 0)
+        THEN
+          IF NOT (GVL_MSG.ApplicationMessageData.FileCreated)
+          THEN
+            GVL_MSG.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_INIT;
+          ELSE
+            GVL_MSG.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          END_IF
+        END_IF
+    END_CASE
+ELSE
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG.ApplicationMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+END_CASE
+//############################################################################
+// logging/
+//############################################################################
 
 
 ]]></ST>
@@ -595,13 +677,28 @@ SenderBufferInfeed.CheckPosition          := GVL_XTS.StationParameter[_nStnFrst]
       </Implementation>
     </Action>
     <LineIds Name="MAIN_APP">
-      <LineId Id="1623" Count="99" />
-      <LineId Id="1767" Count="1" />
-      <LineId Id="1723" Count="0" />
-      <LineId Id="1769" Count="0" />
-      <LineId Id="1771" Count="0" />
-      <LineId Id="1770" Count="0" />
-      <LineId Id="1724" Count="42" />
+      <LineId Id="1830" Count="174" />
+      <LineId Id="2032" Count="2" />
+      <LineId Id="2038" Count="1" />
+      <LineId Id="2128" Count="2" />
+      <LineId Id="2040" Count="6" />
+      <LineId Id="2049" Count="0" />
+      <LineId Id="2096" Count="0" />
+      <LineId Id="2059" Count="1" />
+      <LineId Id="2062" Count="0" />
+      <LineId Id="2064" Count="0" />
+      <LineId Id="2075" Count="1" />
+      <LineId Id="2125" Count="0" />
+      <LineId Id="2077" Count="0" />
+      <LineId Id="2082" Count="0" />
+      <LineId Id="2126" Count="0" />
+      <LineId Id="2083" Count="7" />
+      <LineId Id="2079" Count="0" />
+      <LineId Id="2074" Count="0" />
+      <LineId Id="2092" Count="3" />
+      <LineId Id="2091" Count="0" />
+      <LineId Id="2063" Count="0" />
+      <LineId Id="2026" Count="4" />
       <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="MAIN_APP.ProcessInit_CLAMP">

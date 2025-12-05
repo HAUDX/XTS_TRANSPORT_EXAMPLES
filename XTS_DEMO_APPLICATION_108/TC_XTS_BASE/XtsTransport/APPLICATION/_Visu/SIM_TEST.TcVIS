@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <Visu Name="SIM_TEST" Id="{986ae958-2a9d-4eb4-9e8a-0f993c444b4f}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"21"</v>
+          <v n="UniqueIdGenerator">"24"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -1062,12 +1062,12 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"0: J 100_000 V3000
-1: J 100_000 V3500
-2: J 100_000 V4000
-3: J 200_000 V3000
-4: J 400_000 V3000
-5: J 100_000 PosStop 0.0 V3500"</v>
+                      <v n="Value">"1: J 100_000 V3000
+2: J 100_000 V3500
+3: J 100_000 V4000
+4: J 200_000 V3000
+5: J 400_000 V3000
+6: J 100_000 PosStop 0.0 V3500"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -1075,7 +1075,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"1159"</v>
+                      <v n="Value">"130"</v>
                     </o>
                   </l>
                 </o>
@@ -3701,7 +3701,7 @@
                 <v n="VisualElementIdentifier">"GenElemInst_44"</v>
                 <n n="VisualElementOfflinePaintCommands" />
                 <n n="VisualElementFrameInformation" />
-                <d n="VisualElementInputActions" t="Hashtable" ckt="String" cvt="IInputAction[]">
+                <d n="VisualElementInputActions" t="Hashtable" ckt="String" cvt="ToggleVarInputAction[]">
                   <v>OnMouseClick</v>
                   <a cet="ToggleVarInputAction">
                     <o>
@@ -3750,6 +3750,8 @@
                 <v>ad640bf7-cec0-4e2e-8c64-6056d0b71901</v>
                 <v>FB_Reinit</v>
                 <v>f9eec571-32f6-43bf-8699-e5b659c991b4</v>
+                <v>GetCallerNamespace</v>
+                <v>c979c501-e527-5b12-8135-f02bc45a73e2</v>
                 <v>GetClientData</v>
                 <v>de7acc2d-9ed4-4eac-b3d6-99948e62f135</v>
                 <v>GetDialogInterface</v>
@@ -3949,9 +3951,9 @@ END_VAR"</v>
         <Type n="Hashtable">System.Collections.Hashtable</Type>
         <Type n="HotkeyConfiguration">{6b108d46-58af-4e41-a3f4-174d8f160cc4}</Type>
         <Type n="IInputAction">{69265815-ba9d-4bec-bfcb-427fb9172844}</Type>
-        <Type n="IInputAction[]">_3S.CoDeSys.VisualElem.IInputAction[], VisualElem, Version=4.7.0.0, Culture=neutral, PublicKeyToken=null</Type>
+        <Type n="IInputAction[]">_3S.CoDeSys.VisualElem.IInputAction[], VisualElem, Version=4.8.0.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="InputBoxInputAction">{e8e7e747-f76f-4dee-ab1c-b9637e41ac26}</Type>
-        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.7.0.0, Culture=neutral, PublicKeyToken=null</Type>
+        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.8.0.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="Int16">System.Int16</Type>
         <Type n="Int32">System.Int32</Type>
         <Type n="Int64">System.Int64</Type>
@@ -3960,6 +3962,7 @@ END_VAR"</v>
         <Type n="STSnippetInputAction">{6302d3fe-6ea5-4c42-819a-a9734a133b3d}</Type>
         <Type n="TextDocument">{f3878285-8e4f-490b-bb1b-9acbb7eb04db}</Type>
         <Type n="ToggleVarInputAction">{9dcc475d-e53e-4dd3-abd9-995bf52d466f}</Type>
+        <Type n="ToggleVarInputAction[]">_3S.CoDeSys.VisualElem.ToggleVarInputAction[], VisualElem.plugin, Version=4.8.0.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="UInt16">System.UInt16</Type>
         <Type n="UInt32">System.UInt32</Type>
         <Type n="VisualElemCollection">{ef9d0b20-c96e-48db-b361-2ded4063150e}</Type>

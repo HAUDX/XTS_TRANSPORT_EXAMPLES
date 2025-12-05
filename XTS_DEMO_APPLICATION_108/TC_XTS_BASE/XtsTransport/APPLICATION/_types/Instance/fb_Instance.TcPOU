@@ -305,85 +305,37 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_Instance">
-      <LineId Id="139" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="fb_Instance.Check">
-      <LineId Id="93" Count="3" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="55" Count="1" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="60" Count="1" />
-      <LineId Id="98" Count="3" />
-      <LineId Id="115" Count="1" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="117" Count="1" />
-      <LineId Id="121" Count="5" />
-      <LineId Id="119" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="9" Count="1" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="26" Count="4" />
-      <LineId Id="43" Count="5" />
-      <LineId Id="62" Count="2" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="1" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="89" Count="3" />
-      <LineId Id="74" Count="1" />
-      <LineId Id="113" Count="0" />
-      <LineId Id="82" Count="6" />
-      <LineId Id="21" Count="2" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="78" />
     </LineIds>
     <LineIds Name="fb_Instance.CmdLog">
       <LineId Id="1" Count="9" />
     </LineIds>
     <LineIds Name="fb_Instance.CollectorInterface.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Instance.InstanceCtrl.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Instance.InstanceState.Set">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="fb_Instance.MessageLevel.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Instance.MessageLevel.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="3" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
+      <LineId Id="1" Count="8" />
     </LineIds>
     <LineIds Name="fb_Instance.ProcessId.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Instance.ProcessId.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Instance.ProcessLinkedLists.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

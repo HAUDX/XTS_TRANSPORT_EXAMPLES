@@ -22,22 +22,6 @@ END_VAR
       <Declaration><![CDATA[METHOD Cycle // cyclic call for checking XtsStation state masks and command input from process
 ]]></Declaration>
     </Method>
-    <Method Name="DelBit" Id="{c563b028-d563-4e74-9fbd-23b97d544f02}">
-      <Declaration><![CDATA[METHOD PUBLIC DelBit : T_PROCESS
-VAR_INPUT
-  inVal   : T_PROCESS;
-  bitNo   : DINT;
-END_VAR
-]]></Declaration>
-    </Method>
-    <Method Name="GetBit" Id="{5cb77603-66bd-4ccf-9706-7fc6571f389a}">
-      <Declaration><![CDATA[METHOD PUBLIC GetBit : BOOL
-VAR_INPUT
-  inVal   : T_PROCESS;
-  bitNo   : DINT;
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="GetMoverInStation" Id="{1a047bcd-dda7-4a65-9311-1108fc479b67}">
       <Declaration><![CDATA[METHOD GetMoverInStation : ST_MOVER_INFO // mover in station info
 VAR_INPUT
@@ -113,14 +97,6 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="SetBit" Id="{f0ec1691-a1e2-4501-88b9-c3642e42063b}">
-      <Declaration><![CDATA[METHOD PUBLIC SetBit : T_PROCESS
-VAR_INPUT
-  inVal   : T_PROCESS;
-  bitNo   : DINT;
-END_VAR
-]]></Declaration>
-    </Method>
     <Property Name="StationCount" Id="{5f563919-aaea-4908-801e-6986689421d5}" FolderPath="properties station\">
       <Declaration><![CDATA[PROPERTY StationCount : UINT]]></Declaration>
       <Get Name="Get" Id="{e9641827-639e-4715-8198-301ebd5997d2}">
@@ -167,6 +143,30 @@ END_VAR
       <Declaration><![CDATA[METHOD To_T_Process : T_PROCESS // maps (2^nExp)-1 onto T_PROCESS datatype 
 VAR_INPUT
   nExp              : BYTE;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="BitDel" Id="67032931-0c16-49e0-ac1f-99e9a6db3825">
+      <Declaration><![CDATA[METHOD PUBLIC BitDel : T_PROCESS
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="BitGet" Id="954d469f-bb73-4c17-85cb-4ab73e5a75eb">
+      <Declaration><![CDATA[METHOD PUBLIC BitGet : BOOL
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="BitSet" Id="b164a3d9-92f5-4737-9df7-8ef9fa3abc0f">
+      <Declaration><![CDATA[METHOD PUBLIC BitSet : T_PROCESS
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
 END_VAR
 ]]></Declaration>
     </Method>

@@ -270,6 +270,13 @@ OF
             _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_StationState.nQueue));
             f_MessageSet(_stMsg);
           END_IF
+
+          _stMsg.eType                := E_MessageType.eMessageBatch;
+          _stMsg.eSubdevice           := e_Subdevice.Instance_BufferOutfeed;
+          _stMsg.iErrorNumber         := _StationState.nMoverId;
+          _stMsg.sText                := concat(TO_STRING(_eStateProgress), ': ');
+          _stMsg.sText                := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_STARTED));
+          f_MessageSet(_stMsg);
         END_IF
     END_CASE
     // E_INSTANCE_STATE.DETECTION
@@ -367,7 +374,7 @@ OF
               // now we know who wants to enter
               // check if mover crossed CheckPosition
 
-              IF (_MoverInfo.rModuloActPos > _rCheckPos)
+              IF true or (_MoverInfo.rModuloActPos > _rCheckPos)
               THEN
                 // now we know who wants to enter
                 _Ctrl.Cmd             := E_PROCESS_CTRL.PROCESS_STATIONS_SEND;  // send mover to outfeed process
@@ -443,7 +450,7 @@ OF
 
       _ItfProcessCollector[_nProcess].TargetIndex := _nTargetIndex; // write Xts target onto my ProcessCollector interface
       _ProcessData.wTarget                        := _ItfProcessCollector[_nProcess].
-                                                     DelBit(_ProcessData.wTarget, _nTargetTotal-_nTargetCounter-1);
+                                                     BitDel(_ProcessData.wTarget, _nTargetTotal-_nTargetCounter-1);
 
       _nTargetCounter                 := _nTargetCounter + 1;
 
@@ -469,11 +476,11 @@ OF
                 _Ctrl.Cmd             := E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED; // release the kraken!
                 _eStateProgress       := E_PROGRESS.PROGRESS_DONE;                // mover is on its way, we're done here
       
-                IF (_MessageLevel = E_MessageType.eMessageVerbose)
+                IF (_MessageLevel > E_MessageType.eMessageWarning)
                 THEN
                   _stMsg.eType        := E_MessageType.eMessageVerbose;
                   _stMsg.eSubdevice   := e_Subdevice.Instance_BufferOutfeed;
-                  _stMsg.iErrorNumber := 0;
+                  _stMsg.iErrorNumber := _nTargetIndex[1];
                   _stMsg.sText        := concat(TO_STRING(_eStateInstance), ': ');
                   _stMsg.sText        := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                   f_MessageSet(_stMsg);
@@ -494,9 +501,23 @@ OF
                 _eStateInstance       := E_INSTANCE_STATE.DISABLED;
                 _eStateProgress       := E_PROGRESS.PROGRESS_INIT;
 
+                _stMsg.eType          := E_MessageType.eMessageBatch;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferOutfeed;
+                _stMsg.iErrorNumber   := 0;
+                _stMsg.sText          := concat(TO_STRING(_eStateProgress), ': ');
+                _stMsg.sText          := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_DONE));
+                f_MessageSet(_stMsg);
+
               ELSE
                 _eStateInstance       := E_INSTANCE_STATE.DETECTION;
                 _eStateProgress       := E_PROGRESS.PROGRESS_BUSY;
+
+                _stMsg.eType          := E_MessageType.eMessageBatch;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferOutfeed;
+                _stMsg.iErrorNumber   := 0;
+                _stMsg.sText          := concat(TO_STRING(_eStateProgress), ': ');
+                _stMsg.sText          := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_NEXT_IN_JOB));
+                f_MessageSet(_stMsg);
               END_IF
           END_CASE
         END_CASE
@@ -574,7 +595,11 @@ END_VAR
       <LineId Id="4506" Count="42" />
       <LineId Id="4800" Count="1" />
       <LineId Id="4549" Count="9" />
-      <LineId Id="4561" Count="226" />
+      <LineId Id="4804" Count="6" />
+      <LineId Id="4561" Count="222" />
+      <LineId Id="4820" Count="6" />
+      <LineId Id="4784" Count="3" />
+      <LineId Id="4812" Count="6" />
       <LineId Id="4791" Count="8" />
       <LineId Id="139" Count="0" />
     </LineIds>

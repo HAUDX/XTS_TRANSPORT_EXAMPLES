@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="f_GetState" Id="{865f2491-fb88-41b7-a624-10aefc803067}" SpecialFunc="None">
     <Declaration><![CDATA[// global function to extract state identifier from combined value
 FUNCTION f_GetState : uint
@@ -12,21 +12,11 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[_stx          := state MOD E_PROGRESS.PROGRESS_INIT;
-
-IF (_stx = 0)
-THEN
-  f_GetState  := state;
-ELSE
-  f_GetState  := _stx;
-END_IF
-]]></ST>
+f_GetState    := _stx;]]></ST>
     </Implementation>
     <LineIds Name="f_GetState">
       <LineId Id="64" Count="0" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="69" Count="4" />
-      <LineId Id="7" Count="0" />
+      <LineId Id="75" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

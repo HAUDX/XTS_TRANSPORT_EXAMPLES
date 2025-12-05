@@ -4,14 +4,15 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 //{attribute 'strict'}
 {attribute 'to_string'}
-TYPE E_INSTANCE :
+{info 'placeholder for process identification; add new members here'}
+TYPE E_INSTANCE : // placeholder for process identification; add new members here
 (
   // process identifiers as enum, 
   // this enum must not have gaps!
   INVALID,
-  BUFFER_INFEED,                    // process for getting the job from transfersystem
-  INFEED,                           // process for getting workpieces from transfersystem
-  BUFFER_OUTFEED,                   // process for dealing movers into robot outfeed with no gaps
+  BUFFER_INFEED,                    // process for getting the job from transfersystem, feeds only movers to XtsStations where a product will be dropped
+  INFEED,                           // process for getting workpieces dropped from transfersystem (1 to 12 movers)
+  BUFFER_OUTFEED,                   // process for dealing movers into outfeed
   OUTFEED_ROBOT_R1,                 // process for robot outfeed (12 movers)
   OUTFEED_ROBOT_R2,                 // process for robot outfeed (12 movers)
   //SENDER_SLOW,                    // process for slowing down movers

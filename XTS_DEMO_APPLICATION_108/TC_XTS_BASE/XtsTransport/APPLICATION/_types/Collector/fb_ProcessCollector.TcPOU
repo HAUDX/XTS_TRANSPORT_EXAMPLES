@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="fb_ProcessCollector" Id="{3688c396-a0af-4c6e-801e-e0301c6a2035}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -23,6 +23,7 @@
 //---------------------------------------------------------------------------------------------------------------//
 FUNCTION_BLOCK fb_ProcessCollector EXTENDS fb_StationCollector IMPLEMENTS I_ProcessCollector
 VAR
+  {info ' extend/add enum members to E_INSTANCE as you need them '}
   _nProcessId     : E_INSTANCE; // whoami
 
   _stControl      : REFERENCE TO ST_PROCESS_CTRL;  // ctrl via property
@@ -35,7 +36,7 @@ VAR
 
   // ctrl words for XtsStations
   {attribute 'displaymode':='bin'}
-  _wActivateStation     : T_PROCESS;  // bits enable XtsStations in this process
+  _wActivateStation     : T_PROCESS;  // bits enable XtsStations in this process, that's what drives me
 
   // ctrl data for used target XtsStations in target process
   {attribute 'displaymode':='bin'}
@@ -101,7 +102,7 @@ DO
           IF (_wActivateStation > 0)      // must be at least one XtsStation to switch on
           THEN
             // check who to switch on
-            IF (GetBit(_wActivateStation, (_idx - _nStationFirst)))
+            IF (BitGet(_wActivateStation, (_idx - _nStationFirst)))
             THEN
               _StationCtrl[_idx].eCmd     := E_STATION_CTRL.STATION_ENABLE;
 
@@ -111,14 +112,14 @@ DO
               _StationCtrl[_idx].rOffset        := 0;
               _StationCtrl[_idx].nTargetStation := 0;
 
-              _wCtrlEnable                := SetBit(_wCtrlEnable, (_idx - _nStationFirst)); 
+              _wCtrlEnable                := BitSet(_wCtrlEnable, (_idx - _nStationFirst)); 
 
-              _wCtrlEnter                 := DelBit(_wCtrlEnter,  (_idx - _nStationFirst));
-              _wCtrlSend                  := DelBit(_wCtrlSend,   (_idx - _nStationFirst));
-              _wCtrlStart                 := DelBit(_wCtrlStart,  (_idx - _nStationFirst));
-              _wCtrlDone                  := DelBit(_wCtrlDone,   (_idx - _nStationFirst));
-              _wCtrlNest                  := DelBit(_wCtrlNest,   (_idx - _nStationFirst));
-              _wCtrlOut                   := DelBit(_wCtrlOut,    (_idx - _nStationFirst));
+              _wCtrlEnter                 := BitDel(_wCtrlEnter,  (_idx - _nStationFirst));
+              _wCtrlSend                  := BitDel(_wCtrlSend,   (_idx - _nStationFirst));
+              _wCtrlStart                 := BitDel(_wCtrlStart,  (_idx - _nStationFirst));
+              _wCtrlDone                  := BitDel(_wCtrlDone,   (_idx - _nStationFirst));
+              _wCtrlNest                  := BitDel(_wCtrlNest,   (_idx - _nStationFirst));
+              _wCtrlOut                   := BitDel(_wCtrlOut,    (_idx - _nStationFirst));
             END_IF
           END_IF
       END_CASE
@@ -129,11 +130,11 @@ DO
       CASE Cmd
       OF
         E_PROCESS_CTRL.PROCESS_DISABLE:
-          _wCtrlEnable                    := DelBit(_wCtrlEnable, (_idx - _nStationFirst));
+          _wCtrlEnable                    := BitDel(_wCtrlEnable, (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_DISABLE;
 
         E_PROCESS_CTRL.PROCESS_ENABLE:
-          _wCtrlEnable                    := SetBit(_wCtrlEnable, (_idx - _nStationFirst));
+          _wCtrlEnable                    := BitSet(_wCtrlEnable, (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_ENABLE;
       END_CASE
 
@@ -142,19 +143,19 @@ DO
       CASE Cmd
       OF
         E_PROCESS_CTRL.PROCESS_DISABLE:
-          _wCtrlEnable                    := DelBit(_wCtrlEnable, (_idx - _nStationFirst));
+          _wCtrlEnable                    := BitDel(_wCtrlEnable, (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_DISABLE;
 
         E_PROCESS_CTRL.PROCESS_ENABLE:
-          _wCtrlEnable                    := SetBit(_wCtrlEnable, (_idx - _nStationFirst));
+          _wCtrlEnable                    := BitSet(_wCtrlEnable, (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_ENABLE;
 
         E_PROCESS_CTRL.PROCESS_STATIONS_ENTER:
-          _wCtrlEnter                     := SetBit(_wCtrlEnter, (_idx - _nStationFirst));
+          _wCtrlEnter                     := BitSet(_wCtrlEnter, (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_MOVER_ENTER;
 
         E_PROCESS_CTRL.PROCESS_STATIONS_SEND:
-          _wCtrlSend                      := SetBit(_wCtrlSend, (_idx - _nStationFirst));
+          _wCtrlSend                      := BitSet(_wCtrlSend, (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_MOVER_SEND;
       END_CASE
 
@@ -163,21 +164,29 @@ DO
       CASE Cmd
       OF
         E_PROCESS_CTRL.PROCESS_START:
-          _wCtrlStart                     := SetBit(_wCtrlStart,  (_idx - _nStationFirst));
+          _wCtrlStart                     := BitSet(_wCtrlStart,  (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_PROCESS_START;
 
         E_PROCESS_CTRL.PROCESS_DONE:
-          _wCtrlDone                      := SetBit(_wCtrlDone,   (_idx - _nStationFirst));
+          _wCtrlDone                      := BitSet(_wCtrlDone,   (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_PROCESS_DONE;
       END_CASE
 
     //-------------------------------------------------------------------------
     E_STATION_STATE.STATION_PROCESS_DONE:
+      _StationCtrl[_idx].nMask            :=          _wTargetMask  [1+_idx - _nStationFirst];
+      _StationCtrl[_idx].rOffset          := TO_REAL( _rTargetOffset[1+_idx - _nStationFirst]);
+      _StationCtrl[_idx].nTargetStation   :=          _nTargetIndex [1+_idx - _nStationFirst];
+
       CASE Cmd
       OF
         E_PROCESS_CTRL.PROCESS_DONE:
-          _wCtrlDone                      := SetBit(_wCtrlDone,   (_idx - _nStationFirst));
+          _wCtrlDone                      := BitSet(_wCtrlDone,   (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_PROCESS_DONE;
+
+        E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED:
+          _wCtrlDone                      := BitSet(_wCtrlDone,   (_idx - _nStationFirst));
+          _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_MOVER_OUT;
       END_CASE
 
     //-------------------------------------------------------------------------
@@ -185,8 +194,8 @@ DO
       CASE Cmd
       OF
         E_PROCESS_CTRL.PROCESS_STATIONS_ENTER:
-          _wCtrlStart                     := DelBit(_wCtrlStart,  (_idx - _nStationFirst));
-          _wCtrlNest                      := SetBit(_wCtrlNest,   (_idx - _nStationFirst));
+          _wCtrlStart                     := BitDel(_wCtrlStart,  (_idx - _nStationFirst));
+          _wCtrlNest                      := BitSet(_wCtrlNest,   (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_MOVER_ENTER;
       END_CASE
 
@@ -199,18 +208,18 @@ DO
       CASE Cmd
       OF
         E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED:
-          _wCtrlOut                       := SetBit(_wCtrlOut,    (_idx - _nStationFirst));
+          _wCtrlOut                       := BitSet(_wCtrlOut,    (_idx - _nStationFirst));
           _StationCtrl[_idx].eCmd         := E_STATION_CTRL.STATION_MOVER_OUT;
       END_CASE
 
     //-------------------------------------------------------------------------
     E_STATION_STATE.STATION_MOVER_GONE:
-      _wCtrlEnable                        := DelBit(_wCtrlEnable, (_idx - _nStationFirst));
-      _wCtrlEnter                         := DelBit(_wCtrlEnter,  (_idx - _nStationFirst));
-      _wCtrlSend                          := DelBit(_wCtrlSend,   (_idx - _nStationFirst));
-      _wCtrlStart                         := DelBit(_wCtrlStart,  (_idx - _nStationFirst));
-      _wCtrlDone                          := DelBit(_wCtrlDone,   (_idx - _nStationFirst));
-      _wCtrlNest                          := DelBit(_wCtrlNest,   (_idx - _nStationFirst));
+      _wCtrlEnable                        := BitDel(_wCtrlEnable, (_idx - _nStationFirst));
+      _wCtrlEnter                         := BitDel(_wCtrlEnter,  (_idx - _nStationFirst));
+      _wCtrlSend                          := BitDel(_wCtrlSend,   (_idx - _nStationFirst));
+      _wCtrlStart                         := BitDel(_wCtrlStart,  (_idx - _nStationFirst));
+      _wCtrlDone                          := BitDel(_wCtrlDone,   (_idx - _nStationFirst));
+      _wCtrlNest                          := BitDel(_wCtrlNest,   (_idx - _nStationFirst));
 
       _StationCtrl[_idx].eCmd             := E_STATION_CTRL.STATION_MOVER_GONE;
 
@@ -250,6 +259,7 @@ END_IF
 //-------------------------------------------------------------------------------------------------
 IF NOT Check()
 THEN
+  // you shall not pass!!
   RETURN;
 END_IF
 //-------------------------------------------------------------------------------------------------
@@ -266,7 +276,7 @@ _stMsg.eDevice                      := e_Device.Process + TO_UINT(_nProcessId);
 //  - sets bit for every XtsStation
 //-------------------------------------------------------------------------------------------------
 //
-States();                           // collect XtsStation state information in masks
+States();                           // not just mental, literal
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
 // process states
@@ -281,6 +291,7 @@ OF
       E_PROGRESS.PROGRESS_INIT:
         IF (_wStateDisable = EXPT(2,_nStationCount)-1)                  // all stations in process range must be disabled at this point
         THEN
+          // on a sunny afternoon, nothing to do, just sit and wait
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
           IF (_MessageLevel = E_MessageType.eMessageVerbose)
@@ -301,8 +312,9 @@ OF
       E_PROGRESS.PROGRESS_BUSY:
       CASE _stControl.Cmd                                               // check process command
       OF
-        E_PROCESS_CTRL.PROCESS_ENABLE:
+        E_PROCESS_CTRL.PROCESS_ENABLE:                                  // only one thing to say here..
           _eCmd                     := _stControl.Cmd;                  // copy command from interface to local switch
+          // you do what I say, when I say it
           _wActivateStation         := _stControl.ActivateStation;      // on enabling of process, copy my active stations from interface
 
           LogControl(_eCmd);
@@ -310,9 +322,9 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_ENABLE;  // switch to enable
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageVerbose;
+            _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -334,6 +346,7 @@ OF
       E_PROGRESS.PROGRESS_INIT:
         IF (_wStateEnable = _wActivateStation)                          // all active stations must be enabled
         THEN
+          // we are truly equal, yet not the same
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
           IF (_MessageLevel = E_MessageType.eMessageVerbose)
@@ -374,13 +387,15 @@ OF
           END_IF
 
 
-        E_PROCESS_CTRL.PROCESS_STATIONS_INFEED:                          // command decided to allow checking the infeed into process
-          _eStateProgress           := E_PROGRESS.PROGRESS_INIT;         // switch back sub state
+        E_PROCESS_CTRL.PROCESS_STATIONS_INFEED,
+        E_PROCESS_CTRL.PROCESS_STATIONS_ENTER,
+        E_PROCESS_CTRL.PROCESS_STATIONS_SEND:                           // command decided to allow checking the infeed into process
+          _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_STATIONS_INFEED;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageVerbose;
+            _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -403,6 +418,7 @@ OF
         IF (_wStateEnter = _wActivateStation)                           // all active XtsStations must have mover waiting
         THEN
           // mover IDs are known by now --> Check _nMoverIdQueue for your plausibility checks
+          // master master, there's the thing I've been after
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
           IF (_MessageLevel = E_MessageType.eMessageVerbose)
@@ -431,9 +447,9 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_START;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageVerbose;
+            _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -450,9 +466,9 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_STATIONS_OUTFEED;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageVerbose;
+            _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -472,7 +488,7 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_INIT:
-        IF (_wStateNest = _wActivateStation)
+        IF (_wStateNest = _wActivateStation)  // ...to include everyone
         THEN
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
@@ -502,9 +518,9 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_START;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageVerbose;
+            _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -547,17 +563,19 @@ OF
       E_PROGRESS.PROGRESS_BUSY:
       CASE _stControl.Cmd
       OF
-        E_PROCESS_CTRL.PROCESS_START:
-          _eCmd                     := _stControl.Cmd;                  // first handshake for starting process
+        E_PROCESS_CTRL.PROCESS_START,
+        E_PROCESS_CTRL.PROCESS_DONE,
+        E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED:
+          _eCmd                     := E_PROCESS_CTRL.PROCESS_DONE;     // first handshake for starting process
 
           LogControl(_eCmd);
 
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_DONE;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageVerbose;
+            _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -599,7 +617,8 @@ OF
       E_PROGRESS.PROGRESS_BUSY:
       CASE _stControl.Cmd
       OF
-        E_PROCESS_CTRL.PROCESS_DONE:
+        E_PROCESS_CTRL.PROCESS_DONE,
+        E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED:
           _eCmd                     := _stControl.Cmd;                  // second handshake for finishing process
 
           LogControl(_eCmd);
@@ -613,9 +632,9 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_STATIONS_NEST;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageVerbose;
+            _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -628,9 +647,9 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_STATIONS_OUTFEED;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageVerbose;
+            _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -680,9 +699,9 @@ OF
 
           _eStateProgress           := E_PROGRESS.PROGRESS_CHECK;       // check movers gone
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageVerbose;
+            _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -1148,226 +1167,11 @@ Template_1                      := _eState;
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.Controls">
-      <LineId Id="280" Count="0" />
-      <LineId Id="164" Count="3" />
-      <LineId Id="305" Count="0" />
-      <LineId Id="168" Count="5" />
-      <LineId Id="365" Count="0" />
-      <LineId Id="174" Count="2" />
-      <LineId Id="367" Count="0" />
-      <LineId Id="262" Count="0" />
-      <LineId Id="368" Count="0" />
-      <LineId Id="261" Count="0" />
-      <LineId Id="268" Count="1" />
-      <LineId Id="366" Count="0" />
-      <LineId Id="323" Count="0" />
-      <LineId Id="325" Count="6" />
-      <LineId Id="177" Count="2" />
-      <LineId Id="306" Count="0" />
-      <LineId Id="180" Count="5" />
-      <LineId Id="333" Count="0" />
-      <LineId Id="186" Count="2" />
-      <LineId Id="332" Count="0" />
-      <LineId Id="189" Count="1" />
-      <LineId Id="307" Count="0" />
-      <LineId Id="191" Count="4" />
-      <LineId Id="334" Count="0" />
-      <LineId Id="196" Count="2" />
-      <LineId Id="335" Count="0" />
-      <LineId Id="199" Count="2" />
-      <LineId Id="336" Count="0" />
-      <LineId Id="202" Count="2" />
-      <LineId Id="337" Count="0" />
-      <LineId Id="205" Count="1" />
-      <LineId Id="308" Count="0" />
-      <LineId Id="207" Count="4" />
-      <LineId Id="339" Count="0" />
-      <LineId Id="212" Count="2" />
-      <LineId Id="341" Count="0" />
-      <LineId Id="215" Count="1" />
-      <LineId Id="309" Count="0" />
-      <LineId Id="217" Count="4" />
-      <LineId Id="345" Count="0" />
-      <LineId Id="222" Count="1" />
-      <LineId Id="310" Count="0" />
-      <LineId Id="224" Count="4" />
-      <LineId Id="350" Count="0" />
-      <LineId Id="347" Count="0" />
-      <LineId Id="229" Count="1" />
-      <LineId Id="312" Count="0" />
-      <LineId Id="231" Count="1" />
-      <LineId Id="265" Count="2" />
-      <LineId Id="264" Count="0" />
-      <LineId Id="233" Count="2" />
-      <LineId Id="349" Count="0" />
-      <LineId Id="236" Count="1" />
-      <LineId Id="311" Count="0" />
-      <LineId Id="238" Count="1" />
-      <LineId Id="351" Count="0" />
-      <LineId Id="353" Count="4" />
-      <LineId Id="352" Count="0" />
-      <LineId Id="240" Count="4" />
+      <LineId Id="369" Count="136" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.Cycle">
-      <LineId Id="263" Count="2" />
-      <LineId Id="268" Count="0" />
-      <LineId Id="270" Count="0" />
-      <LineId Id="542" Count="5" />
-      <LineId Id="555" Count="0" />
-      <LineId Id="549" Count="0" />
-      <LineId Id="548" Count="0" />
-      <LineId Id="551" Count="0" />
-      <LineId Id="550" Count="0" />
-      <LineId Id="552" Count="0" />
-      <LineId Id="556" Count="0" />
-      <LineId Id="554" Count="0" />
-      <LineId Id="553" Count="0" />
-      <LineId Id="266" Count="1" />
-      <LineId Id="7" Count="5" />
-      <LineId Id="316" Count="0" />
-      <LineId Id="311" Count="4" />
-      <LineId Id="13" Count="1" />
-      <LineId Id="293" Count="2" />
-      <LineId Id="292" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="296" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="592" Count="0" />
-      <LineId Id="17" Count="4" />
-      <LineId Id="47" Count="1" />
-      <LineId Id="562" Count="0" />
-      <LineId Id="49" Count="5" />
-      <LineId Id="351" Count="4" />
-      <LineId Id="607" Count="1" />
-      <LineId Id="357" Count="3" />
-      <LineId Id="55" Count="1" />
-      <LineId Id="563" Count="0" />
-      <LineId Id="57" Count="2" />
-      <LineId Id="273" Count="2" />
-      <LineId Id="277" Count="1" />
-      <LineId Id="618" Count="1" />
-      <LineId Id="637" Count="0" />
-      <LineId Id="280" Count="1" />
-      <LineId Id="362" Count="9" />
-      <LineId Id="272" Count="0" />
-      <LineId Id="68" Count="7" />
-      <LineId Id="564" Count="0" />
-      <LineId Id="76" Count="5" />
-      <LineId Id="373" Count="4" />
-      <LineId Id="609" Count="3" />
-      <LineId Id="381" Count="1" />
-      <LineId Id="82" Count="1" />
-      <LineId Id="565" Count="0" />
-      <LineId Id="84" Count="2" />
-      <LineId Id="558" Count="0" />
-      <LineId Id="87" Count="3" />
-      <LineId Id="622" Count="0" />
-      <LineId Id="621" Count="0" />
-      <LineId Id="620" Count="0" />
-      <LineId Id="92" Count="1" />
-      <LineId Id="383" Count="9" />
-      <LineId Id="94" Count="2" />
-      <LineId Id="98" Count="1" />
-      <LineId Id="403" Count="0" />
-      <LineId Id="394" Count="8" />
-      <LineId Id="100" Count="8" />
-      <LineId Id="566" Count="0" />
-      <LineId Id="109" Count="4" />
-      <LineId Id="298" Count="0" />
-      <LineId Id="114" Count="0" />
-      <LineId Id="405" Count="4" />
-      <LineId Id="613" Count="3" />
-      <LineId Id="413" Count="1" />
-      <LineId Id="115" Count="1" />
-      <LineId Id="567" Count="0" />
-      <LineId Id="117" Count="6" />
-      <LineId Id="623" Count="1" />
-      <LineId Id="124" Count="2" />
-      <LineId Id="416" Count="9" />
-      <LineId Id="415" Count="0" />
-      <LineId Id="127" Count="2" />
-      <LineId Id="625" Count="1" />
-      <LineId Id="130" Count="2" />
-      <LineId Id="426" Count="9" />
-      <LineId Id="133" Count="2" />
-      <LineId Id="603" Count="1" />
-      <LineId Id="600" Count="1" />
-      <LineId Id="136" Count="1" />
-      <LineId Id="568" Count="0" />
-      <LineId Id="138" Count="5" />
-      <LineId Id="437" Count="4" />
-      <LineId Id="638" Count="0" />
-      <LineId Id="641" Count="2" />
-      <LineId Id="445" Count="1" />
-      <LineId Id="144" Count="1" />
-      <LineId Id="569" Count="0" />
-      <LineId Id="146" Count="6" />
-      <LineId Id="627" Count="1" />
-      <LineId Id="153" Count="2" />
-      <LineId Id="447" Count="9" />
-      <LineId Id="156" Count="8" />
-      <LineId Id="570" Count="0" />
-      <LineId Id="165" Count="4" />
-      <LineId Id="299" Count="0" />
-      <LineId Id="170" Count="0" />
-      <LineId Id="457" Count="4" />
-      <LineId Id="644" Count="3" />
-      <LineId Id="465" Count="1" />
-      <LineId Id="171" Count="1" />
-      <LineId Id="571" Count="0" />
-      <LineId Id="173" Count="6" />
-      <LineId Id="629" Count="1" />
-      <LineId Id="180" Count="3" />
-      <LineId Id="467" Count="8" />
-      <LineId Id="184" Count="7" />
-      <LineId Id="572" Count="0" />
-      <LineId Id="192" Count="4" />
-      <LineId Id="300" Count="0" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="476" Count="4" />
-      <LineId Id="648" Count="3" />
-      <LineId Id="484" Count="1" />
-      <LineId Id="198" Count="1" />
-      <LineId Id="573" Count="0" />
-      <LineId Id="200" Count="6" />
-      <LineId Id="631" Count="1" />
-      <LineId Id="207" Count="8" />
-      <LineId Id="486" Count="9" />
-      <LineId Id="216" Count="4" />
-      <LineId Id="505" Count="0" />
-      <LineId Id="496" Count="8" />
-      <LineId Id="221" Count="7" />
-      <LineId Id="574" Count="0" />
-      <LineId Id="229" Count="4" />
-      <LineId Id="301" Count="1" />
-      <LineId Id="234" Count="0" />
-      <LineId Id="506" Count="4" />
-      <LineId Id="652" Count="3" />
-      <LineId Id="514" Count="1" />
-      <LineId Id="235" Count="1" />
-      <LineId Id="575" Count="0" />
-      <LineId Id="237" Count="6" />
-      <LineId Id="635" Count="0" />
-      <LineId Id="634" Count="0" />
-      <LineId Id="633" Count="0" />
-      <LineId Id="245" Count="0" />
-      <LineId Id="527" Count="9" />
-      <LineId Id="246" Count="1" />
-      <LineId Id="576" Count="0" />
-      <LineId Id="248" Count="6" />
-      <LineId Id="517" Count="4" />
-      <LineId Id="656" Count="3" />
-      <LineId Id="525" Count="1" />
-      <LineId Id="255" Count="2" />
-      <LineId Id="305" Count="3" />
-      <LineId Id="304" Count="0" />
-      <LineId Id="537" Count="4" />
-      <LineId Id="282" Count="0" />
-      <LineId Id="303" Count="0" />
-      <LineId Id="283" Count="0" />
-      <LineId Id="259" Count="0" />
-      <LineId Id="284" Count="2" />
+      <LineId Id="660" Count="515" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.Init">

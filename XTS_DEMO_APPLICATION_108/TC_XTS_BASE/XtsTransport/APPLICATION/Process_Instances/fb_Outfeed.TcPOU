@@ -259,7 +259,15 @@ OF
               _eStateInstance         := E_INSTANCE_STATE.ENABLED;      // go check if my process is switched on
               _eStateProgress         := E_PROGRESS.PROGRESS_INIT;      // reset substate
 
-              GVL_XTS.StationParameter[_ItfProcessCollector[_nProcess].StationLast].rVelo := _rSpeedInfeed;
+              GVL_XTS.StationParameter[_ItfProcessCollector[_nProcess].StationLast].rVelo := TO_REAL(_rSpeedInfeed);
+
+              _stMsg.eType            := E_MessageType.eMessageBatch;
+              _stMsg.eSubdevice       := e_Subdevice.Instance_Outfeed;
+              _stMsg.iErrorNumber     := _Ctrl.ActivateStation;
+              _stMsg.sText            := concat(TO_STRING(_eStateProgress), ': ');
+              _stMsg.sText            := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_STARTED));
+              f_MessageSet(_stMsg);
+
 
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
@@ -426,7 +434,7 @@ OF
                   _Ctrl.Cmd             := E_PROCESS_CTRL.PROCESS_START;
                   _eStateProgress       := E_PROGRESS.PROGRESS_CHECK;
 
-                  GVL_XTS.StationParameter[_ItfProcessCollector[_nProcess].StationLast].rVelo := _rSpeedOutfeed;
+                  GVL_XTS.StationParameter[_ItfProcessCollector[_nProcess].StationLast].rVelo := TO_REAL(_rSpeedOutfeed);
   
                   IF (_MessageLevel = E_MessageType.eMessageVerbose)
                   THEN
@@ -538,6 +546,13 @@ OF
               f_MessageSet(_stMsg);
             END_IF
 
+            _stMsg.eType            := E_MessageType.eMessageBatch;
+            _stMsg.eSubdevice       := e_Subdevice.Instance_Outfeed;
+            _stMsg.iErrorNumber     := 0;
+            _stMsg.sText            := concat(TO_STRING(_eStateProgress), ': ');
+            _stMsg.sText            := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_DONE));
+            f_MessageSet(_stMsg);
+
             // movers are about to leave, tell SENDER_FAST movers are coming
             _WriteResult              := _ItfProcessList[_nProcessTarget].AddTailValue(_ProcessData);
 
@@ -624,11 +639,16 @@ END_VAR
       <LineId Id="4779" Count="0" />
       <LineId Id="4758" Count="2" />
       <LineId Id="4831" Count="1" />
+      <LineId Id="4836" Count="0" />
+      <LineId Id="4838" Count="5" />
+      <LineId Id="4837" Count="0" />
       <LineId Id="4761" Count="15" />
       <LineId Id="4335" Count="148" />
       <LineId Id="4833" Count="1" />
       <LineId Id="4484" Count="66" />
       <LineId Id="4553" Count="42" />
+      <LineId Id="4844" Count="0" />
+      <LineId Id="4846" Count="5" />
       <LineId Id="4781" Count="0" />
       <LineId Id="4783" Count="1" />
       <LineId Id="4596" Count="9" />

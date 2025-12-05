@@ -80,11 +80,6 @@ THEN
   CmdLog();
   _eCmdOld                            := _eCmd;
 END_IF
-//-----------------------------------------------------------------------------
-// cyclic information of mover and station
-//-----------------------------------------------------------------------------
-_StationState                         := _ItfProcessCollector[_nProcess].GetStationState  (_ItfProcessCollector[_nProcess].StationLast);
-_MoverInfo                            := _ItfProcessCollector[_nProcess].GetMoverInStation(_ItfProcessCollector[_nProcess].StationLast);
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -267,6 +262,14 @@ OF
             IF (_ProcessData.wTarget > 0)
             THEN
               _eStateProgress         := E_PROGRESS.PROGRESS_CHECK;
+
+              _stMsg.eType            := E_MessageType.eMessageBatch;
+              _stMsg.eSubdevice       := e_Subdevice.Instance_BufferInfeed;
+              _stMsg.iErrorNumber     := 0;
+              _stMsg.sText            := concat(TO_STRING(_eStateProgress), ': ');
+              _stMsg.sText            := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_STARTED));
+              f_MessageSet(_stMsg);
+
             ELSE
               _DeleteResult           := _ItfProcessList[_nProcess].RemoveHeadValue();
             END_IF
@@ -308,7 +311,7 @@ OF
               _eStateInstance         := E_INSTANCE_STATE.ENABLED;      // go check if my process is switched on
               _eStateProgress         := E_PROGRESS.PROGRESS_INIT;      // reset substate
 
-              IF (_MessageLevel = E_MessageType.eMessageVerbose)
+              IF (_MessageLevel > E_MessageType.eMessageWarning)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
                 _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed;
@@ -350,11 +353,15 @@ OF
               _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_INFEED; // tells my process to go check the infeed
               _eStateProgress         := E_PROGRESS.PROGRESS_BUSY; // go check how the infeed into my process is doing
 
-              IF (_MessageLevel = E_MessageType.eMessageVerbose)
+              _StationState           := _ItfProcessCollector[_nProcess].GetStationState  (_ItfProcessCollector[_nProcess].StationLast);
+              _MoverInfo              := _ItfProcessCollector[_nProcess].GetMoverInStation(_ItfProcessCollector[_nProcess].StationLast);
+
+
+              IF (_MessageLevel > E_MessageType.eMessageWarning)
               THEN
-                _stMsg.eType          := E_MessageType.eMessageVerbose;
+                _stMsg.eType          := E_MessageType.eMessageInfo;
                 _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed;
-                _stMsg.iErrorNumber   := 0;
+                _stMsg.iErrorNumber   := _StationState.nMoverId;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                 _stMsg.sText          := concat(_stMsg.sText, ': ');
@@ -378,12 +385,17 @@ OF
               CASE _eCmd
               OF
                 E_INSTANCE_CMD.DISABLE:
-                  _eStateInstance       := E_INSTANCE_STATE.DISABLED;
-                  _eStateProgress       := E_PROGRESS.PROGRESS_INIT;
+                  _eStateInstance     := E_INSTANCE_STATE.DISABLED;
+                  _eStateProgress     := E_PROGRESS.PROGRESS_INIT;
               END_CASE
 
             E_PROGRESS.PROGRESS_BUSY:
-            IF (_MoverInfo.rModuloActPos < GVL_XTS.StationParameter[53].rPosWait + 50.0) 
+              _StationState           := _ItfProcessCollector[_nProcess].GetStationState  (_ItfProcessCollector[_nProcess].StationLast);
+              _MoverInfo              := _ItfProcessCollector[_nProcess].GetMoverInStation(_ItfProcessCollector[_nProcess].StationLast);
+
+            IF TRUE or (_MoverInfo.rModuloActPos < GVL_XTS.StationParameter[53].rPosWait + 50.0) 
+              // this 'smaller than' makes sense here because this Process is right behind the modulo turn, 
+              // so every mover smaller than the wait position is close enough to start processing
             THEN
               // now we know who wants to enter
               _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_SEND; // the InfeedBuffer does not need a standstill at PosStop, --> send mover at once
@@ -391,11 +403,11 @@ OF
               _eStateInstance         := E_INSTANCE_STATE.FINISH;   // go get data ready for outfeed
               _eStateProgress         := E_PROGRESS.PROGRESS_INIT;  // reset substate
 
-              IF (_MessageLevel = E_MessageType.eMessageVerbose)
+              IF (_MessageLevel > E_MessageType.eMessageError)
               THEN
-                _stMsg.eType          := E_MessageType.eMessageVerbose;
+                _stMsg.eType          := E_MessageType.eMessageInfo;
                 _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed;
-                _stMsg.iErrorNumber   := 0;
+                _stMsg.iErrorNumber   := _StationState.nMoverId;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                 _stMsg.sText          := concat(_stMsg.sText, ': ');
@@ -429,14 +441,14 @@ OF
       // get target index for mover from process list entry
       FOR _idx := _nTargetStationLast TO _nTargetStationFirst BY(-1)
       DO
-        IF (ItfProcessCollector[_nProcess].GetBit(_ProcessData.wTarget, _idx-_nTargetStationFirst))
+        IF (ItfProcessCollector[_nProcess].BitGet(_ProcessData.wTarget, _idx-_nTargetStationFirst))
         THEN
           _eStateProgress             := E_PROGRESS.PROGRESS_BUSY;
 
           _nTargetIndex[1]                            := TO_USINT(_idx);
           _ItfProcessCollector[_nProcess].TargetIndex := _nTargetIndex; // write Xts target onto my ProcessCollector interface
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
             _stMsg.eType              := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice         := e_Subdevice.Instance_BufferInfeed;
@@ -448,7 +460,7 @@ OF
 
           // got the target, now delete the just found bit of this job
           _ProcessData.wTarget        := _ItfProcessCollector[_nProcess].
-                                         DelBit(_ProcessData.wTarget, _idx-_nTargetStationFirst);
+                                         BitDel(_ProcessData.wTarget, _idx-_nTargetStationFirst);
           EXIT;
         END_IF
       END_FOR
@@ -498,6 +510,13 @@ OF
 
               _eStateInstance         := E_INSTANCE_STATE.ENABLED;      // go check if my process is switched on
               _eStateProgress         := E_PROGRESS.PROGRESS_INIT;      // reset substate
+
+              _stMsg.eType            := E_MessageType.eMessageBatch;
+              _stMsg.eSubdevice       := e_Subdevice.Instance_BufferInfeed;
+              _stMsg.iErrorNumber     := 0;
+              _stMsg.sText            := concat(TO_STRING(_eStateProgress), ': ');
+              _stMsg.sText            := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_NEXT_IN_JOB));
+              f_MessageSet(_stMsg);
 
             ELSE
               // job done, all movers were sent
@@ -552,6 +571,13 @@ OF
             _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_eStateProgress));
             f_MessageSet(_stMsg);
           END_IF
+
+          _stMsg.eType                := E_MessageType.eMessageBatch;
+          _stMsg.eSubdevice           := e_Subdevice.Instance_BufferInfeed;
+          _stMsg.iErrorNumber         := 0;
+          _stMsg.sText                := concat(TO_STRING(_eStateProgress), ': ');
+          _stMsg.sText                := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_DONE));
+          f_MessageSet(_stMsg);
         END_IF
     END_CASE
     // E_INSTANCE_STATE.FINISH:
@@ -629,7 +655,26 @@ END_VAR
     <LineIds Name="fb_BufferInfeed">
       <LineId Id="7681" Count="27" />
       <LineId Id="8198" Count="0" />
-      <LineId Id="7709" Count="488" />
+      <LineId Id="7709" Count="1" />
+      <LineId Id="7716" Count="181" />
+      <LineId Id="8218" Count="0" />
+      <LineId Id="8220" Count="6" />
+      <LineId Id="7898" Count="81" />
+      <LineId Id="8229" Count="0" />
+      <LineId Id="8231" Count="1" />
+      <LineId Id="8230" Count="0" />
+      <LineId Id="7980" Count="33" />
+      <LineId Id="8234" Count="1" />
+      <LineId Id="8233" Count="0" />
+      <LineId Id="8014" Count="0" />
+      <LineId Id="8227" Count="1" />
+      <LineId Id="8015" Count="113" />
+      <LineId Id="8199" Count="0" />
+      <LineId Id="8201" Count="4" />
+      <LineId Id="8208" Count="0" />
+      <LineId Id="8129" Count="53" />
+      <LineId Id="8210" Count="6" />
+      <LineId Id="8183" Count="14" />
       <LineId Id="139" Count="0" />
     </LineIds>
     <LineIds Name="fb_BufferInfeed.CheckPosition.Get">

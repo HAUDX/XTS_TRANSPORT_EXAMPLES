@@ -182,7 +182,7 @@ OF
             IF (_MessageLevel = E_MessageType.eMessageVerbose)
             THEN
               _stMsg.eType            := E_MessageType.eMessageVerbose;
-              _stMsg.eSubdevice       := e_Subdevice.Process_LinkedList_GetHead;
+              _stMsg.eSubdevice       := e_Subdevice.Instance_Infeed;
               _stMsg.iErrorNumber     := 0;
               _stMsg.sText            := concat(TO_STRING(_eStateInstance), ': ');
               _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -282,6 +282,13 @@ OF
               _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eStateProgress));
               f_MessageSet(_stMsg);
             END_IF
+
+            _stMsg.eType              := E_MessageType.eMessageBatch;
+            _stMsg.eSubdevice         := e_Subdevice.Instance_Infeed;
+            _stMsg.iErrorNumber       := _ProcessData.wTarget;
+            _stMsg.sText              := concat(TO_STRING(_eStateProgress), ': ');
+            _stMsg.sText              := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_STARTED));
+            f_MessageSet(_stMsg);
           END_IF
         END_IF
     END_CASE
@@ -304,7 +311,7 @@ OF
 
               FOR _idx := _ItfProcessCollector[_nProcess].StationLast TO _ItfProcessCollector[_nProcess].StationFirst BY (-1)
               DO
-                GVL_XTS.StationParameter[_idx].rJerk := _rJerkInfeed;
+                GVL_XTS.StationParameter[_idx].rJerk := TO_REAL(_rJerkInfeed);
               END_FOR
 
               _eStateInstance         := E_INSTANCE_STATE.ENABLED;      // go check if my process is switched on
@@ -492,7 +499,7 @@ OF
 
                   FOR _idx := _ItfProcessCollector[_nProcess].StationLast TO _ItfProcessCollector[_nProcess].StationFirst BY (-1)
                   DO
-                    GVL_XTS.StationParameter[_idx].rJerk := _rJerkOutfeed;
+                    GVL_XTS.StationParameter[_idx].rJerk := TO_REAL(_rJerkInfeed);//TO_REAL(_rJerkOutfeed);
                   END_FOR
   
                   IF (_MessageLevel = E_MessageType.eMessageVerbose)
@@ -566,7 +573,7 @@ OF
   
         _ItfProcessCollector[_nProcess].TargetIndex := _nTargetIndex; // write Xts target onto my ProcessCollector interface
         _ProcessData.wTarget                        := _ItfProcessCollector[_nProcess].
-                                                       DelBit(_ProcessData.wTarget, _idx-_nTargetStationFirst);
+                                                       BitDel(_ProcessData.wTarget, _idx-_nTargetStationFirst);
       END_FOR
     END_CASE
     //-------------------------------------------------------------------------
@@ -609,6 +616,13 @@ OF
           _eStateProgress             := E_PROGRESS.PROGRESS_ERROR;
         ELSE
           _eStateProgress             := E_PROGRESS.PROGRESS_DONE; // job is done, no ticket for target process required, BufferOutfeedRobot checks for arriving movers
+
+          _stMsg.eType                := E_MessageType.eMessageBatch;
+          _stMsg.eSubdevice           := e_Subdevice.Instance_Infeed;
+          _stMsg.iErrorNumber         := 0;
+          _stMsg.sText                := concat(TO_STRING(_eStateProgress), ': ');
+          _stMsg.sText                := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_DONE));
+          f_MessageSet(_stMsg);
         END_IF
     END_CASE
     //-------------------------------------------------------------------------
@@ -678,7 +692,12 @@ END_VAR
     <LineIds Name="fb_Infeed">
       <LineId Id="3779" Count="27" />
       <LineId Id="4366" Count="0" />
-      <LineId Id="3807" Count="558" />
+      <LineId Id="3807" Count="203" />
+      <LineId Id="4374" Count="0" />
+      <LineId Id="4368" Count="5" />
+      <LineId Id="4011" Count="326" />
+      <LineId Id="4376" Count="6" />
+      <LineId Id="4338" Count="27" />
       <LineId Id="139" Count="0" />
     </LineIds>
     <LineIds Name="fb_Infeed.Clear">

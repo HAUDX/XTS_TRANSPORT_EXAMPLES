@@ -252,6 +252,7 @@ OF
             f_MessageSet(_stMsg);
 
           ELSE
+
             IF (_MessageLevel > E_MessageType.eMessageError)
             THEN
               _stMsg.eType            := E_MessageType.eMessageInfo;
@@ -268,6 +269,14 @@ OF
             IF (_ProcessData.wTarget > 0)
             THEN
               _eStateProgress         := E_PROGRESS.PROGRESS_CHECK;
+
+              _stMsg.eType            := E_MessageType.eMessageBatch;
+              _stMsg.eSubdevice       := e_Subdevice.Instance_Sender_Buffer;
+              _stMsg.iErrorNumber     := _StationState.nMoverId;
+              _stMsg.sText            := concat(TO_STRING(_eStateProgress), ': ');
+              _stMsg.sText            := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_STARTED));
+              f_MessageSet(_stMsg);
+
             ELSE
               _DeleteResult           := _ItfProcessList[_nProcess].RemoveHeadValue();
             END_IF
@@ -450,10 +459,10 @@ OF
 
       FOR _idx := 1 TO (SIZEOF(T_PROCESS)*8)
       DO
-        IF (_ItfProcessCollector[_nProcess].GetBit(_ProcessData.wTarget, _idx-1))
+        IF (_ItfProcessCollector[_nProcess].BitGet(_ProcessData.wTarget, _idx-1))
         THEN
           _ProcessData.wTarget        := _ItfProcessCollector[_nProcess].
-                                         DelBit(_ProcessData.wTarget, _idx-1);
+                                         BitDel(_ProcessData.wTarget, _idx-1);
           EXIT;
         END_IF
       END_FOR
@@ -480,9 +489,23 @@ OF
                   _nBatch             := _nBatch + 1;
                   _eStateProgress     := E_PROGRESS.PROGRESS_DONE;                // mover is on its way
                   _stMsg.iErrorNumber := 0;
+
+                  _stMsg.eType        := E_MessageType.eMessageBatch;
+                  _stMsg.eSubdevice   := e_Subdevice.Instance_Outfeed;
+                  _stMsg.iErrorNumber := 0;
+                  _stMsg.sText        := concat(TO_STRING(_eStateProgress), ': ');
+                  _stMsg.sText        := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_DONE));
+                  f_MessageSet(_stMsg);
+
                 ELSE
                   _eStateProgress     := E_PROGRESS.PROGRESS_PREPARE;
-                  _stMsg.iErrorNumber := _StationState.nMoverId;
+
+                  _stMsg.eType        := E_MessageType.eMessageBatch;
+                  _stMsg.eSubdevice   := e_Subdevice.Instance_Outfeed;
+                  _stMsg.iErrorNumber := 0;
+                  _stMsg.sText        := concat(TO_STRING(_eStateProgress), ': ');
+                  _stMsg.sText        := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_NEXT_IN_JOB));
+                  f_MessageSet(_stMsg);
                 END_IF
       
                 IF (_MessageLevel > E_MessageType.eMessageError)
@@ -625,7 +648,12 @@ END_VAR
       <LineId Id="3989" Count="11" />
       <LineId Id="4549" Count="0" />
       <LineId Id="4044" Count="0" />
-      <LineId Id="4379" Count="98" />
+      <LineId Id="4379" Count="47" />
+      <LineId Id="4585" Count="0" />
+      <LineId Id="4427" Count="15" />
+      <LineId Id="4587" Count="6" />
+      <LineId Id="4586" Count="0" />
+      <LineId Id="4443" Count="34" />
       <LineId Id="4551" Count="1" />
       <LineId Id="4480" Count="14" />
       <LineId Id="4496" Count="3" />
@@ -636,8 +664,12 @@ END_VAR
       <LineId Id="4557" Count="0" />
       <LineId Id="4203" Count="0" />
       <LineId Id="4572" Count="0" />
+      <LineId Id="4601" Count="0" />
+      <LineId Id="4595" Count="5" />
+      <LineId Id="4594" Count="0" />
       <LineId Id="4204" Count="1" />
-      <LineId Id="4573" Count="0" />
+      <LineId Id="4602" Count="0" />
+      <LineId Id="4604" Count="5" />
       <LineId Id="4206" Count="1" />
       <LineId Id="4563" Count="8" />
       <LineId Id="4217" Count="23" />

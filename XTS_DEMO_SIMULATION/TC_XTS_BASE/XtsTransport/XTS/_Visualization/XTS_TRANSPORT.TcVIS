@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <Visu Name="XTS_TRANSPORT" Id="{1677eb1f-a145-4dc2-89c6-13c253be66e6}">
     <XmlArchive>
       <Data>
@@ -1775,6 +1775,8 @@
                 <v>a2a325ae-218b-474e-aa9c-bb75c408e30f</v>
                 <v>FB_Reinit</v>
                 <v>6d9be7a2-60a5-4140-9340-5a1d60d3d3a9</v>
+                <v>GetCallerNamespace</v>
+                <v>d6602f07-cfc1-5485-91f9-254d731c016c</v>
                 <v>GetClientData</v>
                 <v>2cc6ff4b-8a99-478b-8559-7b3c2825bc60</v>
                 <v>GetDialogInterface</v>
