@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_XPU_CTRL" Id="{a75553bb-d329-4b89-b382-e87c354366be}">
+    <Declaration><![CDATA[{attribute 'strict'}
+TYPE E_XPU_CTRL :
+(
+  XTS_CMD_NULL,
+  XTS_CMD_INIT                  := 10,
+  //XTS_CMD_READ_STN_CONFIG       := 20,
+  XTS_IDLE                      := 30
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

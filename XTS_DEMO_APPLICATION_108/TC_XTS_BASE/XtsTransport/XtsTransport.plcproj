@@ -68,6 +68,9 @@
     <Compile Include="APPLICATION\_types\Application\E_APP_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="APPLICATION\_types\Application\E_APP_VARIANT.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="APPLICATION\_types\Application\ST_APP_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -485,13 +488,13 @@
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="APPLICATION\_types\Application" />
+    <Folder Include="APPLICATION\_types\Collector" />
+    <Folder Include="APPLICATION\_types\Instance" />
+    <Folder Include="APPLICATION\_types\LinkedList" />
     <Folder Include="APPLICATION\_Visu" />
     <Folder Include="APPLICATION\Process_Instances" />
     <Folder Include="APPLICATION\_types" />
-    <Folder Include="APPLICATION\_types\LinkedList" />
-    <Folder Include="APPLICATION\_types\Instance" />
-    <Folder Include="APPLICATION\_types\Collector" />
-    <Folder Include="APPLICATION\_types\Application" />
     <Folder Include="APPLICATION\_Visu\textlists" />
     <Folder Include="MSG" />
     <Folder Include="MSG\types" />
@@ -522,9 +525,6 @@
     <SubObject Include="fb_ProcessCollector.Template">
       <ExcludeFromBuild>true</ExcludeFromBuild>
     </SubObject>
-    <SubObject Include="fb_ProcessCollector.Template">
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </SubObject>
     <SubObject Include="fb_TransportUnit.Template">
       <ExcludeFromBuild>true</ExcludeFromBuild>
     </SubObject>
@@ -546,8 +546,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -671,15 +671,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="Int32">System.Int32</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="Int32">System.Int32</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

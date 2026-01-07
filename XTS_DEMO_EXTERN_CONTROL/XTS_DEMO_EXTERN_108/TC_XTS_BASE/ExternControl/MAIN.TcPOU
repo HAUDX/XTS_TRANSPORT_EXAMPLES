@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{f03fa316-d73a-4a34-ad00-e322fc0b37ed}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+  eInit     : e_progress := E_PROGRESS.PROGRESS_DONE;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//############################################################################
+// Local time; used for timestamps
+//############################################################################
+GVL_MSG.fbLocalTime(
+                    sLocalTime          => GVL_MSG.sLocalTime, 
+                    dtLocalTime         => GVL_MSG.dtLocalTime);
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="3" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

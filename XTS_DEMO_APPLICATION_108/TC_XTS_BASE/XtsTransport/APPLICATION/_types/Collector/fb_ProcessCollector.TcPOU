@@ -13,7 +13,7 @@
 //  
 //
 //---------------------------------------------------------------------------------------------------------------//
-// This SOFTWARE is provided as an Exemple by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no  //
+// This SOFTWARE is provided as an Example by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no  //
 // representations or warranties of any kind concerning the safety, suitability, lack of viruses, inaccuracies,  //
 // typographical errors, or other harmful components of this SOFTWARE. There are inherent dangers in the use of  //
 // any software, and you are solely responsible for determining whether this SOFTWARE is compatible with your    //
@@ -23,8 +23,6 @@
 //---------------------------------------------------------------------------------------------------------------//
 FUNCTION_BLOCK fb_ProcessCollector EXTENDS fb_StationCollector IMPLEMENTS I_ProcessCollector
 VAR
-  {info ' extend/add enum members to E_INSTANCE as you need them '}
-  _nProcessId     : E_INSTANCE; // whoami
 
   _stControl      : REFERENCE TO ST_PROCESS_CTRL;  // ctrl via property
   _stState        : REFERENCE TO ST_PROCESS_STATE; // state via property
@@ -294,7 +292,7 @@ OF
           // on a sunny afternoon, nothing to do, just sit and wait
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
             _stMsg.eType            := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -322,7 +320,7 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_ENABLE;  // switch to enable
 
-          IF (_MessageLevel > E_MessageType.eMessageWarning)
+          IF (_MessageLevel > E_MessageType.eMessageError)
           THEN
             _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -349,7 +347,7 @@ OF
           // we are truly equal, yet not the same
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
             _stMsg.eType            := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -376,7 +374,7 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_DISABLE;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
             _stMsg.eType            := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -421,7 +419,7 @@ OF
           // master master, there's the thing I've been after
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
             _stMsg.eType            := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -447,7 +445,7 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_START;
 
-          IF (_MessageLevel > E_MessageType.eMessageWarning)
+          IF (_MessageLevel > E_MessageType.eMessageError)
           THEN
             _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -466,7 +464,7 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_STATIONS_OUTFEED;
 
-          IF (_MessageLevel > E_MessageType.eMessageWarning)
+          IF (_MessageLevel > E_MessageType.eMessageError)
           THEN
             _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -492,9 +490,9 @@ OF
         THEN
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageWarning)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageVerbose;
+            _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _wStateNest;
             _stMsg.sText            := concat('_wStateNest: ', BitsToString(_wStateNest));
@@ -545,7 +543,7 @@ OF
           // movers have arrived and are in standstill
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
             _stMsg.eType            := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -599,7 +597,7 @@ OF
           // first handshake done
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
             _stMsg.eType            := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -632,9 +630,9 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_STATIONS_NEST;
 
-          IF (_MessageLevel > E_MessageType.eMessageWarning)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageInfo;
+            _stMsg.eType            := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -647,9 +645,9 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_STATIONS_OUTFEED;
 
-          IF (_MessageLevel > E_MessageType.eMessageWarning)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
-            _stMsg.eType            := E_MessageType.eMessageInfo;
+            _stMsg.eType            := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
             _stMsg.iErrorNumber     := _nProcessId;
             _stMsg.sText            := concat(TO_STRING(_stState.State), ': ');
@@ -674,7 +672,7 @@ OF
           // now is the time for you to have decided the TargetStation(s) and TargetMask(s)
           _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
             _stMsg.eType            := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -699,7 +697,7 @@ OF
 
           _eStateProgress           := E_PROGRESS.PROGRESS_CHECK;       // check movers gone
 
-          IF (_MessageLevel > E_MessageType.eMessageWarning)
+          IF (_MessageLevel > E_MessageType.eMessageError)
           THEN
             _stMsg.eType            := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -719,7 +717,7 @@ OF
           _eStateProgress           := E_PROGRESS.PROGRESS_INIT;        // switch back sub state
           _stState.State            := E_PROCESS_STATE.PROCESS_DISABLE; // switch back to disabled state
 
-          IF (_MessageLevel = E_MessageType.eMessageVerbose)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
             _stMsg.eType            := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice       := e_Subdevice.Process_ProcessCollector_Cycle;
@@ -1160,127 +1158,68 @@ Template_1                      := _eState;
       </Implementation>
     </Method>
     <LineIds Name="fb_ProcessCollector">
-      <LineId Id="9" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.ActivateStation.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.Controls">
-      <LineId Id="369" Count="136" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="137" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.Cycle">
-      <LineId Id="660" Count="515" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="518" Count="515" />
+      <LineId Id="517" Count="0" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.Init">
-      <LineId Id="396" Count="17" />
-      <LineId Id="415" Count="3" />
-      <LineId Id="537" Count="0" />
-      <LineId Id="536" Count="0" />
-      <LineId Id="534" Count="1" />
-      <LineId Id="533" Count="0" />
-      <LineId Id="419" Count="31" />
-      <LineId Id="526" Count="0" />
-      <LineId Id="524" Count="0" />
-      <LineId Id="451" Count="6" />
-      <LineId Id="527" Count="1" />
-      <LineId Id="458" Count="36" />
-      <LineId Id="529" Count="3" />
-      <LineId Id="500" Count="14" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="126" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.LogControl">
-      <LineId Id="9" Count="10" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="34" Count="2" />
-      <LineId Id="42" Count="7" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="28" Count="1" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="26" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.MessageLevel.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.MessageLevel.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="10" Count="2" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="16" Count="1" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="11" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.MoverCountTotal.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.MoverPerMinute.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.ProcessCtrl.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.ProcessCtrl.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.ProcessId.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.ProcessId.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.ProcessState.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.ProcessState.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.TargetIndex.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.TargetIndex.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.TargetMask.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.TargetMask.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessCollector.Template">
-      <LineId Id="365" Count="0" />
-      <LineId Id="269" Count="0" />
-      <LineId Id="346" Count="2" />
-      <LineId Id="364" Count="0" />
-      <LineId Id="270" Count="0" />
-      <LineId Id="349" Count="3" />
-      <LineId Id="271" Count="0" />
-      <LineId Id="366" Count="0" />
-      <LineId Id="273" Count="5" />
-      <LineId Id="335" Count="0" />
-      <LineId Id="280" Count="8" />
-      <LineId Id="292" Count="5" />
-      <LineId Id="301" Count="4" />
-      <LineId Id="309" Count="4" />
-      <LineId Id="363" Count="0" />
-      <LineId Id="317" Count="5" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="52" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_XPU_CTRL" Id="{1d1e8451-8806-442a-b5f1-ea50efdfa0dc}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_XPU_CTRL :
+STRUCT
+  Cmd             : E_XPU_CTRL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

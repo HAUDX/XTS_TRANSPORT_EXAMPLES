@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_LIST_CHECK" Id="{558641bc-3bbd-48e8-b1c1-737f2eb93bec}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_LIST_CHECK :
+(
+	CHECK_NULL,
+  CHECK_INVALID_REF_CTRL,
+  CHECK_INVALID_REF_STATE,
+  CHECK_INVALID_REF_DATA,
+
+  CHECK_DONE              := 10000
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

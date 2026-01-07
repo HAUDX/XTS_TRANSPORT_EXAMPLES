@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="f_BitDel" Id="{6417603d-b229-4ca2-bc92-1faa058378c2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION f_BitDel : T_PROCESS
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
+END_VAR
+VAR
+  wConst : T_PROCESS := 1;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF ( inVal AND SHL( wConst,TO_SINT(bitNo) MOD TO_INT(SIZEOF(T_PROCESS)*8) ) ) > 0 THEN
+  f_BitDel := inVal XOR (SHL( wConst,TO_SINT(bitNo) MOD TO_INT(SIZEOF(T_PROCESS)*8) ));
+ELSE
+  f_BitDel := inVal;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="f_BitDel">
+      <LineId Id="1" Count="4" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

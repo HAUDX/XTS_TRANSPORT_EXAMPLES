@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_APPLICATION" Id="{a812453b-7e29-42cf-a12a-cdf8bc1cdb2b}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+  MAX_PROCESS         : E_INSTANCE := E_INSTANCE.SENDER_BUFFER_INFEED;
+END_VAR
+{attribute 'qualified_only'}
+VAR_GLOBAL
+  //-----------------------------------------------------------------------------------------------
+  // Application
+  //
+  //  this is the part you will have to change and adapt into your programming
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  // fb_Application:
+  // - procedures for getting fb_Instance classes and XTS_TRANSPORT_LAYER to work
+  //
+  //  - Cmd/state behaviour similar to sw mechanics in fb_TransportUnit
+  //  - E_INSTANCE_CMD  / E_INSTANCE_STATE + E_PROGRESS
+  //      INIT          /   INIT          : initialize processes and XtsStations       
+  //      DISABLE       /   DISABLED      : RemoveAllAxis from CA Group, disable CA Group, disable all movers
+  //      ENABLE        /   ENABLED       : AddAllAxis to CA Group, Enable CA Group, Enable all movers
+  //      WORK          /   WORKING       : CMD_TRANSPORT_START, enable handshakes, start writing list entries to BUFFER_INFEED
+  //      PROCEED       /   PROCEEDING    : CMD_TRANSPORT_RESTART, enable handshakes, continue writing list entries to BUFFER_INFEED
+  //      FINISH        /   FINISH        : stop writing list entries to BUFFER_INFEED, handshake processes until outfeeds are empty
+  //      CLEAR         /   CLEARED       : clear all instances of fb_Instance, clear all XtsStations
+  //-----------------------------------------------------------------------------------------------
+  ApplicationMain       : fb_Application;
+  AppControl            : ST_APP_CTRL;
+  AppState              : ST_APP_STATE;
+
+  // application configuration switch
+  bOutput_R1R2          : BOOL := TRUE;   // switch between two application setups
+
+  //-----------------------------------------------------------------------------------------------
+  // fb_Instance control and state
+  //  - structs are used in fb_Application as reference 
+  //-----------------------------------------------------------------------------------------------
+  InstanceCtrl          : ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_CTRL;
+  InstanceState         : ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_STATE;
+
+  TicketListControl     : ST_LIST_CTRL;
+  TicketListState       : ST_LIST_STATE;
+  TicketListDataInput   : ST_LIST_NODE_DATA;   // datafield for you to write(add) your data
+  TicketListDataOutput  : ST_LIST_NODE_DATA;   // datafield for you to read (get) your data
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

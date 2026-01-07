@@ -118,6 +118,7 @@ OF
            NOT (_nProcessTarget < E_INSTANCE.INSTANCE_MAX)
         THEN
           _eStateProgress             := E_PROGRESS.PROGRESS_ERROR;
+
         ELSE
           _eStateProgress             := E_PROGRESS.PROGRESS_BUSY;
         END_IF
@@ -137,7 +138,16 @@ OF
             IF NOT (_nProcessTarget > 0) OR
                NOT (_nProcessTarget < E_INSTANCE.INSTANCE_MAX)
             THEN
+              // an invalid target you must have not
               _eStateProgress         := E_PROGRESS.PROGRESS_ERROR;
+
+              _stMsg.eType            := E_MessageType.eMessageError;
+              _stMsg.eSubdevice       := e_Subdevice.Instance_BufferInfeed;
+              _stMsg.iErrorNumber     := _nProcessTarget;
+              _stMsg.sText            := concat(TO_STRING(_eStateInstance), ': ProcessTarget: ');
+              _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eStateProgress));
+              f_MessageSet(_stMsg);
+
             ELSE
               _ItfProcessCollector[_nProcess].Init(FALSE); // clear init procedure
 
@@ -185,10 +195,10 @@ OF
             _eStateInstance           := E_INSTANCE_STATE.DETECTION;
             _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
   
-            IF (_MessageLevel = E_MessageType.eMessageVerbose)
+            IF (_MessageLevel > E_MessageType.eMessageInfo)
             THEN
               _stMsg.eType            := E_MessageType.eMessageVerbose;
-              _stMsg.eSubdevice       := e_Subdevice.Process_LinkedList_GetHead;
+              _stMsg.eSubdevice       := e_Subdevice.Instance_BufferInfeed;
               _stMsg.iErrorNumber     := 0;
               _stMsg.sText            := concat(TO_STRING(_eStateInstance), ': ');
               _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eStateProgress));
@@ -241,7 +251,7 @@ OF
             _stMsg.eType              := E_MessageType.eMessageError;
             _stMsg.eSubdevice         := e_Subdevice.Process_LinkedList_GetHead;
             _stMsg.iErrorNumber       := _ListResult.wState;
-            _stMsg.sText              := concat(TO_STRING(_eStateInstance), ': ');
+            _stMsg.sText              := concat(TO_STRING(_eStateInstance), ': _ListResult.wState: ');
             _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_eStateProgress));
             f_MessageSet(_stMsg);
 
@@ -263,17 +273,18 @@ OF
             THEN
               _eStateProgress         := E_PROGRESS.PROGRESS_CHECK;
 
-              _stMsg.eType            := E_MessageType.eMessageBatch;
-              _stMsg.eSubdevice       := e_Subdevice.Instance_BufferInfeed;
-              _stMsg.iErrorNumber     := 0;
-              _stMsg.sText            := concat(TO_STRING(_eStateProgress), ': ');
-              _stMsg.sText            := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_STARTED));
-              f_MessageSet(_stMsg);
-
+              IF (_MessageLevel > E_MessageType.eMessageEmpty)
+              THEN
+                _stMsg.eType          := E_MessageType.eMessageBatch;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed;
+                _stMsg.iErrorNumber   := 0;
+                _stMsg.sText          := concat(TO_STRING(_eStateProgress), ': ');
+                _stMsg.sText          := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_STARTED));
+                f_MessageSet(_stMsg);
+              END_IF
             ELSE
               _DeleteResult           := _ItfProcessList[_nProcess].RemoveHeadValue();
             END_IF
-
 
             // check target mask for entries
             IF NOT (_ProcessData.wTarget > 0)
@@ -311,7 +322,7 @@ OF
               _eStateInstance         := E_INSTANCE_STATE.ENABLED;      // go check if my process is switched on
               _eStateProgress         := E_PROGRESS.PROGRESS_INIT;      // reset substate
 
-              IF (_MessageLevel > E_MessageType.eMessageWarning)
+              IF (_MessageLevel > E_MessageType.eMessageInfo)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
                 _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed;
@@ -322,7 +333,6 @@ OF
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_Ctrl.Cmd));
                 f_MessageSet(_stMsg);
               END_IF
-
           END_CASE
         END_CASE
     END_CASE
@@ -396,6 +406,12 @@ OF
             IF TRUE or (_MoverInfo.rModuloActPos < GVL_XTS.StationParameter[53].rPosWait + 50.0) 
               // this 'smaller than' makes sense here because this Process is right behind the modulo turn, 
               // so every mover smaller than the wait position is close enough to start processing
+              // why so 'dirty'?    
+              //  - I have not abstracted it further 
+              //      because this is intended to be the highest Layer 
+              //        of transportation and I thought it may have some explicitness in it, 
+              //          the fb_Application part will be your job 
+              //            when integrating this approach into your world.
             THEN
               // now we know who wants to enter
               _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_SEND; // the InfeedBuffer does not need a standstill at PosStop, --> send mover at once
@@ -448,12 +464,12 @@ OF
           _nTargetIndex[1]                            := TO_USINT(_idx);
           _ItfProcessCollector[_nProcess].TargetIndex := _nTargetIndex; // write Xts target onto my ProcessCollector interface
 
-          IF (_MessageLevel > E_MessageType.eMessageWarning)
+          IF (_MessageLevel > E_MessageType.eMessageVerbose)
           THEN
-            _stMsg.eType              := E_MessageType.eMessageVerbose;
+            _stMsg.eType              := E_MessageType.eMessageSentient;
             _stMsg.eSubdevice         := e_Subdevice.Instance_BufferInfeed;
             _stMsg.iErrorNumber       := _idx;
-            _stMsg.sText              := concat('_ProcessData.wTarget: ', 
+            _stMsg.sText              := concat('I_AM _ProcessData.wTarget: ', 
                                          _ItfProcessCollector[_nProcess].BitsToString(_ProcessData.wTarget));
             f_MessageSet(_stMsg);
           END_IF
@@ -461,6 +477,16 @@ OF
           // got the target, now delete the just found bit of this job
           _ProcessData.wTarget        := _ItfProcessCollector[_nProcess].
                                          BitDel(_ProcessData.wTarget, _idx-_nTargetStationFirst);
+
+          IF (_MessageLevel > E_MessageType.eMessageVerbose)
+          THEN
+            _stMsg.eType              := E_MessageType.eMessageSentient;
+            _stMsg.eSubdevice         := e_Subdevice.Instance_BufferInfeed;
+            _stMsg.iErrorNumber       := _idx;
+            _stMsg.sText              := concat('I_WAS _ProcessData.wTarget: ', 
+                                         _ItfProcessCollector[_nProcess].BitsToString(_ProcessData.wTarget));
+            f_MessageSet(_stMsg);
+          END_IF
           EXIT;
         END_IF
       END_FOR
@@ -511,13 +537,24 @@ OF
               _eStateInstance         := E_INSTANCE_STATE.ENABLED;      // go check if my process is switched on
               _eStateProgress         := E_PROGRESS.PROGRESS_INIT;      // reset substate
 
-              _stMsg.eType            := E_MessageType.eMessageBatch;
-              _stMsg.eSubdevice       := e_Subdevice.Instance_BufferInfeed;
-              _stMsg.iErrorNumber     := 0;
-              _stMsg.sText            := concat(TO_STRING(_eStateProgress), ': ');
-              _stMsg.sText            := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_NEXT_IN_JOB));
-              f_MessageSet(_stMsg);
-
+              IF (_MessageLevel > E_MessageType.eMessageEmpty)
+              THEN
+                _stMsg.eType          := E_MessageType.eMessageBatch;
+                _stMsg.eSubdevice     := e_Subdevice.Instance_BufferInfeed;
+                _stMsg.iErrorNumber   := 0;
+                _stMsg.sText          := concat(TO_STRING(_eStateProgress), ': ');
+                _stMsg.sText          := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_NEXT_IN_JOB));
+                f_MessageSet(_stMsg);
+              END_IF
+              IF (_MessageLevel > E_MessageType.eMessageVerbose)
+              THEN
+                _stMsg.eType              := E_MessageType.eMessageSentient;
+                _stMsg.eSubdevice         := e_Subdevice.Instance_BufferInfeed;
+                _stMsg.iErrorNumber       := 0;
+                _stMsg.sText              := concat('I_RETURN _ProcessData.wTarget: ', 
+                                             _ItfProcessCollector[_nProcess].BitsToString(_ProcessData.wTarget));
+                f_MessageSet(_stMsg);
+              END_IF
             ELSE
               // job done, all movers were sent
               // job done, delete from top of my list
@@ -562,6 +599,15 @@ OF
         ELSE
           _eStateProgress             := E_PROGRESS.PROGRESS_DONE;
 
+          IF (_MessageLevel > E_MessageType.eMessageVerbose)
+          THEN
+            _stMsg.eType              := E_MessageType.eMessageSentient;
+            _stMsg.eSubdevice         := e_Subdevice.Instance_BufferInfeed;
+            _stMsg.iErrorNumber       := 0;
+            _stMsg.sText              := concat('I_GONE _ProcessData.wTarget: ', 
+                                         _ItfProcessCollector[_nProcess].BitsToString(_ProcessData.wTarget));
+            f_MessageSet(_stMsg);
+          END_IF
           IF (_MessageLevel > E_MessageType.eMessageError)
           THEN
             _stMsg.eType              := E_MessageType.eMessageInfo;
@@ -571,13 +617,15 @@ OF
             _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_eStateProgress));
             f_MessageSet(_stMsg);
           END_IF
-
-          _stMsg.eType                := E_MessageType.eMessageBatch;
-          _stMsg.eSubdevice           := e_Subdevice.Instance_BufferInfeed;
-          _stMsg.iErrorNumber         := 0;
-          _stMsg.sText                := concat(TO_STRING(_eStateProgress), ': ');
-          _stMsg.sText                := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_DONE));
-          f_MessageSet(_stMsg);
+          IF (_MessageLevel > E_MessageType.eMessageEmpty)
+          THEN
+            _stMsg.eType              := E_MessageType.eMessageBatch;
+            _stMsg.eSubdevice         := e_Subdevice.Instance_BufferInfeed;
+            _stMsg.iErrorNumber       := 0;
+            _stMsg.sText              := concat(TO_STRING(_eStateProgress), ': ');
+            _stMsg.sText              := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_DONE));
+            f_MessageSet(_stMsg);
+          END_IF
         END_IF
     END_CASE
     // E_INSTANCE_STATE.FINISH:
@@ -656,10 +704,20 @@ END_VAR
       <LineId Id="7681" Count="27" />
       <LineId Id="8198" Count="0" />
       <LineId Id="7709" Count="1" />
-      <LineId Id="7716" Count="181" />
-      <LineId Id="8218" Count="0" />
+      <LineId Id="7716" Count="37" />
+      <LineId Id="8248" Count="0" />
+      <LineId Id="7754" Count="18" />
+      <LineId Id="8303" Count="0" />
+      <LineId Id="7773" Count="0" />
+      <LineId Id="8249" Count="0" />
+      <LineId Id="8251" Count="5" />
+      <LineId Id="8246" Count="0" />
+      <LineId Id="7774" Count="123" />
+      <LineId Id="8236" Count="2" />
       <LineId Id="8220" Count="6" />
-      <LineId Id="7898" Count="81" />
+      <LineId Id="7898" Count="3" />
+      <LineId Id="7903" Count="46" />
+      <LineId Id="7951" Count="28" />
       <LineId Id="8229" Count="0" />
       <LineId Id="8231" Count="1" />
       <LineId Id="8230" Count="0" />
@@ -668,12 +726,26 @@ END_VAR
       <LineId Id="8233" Count="0" />
       <LineId Id="8014" Count="0" />
       <LineId Id="8227" Count="1" />
-      <LineId Id="8015" Count="113" />
-      <LineId Id="8199" Count="0" />
+      <LineId Id="8257" Count="0" />
+      <LineId Id="8302" Count="0" />
+      <LineId Id="8258" Count="0" />
+      <LineId Id="8261" Count="0" />
+      <LineId Id="8259" Count="1" />
+      <LineId Id="8015" Count="64" />
+      <LineId Id="8272" Count="0" />
+      <LineId Id="8263" Count="8" />
+      <LineId Id="8080" Count="48" />
+      <LineId Id="8243" Count="2" />
       <LineId Id="8201" Count="4" />
       <LineId Id="8208" Count="0" />
-      <LineId Id="8129" Count="53" />
-      <LineId Id="8210" Count="6" />
+      <LineId Id="8129" Count="0" />
+      <LineId Id="8274" Count="8" />
+      <LineId Id="8130" Count="43" />
+      <LineId Id="8293" Count="8" />
+      <LineId Id="8174" Count="8" />
+      <LineId Id="8240" Count="1" />
+      <LineId Id="8211" Count="5" />
+      <LineId Id="8242" Count="0" />
       <LineId Id="8183" Count="14" />
       <LineId Id="139" Count="0" />
     </LineIds>

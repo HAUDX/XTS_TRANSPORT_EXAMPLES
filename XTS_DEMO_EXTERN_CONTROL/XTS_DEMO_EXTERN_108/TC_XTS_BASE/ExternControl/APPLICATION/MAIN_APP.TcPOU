@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN_APP" Id="{4eff99b1-02bf-4c6b-b630-0279d11bdebb}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2025.11.29
+//
+//  - EXAMPLE, change, adapt, use
+//  -----------------------------
+//  - processes and top level workflow examples
+//  - based on fb_Instance for processes
+//  - fb_Application as top level control for starting, stopping, restarting etc..
+//---------------------------------------------------------------------------------------------------------------
+PROGRAM MAIN_APP
+VAR
+  eInit                       : E_PROGRESS;   // application startup state info
+  nProcess                    : uint;
+
+  stMsg                       : ST_Message;
+
+  _nBufferOutfeedTarget       : ARRAY[1..2] OF E_INSTANCE;
+  _nStnFrst                   : UDINT;
+
+  eMsgState                   : e_message_state;
+  eMsgProgress                : E_PROGRESS;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// check for MAIN.eInit
+//  - wait for fb_TransportUnit to be fully started up
+//-----------------------------------------------------------------------------------------------------------------
+IF NOT (MAIN.eInit = E_PROGRESS.PROGRESS_DONE) 
+THEN 
+  eInit                                                     := E_PROGRESS.PROGRESS_INVALID; 
+  FOR nProcess := E_INSTANCE.BUFFER_INFEED TO MAX_PROCESS
+  DO
+    GVL_MSG.MessageLevelProcess[nProcess]                   := GVL_MSG.MessageLevel;
+  END_FOR
+  ApplicationMain.MessageLevel                              := GVL_MSG.MessageLevel;
+
+  RETURN; 
+END_IF
+//-----------------------------------------------------------------------------------------------------------------
+// set MAIN_APP message device identification
+//-----------------------------------------------------------------------------------------------------------------
+stMsg.eDevice                                               := e_Device.Application;
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// /assign dataflow
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//  main application class
+//-----------------------------------------------------------------------------------------------------------------
+
+GVL_APPLICATION.ApplicationMain.Ctrl                        REF=  GVL_APPLICATION.AppControl;
+GVL_APPLICATION.ApplicationMain.State                       REF=  GVL_APPLICATION.AppState;
+GVL_APPLICATION.ApplicationMain.XtsTransportCtrl            REF=  GVL_XTS.XtsTransportCtrl;
+GVL_APPLICATION.ApplicationMain.XtsTransportState           REF=  GVL_XTS.XtsTransportState;
+GVL_APPLICATION.ApplicationMain.InstanceCtrl                REF=  GVL_APPLICATION.InstanceCtrl;
+GVL_APPLICATION.ApplicationMain.InstanceState               REF=  GVL_APPLICATION.InstanceState;
+GVL_APPLICATION.ApplicationMain.ListControl                 REF=  GVL_APPLICATION.TicketListControl;
+GVL_APPLICATION.ApplicationMain.ListState                   REF=  GVL_APPLICATION.TicketListState;
+GVL_APPLICATION.ApplicationMain.ListInputData               REF=  GVL_APPLICATION.TicketListDataInput;
+
+
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// assign dataflow/
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//  /STARTUP
+//
+// startup procedure for application
+//  - connects processes and XtsStations
+//-----------------------------------------------------------------------------------------------------------------
+CASE eInit
+OF
+  E_PROGRESS.PROGRESS_INVALID:                // first cycle startup
+    //---------------------------------------------------------------------------------------------------------------
+    // first cycle startup
+    // - wait for extern to give the command, if we are waiting here MAIN is ready, extern can see that
+    //---------------------------------------------------------------------------------------------------------------
+    GVL_MSG.ApplicationMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    eInit                                     := E_PROGRESS.PROGRESS_INIT;
+
+  E_PROGRESS.PROGRESS_INIT:
+    //---------------------------------------------------------------------------------------------------------------
+    // wait for valid variant
+    //---------------------------------------------------------------------------------------------------------------
+    CASE GVL_APPLICATION.AppControl.Variant   // this is what you have to decide, two variants are available
+    OF
+      E_APP_VARIANT.VARIANT_OUTPUT_24:
+        eInit                                 := E_PROGRESS.PROGRESS_BUSY;
+  
+        stMsg.eType                           := E_MessageType.eMessageInfo;
+        stMsg.eSubdevice                      := e_Subdevice.General;
+        stMsg.iErrorNumber                    := eInit;
+        stMsg.sText                           := concat('MAIN_APP.eInit: ', TO_STRING(eInit));
+        stMsg.sText                           := concat(stMsg.sText, ': ');
+        stMsg.sText                           := concat(stMsg.sText, TO_STRING(E_INSTANCE.OUTFEED_ROBOT_R1));
+        stMsg.sText                           := concat(stMsg.sText, ': ');
+        stMsg.sText                           := concat(stMsg.sText, TO_STRING(E_INSTANCE.OUTFEED_ROBOT_R2));
+        f_MessageSet(stMsg);
+
+      E_APP_VARIANT.VARIANT_OUTPUT_CLAMP:
+        eInit                                 := E_PROGRESS.PROGRESS_BUSY;
+  
+        stMsg.eType                           := E_MessageType.eMessageInfo;
+        stMsg.eSubdevice                      := e_Subdevice.General;
+        stMsg.iErrorNumber                    := eInit;
+        stMsg.sText                           := concat('MAIN_APP.eInit: ', TO_STRING(eInit));
+        stMsg.sText                           := concat(stMsg.sText, ': ');
+        stMsg.sText                           := concat(stMsg.sText, TO_STRING(E_INSTANCE.OUTFEED_ROBOT_R1));
+        f_MessageSet(stMsg);
+    END_CASE
+
+  E_PROGRESS.PROGRESS_BUSY:
+    //---------------------------------------------------------------------------------------------------------------
+    // first cycle startup of all instances
+    //---------------------------------------------------------------------------------------------------------------
+    GVL_MSG.ApplicationMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_INIT;
+    IF GVL_MSG.ApplicationMessageData.FileCreated
+    THEN
+      eInit                                   := E_PROGRESS.PROGRESS_STARTUP;
+      GVL_MSG.ApplicationMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_IF
+
+  E_PROGRESS.PROGRESS_STARTUP:
+    GVL_APPLICATION.AppControl.Cmd            := E_INSTANCE_CMD.INIT;
+
+    IF (GVL_APPLICATION.AppState.State = E_INSTANCE_STATE.INIT + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      eInit                                   := E_PROGRESS.PROGRESS_PREPARE;
+    END_IF
+
+  E_PROGRESS.PROGRESS_PREPARE:
+    IF (GVL_APPLICATION.AppState.AppInit = E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd   := E_LIST_CTRL.LIST_CTRL_NULL; 
+      eInit                                   := E_PROGRESS.PROGRESS_CHECK;
+    END_IF
+
+  E_PROGRESS.PROGRESS_CHECK:
+    GVL_APPLICATION.TicketListControl.Cmd     := E_LIST_CTRL.LIST_CTRL_INIT;
+
+    IF (GVL_APPLICATION.TicketListState.State =  E_LIST_STATE.LIST_STATE_INIT + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      eInit                                   := E_PROGRESS.PROGRESS_DONE;
+    END_IF
+END_CASE
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// STARTUP/
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// /cyclic calls
+//-----------------------------------------------------------------------------------------------------------------
+GVL_APPLICATION.ApplicationMain();
+
+//-----------------------------------------------------------------------------------------------------------------
+//############################################################################
+// /logging
+//############################################################################
+GVL_MSG.ApplicationMessageData.Ctrl           REF= GVL_MSG.ApplicationMessageCtrl;
+GVL_MSG.ApplicationMessageData.State          REF= GVL_MSG.ApplicationMessageState;
+
+GVL_MSG.ApplicationMessageData.MessageIndex   REF= GVL_MSG.MessageApplicationIndex;
+GVL_MSG.ApplicationMessageData.ErrorIndex     REF= GVL_MSG.MessageApplicationError;
+
+GVL_MSG.ApplicationMessageData.DirRoot        :=   ADR(GVL_MSG.LOG_DIR);
+GVL_MSG.ApplicationMessageData.FileRoot       :=   ADR(GVL_MSG.LOG_FILE_APP);
+
+GVL_MSG.ApplicationMessageData.MsgList        :=   ADR(GVL_MSG.ApplicationMessages);
+GVL_MSG.ApplicationMessageData.LocalTime      :=   ADR(GVL_MSG.dtLocalTime);
+
+GVL_MSG.ApplicationMessageData();
+
+eMsgState                                     := f_GetState   (GVL_MSG.ApplicationMessageState.State);
+eMsgProgress                                  := f_GetProgress(GVL_MSG.ApplicationMessageState.State);
+
+
+CASE eMsgState
+OF
+  E_MESSAGE_STATE.MSG_STATE_NULL:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_INVALID:
+        IF (GVL_MSG.MessageApplicationIndex > GVL_MSG.MAX_MESSAGE/100) OR
+           (GVL_MSG.MessageApplicationError > 0)
+        THEN
+          GVL_MSG.ApplicationMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        END_IF
+    END_CASE
+
+  E_MESSAGE_STATE.MSG_STATE_WRITE:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_ERROR,
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+
+ELSE
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+END_CASE
+//############################################################################
+// logging/
+//############################################################################
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN_APP">
+      <LineId Id="151" Count="24" />
+      <LineId Id="225" Count="7" />
+      <LineId Id="235" Count="3" />
+      <LineId Id="395" Count="1" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="397" Count="0" />
+      <LineId Id="239" Count="31" />
+      <LineId Id="272" Count="12" />
+      <LineId Id="286" Count="14" />
+      <LineId Id="309" Count="4" />
+      <LineId Id="420" Count="0" />
+      <LineId Id="406" Count="0" />
+      <LineId Id="408" Count="9" />
+      <LineId Id="423" Count="0" />
+      <LineId Id="418" Count="1" />
+      <LineId Id="421" Count="0" />
+      <LineId Id="407" Count="0" />
+      <LineId Id="422" Count="0" />
+      <LineId Id="428" Count="0" />
+      <LineId Id="424" Count="1" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="316" Count="9" />
+      <LineId Id="340" Count="54" />
+      <LineId Id="150" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

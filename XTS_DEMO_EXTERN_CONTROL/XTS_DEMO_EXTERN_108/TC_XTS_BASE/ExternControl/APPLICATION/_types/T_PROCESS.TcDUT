@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="T_PROCESS" Id="{c74bd015-c194-4be6-8b0f-49732c1a216d}">
+    <Declaration><![CDATA[TYPE T_PROCESS : DWORD; END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

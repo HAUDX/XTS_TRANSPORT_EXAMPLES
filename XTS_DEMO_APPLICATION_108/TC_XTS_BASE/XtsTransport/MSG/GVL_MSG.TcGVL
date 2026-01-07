@@ -19,7 +19,7 @@ VAR_GLOBAL CONSTANT
   LOG_FILE_APP          : STRING  := 'MSG_Application_';
   LOG_FILE_METRIC       : STRING  := 'MSG_XtsTransportMetrics_';
 
-  MAX_MESSAGE           : UINT    := 2000; // max entry in message list
+  MAX_MESSAGE           : UINT    := 6000; // max entry in message list
 END_VAR
 VAR_GLOBAL
   //-----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ VAR_GLOBAL
   {info 'TEST logging enabled'}
   MessageLevel                    : E_MessageType := eMessageinfo; // a lot of messages
 {ELSE}
-  MessageLevel                    : E_MessageType := eMessageInfo; // only errors are written into list 
+  MessageLevel                    : E_MessageType := E_MessageType.eMessageWarning; // only errors are written into list 
 {END_IF}
 
 END_VAR]]></Declaration>

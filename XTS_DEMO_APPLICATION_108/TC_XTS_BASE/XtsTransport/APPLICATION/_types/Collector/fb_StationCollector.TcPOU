@@ -21,6 +21,9 @@
 //---------------------------------------------------------------------------------------------------------------//
 FUNCTION_BLOCK ABSTRACT fb_StationCollector
 VAR
+  {info ' extend/add enum members to E_INSTANCE as you need them '}
+  _nProcessId     : E_INSTANCE; // whoami
+
   _eCheck             : E_PROCESS_CHECK;
   _nStationCount      : UINT;
 
@@ -68,7 +71,7 @@ VAR
   _nStationQueue              : ARRAY[1..SIZEOF(T_PROCESS)*8] OF UINT; // single queues from sub stations
   _nProcessQueue              : UINT; // sum of all sub station queues
 
-  _AllStationMoverPerMinute   : UINT;
+  _AllStationMoverPerMinute   : UDINT;
   _tonPartsPerMinute          : Tc2_Standard.TON;
 
   _nMoverCountTotal           : UDINT;
@@ -85,7 +88,7 @@ END_VAR
       <Declaration><![CDATA[METHOD PUBLIC BitDel : T_PROCESS
 VAR_INPUT
   inVal   : T_PROCESS;
-  bitNo   : DINT;
+  bitNo   : uDINT;
 END_VAR
 VAR
   wConst : T_PROCESS := 1;
@@ -103,7 +106,7 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PUBLIC BitGet : BOOL
 VAR_INPUT
   inVal   : T_PROCESS;
-  bitNo   : DINT;
+  bitNo   : uDINT;
 END_VAR
 VAR
   wConst : T_PROCESS := 1;
@@ -122,7 +125,7 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PUBLIC BitSet : T_PROCESS
 VAR_INPUT
   inVal   : T_PROCESS;
-  bitNo   : DINT;
+  bitNo   : uDINT;
 END_VAR
 VAR
   wConst  : T_PROCESS := 1;
@@ -139,7 +142,7 @@ VAR_INPUT
   inVal       : T_PROCESS;
 END_VAR
 VAR
-  _nx         : DINT;
+  _nx         : UDINT;
   _str        : STRING(SIZEOF(T_PROCESS)*8);
 END_VAR
 ]]></Declaration>
@@ -315,24 +318,27 @@ END_VAR
     <Method Name="States" Id="{a390ee0f-0bc9-4172-9ee2-70281babb672}">
       <Declaration><![CDATA[METHOD PROTECTED States // cyclic call for collecting XtsStation state masks
 VAR_INST
-  _idx    	: UINT;
-  _k                    : UINT;
+  _idx    	: UDINT;
+  _k                    : UDINT;
   _rtrigProcess         : ARRAY[1..MAX_STATION] OF Tc2_Standard.R_TRIG;
   _rtrigProcessEnter    : ARRAY[1..MAX_STATION] OF Tc2_Standard.R_TRIG;
   _rtrigProcessStart    : ARRAY[1..MAX_STATION] OF Tc2_Standard.R_TRIG;
+  _rtrigProcessInit     : ARRAY[1..MAX_STATION] OF Tc2_Standard.R_TRIG;
 
   _nMoverPerMinute,
   _nMoverCount,
-  _nMoverCountOld       : ARRAY[1..MAX_STATION]  OF UINT;
+  _nMoverCountOld       : ARRAY[1..MAX_STATION]  OF UDINT;
 
   _nMoverCountEnter,
-  _nMoverCountEnterOld  : ARRAY[1..MAX_STATION]  OF UINT;
+  _nMoverCountEnterOld  : ARRAY[1..MAX_STATION]  OF UDINT;
 
   _nMoverCountStart,
-  _nMoverCountStartOld  : ARRAY[1..MAX_STATION]  OF UINT;
+  _nMoverCountStartOld  : ARRAY[1..MAX_STATION]  OF UDINT;
 
+  _nStationInit,
+  _nStationInitOld      : ARRAY[1..MAX_STATION]  OF UDINT;
 
-  _interAllStationsCounter    : UINT;
+  _interAllStationsCounter    : UDINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -450,17 +456,20 @@ DO
 
   IF _rtrigProcess[_k].Q
   THEN
-    _nMoverCount[_k]         := _nMoverCount[_k] + 1;
+    _nMoverCount[_k]        := _nMoverCount[_k] + 1;
 
-    _stMsg.eType            := E_MessageType.eMessageInfo;
-    _stMsg.eDevice          := e_Device.Metrics + _k;
-  
-    _stMsg.eSubdevice       := e_Subdevice.Process_StationCollector;
-    _stMsg.iErrorNumber     := _k;
-    _stMsg.sText            := concat('MoverCountStation[k]: ', TO_STRING(_nMoverCount[_k]));
-    _stMsg.sText            := concat(_stMsg.sText, ': E_STATION_CTRL.');
-    _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_StationCtrl[_k].eCmd));
-    f_MessageSet(_stMsg);
+    IF (_MessageLevel > E_MessageType.eMessageVerbose)
+    THEN
+      _stMsg.eType          := E_MessageType.eMessageSentient;
+      _stMsg.eDevice        := e_Device.Metrics + TO_UINT(_nProcessId);
+                            
+      _stMsg.eSubdevice     := e_Subdevice.Process_StationCollector;
+      _stMsg.iErrorNumber   := _k;
+      _stMsg.sText          := concat('MoverCountStation[ ]: ', TO_STRING(_nMoverCount[_k]));
+      _stMsg.sText          := concat(_stMsg.sText, ': E_STATION_CTRL.');
+      _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_StationCtrl[_k].eCmd));
+      f_MessageSet(_stMsg);
+    END_IF
   END_IF
 
   _rtrigProcessStart[_k](CLK:= ( _StationState[_k].eState = E_STATION_STATE.STATION_PROCESS_START));
@@ -469,15 +478,18 @@ DO
   THEN
     _nMoverCountStart[_k]   := _nMoverCountStart[_k] + 1;
 
-    _stMsg.eType            := E_MessageType.eMessageInfo;
-    _stMsg.eDevice          := e_Device.Metrics + _k;
-  
-    _stMsg.eSubdevice       := e_Subdevice.Process_StationCollector;
-    _stMsg.iErrorNumber     := _k;
-    _stMsg.sText            := concat('MoverCountStation[k]: ', TO_STRING(_nMoverCountEnter[_k]));
-    _stMsg.sText            := concat(_stMsg.sText, ': E_STATION_STATE.');
-    _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_StationState[_k].eState));
-    f_MessageSet(_stMsg);
+    IF (_MessageLevel > E_MessageType.eMessageVerbose)
+    THEN
+      _stMsg.eType          := E_MessageType.eMessageSentient;
+      _stMsg.eDevice        := e_Device.Metrics + TO_UINT(_nProcessId);
+                            
+      _stMsg.eSubdevice     := e_Subdevice.Process_StationCollector;
+      _stMsg.iErrorNumber   := _k;
+      _stMsg.sText          := concat('MoverCountStation[ ]: ', TO_STRING(_nMoverCountEnter[_k]));
+      _stMsg.sText          := concat(_stMsg.sText, ': E_STATION_STATE.');
+      _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_StationState[_k].eState));
+      f_MessageSet(_stMsg);
+    END_IF
   END_IF
 
   _rtrigProcessEnter[_k](CLK:= ( _StationCtrl[_k].eCmd = E_STATION_CTRL.STATION_MOVER_ENTER));
@@ -486,15 +498,18 @@ DO
   THEN
     _nMoverCountEnter[_k]   := _nMoverCountEnter[_k] + 1;
 
-    _stMsg.eType            := E_MessageType.eMessageInfo;
-    _stMsg.eDevice          := e_Device.Metrics + _k;
-  
-    _stMsg.eSubdevice       := e_Subdevice.Process_StationCollector;
-    _stMsg.iErrorNumber     := _k;
-    _stMsg.sText            := concat('MoverCountStation[k]: ', TO_STRING(_nMoverCountEnter[_k]));
-    _stMsg.sText            := concat(_stMsg.sText, ': E_STATION_CTRL.');
-    _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_StationCtrl[_k].eCmd));
-    f_MessageSet(_stMsg);
+    IF (_MessageLevel > E_MessageType.eMessageVerbose)
+    THEN
+      _stMsg.eType          := E_MessageType.eMessageSentient;
+      _stMsg.eDevice        := e_Device.Metrics + TO_UINT(_nProcessId);
+                            
+      _stMsg.eSubdevice     := e_Subdevice.Process_StationCollector;
+      _stMsg.iErrorNumber   := _k;
+      _stMsg.sText          := concat('MoverCountStation[ ]: ', TO_STRING(_nMoverCountEnter[_k]));
+      _stMsg.sText          := concat(_stMsg.sText, ': E_STATION_CTRL.');
+      _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_StationCtrl[_k].eCmd));
+      f_MessageSet(_stMsg);
+    END_IF
   END_IF
 
   
@@ -521,16 +536,16 @@ THEN
 
   IF (_MessageLevel > E_MessageType.eMessageError)
   THEN
-    _stMsg.eType          := E_MessageType.eMessageBatch;
-    _stMsg.eDevice        := e_Device.Metrics;
+    _stMsg.eType            := E_MessageType.eMessageBatch;
+    _stMsg.eDevice          := e_Device.Metrics + TO_UINT(_nProcessId);
   
-    _stMsg.eSubdevice     := e_Subdevice.Process_StationCollector;
-    _stMsg.iErrorNumber   := _nMoverCountTotal;
-    _stMsg.sText          := concat('MoverCountTotal: ', TO_STRING(_nMoverCountTotal));
-    _stMsg.sText          := concat(_stMsg.sText, ': StationLast: ');
-    _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_nStationLast));
-    _stMsg.sText          := concat(_stMsg.sText, ': StationFirst: ');
-    _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_nStationFirst));
+    _stMsg.eSubdevice       := e_Subdevice.Process_StationCollector;
+    _stMsg.iErrorNumber     := _nMoverCountTotal;
+    _stMsg.sText            := concat('MoverCountTotal: ', TO_STRING(_nMoverCountTotal));
+    _stMsg.sText            := concat(_stMsg.sText, ': StationLast: ');
+    _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_nStationLast));
+    _stMsg.sText            := concat(_stMsg.sText, ': StationFirst: ');
+    _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_nStationFirst));
     f_MessageSet(_stMsg);
   END_IF
 END_IF
@@ -724,41 +739,8 @@ To_T_Process      := wtmp;]]></ST>
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_StationCollector.States">
-      <LineId Id="1" Count="110" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="113" Count="2" />
-      <LineId Id="152" Count="6" />
-      <LineId Id="202" Count="1" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="116" Count="0" />
-      <LineId Id="180" Count="0" />
-      <LineId Id="182" Count="11" />
-      <LineId Id="199" Count="1" />
-      <LineId Id="194" Count="1" />
-      <LineId Id="162" Count="1" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="165" Count="9" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="196" Count="0" />
-      <LineId Id="175" Count="1" />
-      <LineId Id="164" Count="0" />
-      <LineId Id="117" Count="5" />
-      <LineId Id="179" Count="0" />
-      <LineId Id="178" Count="0" />
-      <LineId Id="204" Count="0" />
-      <LineId Id="123" Count="2" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="126" Count="7" />
-      <LineId Id="209" Count="0" />
-      <LineId Id="140" Count="0" />
-      <LineId Id="210" Count="0" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="149" Count="1" />
-      <LineId Id="142" Count="2" />
-      <LineId Id="205" Count="3" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="211" Count="0" />
-      <LineId Id="134" Count="4" />
+      <LineId Id="241" Count="209" />
+      <LineId Id="138" Count="0" />
     </LineIds>
     <LineIds Name="fb_StationCollector.StationCount.Get">
       <LineId Id="6" Count="0" />

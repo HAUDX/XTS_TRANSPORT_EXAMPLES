@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_LIST_STATE" Id="{2ab4d27f-91f7-4375-9cd0-8fa278652304}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+//{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_LIST_STATE :
+(
+  LIST_STATE_INVALID,
+	LIST_STATE_NULL,
+  LIST_STATE_INIT      := 10,
+  LIST_STATE_GET_HEAD  := 20,
+  LIST_STATE_GET_TAIL  := 30,
+  LIST_STATE_ADD_HEAD  := 40,
+  LIST_STATE_ADD_TAIL  := 50,
+  LIST_STATE_DEL_HEAD  := 60,
+  LIST_STATE_DEL_TAIL  := 70
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

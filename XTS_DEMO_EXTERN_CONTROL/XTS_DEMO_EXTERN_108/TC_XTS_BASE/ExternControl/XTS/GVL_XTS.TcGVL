@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_XTS" Id="{6eec2535-f794-40f6-be92-e4c1eba0a24e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+  //---------------------------------------------------------------------------
+  // XTS
+  // XTS TransportUnit
+  //  - This is ground control
+  //  - handles request for XPU, Group, Mover, StartUp, ReStart
+  XtsTransportCtrl    : ST_XTS_TRANSPORT_CTRL;    // control of XTS transport for extern to write
+  XtsTransportState   : ST_XTS_TRANSPORT_STATE;   // state   of XTS transport for extern to read
+  //---------------------------------------------------------------------------
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

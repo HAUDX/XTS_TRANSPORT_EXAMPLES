@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <POU Name="MAPPING_out" Id="{f452c8f5-5dcb-0f99-160c-afb3c9dfaf6c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAPPING_out
+VAR CONSTANT
+{IF defined (MOVER_MAP)}
+  {info 'MAPPING_out - MOVER_MAPPING active'}
+  bBypassMappingMover       : BOOL  := FALSE;
+{ELSE}
+  bBypassMappingMover       : BOOL  := TRUE;
+{END_IF}
+
+{IF defined (STATION_MAP)}
+  {info 'MAPPING_out - STATION_MAPPING active'}
+  bBypassMappingStation     : BOOL  := FALSE;
+{ELSE}
+  bBypassMappingStation     : BOOL  := TRUE;
+{END_IF}
+END_VAR
+VAR
+  sMapping          : STRING;
+  bByPass           : Bool;
+  bFirstCycle       : BOOL := TRUE;
+{IF defined (MOVER_MAP)}
+  MoverState        : U_MOVER_STATE;
+  MoverInfo         : U_MOVER_INFO;
+{ELSE}
+  MoverState        : BYTE;
+  MoverInfo         : BYTE;
+{END_IF}
+
+{IF defined (STATION_MAP)}
+  StationState      : U_XTS_STATION_STATE;
+{ELSE}
+  StationState      : BYTE;
+{END_IF}
+
+  TransportState    : U_XTS_TRANSPORT_STATE;
+  AppState          : U_APP_STATE;
+  InstanceState     : U_INSTANCE_STATE;
+  TicketListState   : U_TICKET_LIST_STATE;
+  TicketListOutput  : U_TICKET_LIST_DATA_OUTPUT;
+
+  szMoverInfo,
+  szMoverState        : ARRAY[1..2] OF UDINT;
+
+  szStationState      : ARRAY[1..2] OF UDINT;
+
+  szTransportState    : ARRAY[1..2] OF UDINT;
+  szAppState          : ARRAY[1..2] OF UDINT;
+  szInstanceState     : ARRAY[1..2] OF UDINT;
+  szTicketState       : ARRAY[1..2] OF UDINT;
+  szTicketData        : ARRAY[1..2] OF UDINT;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF (bFirstCycle)
+THEN
+  bFirstCycle         := FALSE;
+  
+  szMoverState[1]     := SIZEOF(MoverState);
+  szMoverState[2]     := SIZEOF(GVL_XTS.MoverState);
+  
+  szMoverInfo [1]     := SIZEOF(MoverInfo);
+  szMoverInfo [2]     := SIZEOF(GVL_XTS.MoverInfo);
+  
+  szStationState [1]  := SIZEOF(StationState);
+  szStationState [2]  := SIZEOF(GVL_XTS.StationState);
+  
+  
+  szTransportState [1]:= SIZEOF(TransportState);
+  szTransportState [2]:= SIZEOF(GVL_XTS.XtsTransportState);
+
+  szAppState [1]      := SIZEOF(AppState);
+  szAppState [2]      := SIZEOF(GVL_APPLICATION.AppState);
+
+  szInstanceState  [1]:= SIZEOF(InstanceState);
+  szInstanceState  [2]:= SIZEOF(GVL_APPLICATION.InstanceState);
+
+  szTicketState[1]    := SIZEOF(TicketListState);
+  szTicketState[2]    := SIZEOF(GVL_APPLICATION.TicketListState);
+
+  szTicketData[1]     := SIZEOF(TicketListOutput);
+  szTicketData[2]     := SIZEOF(GVL_APPLICATION.TicketListDataOutput);
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TicketListOutput) <> SIZEOF(GVL_APPLICATION.TicketListDataOutput))
+THEN
+  sMapping  := 'TicketListOutput sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TicketListState) <> SIZEOF(GVL_APPLICATION.TicketListState))
+THEN
+  sMapping  := 'TicketListState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(InstanceState) <> SIZEOF(GVL_APPLICATION.InstanceState))
+THEN
+  sMapping  := 'InstanceState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(AppState) <> SIZEOF(GVL_APPLICATION.AppState))
+THEN
+  sMapping  := 'AppState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TransportState) <> SIZEOF(GVL_XTS.XtsTransportState))
+THEN
+  sMapping  := 'TransportState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (bByPass) 
+THEN 
+  sMapping  := 'NO_MAPPING_OUTPUT_ACTIVE';
+  RETURN;
+ELSE
+  sMapping  := 'MAPPING_OUTPUT_ACTIVE';
+END_IF
+//---------------------------------------------------------------------
+IF NOT bBypassMappingMover
+THEN
+  memcpy(ADR(MoverState),      ADR(GVL_XTS.MoverState),         SIZEOF(MoverState));
+  memcpy(ADR(MoverInfo),       ADR(GVL_XTS.MoverInfo),          SIZEOF(MoverInfo));
+END_IF
+
+IF NOT bBypassMappingStation
+THEN
+  memcpy(ADR(StationState),    ADR(GVL_XTS.StationState),       SIZEOF(StationState));
+END_IF
+//-----------------------------------------------------------------------------------------
+//       destination,           source,                                    size
+//-----------------------------------------------------------------------------------------
+  memcpy(ADR(TransportState),   ADR(GVL_XTS.XtsTransportState),            SIZEOF(TransportState));
+  memcpy(ADR(AppState),         ADR(GVL_APPLICATION.AppState),             SIZEOF(AppState));
+  memcpy(ADR(InstanceState),    ADR(GVL_APPLICATION.InstanceState),        SIZEOF(InstanceState));
+  memcpy(ADR(TicketListState),  ADR(GVL_APPLICATION.TicketListState),      SIZEOF(TicketListState));
+  memcpy(ADR(TicketListOutput), ADR(GVL_APPLICATION.TicketListDataOutput), SIZEOF(TicketListOutput));
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAPPING_out">
+      <LineId Id="1" Count="15" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="78" Count="5" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="84" Count="11" />
+      <LineId Id="67" Count="5" />
+      <LineId Id="41" Count="20" />
+      <LineId Id="20" Count="9" />
+      <LineId Id="73" Count="2" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="96" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="77" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

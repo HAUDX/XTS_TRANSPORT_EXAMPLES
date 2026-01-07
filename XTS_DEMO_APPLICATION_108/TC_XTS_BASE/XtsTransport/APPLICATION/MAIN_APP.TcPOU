@@ -136,6 +136,7 @@ OF
     // first cycle startup
     //---------------------------------------------------------------------------------------------------------------
     GVL_APPLICATION.AppControl.Cmd            := E_INSTANCE_CMD.NULL;
+    GVL_MSG.ApplicationMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     eInit                                     := E_PROGRESS.PROGRESS_INIT;
 
     IF (GVL_APPLICATION.bOutput_R1R2)
@@ -169,11 +170,19 @@ OF
     //---------------------------------------------------------------------------------------------------------------
     // first cycle startup of all instances
     //---------------------------------------------------------------------------------------------------------------
+    GVL_MSG.ApplicationMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_INIT;
     GVL_APPLICATION.AppControl.Cmd            := E_INSTANCE_CMD.INIT;
 
     IF (GVL_APPLICATION.AppState.AppState = E_INSTANCE_STATE.INIT + E_PROGRESS.PROGRESS_DONE)
     THEN
+      eInit                                   := E_PROGRESS.PROGRESS_BUSY;
+    END_IF
+
+  E_PROGRESS.PROGRESS_BUSY:
+    IF GVL_MSG.ApplicationMessageData.FileCreated
+    THEN
       eInit                                   := E_PROGRESS.PROGRESS_DONE;
+      GVL_MSG.ApplicationMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_IF
 END_CASE
 //-----------------------------------------------------------------------------------------------------------------
@@ -227,19 +236,22 @@ OF
   E_MESSAGE_STATE.MSG_STATE_NULL:
     CASE eMsgProgress
     OF
-      E_PROGRESS.PROGRESS_INVALID,
-      E_PROGRESS.PROGRESS_DONE:
-        IF (GVL_MSG.MessageApplicationIndex > GVL_MSG.MAX_MESSAGE/10) OR
+      E_PROGRESS.PROGRESS_INVALID:
+        IF (GVL_MSG.MessageApplicationIndex > GVL_MSG.MAX_MESSAGE/100) OR
            (GVL_MSG.MessageApplicationError > 0)
         THEN
-          IF NOT (GVL_MSG.ApplicationMessageData.FileCreated)
-          THEN
-            GVL_MSG.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_INIT;
-          ELSE
-            GVL_MSG.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
-          END_IF
+          GVL_MSG.ApplicationMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
         END_IF
     END_CASE
+
+  E_MESSAGE_STATE.MSG_STATE_WRITE:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_ERROR,
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG.ApplicationMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+
 ELSE
     CASE eMsgProgress
     OF
@@ -677,7 +689,18 @@ SenderBufferInfeed.CheckPosition          := GVL_XTS.StationParameter[_nStnFrst]
       </Implementation>
     </Action>
     <LineIds Name="MAIN_APP">
-      <LineId Id="1830" Count="174" />
+      <LineId Id="1830" Count="106" />
+      <LineId Id="2131" Count="0" />
+      <LineId Id="1937" Count="32" />
+      <LineId Id="2138" Count="0" />
+      <LineId Id="1970" Count="5" />
+      <LineId Id="2133" Count="0" />
+      <LineId Id="2132" Count="0" />
+      <LineId Id="2134" Count="1" />
+      <LineId Id="2139" Count="0" />
+      <LineId Id="2137" Count="0" />
+      <LineId Id="2136" Count="0" />
+      <LineId Id="1976" Count="28" />
       <LineId Id="2032" Count="2" />
       <LineId Id="2038" Count="1" />
       <LineId Id="2128" Count="2" />
@@ -689,11 +712,15 @@ SenderBufferInfeed.CheckPosition          := GVL_XTS.StationParameter[_nStnFrst]
       <LineId Id="2064" Count="0" />
       <LineId Id="2075" Count="1" />
       <LineId Id="2125" Count="0" />
-      <LineId Id="2077" Count="0" />
       <LineId Id="2082" Count="0" />
       <LineId Id="2126" Count="0" />
-      <LineId Id="2083" Count="7" />
+      <LineId Id="2083" Count="0" />
+      <LineId Id="2152" Count="0" />
+      <LineId Id="2090" Count="0" />
       <LineId Id="2079" Count="0" />
+      <LineId Id="2141" Count="0" />
+      <LineId Id="2143" Count="6" />
+      <LineId Id="2140" Count="0" />
       <LineId Id="2074" Count="0" />
       <LineId Id="2092" Count="3" />
       <LineId Id="2091" Count="0" />

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_MESSAGE_CTRL" Id="{c0a0c942-c33b-4b1c-91b6-3018de854c3c}">
+    <Declaration><![CDATA[TYPE ST_MESSAGE_CTRL :
+STRUCT
+  Cmd         : E_MESSAGE_CTRL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

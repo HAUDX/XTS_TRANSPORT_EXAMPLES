@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Task Name="PLC_1" Id="{23962615-d139-41e6-88e3-f2ace0a92f0d}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>1000</CycleTime>
+    <Priority>15</Priority>
+    <PouCall>
+      <Name>MAPPING_in</Name>
+    </PouCall>
+    <PouCall>
+      <Name>MAIN</Name>
+    </PouCall>
+    <PouCall>
+      <Name>MAIN_APP</Name>
+    </PouCall>
+    <PouCall>
+      <Name>MAPPING_out</Name>
+    </PouCall>
+    <TaskFBGuid>{0892dd04-0e0e-4421-842e-b5e9ba4992da}</TaskFBGuid>
+    <Fb_init>{46ca0ff8-715c-4656-8104-d7feccde36ae}</Fb_init>
+    <Fb_exit>{670b3a91-4994-4e8a-bc82-ebb209d67eed}</Fb_exit>
+    <CycleUpdate>{87b03516-27ac-4a95-a8e7-af5c4e5bd39f}</CycleUpdate>
+    <PostCycleUpdate>{bec7cdb3-6110-480c-823a-f49df22cc6f8}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

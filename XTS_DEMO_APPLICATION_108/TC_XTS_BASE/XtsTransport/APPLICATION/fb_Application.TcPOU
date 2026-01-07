@@ -18,6 +18,8 @@
 //---------------------------------------------------------------------------------------------------------------
 FUNCTION_BLOCK fb_Application
 VAR
+  
+
   _eCheck                       : E_APP_CHECK;
   _eInit                        : E_PROGRESS;
 
@@ -47,7 +49,7 @@ VAR
 
 
   _stMsg                        : ST_Message;
-  _MessageLevel                 : E_MessageType;
+  _MessageLevel                 : E_MessageType := E_MessageType.eMessageVerbose;
 
   // ListData()
   _nLoadCaseOld,
@@ -1986,7 +1988,9 @@ OF
       _tMsg.sText             := concat(_tMsg.sText, ': _ProcessData.wTarget: ');
       _tMsg.sText             := concat(_tMsg.sText, _ItfProcessCollector[E_INSTANCE.BUFFER_INFEED].BitsToString(_ProcessData.wTarget));
       f_MessageSet(_tMsg);
-
+    END_IF
+    IF (_MessageLevel > E_MessageType.eMessageEmpty)
+    THEN
       _tMsg.eType             := E_MessageType.eMessageInfo;
       _tMsg.eDevice           := e_Device.Metrics;
       _tMsg.eSubdevice        := e_Subdevice.Application;
@@ -1995,7 +1999,6 @@ OF
       _tMsg.sText             := concat(_tMsg.sText, ': _ProcessData.wTarget: ');
       _tMsg.sText             := concat(_tMsg.sText, _ItfProcessCollector[E_INSTANCE.BUFFER_INFEED].BitsToString(_ProcessData.wTarget));
       f_MessageSet(_tMsg);
-
     END_IF
 END_CASE
 CASE _eStateProgress
@@ -2021,13 +2024,16 @@ OF
     ELSE
       _eStateProgress         := E_PROGRESS.PROGRESS_ERROR;
 
-      _tMsg.eType             := E_MessageType.eMessageError;
-      _tMsg.eSubdevice        := e_Subdevice.Application;
-      _tMsg.iErrorNumber      := _nLoadCase;
-      _tMsg.sText             := concat('AddTail: ', TO_STRING(E_INSTANCE.BUFFER_INFEED));
-      _tMsg.sText             := concat(_tMsg.sText, ': ');
-      _tMsg.sText             := concat(_tMsg.sText, TO_STRING(_eStateProgress));
-      f_MessageSet(_tMsg);
+      IF (_MessageLevel > E_MessageType.eMessageEmpty)
+      THEN
+        _tMsg.eType           := E_MessageType.eMessageError;
+        _tMsg.eSubdevice      := e_Subdevice.Application;
+        _tMsg.iErrorNumber    := _nLoadCase;
+        _tMsg.sText           := concat('AddTail: ', TO_STRING(E_INSTANCE.BUFFER_INFEED));
+        _tMsg.sText           := concat(_tMsg.sText, ': ');
+        _tMsg.sText           := concat(_tMsg.sText, TO_STRING(_eStateProgress));
+        f_MessageSet(_tMsg);
+      END_IF
     END_IF
 END_CASE
 CASE _eStateProgress
@@ -3118,17 +3124,20 @@ END_VAR
       <LineId Id="689" Count="4" />
       <LineId Id="728" Count="0" />
       <LineId Id="694" Count="2" />
-      <LineId Id="771" Count="1" />
+      <LineId Id="771" Count="0" />
+      <LineId Id="780" Count="1" />
+      <LineId Id="772" Count="0" />
       <LineId Id="779" Count="0" />
       <LineId Id="773" Count="5" />
-      <LineId Id="769" Count="0" />
       <LineId Id="697" Count="0" />
       <LineId Id="572" Count="9" />
       <LineId Id="740" Count="9" />
       <LineId Id="739" Count="0" />
       <LineId Id="582" Count="1" />
       <LineId Id="758" Count="0" />
+      <LineId Id="782" Count="1" />
       <LineId Id="751" Count="6" />
+      <LineId Id="784" Count="0" />
       <LineId Id="584" Count="12" />
       <LineId Id="700" Count="1" />
       <LineId Id="5" Count="0" />

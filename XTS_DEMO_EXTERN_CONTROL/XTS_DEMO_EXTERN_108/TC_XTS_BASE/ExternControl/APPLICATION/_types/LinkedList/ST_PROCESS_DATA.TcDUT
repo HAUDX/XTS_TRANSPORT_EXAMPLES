@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_PROCESS_DATA" Id="{a3bf93e1-2773-4ab2-bd47-0b7a8158d7ce}">
+    <Declaration><![CDATA[TYPE ST_PROCESS_DATA :
+STRUCT
+  nProcessId          : e_instance; // target process
+  {attribute 'displaymode':='bin'}
+  wTarget             : T_PROCESS;  // where and how many stations are to be used in process
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

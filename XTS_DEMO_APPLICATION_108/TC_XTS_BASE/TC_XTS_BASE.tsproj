@@ -5429,14 +5429,14 @@ and will return to Group State Standby when the situation permits.
 	</ImageDatas>
 	<Project ProjectGUID="{93087B8E-8B45-410C-842B-030B1FDEA597}" TargetNetId="5.163.199.237.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
-			<Settings MaxCpus="8" NonWinCpus="6" MaxStackSize="1024">
+			<Settings MaxCpus="8" NonWinCpus="6" RouterMemory="67108864" MaxStackSize="1024">
 				<Cpu CpuId="2" BaseTime="2500"/>
 				<Cpu CpuId="3" BaseTime="2500"/>
-				<Cpu CpuId="4" BaseTime="5000"/>
-				<Cpu CpuId="5" BaseTime="5000"/>
+				<Cpu CpuId="4" BaseTime="2500"/>
+				<Cpu CpuId="5" BaseTime="2500"/>
 				<Cpu CpuId="6" BaseTime="2500"/>
 				<Cpu CpuId="7" BaseTime="2500"/>
-				<IoIdleTask Priority="18" Affinity="#x00000010"/>
+				<IoIdleTask Priority="18" Affinity="#x00000004"/>
 			</Settings>
 			<Licenses>
 				<Target>
@@ -5444,16 +5444,16 @@ and will return to Group State Standby when the situation permits.
 				</Target>
 			</Licenses>
 			<Tasks>
-				<Task Id="2" Priority="1" CycleTime="2500" AmsPort="350" Affinity="#x00000080" AdtTasks="true">
+				<Task Id="2" Priority="1" CycleTime="2500" AmsPort="350" Affinity="#x00000004" AdtTasks="true">
 					<Name>XTS Task 1</Name>
 				</Task>
-				<Task Id="8" Priority="15" CycleTime="20000" AmsPort="353" Affinity="#x00000010" AdtTasks="true">
+				<Task Id="8" Priority="15" CycleTime="20000" AmsPort="353" Affinity="#x00000020" AdtTasks="true">
 					<Name>PLC_1</Name>
 				</Task>
-				<Task Id="4" Priority="2" CycleTime="2500" AmsPort="351" Affinity="#x00000040" AdtTasks="true">
+				<Task Id="4" Priority="2" CycleTime="2500" AmsPort="351" Affinity="#x00000008" AdtTasks="true">
 					<Name>XTS Task 2</Name>
 				</Task>
-				<Task Id="7" Priority="32" Affinity="#x00000020" AdtTasks="true" JobTask="true">
+				<Task Id="7" Priority="32" Affinity="#x00000010" AdtTasks="true" JobTask="true">
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
@@ -170257,7 +170257,7 @@ and will return to Group State Standby when the situation permits.
 		</System>
 		<Motion>
 			<NC>
-				<SafTask Priority="4" CycleTime="10000" AmsPort="501" Affinity="#x00000020" IoAtBegin="true" SafTaskInfo="256">
+				<SafTask Priority="4" CycleTime="10000" AmsPort="501" Affinity="#x00000010" IoAtBegin="true" SafTaskInfo="256">
 					<Name>NC-Task 1</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -170269,7 +170269,7 @@ and will return to Group State Standby when the situation permits.
 						<Name>Image</Name>
 					</Image>
 				</SafTask>
-				<SvbTask Priority="8" CycleTime="100000" AmsPort="511" Affinity="#x00000020">
+				<SvbTask Priority="8" CycleTime="100000" AmsPort="511" Affinity="#x00000010">
 					<Name>NC-Task 1 SVB</Name>
 				</SvbTask>
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
@@ -319159,8 +319159,8 @@ and will return to Group State Standby when the situation permits.
 			</NC>
 		</Motion>
 		<Plc>
-			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{B8A2D406-4699-4D54-3A11-F2D32AFF4C14}" TmcPath="XtsTransport\XtsTransport.tmc">
+			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="TEST" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{01A4165F-6DC5-7205-16FF-C229D9D8C5E5}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -320057,7 +320057,7 @@ and will return to Group State Standby when the situation permits.
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<PlcAuxTask Affinity="#x00000010"/>
+			<PlcAuxTask Affinity="#x00000020"/>
 		</Plc>
 		<Io>
 			<Device Id="1" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="172.18.232.185.2.1" RemoteName="Device 1" InfoImageId="2">

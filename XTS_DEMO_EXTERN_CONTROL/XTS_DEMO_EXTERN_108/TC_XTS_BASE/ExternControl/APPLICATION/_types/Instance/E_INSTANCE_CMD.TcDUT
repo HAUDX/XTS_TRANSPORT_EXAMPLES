@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_INSTANCE_CMD" Id="{dad54672-ac40-4585-98d2-40dc43364f6e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'to_string'}
+{attribute 'strict'}
+TYPE E_INSTANCE_CMD : // instructions for fb_Instance executions
+(
+	NULL,
+  INIT,
+  DISABLE,
+  ENABLE,
+  WORK,
+  PROCEED := 100,
+  FINISH,
+  CLEAR
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

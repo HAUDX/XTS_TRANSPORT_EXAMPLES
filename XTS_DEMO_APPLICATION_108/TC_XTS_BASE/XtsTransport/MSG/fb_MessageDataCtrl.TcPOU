@@ -75,7 +75,7 @@ ELSE
       THEN
         _eResult              := E_PROGRESS.PROGRESS_WORKING;
       ELSE
-        _eResult              := E_PROGRESS.PROGRESS_DONE;
+        _eResult              := E_PROGRESS.PROGRESS_BUSY;
         _nMsgIndex            := 0;
         // copy from attached list to local
         memcpy(ADR(_aWriteList), _pMsgList, SIZEOF(_aWriteList));

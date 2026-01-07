@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="fb_Station" Id="{6a0a6a2b-7760-4443-be11-40a67a6801c3}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -234,7 +234,7 @@ OF
       _eStateProgress                 := E_PROGRESS.PROGRESS_INIT;  // substate for procedures within one state
       _stState[_nStationId].eState    := E_STATION_STATE.STATION_DETECT_MOVER;  // switch to mover detection
 
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageInfo)
       THEN
         _stMsg.eType                  := _eMessageLevel;
         LogState(_stMsg.eType);
@@ -257,7 +257,7 @@ OF
       E_PROGRESS.PROGRESS_INIT:
         IF (_stCtrl[_nStationId].eCmd = E_STATION_CTRL.STATION_DISABLE) // check for commanded disable
         THEN
-          IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+          IF (_eMessageLevel > E_MessageType.eMessageinfo)
           THEN
             _stMsg.eType              := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice         := Stationstate;
@@ -294,7 +294,7 @@ OF
           _stMsg.eSubdevice           := e_Subdevice.StationGetHead;
           _stMsg.iErrorNumber         := _stListEnter.stData.nMoverId;
           _stMsg.sText                := '';
-          IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+          IF (_eMessageLevel > E_MessageType.eMessageinfo)
           THEN
             f_MessageSet(_stMsg);
           END_IF
@@ -303,7 +303,7 @@ OF
           _stMoverData                := _stListEnter.stData; // copy ticket from list result
           _eStateProgress             := E_PROGRESS.PROGRESS_PREPARE; // go check plausibility of ticket
 
-          IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+          IF (_eMessageLevel > E_MessageType.eMessageinfo)
           THEN
             _stMsg.eType              := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice         := Stationstate;
@@ -335,6 +335,16 @@ OF
         ELSE
           // it's a me
           _nMoverDetected                   := _stMoverData.nMoverId;
+
+          IF (_eMessageLevel > E_MessageType.eMessageVerbose)
+          THEN
+            _stMsg.eType              := E_MessageType.eMessageSentient;
+            _stMsg.eSubdevice         := e_Subdevice.StationGetHead;
+            _stMsg.iErrorNumber       := _nMoverDetected;
+            _stMsg.sText              := concat('I_AM nMoverDetected: ', TO_STRING(_nMoverDetected));
+            f_MessageSet(_stMsg);
+          END_IF
+
 
           IF (_nMoverDetected < 1) OR
              (_nMoverDetected > MAX_MOVER)
@@ -387,7 +397,7 @@ OF
           E_STATION_CTRL.STATION_DISABLE:       // control decided to disable, mover will wait
             _stState[_nStationId].eState    := E_STATION_STATE.STATION_DISABLE;
 
-            IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+            IF (_eMessageLevel > E_MessageType.eMessageinfo)
             THEN
               _stMsg.eType                  := _eMessageLevel;
               LogState(_stMsg.eType);
@@ -397,7 +407,7 @@ OF
             _nNest                    := 1;     // default nest/PosStop[1]
             _eStateProgress           := E_PROGRESS.PROGRESS_BUSY;
 
-            IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+            IF (_eMessageLevel > E_MessageType.eMessageinfo)
             THEN
               _stMsg.eType            := E_MessageType.eMessageVerbose;
               _stMsg.eSubdevice       := Stationstate;
@@ -420,11 +430,20 @@ OF
             _stOutfeed.rDistance          := _stParameter[_nStationId].rReleaseDistance;
             _stState[_nStationId].eState  := E_STATION_STATE.STATION_MOVER_OUT;
 
-            IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+            IF (_eMessageLevel > E_MessageType.eMessageinfo)
             THEN
               _stMsg.eType                := _eMessageLevel;
               LogState(_stMsg.eType);
             END_IF
+            IF (_eMessageLevel > E_MessageType.eMessageVerbose)
+            THEN
+              _stMsg.eType              := E_MessageType.eMessageSentient;
+              _stMsg.eSubdevice         := e_Subdevice.StationGetHead;
+              _stMsg.iErrorNumber       := _nMoverDetected;
+              _stMsg.sText              := concat('I_SEND nMoverDetected: ', TO_STRING(_nMoverDetected));
+              f_MessageSet(_stMsg);
+            END_IF
+
         END_CASE
     END_CASE
     CASE _eStateProgress
@@ -473,6 +492,14 @@ OF
         _stMsg.eType                  := E_MessageType.eMessageInfo;
         LogState(_stMsg.eType);
       END_IF
+      IF (_eMessageLevel > E_MessageType.eMessageVerbose)
+      THEN
+        _stMsg.eType              := E_MessageType.eMessageSentient;
+        _stMsg.eSubdevice         := e_Subdevice.StationState;
+        _stMsg.iErrorNumber       := _nMoverDetected;
+        _stMsg.sText              := concat('ME_ARRIVE nMoverId: ', TO_STRING(_stState[_nStationId].nMoverId));
+        f_MessageSet(_stMsg);
+      END_IF
     ELSE
       IF (_Result = E_PROGRESS.PROGRESS_ERROR)
       THEN
@@ -500,10 +527,18 @@ OF
       _stState[_nStationId].nMask     := TO_USINT(DelBitWord(TO_WORD(_stState[_nStationId].nMask), _nNest-1));
       _stState[_nStationId].eState    := E_STATION_STATE.STATION_PROCESS_DONE;
 
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageinfo)
       THEN
         _stMsg.eType                  := _eMessageLevel;
         LogState(_stMsg.eType);
+      END_IF
+      IF (_eMessageLevel > E_MessageType.eMessageVerbose)
+      THEN
+        _stMsg.eType              := E_MessageType.eMessageSentient;
+        _stMsg.eSubdevice         := e_Subdevice.StationState;
+        _stMsg.iErrorNumber       := _nMoverDetected;
+        _stMsg.sText              := concat('ME_WORK nMoverId: ', TO_STRING(_stState[_nStationId].nMoverId));
+        f_MessageSet(_stMsg);
       END_IF
     END_IF
 END_CASE
@@ -589,10 +624,18 @@ OF
       MoveData();
       _stState[_nStationId].eState    := E_STATION_STATE.STATION_MOVER_IN_TARGET;
   
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageInfo)
       THEN
         _stMsg.eType                  := _eMessageLevel;
         LogState(_stMsg.eType);
+      END_IF
+      IF (_eMessageLevel > E_MessageType.eMessageVerbose)
+      THEN
+        _stMsg.eType              := E_MessageType.eMessageSentient;
+        _stMsg.eSubdevice         := e_Subdevice.StationState;
+        _stMsg.iErrorNumber       := _nMoverDetected;
+        _stMsg.sText              := concat('ME_RETURN nMoverId: ', TO_STRING(_stState[_nStationId].nMoverId));
+        f_MessageSet(_stMsg);
       END_IF
     END_IF
 END_CASE
@@ -631,7 +674,7 @@ OF
           _stMsg.eSubdevice           := e_Subdevice.StationRemoveHeadValue;
           _stMsg.iErrorNumber         := _stState[_nStationId].nMoverId;
           _stMsg.sText                := '';
-          IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+          IF (_eMessageLevel > E_MessageType.eMessageinfo)
           THEN
             f_MessageSet(_stMsg);
           END_IF
@@ -646,6 +689,14 @@ OF
           THEN
             _stMsg.eType                := E_MessageType.eMessageInfo;
             LogState(_stMsg.eType);
+          END_IF
+          IF (_eMessageLevel > E_MessageType.eMessageVerbose)
+          THEN
+            _stMsg.eType              := E_MessageType.eMessageSentient;
+            _stMsg.eSubdevice         := e_Subdevice.StationState;
+            _stMsg.iErrorNumber       := _nMoverDetected;
+            _stMsg.sText              := concat('ME_RELEASE nMoverId: ', TO_STRING(_stState[_nStationId].nMoverId));
+            f_MessageSet(_stMsg);
           END_IF
         END_IF
       END_IF
@@ -717,6 +768,14 @@ OF
         _stMsg.eType                := _eMessageLevel;
         LogState(_stMsg.eType);
       END_IF
+      IF (_eMessageLevel > E_MessageType.eMessageVerbose)
+      THEN
+        _stMsg.eType              := E_MessageType.eMessageSentient;
+        _stMsg.eSubdevice         := e_Subdevice.StationState;
+        _stMsg.iErrorNumber       :=  _stState[_nStationId].nMoverId;
+        _stMsg.sText              := concat('ME_GONE nMoverId: ', TO_STRING(_stState[_nStationId].nMoverId));
+        f_MessageSet(_stMsg);
+      END_IF
     END_IF
 END_CASE
 //-----------------------------------------------------------------------------
@@ -737,7 +796,7 @@ OF
     THEN
       _stState[_nStationId].eState    := E_STATION_STATE.STATION_DISABLE;
 
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageinfo)
       THEN
         _stMsg.eType                  := _eMessageLevel;
         LogState(_stMsg.eType);
@@ -1214,18 +1273,34 @@ END_VAR
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_Station.Cycle">
-      <LineId Id="4459" Count="203" />
+      <LineId Id="4459" Count="178" />
+      <LineId Id="5281" Count="0" />
+      <LineId Id="5283" Count="5" />
+      <LineId Id="5290" Count="1" />
+      <LineId Id="5282" Count="0" />
+      <LineId Id="4638" Count="24" />
       <LineId Id="5279" Count="1" />
-      <LineId Id="4663" Count="131" />
+      <LineId Id="4663" Count="62" />
+      <LineId Id="5293" Count="7" />
+      <LineId Id="5292" Count="0" />
+      <LineId Id="4726" Count="47" />
+      <LineId Id="5302" Count="7" />
+      <LineId Id="4774" Count="20" />
       <LineId Id="5210" Count="0" />
-      <LineId Id="4795" Count="19" />
+      <LineId Id="4795" Count="9" />
+      <LineId Id="5311" Count="7" />
+      <LineId Id="4805" Count="9" />
       <LineId Id="5212" Count="0" />
       <LineId Id="5211" Count="0" />
       <LineId Id="5213" Count="1" />
       <LineId Id="4815" Count="64" />
       <LineId Id="4882" Count="1" />
       <LineId Id="5209" Count="0" />
-      <LineId Id="4884" Count="74" />
+      <LineId Id="4884" Count="6" />
+      <LineId Id="5320" Count="7" />
+      <LineId Id="4891" Count="52" />
+      <LineId Id="5329" Count="7" />
+      <LineId Id="4944" Count="14" />
       <LineId Id="5270" Count="0" />
       <LineId Id="5272" Count="3" />
       <LineId Id="5220" Count="0" />
@@ -1237,7 +1312,9 @@ END_VAR
       <LineId Id="5231" Count="4" />
       <LineId Id="5228" Count="1" />
       <LineId Id="5226" Count="0" />
-      <LineId Id="5236" Count="29" />
+      <LineId Id="5236" Count="28" />
+      <LineId Id="5338" Count="7" />
+      <LineId Id="5265" Count="0" />
       <LineId Id="5224" Count="0" />
       <LineId Id="4998" Count="7" />
       <LineId Id="5007" Count="116" />

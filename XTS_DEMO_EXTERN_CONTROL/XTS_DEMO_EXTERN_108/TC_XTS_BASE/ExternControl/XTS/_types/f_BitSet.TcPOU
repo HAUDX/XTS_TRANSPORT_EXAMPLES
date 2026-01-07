@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="f_BitSet" Id="{eed11445-15f7-4c54-b5d4-d8ce614117a6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION f_BitSet : T_PROCESS
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
+END_VAR
+VAR
+  wConst  : T_PROCESS := 1;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[f_BitSet := inVal OR SHL( wConst,TO_SINT(bitNo) MOD TO_INT(SIZEOF(T_PROCESS)*8) );
+]]></ST>
+    </Implementation>
+    <LineIds Name="f_BitSet">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

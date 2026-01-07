@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="U_INSTANCE_STATE" Id="{83e9c198-db86-4ba3-a153-a264fb32046f}">
+    <Declaration><![CDATA[TYPE U_INSTANCE_STATE :
+UNION
+  stState             : ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_STATE;
+  byState   AT %i*    : ARRAY[1..MAX_PROCESS] OF
+                        ARRAY[1..SIZEOF(ST_INSTANCE_STATE)] OF BYTE;
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

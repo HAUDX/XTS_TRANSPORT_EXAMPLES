@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="fb_Mover" Id="{0329c584-f72c-48ef-81e9-d36f2b915502}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -1265,7 +1265,7 @@ OF
             Gap               := stMoveData.rGap, 
             BufferMode        := Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting);
 
-    IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+    IF (_eMessageLevel > E_MessageType.eMessageinfo)
     THEN
       _stMsg.eType            := E_MessageType.eMessageVerbose;
       _stMsg.eSubdevice       := e_Subdevice.fbMoveToPosCa;
@@ -1310,7 +1310,7 @@ OF
 		THEN
       _eState                 := E_PROGRESS.PROGRESS_WORKING;
 
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageinfo)
       THEN
         _stMsg.eType          := E_MessageType.eMessageVerbose;
         _stMsg.eSubdevice     := e_Subdevice.fbMoveToPosCa;
@@ -1733,7 +1733,7 @@ OF
             Gap               := stMoveData.rGap, 
             BufferMode        := Tc3_Mc3Definitions.MC_BUFFER_MODE.mcAborting);
 
-    IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+    IF (_eMessageLevel > E_MessageType.eMessageinfo)
     THEN
       _stMsg.eType            := E_MessageType.eMessageVerbose;
       _stMsg.eSubdevice       := e_Subdevice.fbSendToModuloPosCa;
@@ -1792,7 +1792,7 @@ OF
     THEN
       _eState                 := E_PROGRESS.PROGRESS_WORKING;
 
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageinfo)
       THEN
         _stMsg.eType          := E_MessageType.eMessageVerbose;
         _stMsg.eSubdevice     := e_Subdevice.fbSendToModuloPosCa;
@@ -1800,7 +1800,7 @@ OF
         _stMsg.sText            := concat(TO_STRING(_eState), ': ');
         _stMsg.sText          := concat(_stMsg.sText, '.ModuloActPos: ');
         _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_Mover.NcToPlc.ModuloActPos));
-        //f_MessageSet(_stMsg);
+        f_MessageSet(_stMsg);
       END_IF
 (*
     ELSIF (_Mover.NcToPlc.ActPos > _rStart + stMoveData.rDistance)
