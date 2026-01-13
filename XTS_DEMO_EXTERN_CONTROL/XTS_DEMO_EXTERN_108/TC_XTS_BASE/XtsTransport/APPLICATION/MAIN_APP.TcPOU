@@ -94,7 +94,7 @@ GVL_APPLICATION.BufferInfeed.MessageLevel                   :=    GVL_MSG.Messag
                                                             
 GVL_APPLICATION.Infeed.InstanceCtrl                         REF=  GVL_APPLICATION.InstanceCtrl;
 GVL_APPLICATION.Infeed.InstanceState                        REF=  GVL_APPLICATION.InstanceState;
-GVL_APPLICATION.Infeed.MessageLevel                         :=    GVL_MSG.MessageLevelProcess[e_instance.INFEED];
+GVL_APPLICATION.Infeed.MessageLevel                         :=    E_MessageType.eMessageSentient; //GVL_MSG.MessageLevelProcess[e_instance.INFEED];
                                                             
 GVL_APPLICATION.BufferOutfeed.InstanceCtrl                  REF=  GVL_APPLICATION.InstanceCtrl;
 GVL_APPLICATION.BufferOutfeed.InstanceState                 REF=  GVL_APPLICATION.InstanceState;

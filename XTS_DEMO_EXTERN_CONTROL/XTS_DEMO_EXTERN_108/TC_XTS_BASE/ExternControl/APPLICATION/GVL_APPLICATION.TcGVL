@@ -29,9 +29,6 @@ VAR_GLOBAL
   AppControl            : ST_APP_CTRL;
   AppState              : ST_APP_STATE;
 
-  // application configuration switch
-  bOutput_R1R2          : BOOL := TRUE;   // switch between two application setups
-
   //-----------------------------------------------------------------------------------------------
   // fb_Instance control and state
   //  - structs are used in fb_Application as reference 

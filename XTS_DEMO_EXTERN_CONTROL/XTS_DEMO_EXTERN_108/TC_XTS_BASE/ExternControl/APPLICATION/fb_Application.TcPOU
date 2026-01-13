@@ -54,7 +54,12 @@ VAR
 
   // ListData()
   _nLoadCaseOld,
-  _nLoadCase                    : UINT := 0; // 0 = fully loaded, 2 = mod 5 missing 1, 1 = missing up to 11
+  _nLoadCase                    : UINT  := 0;       // 0 = fully loaded, 2 = mod 5 missing 1, 1 = missing up to 11
+
+  _bRunListData                 : BOOL  := TRUE;    // my dbg switch for switching on/off writing of tickets during simulated runs.
+  _nTicketCount                 : UDINT;
+  _nTicketCountEnd              : UDINT := 666;    // my dbg limit for running defined batches and then simply hold still.
+  _bTicketCountOverride         : BOOL;
 
   // Work()
   _bSingleOutput                : BOOL;
@@ -1005,6 +1010,15 @@ CASE _eState
 OF
   E_PROGRESS.PROGRESS_PREPARE:  // SENDER_BUFFER_INFEED sends movers to BUFFER_INFEED
                                 //  - this instance has to stop first
+
+    CASE _InstanceState[E_INSTANCE.PROCESS_CONDUCTOR].State // kill ticket transfer.
+    OF
+    E_INSTANCE_STATE.DISABLED:
+      _InstanceCtrl[e_instance.PROCESS_CONDUCTOR].Cmd         := E_INSTANCE_CMD.DISABLE;
+    ELSE
+      _InstanceCtrl[e_instance.PROCESS_CONDUCTOR].Cmd         := E_INSTANCE_CMD.INIT;
+    END_CASE
+
     CASE _InstanceState[E_INSTANCE.SENDER_BUFFER_INFEED].State
     OF
     E_INSTANCE_STATE.DISABLED:
@@ -1810,7 +1824,7 @@ VAR_INST
   _nBit,
   _nExp           : BYTE;
   _nMod           : UINT := 5;
-  _nCount         : UINT;
+
   _eStateProgress,
   _eRslt          : E_PROGRESS;
 
@@ -1850,6 +1864,15 @@ OF
 
         _InfeedListCtrl.Cmd     := E_LIST_CTRL.LIST_CTRL_NULL;
         _eStateProgress         :=  E_PROGRESS.PROGRESS_BUSY;
+
+        IF (_MessageLevel > E_MessageType.eMessageError)
+        THEN
+          _tMsg.eType         := E_MessageType.eMessageInfo;
+          _tMsg.eSubdevice    := e_Subdevice.Application;
+          _tMsg.iErrorNumber  := _nTicketCount;
+          _tMsg.sText         := concat('ListData.TicketCount: ', TO_STRING(_nTicketCount));
+          f_MessageSet(_tMsg);
+        END_IF
       ELSE
         _ListDataWaitCounter    := _ListDataWaitCounter + 1;
       END_IF
@@ -1936,62 +1959,62 @@ OF
     _nExp                     := TO_BYTE(_InstanceState[E_INSTANCE.INFEED].StationCount);
     _ProcessData.wTarget      := f_To_T_Process(_nExp);
 
-    IF (_nCount MOD _nMod = 0)
+    IF (_nTicketCount MOD _nMod = 0)
     THEN
       _nBit                   := SEL((_nBit>_nExp), _nBit+1, 0);
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (8) = 0)
+    IF (_nTicketCount MOD (8) = 0)
     THEN
       _nBit                   := 1;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (16) = 0)
+    IF (_nTicketCount MOD (16) = 0)
     THEN
       _nBit                   := 2;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (24) = 0)
+    IF (_nTicketCount MOD (24) = 0)
     THEN
       _nBit                   := 3;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (32) = 0)
+    IF (_nTicketCount MOD (32) = 0)
     THEN
       _nBit                   := 4;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (40) = 0)
+    IF (_nTicketCount MOD (40) = 0)
     THEN
       _nBit                   := 5;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (48) = 0)
+    IF (_nTicketCount MOD (48) = 0)
     THEN
       _nBit                   := 6;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (60) = 0)
+    IF (_nTicketCount MOD (60) = 0)
     THEN
       _nBit                   := 7;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (72) = 0)
+    IF (_nTicketCount MOD (72) = 0)
     THEN
       _nBit                   := 8;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (84) = 0)
+    IF (_nTicketCount MOD (84) = 0)
     THEN
       _nBit                   := 9;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (96) = 0)
+    IF (_nTicketCount MOD (96) = 0)
     THEN
       _nBit                   := 10;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nCount MOD (108) = 0)
+    IF (_nTicketCount MOD (108) = 0)
     THEN
       _nBit                   := 11;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
@@ -2006,7 +2029,7 @@ OF
     _nExp                     := TO_BYTE(_InstanceState[E_INSTANCE.INFEED].StationCount);
     _ProcessData.wTarget      := f_To_T_Process(_nExp);
 
-    IF (_nCount MOD _nMod = 0)
+    IF (_nTicketCount MOD _nMod = 0)
     THEN
       _nBit                   := SEL((_nBit>_nExp), _nBit+1, 0);
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
@@ -2050,6 +2073,7 @@ END_CASE
 CASE _eStateProgress
 OF
   E_PROGRESS.PROGRESS_WORKING:
+    _InfeedListDataInput.ProcessData            := _ProcessData;
     _InfeedListDataInput.ProcessData.nProcessId := E_INSTANCE.BUFFER_INFEED;
     _InfeedListCtrl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -2067,7 +2091,7 @@ OF
 
     ELSIF(_InfeedListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
     THEN
-       _nCount                 := _nCount + 1;
+       _nTicketCount          := _nTicketCount + 1;
       _eStateProgress         := E_PROGRESS.PROGRESS_OCCUPIED;
  
      IF (_MessageLevel > E_MessageType.eMessageError)
@@ -2560,36 +2584,29 @@ OF
           CASE _InstanceState[_eInst].Progress
           OF
             E_PROGRESS.PROGRESS_BUSY:
-              IF (_eInst = e_instance.PROCESS_CONDUCTOR)
-              THEN
-                _eRslt                  := ListData(FALSE);
-              _tonListData(IN               := FALSE,
-                           PT               := T#2000MS);
+            CASE _eInst
+            OF
+              e_instance.PROCESS_CONDUCTOR:
 
-                IF (_InstanceState[e_instance.BUFFER_INFEED].QueueProcessCount > 0)
-                THEN
-                  _InstanceCtrl[_eInst].Cmd := E_INSTANCE_CMD.ENABLE;
-                END_IF
-              ELSE
+                CASE _InstanceState[e_instance.BUFFER_INFEED].State
+                OF
+                  E_INSTANCE_STATE.DETECTION:
+                    _eRslt                  := ListData(FALSE);
+                    _tonListData( IN        := FALSE,
+                                  PT        := _tListDataIntervall);
+                    IF NOT _bTicketCountOverride
+                    THEN
+                      IF (_nTicketCount < _nTicketCountEnd+1)
+                      THEN
+                        _InstanceCtrl[e_instance.PROCESS_CONDUCTOR].Cmd := E_INSTANCE_CMD.ENABLE;
+                      END_IF
+                    ELSE
+                      _InstanceCtrl[e_instance.PROCESS_CONDUCTOR].Cmd   := E_INSTANCE_CMD.ENABLE;
+                    END_IF
+                END_CASE
+            ELSE
                 _InstanceCtrl[_eInst].Cmd := E_INSTANCE_CMD.ENABLE;
-              END_IF
-(*
-              IF NOT (_eInst = E_INSTANCE.INFEED)
-              THEN
-                _InstanceCtrl[_eInst].Cmd   := E_INSTANCE_CMD.ENABLE;
-              ELSE
-
-                IF (_InfeedListState.Count < 1)
-                THEN
-                  _eRslt                    := ListData(TRUE);
-
-                  IF (_eRslt = E_PROGRESS.PROGRESS_DONE)
-                  THEN
-                    _InstanceCtrl[_eInst].Cmd := E_INSTANCE_CMD.ENABLE;
-                  END_IF
-                END_IF
-              END_IF
-*)
+            END_CASE
           END_CASE
       
         E_INSTANCE_STATE.ENABLED:
@@ -2654,7 +2671,7 @@ OF
                            PT               := _tListDataIntervall);
               IF (_tonListData.Q)
               THEN
-                _eRslt                        := ListData(TRUE);
+                _eRslt                        := ListData(_bRunListData);
                 IF (_eRslt = E_PROGRESS.PROGRESS_DONE)
                 THEN
                   _InstanceCtrl[_eInst].Cmd   := E_INSTANCE_CMD.FINISH;
@@ -2764,7 +2781,12 @@ END_VAR
     </LineIds>
     <LineIds Name="fb_Application.Finish">
       <LineId Id="1" Count="62" />
-      <LineId Id="65" Count="31" />
+      <LineId Id="65" Count="19" />
+      <LineId Id="607" Count="0" />
+      <LineId Id="609" Count="5" />
+      <LineId Id="608" Count="0" />
+      <LineId Id="606" Count="0" />
+      <LineId Id="85" Count="11" />
       <LineId Id="98" Count="16" />
       <LineId Id="117" Count="10" />
       <LineId Id="129" Count="54" />
@@ -2834,9 +2856,13 @@ END_VAR
       <LineId Id="654" Count="1" />
       <LineId Id="659" Count="2" />
       <LineId Id="398" Count="1" />
+      <LineId Id="664" Count="6" />
+      <LineId Id="674" Count="1" />
       <LineId Id="657" Count="1" />
       <LineId Id="656" Count="0" />
-      <LineId Id="405" Count="239" />
+      <LineId Id="405" Count="196" />
+      <LineId Id="676" Count="0" />
+      <LineId Id="602" Count="42" />
       <LineId Id="280" Count="0" />
     </LineIds>
     <LineIds Name="fb_Application.ListInputData.Set">
@@ -2898,31 +2924,18 @@ END_VAR
       <LineId Id="308" Count="0" />
       <LineId Id="144" Count="21" />
       <LineId Id="168" Count="9" />
-      <LineId Id="361" Count="0" />
-      <LineId Id="363" Count="0" />
-      <LineId Id="360" Count="0" />
-      <LineId Id="372" Count="1" />
-      <LineId Id="371" Count="0" />
-      <LineId Id="367" Count="1" />
-      <LineId Id="370" Count="0" />
-      <LineId Id="369" Count="0" />
-      <LineId Id="365" Count="1" />
-      <LineId Id="364" Count="0" />
-      <LineId Id="348" Count="0" />
-      <LineId Id="324" Count="1" />
-      <LineId Id="178" Count="0" />
-      <LineId Id="326" Count="0" />
-      <LineId Id="345" Count="0" />
-      <LineId Id="344" Count="0" />
-      <LineId Id="346" Count="0" />
-      <LineId Id="332" Count="0" />
-      <LineId Id="341" Count="0" />
-      <LineId Id="328" Count="1" />
-      <LineId Id="331" Count="0" />
-      <LineId Id="330" Count="0" />
-      <LineId Id="347" Count="0" />
-      <LineId Id="327" Count="0" />
-      <LineId Id="349" Count="0" />
+      <LineId Id="390" Count="0" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="403" Count="0" />
+      <LineId Id="402" Count="0" />
+      <LineId Id="404" Count="0" />
+      <LineId Id="407" Count="0" />
+      <LineId Id="409" Count="11" />
+      <LineId Id="405" Count="0" />
+      <LineId Id="398" Count="0" />
+      <LineId Id="400" Count="0" />
+      <LineId Id="397" Count="0" />
       <LineId Id="179" Count="57" />
       <LineId Id="322" Count="0" />
       <LineId Id="321" Count="0" />
