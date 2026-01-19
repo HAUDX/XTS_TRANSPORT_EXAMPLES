@@ -4,6 +4,7 @@
 ## [examples] (..they have all been machines in the past)
 - all examples are split between APPLICATION and XTS (folders named equally)
 - examples strictly follow the idea of namespaces, the TcGVL files may be seen as sovereign territory for which a diplomat (facade or interface) must be employed for communications.
+- The lowest layer (ST_STATION_CTRL/STATE and ST_MOVER_CTRL/STATE) already has a diplomatic "core" you can plug into (see XTS_DEMO_11 and the simulation templates).
 
 ## [XTS_DEMO_EXTERN_CONTROL]:
 All extern examples shall illustrate a specific aspect of the XTS_TRANSPORT_LAYER
@@ -12,7 +13,7 @@ All extern examples shall illustrate a specific aspect of the XTS_TRANSPORT_LAYE
 ### [XTS_DEMO_EXTERN_108]:
 - 2 PLC example for high layer abstraction
 - Process Layer (Collectors and Instances) is fully independent from Station Layer (ProcessStation and Mover)
-- Introduction of a LinkedList with Ctrl/State wrapper for async atomic communication between any domains or sovereign entities.
+- Introduction of a LinkedList with cyclic Ctrl/State wrapper for async atomic communication across any means of communication.
 
 ### [XTS_DEMO_EXTERN_SIMULATION]:
 - 2 PLC example for Station Layer abstraction
