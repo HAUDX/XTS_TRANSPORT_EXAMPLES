@@ -57,7 +57,7 @@ VAR
   _nLoadCase                    : UINT  := 0;       // 0 = fully loaded, 2 = mod 5 missing 1, 1 = missing up to 11
 
   _bRunListData                 : BOOL  := TRUE;    // my dbg switch for switching on/off writing of tickets during simulated runs.
-  _nTicketCount                 : UDINT;
+  _nTicketCount                 : UDINT :=   1;
   _nTicketCountEnd              : UDINT := 666;    // my dbg limit for running defined batches and then simply hold still.
   _bTicketCountOverride         : BOOL;
 
@@ -376,6 +376,7 @@ OF
                 _InstanceCtrl[E_INSTANCE.PROCESS_CONDUCTOR].Cmd := E_INSTANCE_CMD.DISABLE;
                 _InstanceCtrl[E_INSTANCE.BUFFER_INFEED].Cmd     := E_INSTANCE_CMD.DISABLE;
                 _eState                                         := E_PROGRESS.PROGRESS_PREPARE; // go check next insatnce
+                _nTicketCount                                   := 1;
     
                 IF (_MessageLevel > E_MessageType.eMessageError)
                 THEN
@@ -1014,6 +1015,7 @@ OF
     CASE _InstanceState[E_INSTANCE.PROCESS_CONDUCTOR].State // kill ticket transfer.
     OF
     E_INSTANCE_STATE.DISABLED:
+      // switch off Ticket list on the far side
       _InstanceCtrl[e_instance.PROCESS_CONDUCTOR].Cmd         := E_INSTANCE_CMD.DISABLE;
     ELSE
       _InstanceCtrl[e_instance.PROCESS_CONDUCTOR].Cmd         := E_INSTANCE_CMD.INIT;
@@ -2019,6 +2021,16 @@ OF
       _nBit                   := 11;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
+    IF (_MessageLevel > E_MessageType.eMessageError)
+    THEN
+      _tMsg.eType             := E_MessageType.eMessageInfo;
+      _tMsg.eSubdevice        := e_Subdevice.Application;
+      _tMsg.iErrorNumber      := _nLoadCase;
+      _tMsg.sText             := concat('ListData.Progress: ', TO_STRING(_eState));
+      _tMsg.sText             := concat(_tMsg.sText, ': _ProcessData.wTarget: ');
+      _tMsg.sText             := concat(_tMsg.sText, f_BitsToString(_ProcessData.wTarget));
+      f_MessageSet(_tMsg);
+    END_IF
 END_CASE
 //---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
@@ -2033,6 +2045,16 @@ OF
     THEN
       _nBit                   := SEL((_nBit>_nExp), _nBit+1, 0);
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
+    END_IF
+    IF (_MessageLevel > E_MessageType.eMessageError)
+    THEN
+      _tMsg.eType             := E_MessageType.eMessageInfo;
+      _tMsg.eSubdevice        := e_Subdevice.Application;
+      _tMsg.iErrorNumber      := _nLoadCase;
+      _tMsg.sText             := concat('ListData.Progress: ', TO_STRING(_eState));
+      _tMsg.sText             := concat(_tMsg.sText, ': _ProcessData.wTarget: ');
+      _tMsg.sText             := concat(_tMsg.sText, f_BitsToString(_ProcessData.wTarget));
+      f_MessageSet(_tMsg);
     END_IF
 END_CASE
 //---------------------------------------------------------------------------------------
@@ -2404,7 +2426,7 @@ VAR_INST
   _JobResult              : E_PROGRESS;
 
   _tonListData            : Tc2_Standard.TON;
-  _tListDataIntervall     : time := t#2000ms;
+  _tListDataIntervall     : time := t#20ms;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -2755,7 +2777,9 @@ END_VAR
       <LineId Id="243" Count="0" />
       <LineId Id="245" Count="0" />
       <LineId Id="258" Count="0" />
-      <LineId Id="247" Count="4" />
+      <LineId Id="247" Count="1" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="249" Count="2" />
       <LineId Id="260" Count="4" />
       <LineId Id="259" Count="0" />
       <LineId Id="252" Count="5" />
@@ -2783,7 +2807,9 @@ END_VAR
       <LineId Id="1" Count="62" />
       <LineId Id="65" Count="19" />
       <LineId Id="607" Count="0" />
-      <LineId Id="609" Count="5" />
+      <LineId Id="609" Count="2" />
+      <LineId Id="615" Count="0" />
+      <LineId Id="612" Count="2" />
       <LineId Id="608" Count="0" />
       <LineId Id="606" Count="0" />
       <LineId Id="85" Count="11" />
@@ -2860,7 +2886,11 @@ END_VAR
       <LineId Id="674" Count="1" />
       <LineId Id="657" Count="1" />
       <LineId Id="656" Count="0" />
-      <LineId Id="405" Count="196" />
+      <LineId Id="405" Count="142" />
+      <LineId Id="678" Count="9" />
+      <LineId Id="548" Count="14" />
+      <LineId Id="688" Count="9" />
+      <LineId Id="563" Count="38" />
       <LineId Id="676" Count="0" />
       <LineId Id="602" Count="42" />
       <LineId Id="280" Count="0" />
