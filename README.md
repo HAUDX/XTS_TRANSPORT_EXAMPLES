@@ -79,3 +79,6 @@ All extern examples shall illustrate a specific aspect of the XTS_TRANSPORT_LAYE
 ## [scope]
 - TwinCAT scope project for recording the signals of Stations and Processes
 
+## [TR3056 Beckhoff Training]
+- come to Nuernberg and we can talk and code in person for days.
+## [TR3056 Beckhoff Training]
