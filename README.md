@@ -2,6 +2,26 @@
 # XTS transport layer examples
 
 ## [examples] (..they have all been machines in the past)
+- all examples are split between APPLICATION and XTS (folders named equally)
+- examples strictly follow the idea of namespaces, the TcGVL files may be seen as sovereign territory for which a diplomat (facade or interface) must be employed for communications.
+
+## [XTS_DEMO_EXTERN_CONTROL]:
+All extern examples shall illustrate a specific aspect of the XTS_TRANSPORT_LAYER
+- transport examples for illustrating encapsulation
+- Agnostic to cyclic communication medium
+### [XTS_DEMO_EXTERN_108]:
+- 2 PLC example for high layer abstraction
+- Process Layer (Collectors and Instances) is fully independent from Station Layer (ProcessStation and Mover)
+- Introduction of a LinkedList with Ctrl/State wrapper for async atomic communication between any domains or sovereign entities.
+
+### [XTS_DEMO_EXTERN_SIMULATION]:
+- 2 PLC example for Station Layer abstraction
+- Station Layer is controlled via extern entity
+- ExternControl PLC with process abstraction (fb_Simulation) is intended for quick product flow analysis
+ 
+***start simulating your transport system before anything is built***
+
+## [XTS_TRANSPORT_EXAMPLES]:
 
 ### [XTS_DEMO_22]:
 - simple handshake example
@@ -41,7 +61,7 @@
   - fb_ProcessLinkedList
 
 ### [XTS_DEMO_SIMULATION_NEW_MC]:
-## start simulating your transport system before anything is built ##
+  ***start simulating your transport system before anything is built***
 
 - MAIN.StationParameterInit:
   - configuration of XtsStations
