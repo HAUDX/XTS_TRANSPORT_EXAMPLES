@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_STATION_STATE" Id="{4f9ee2ef-7040-4ded-a133-ddd08ae8a9da}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_STATION_STATE :
+STRUCT
+  State           : E_STATION_STATE;
+  {attribute 'displaymode':='bin'}
+  nMask           : BYTE;
+  nMoverId        : USINT;
+  rMoverModPos    : LREAL;            // modulo position of detected mover
+  nQueue          : USINT;            // queue count for station
+END_STRUCT
+END_TYPE
+
+
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_PROCESS_STATE" Id="{0defc240-6dc1-4211-9902-1cf5e09235fe}">
+    <Declaration><![CDATA[TYPE ST_PROCESS_STATE :
+STRUCT
+  State           : E_PROCESS_STATE;
+  Result          : E_PROGRESS;
+  Check           : E_PROCESS_CHECK;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,814 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fb_Simulation" Id="{95547218-5333-4783-8bca-61fa6e34e4a7}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2023.03.27
+//
+//
+//  fb_Simulation
+//
+//    !!! NOT FOR USE IN PRODUCTION !!! --> build something from your mind, this gets messy if you do not
+//
+//  - grouping of xts stations to sync start process
+//  - nFirst to nLast xts stations are checked for starting process simultaneously
+//  - basic preparation of station target index in PrepareTarget()
+//  - handshake with station control for mover transport through station
+//
+//---------------------------------------------------------------------------------------------------------------
+// This SOFTWARE is provided as an Exemple by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no 
+// representations or warranties of any kind concerning the safety, suitability, lack of viruses, inaccuracies, 
+// typographical errors, or other harmful components of this SOFTWARE. There are inherent dangers in the use of 
+// any software, and you are solely responsible for determining whether this SOFTWARE is compatible with your 
+// equipment and other software installed on your equipment. You are also solely responsible for the protection 
+// of your equipment and backup of your data, and THE PROVIDER will not be liable for any damages you may suffer 
+// in connection with using, modifying, or distributing this SOFTWARE.
+//---------------------------------------------------------------------------------------------------------------
+FUNCTION_BLOCK fb_Simulation
+VAR
+  _sCheck                     : STRING;
+  _tonProcess                 : Tc2_Standard.TON;
+  _tProcess                   : TIME := T#500MS;
+
+  _AllStationMoverPerMinute   : UDINT;
+  _tonPartsPerMinute          : Tc2_Standard.TON;
+
+  {attribute 'displaymode':='bin'}
+  _wEnter                     : WORD;
+  {attribute 'displaymode':='bin'}
+  _wStart                     : WORD;
+  {attribute 'displaymode':='bin'}
+  _wOut                       : WORD;
+  {attribute 'displaymode':='bin'}
+  _wGone                      : WORD;
+  {attribute 'displaymode':='bin'}
+  _wEnableProcess             : WORD; // bits switch on stations
+
+  {attribute 'displaymode':='bin'}
+  _TargetMask                 : BYTE;
+
+  _stCtrl                     : POINTER TO ARRAY[1..MAX_STATION]  OF ST_STATION_CTRL;
+  _stState                    : POINTER TO ARRAY[1..MAX_STATION]  OF ST_STATION_STATE;
+
+  // controlling bits from properties used on the outside
+  _bNext,
+  _bMoverEnter,
+  _bMoverOut                  : BOOL;
+
+  // who is included in process
+  // _nFirst to _nLast MUST be in closed consecutive order
+  _nProcessState,
+  _nStation,
+  _nStationCount,
+  _nFirstStation,
+  _nLastStation               : UINT;
+
+  _nTarget,
+  _nFirstTarget,
+  _nLastTarget                : UINT;
+
+  _nPreparedTarget            : ARRAY[1..MAX_MOVER]  OF UINT;
+
+  _nMoverPerMinute,
+  _nMoverCount,
+  _nMoverCountOld             : ARRAY[1..MAX_STATION]  OF UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="properties" Id="{51511239-3911-4b28-bb06-815fba17ead1}" />
+    <Method Name="Check" Id="{694de67a-4e59-4f49-9885-0be4e03bbd74}">
+      <Declaration><![CDATA[METHOD Check : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF (_nFirstStation < 1) OR
+   (_nFirstStation > MAX_STATION)
+THEN
+  _sCheck                     := '_nFirstStation out of bounds';
+  RETURN;
+END_IF
+
+IF (_nLastStation < 1) OR
+   (_nLastStation > MAX_STATION)
+THEN
+  _sCheck                     := '_nLastStation out of bounds';
+  RETURN;
+END_IF
+
+IF (_nFirstTarget < 1) OR
+   (_nFirstTarget > MAX_STATION)
+THEN
+  _sCheck                     := '_nFirstTarget out of bounds';
+  RETURN;
+END_IF
+
+IF (_nLastTarget < 1) OR
+   (_nLastTarget > MAX_STATION)
+THEN
+  _sCheck                     := '_nLastTarget out of bounds';
+  RETURN;
+END_IF
+
+IF NOT (_stCtrl  <> 0)
+THEN
+  _sCheck                     := '_stCtrl: missing pointer';
+  RETURN;
+END_IF
+
+IF NOT (_stState <> 0)
+THEN
+  _sCheck                     := '_stState: missing pointer';
+  RETURN;
+END_IF
+
+
+_sCheck                       := TO_STRING(E_PROGRESS.PROGRESS_DONE);
+Check                         := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Cycle" Id="{5de7d7d1-0b78-4d2d-8797-36a2cf0d91ca}">
+      <Declaration><![CDATA[METHOD Cycle
+VAR_INST
+  _k                  : UINT;
+  _rtrigProcess       : ARRAY[1..MAX_STATION] OF Tc2_Standard.R_TRIG;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Check() THEN RETURN; END_IF
+
+_nStationCount                              := _nLastStation - _nFirstStation + 1;
+
+IF (_nStationCount < 1)
+THEN
+  RETURN;
+END_IF
+
+FOR _nStation := _nLastStation TO _nFirstStation BY(-1) 
+DO
+  CASE _stState^[_nStation].State
+  OF
+    E_STATION_STATE.STATION_DISABLE,
+    E_STATION_STATE.STATION_ENABLE, 
+    E_STATION_STATE.STATION_DETECT_MOVER:
+      _wOut    := _wGone                    := 0;
+      _wEnter                               := DelBitWord(_wEnter, (_nStation-_nFirstStation));
+      _wStart                               := DelBitWord(_wStart, (_nStation-_nFirstStation));
+      IF (GetBitWord(_wEnableProcess, (_nStation-_nFirstStation)))
+      THEN
+        IF (_bMoverEnter)
+        THEN
+          _stCtrl^[_nStation].Cmd           := E_STATION_CTRL.STATION_ENABLE;
+        ELSE
+          _stCtrl^[_nStation].Cmd           := E_STATION_CTRL.STATION_DISABLE;
+        END_IF
+      ELSE
+        _stCtrl^[_nStation].Cmd             := E_STATION_CTRL.STATION_DISABLE;
+      END_IF
+
+
+    E_STATION_STATE.STATION_MOVER_ENTER:
+      _wEnter                               := SetBitWord(_wEnter, (_nStation-_nFirstStation));
+      IF _bMoverEnter
+      THEN
+        _tonProcess(IN                      := FALSE, 
+                    PT                      := _tProcess);
+
+        _stCtrl^[_nStation].nTargetStation  := 0;
+        _stCtrl^[_nStation].Cmd             := E_STATION_CTRL.STATION_MOVER_ENTER;
+      END_IF
+
+    E_STATION_STATE.STATION_PROCESS_START:
+      _wEnter                               := DelBitWord(_wEnter, (_nStation-_nFirstStation));
+      _wStart                               := SetBitWord(_wStart, (_nStation-_nFirstStation));
+  
+      // check if ALL XtsStations have mover in place to work
+      IF (_wStart = TO_WORD(EXPT(2,_nStationCount))-1)
+      THEN
+        _tonProcess(IN                      := TRUE, 
+                    PT                      := _tProcess);
+
+        IF _tonProcess.Q
+        THEN
+          PrepareTargets(FALSE);
+          _stCtrl^[_nStation].Cmd           := E_STATION_CTRL.STATION_PROCESS_DONE;
+        END_IF
+      END_IF
+
+    E_STATION_STATE.STATION_CHECK_NEST:
+      _wEnter                               := SetBitWord(_wEnter, (_nStation-_nFirstStation));
+      _wStart                               := DelBitWord(_wStart, (_nStation-_nFirstStation));
+      _tonProcess(IN                        := FALSE, 
+                  PT                        := _tProcess);
+
+      IF (_bNext)
+      THEN
+        // check if ALL XtsStations have nest to work
+        IF (_wEnter = TO_WORD(EXPT(2,_nStationCount))-1)
+        THEN
+          _stCtrl^[_nStation].Cmd           := E_STATION_CTRL.STATION_MOVER_ENTER;
+        END_IF
+      END_IF
+
+
+    E_STATION_STATE.STATION_MOVER_OUT:
+      _wOut                                 := SetBitWord(_wOut, (_nStation-_nFirstStation));
+      _tonProcess(IN                        := FALSE, 
+                  PT                        := _tProcess);
+
+      IF _bMoverOut
+      THEN
+        // nest mask for this mover in target station, sender decides what to work in target
+        _stCtrl^[_nStation].nMask           := _TargetMask;
+
+        // check if ALL XtsStations have mover to send
+        IF (_wOut = TO_WORD(EXPT(2,_nStationCount))-1)
+        THEN
+          _nProcessState                    := 10;
+        END_IF
+      END_IF
+  END_CASE
+END_FOR
+
+CASE _nProcessState
+OF
+10:
+  // ctrl has to decide where to send mover; this depends on YOUR decision
+  IF PrepareTargets(TRUE)
+  THEN
+    PrepareTargets(FALSE);
+    _nProcessState                          := 30;
+  END_IF
+END_CASE
+CASE _nProcessState
+OF
+30:
+  FOR _nStation := _nLastStation TO _nFirstStation BY(-1) 
+  DO
+    IF _bNext
+    THEN
+      // start outfeed of mover
+      _stCtrl^[_nStation].Cmd               := E_STATION_CTRL.STATION_MOVER_OUT;
+    END_IF
+
+    CASE _stState^[_nStation].State
+    OF
+      E_STATION_STATE.STATION_MOVER_GONE:
+        // whO is gone?
+        _wGone                              := SetBitWord(_wGone, (_nStation-_nFirstStation));
+    END_CASE
+  END_FOR
+  // check if ALL XtsStations are empty
+  IF (_wGone = TO_WORD(EXPT(2,_nStationCount))-1)
+  THEN
+    _nProcessState                          := 40;
+  END_IF
+END_CASE
+CASE _nProcessState
+OF
+40:
+  _nProcessState                            := 0;
+  FOR _nStation := _nLastStation TO _nFirstStation BY(-1) 
+  DO
+    // let XtsStations jump back to disable
+    _stCtrl^[_nStation].Cmd                 := E_STATION_CTRL.STATION_MOVER_GONE;
+  END_FOR
+END_CASE
+
+
+//-----------------------------------------------------------------------------
+// Mover per Minute counter all XtsStations in range
+//-----------------------------------------------------------------------------
+_AllStationMoverPerMinute   := 0; 
+//-----------------------------------------------------------------------------
+// mover counter
+//-----------------------------------------------------------------------------
+FOR _k := _nLastStation TO _nFirstStation BY(-1) 
+DO
+  _rtrigProcess[_k](CLK:= (_stCtrl^[_k].Cmd = E_STATION_CTRL.STATION_MOVER_OUT));
+
+  IF _rtrigProcess[_k].Q
+  THEN
+    _nMoverCount[_k]         := _nMoverCount[_k] + 1;
+  END_IF
+  
+  IF _tonPartsperMinute.Q
+  THEN
+    // count every XtsStation in range
+    _nMoverPerMinute[_k]    := _nMoverCount[_k] - _nMoverCountOld[_k];
+    _nMoverCountOld [_k]    := _nMoverCount[_k];
+  END_IF
+  // sum up all XtsStations in range
+  _AllStationMoverPerMinute := _AllStationMoverPerMinute + _nMoverPerMinute[_k]; 
+END_FOR
+
+IF _tonPartsperMinute.q
+THEN
+  _tonPartsperMinute(IN:=FALSE);
+END_IF
+
+_tonPartsperMinute(IN:= TRUE, PT:= T#60S);
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DelBitWord" Id="{70924835-6ae4-4837-a61a-3abca9ac92bf}">
+      <Declaration><![CDATA[METHOD PUBLIC DelBitWord : WORD
+VAR_INPUT
+  inVal   : WORD;
+  bitNo   : DINT;
+END_VAR
+VAR
+  wConst : WORD := 1;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ( inVal AND SHL( wConst,bitNo MOD 16 ) ) > 0 THEN
+  DelBitWord := inVal XOR (SHL( wConst,bitNo MOD 16 ));
+ELSE
+  DelBitWord := inVal;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Disable" Id="{fc0d75f6-4b8a-411a-bacb-0bd6a1cbfff1}">
+      <Declaration><![CDATA[METHOD Disable : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT (_nLastStation   > 0) OR
+   NOT (_nFirstStation  > 0) OR
+   NOT (_nLastStation   < MAX_STATION+1) OR
+   NOT (_nFirstStation  < MAX_STATION+1)
+THEN
+  Disable := FALSE;
+ELSE
+  FOR _nStation := _nLastStation TO _nFirstStation BY(-1) 
+  DO
+    _stCtrl^[_nStation].Cmd               := E_STATION_CTRL.STATION_DISABLE;
+    _stCtrl^[_nStation].nMask             := 0;
+  END_FOR
+
+  memset(ADR(_nMoverCount),    0, SIZEOF(_nMoverCount));
+  memset(ADR(_nMoverCountOld), 0, SIZEOF(_nMoverCountOld));
+  _nProcessState :=  _nTarget             := 0;
+  
+  Disable := TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="EnableProcess" Id="{846a0124-f641-416f-9a0f-1b1ff2f65344}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY EnableProcess : word]]></Declaration>
+      <Get Name="Get" Id="{8c42be0c-10e8-4a71-bf4d-d8d7a5d1653e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[EnableProcess := _wEnableProcess;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{7023e888-724f-48b4-81be-c8ed1c7f8bc3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_wEnableProcess := EnableProcess;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="GetBitWord" Id="{698f4cd9-5aaa-4948-8330-4ed006eb5d2f}">
+      <Declaration><![CDATA[METHOD PUBLIC GetBitWord : BOOL
+VAR_INPUT
+  inVal   : WORD;
+  bitNo   : DINT;
+END_VAR
+VAR
+  wConst : WORD := 1;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ( inVal AND SHL( wConst,DINT_TO_SINT(bitNo) MOD 16 ) ) > 0
+THEN
+  GetBitWord := TRUE;
+ELSE
+  GetBitWord := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Init" Id="{3c71f824-fa35-410d-88cb-22888870d811}">
+      <Declaration><![CDATA[METHOD Init : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT (_nLastStation   > 0) OR
+   NOT (_nFirstStation  > 0) OR
+   NOT (_nLastStation   < MAX_STATION+1) OR
+   NOT (_nFirstStation  < MAX_STATION+1)
+THEN
+  Init := FALSE;
+ELSE
+  FOR _nStation := _nLastStation TO _nFirstStation BY(-1) 
+  DO
+    _stCtrl^[_nStation].Cmd               := E_STATION_CTRL.STATION_INIT;
+    _stCtrl^[_nStation].nMask             := 0;
+  END_FOR
+
+  memset(ADR(_nMoverCount),    0, SIZEOF(_nMoverCount));
+  memset(ADR(_nMoverCountOld), 0, SIZEOF(_nMoverCountOld));
+  _nProcessState :=  _nTarget             := 0;
+  
+  Init := TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="MoverEnter" Id="{087bf083-ec8b-4a8f-b291-4c74557b6372}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY MoverEnter : bool]]></Declaration>
+      <Get Name="Get" Id="{0376b55b-a13f-4460-92e6-2a9ddb0f017e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoverEnter := _bMoverEnter;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{3bef2022-3643-4016-98c1-73c73fea5614}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bMoverEnter := MoverEnter;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="MoverOut" Id="{01698e23-f0db-4b7b-ae38-64fc57a4ea28}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY MoverOut : bool]]></Declaration>
+      <Get Name="Get" Id="{47abaaf2-2811-45fc-b22d-6c8720f60fce}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MoverOut := _bMoverOut;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{e2ee0318-4b14-4609-bc64-cbd249234ffc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bMoverOut := MoverOut;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Next" Id="{63330e2b-b58d-4dd4-aed5-6c3f323672bb}">
+      <Declaration><![CDATA[METHOD Next : BOOL
+VAR_INPUT
+  Nxt  : Bool;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_bNext := Nxt;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PrepareTargets" Id="{8e04e3f7-05a5-4812-a2bb-d904c091374f}">
+      <Declaration><![CDATA[METHOD PRIVATE PrepareTargets : BOOL
+VAR_INPUT
+  Execute         : BOOL;
+END_VAR
+VAR_INST
+  _idxStations    : uint;
+  _nt,
+  _nstate         : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF NOT Check() THEN RETURN; END_IF
+
+IF NOT Execute
+THEN
+  _nstate                             := 0;
+END_IF
+
+
+CASE _nstate
+OF
+  0:
+    IF Execute
+    THEN
+      _nstate                         := 10;
+    END_IF
+END_CASE
+CASE _nstate
+OF
+  10:
+    _nstate                           := 20;
+
+    FOR _idxStations := _nLastStation TO _nFirstStation BY(-1) 
+    DO
+      _nt                               := TO_USINT(_nLastTarget - _nTarget);
+      _nTarget                          := _nTarget + 1;
+  
+      _nPreparedTarget[_stState^[_idxStations].nMoverId]  := _nt;
+      _stCtrl^[_idxStations].nTargetStation               := TO_USINT(_nt);
+  
+      IF (_nLastTarget - _nTarget < _nFirstTarget)
+      THEN
+        _nTarget                        := 0;
+      END_IF
+    END_FOR
+END_CASE
+CASE _nstate
+OF
+  20:
+    PrepareTargets                    := TRUE;
+END_CASE
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="ProcessTime" Id="{d00419a7-db49-4dbe-aa31-acf19a0e2936}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY ProcessTime : time]]></Declaration>
+      <Get Name="Get" Id="{24facd13-d414-4bb6-b76f-a98920ebcd7f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ProcessTime := _tProcess;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{5907403c-deff-43eb-8d84-a0de0d2a810b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_tProcess := ProcessTime;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="SetBitWord" Id="{50b45556-4117-4424-8e04-99a7a8ddf300}">
+      <Declaration><![CDATA[METHOD PUBLIC SetBitWord : WORD
+VAR_INPUT
+  inVal   : WORD;
+  bitNo   : DINT;
+END_VAR
+VAR
+  wConst  : WORD := 1;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SetBitWord := inVal OR SHL( wConst,bitNo MOD 16 );]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="StationCount" Id="{8a13de11-7010-44c9-8b19-d9b9a32e8375}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY StationCount : uint]]></Declaration>
+      <Get Name="Get" Id="{3c9fdc52-c19f-4bb4-87a0-99c7350298cd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[StationCount := _nStationCount;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="StationCtrl" Id="{83803f5f-0b47-46a4-a4b9-14087bd08bb9}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY StationCtrl : pointer to ARRAY[1..MAX_STATION]  OF ST_STATION_CTRL;]]></Declaration>
+      <Set Name="Set" Id="{e041ab97-a1e4-4b5b-94c1-ca0431ae2735}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_stCtrl := StationCtrl;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="StationFirst" Id="{d2de8915-7e68-49ff-9bfd-5b353bb810d6}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY StationFirst : uint]]></Declaration>
+      <Get Name="Get" Id="{775b91a6-93be-4874-960e-58cded1b0fdd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[StationFirst := _nFirstStation;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a51fb2b3-3a10-450f-9eb4-f748fc120193}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_nFirstStation := StationFirst;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="StationLast" Id="{6aa1df61-bb0a-4645-bee1-71fc1b46d00e}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY StationLast : uint]]></Declaration>
+      <Get Name="Get" Id="{78a9fd8c-4da9-4370-82bd-241288a835f9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[StationLast := _nLastStation;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{3eb09a4d-1314-4412-b5ab-245e72f44c71}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_nLastStation := StationLast;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="StationState" Id="{39250f13-fbf7-4949-a663-b45102b295c9}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY StationState : POINTER TO ARRAY[1..MAX_STATION]  OF ST_STATION_STATE]]></Declaration>
+      <Set Name="Set" Id="{2850120b-f15e-4fd9-b319-bb074182ffb6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_stState := StationState;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TargetFirst" Id="{a2f15d8b-f149-40e7-916c-1dafe95c52d5}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY TargetFirst : uint]]></Declaration>
+      <Get Name="Get" Id="{7ec9dc90-ee4e-4478-9ad4-71684d4c4a2d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TargetFirst := _nFirstTarget;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{60b2ef36-3b02-44ff-b248-ff358cc20037}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_nFirstTarget := TargetFirst;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TargetLast" Id="{d00b79d6-9d8c-40db-94ff-7fe185df2798}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY TargetLast : uint]]></Declaration>
+      <Get Name="Get" Id="{850f8308-0c62-4637-8025-a5a20d94bc36}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TargetLast := _nLastTarget;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a906dba5-6def-4e19-9ad1-6f2b02714aac}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_nLastTarget := TargetLast;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TargetMask" Id="{0902d040-5eff-4257-824b-14abd6cfd0b9}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY TargetMask : byte]]></Declaration>
+      <Get Name="Get" Id="{da5b9f3d-cc87-4305-ba19-ec27e453c528}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TargetMask := _TargetMask;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{54d71b49-c6db-4ffe-9026-bef618ca8f56}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_TargetMask := TargetMask;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="fb_Simulation">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.Check">
+      <LineId Id="1" Count="44" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.Cycle">
+      <LineId Id="1" Count="175" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.DelBitWord">
+      <LineId Id="1" Count="5" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.Disable">
+      <LineId Id="1" Count="19" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.EnableProcess.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.EnableProcess.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.GetBitWord">
+      <LineId Id="1" Count="5" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.Init">
+      <LineId Id="1" Count="19" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.MoverEnter.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.MoverEnter.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.MoverOut.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.MoverOut.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.Next">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.PrepareTargets">
+      <LineId Id="1" Count="43" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.ProcessTime.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.ProcessTime.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.SetBitWord">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.StationCount.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.StationCtrl.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.StationFirst.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.StationFirst.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.StationLast.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.StationLast.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.StationState.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.TargetFirst.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.TargetFirst.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.TargetLast.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.TargetLast.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.TargetMask.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.TargetMask.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
