@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAPPING_in" Id="{cab2eef4-b243-4d10-adf5-ec5dc533ff13}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAPPING_in
+VAR
+  sMapping          : STRING;
+  bFirstCycle       : BOOL := TRUE;
+
+
+
+//  TicketListOutput  : U_TICKET_LIST_DATA_OUTPUT;
+//  TicketListState   : U_TICKET_LIST_STATE;
+//  InstanceState     : U_INSTANCE_STATE;
+//  AppState          : U_APP_STATE;
+  TransportState    : U_XTS_TRANSPORT_STATE;
+  StationState      : U_XTS_STATION_STATE;
+  MoverState        : U_MOVER_STATE;
+  MoverInfo         : U_MOVER_INFO;
+
+  szTransportState  : ARRAY[1..2] OF UDINT;
+  szStationState    : ARRAY[1..2] OF UDINT;
+  szMoverState      : ARRAY[1..2] OF UDINT;
+  szMoverInfo       : ARRAY[1..2] OF UDINT;
+
+  szAppState        : ARRAY[1..2] OF UDINT;
+  szInstanceState   : ARRAY[1..2] OF UDINT;
+  szTicketState     : ARRAY[1..2] OF UDINT;
+  szTicketData      : ARRAY[1..2] OF UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF (bFirstCycle)
+THEN
+  bFirstCycle           := FALSE;
+  
+  szTransportState[1]   := SIZEOF(TransportState);
+  szTransportState[2]   := SIZEOF(GVL_XTS.XtsTransportState);
+
+  szStationState  [1]   := SIZEOF(StationState);
+  szStationState  [2]   := SIZEOF(GVL_XTS.StationState);
+
+  szMoverState    [1]   := SIZEOF(MoverState);
+  szMoverState    [2]   := SIZEOF(GVL_XTS.MoverState);
+
+  szMoverInfo     [1]   := SIZEOF(MoverInfo);
+  szMoverInfo     [2]   := SIZEOF(GVL_XTS.MoverInfo);
+
+
+(*
+  szAppState[1]       := SIZEOF(AppState);
+  szAppState[2]       := SIZEOF(GVL_APPLICATION.AppState);
+
+  szInstanceState[1]  := SIZEOF(InstanceState);
+  szInstanceState[2]  := SIZEOF(GVL_APPLICATION.InstanceState);
+
+  szTicketState[1]    := SIZEOF(TicketListState);
+  szTicketState[2]    := SIZEOF(GVL_APPLICATION.TicketListState);
+
+  szTicketData[1]     := SIZEOF(TicketListOutput);
+  szTicketData[2]     := SIZEOF(GVL_APPLICATION.TicketListDataOutput);
+*)
+END_IF
+(*
+//---------------------------------------------------------------------
+IF (SIZEOF(TicketListOutput) <> SIZEOF(GVL_APPLICATION.TicketListDataOutput))
+THEN
+  sMapping  := 'TicketListOutput sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TicketListState) <> SIZEOF(GVL_APPLICATION.TicketListState))
+THEN
+  sMapping  := 'TicketListState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(InstanceState) <> SIZEOF(GVL_APPLICATION.InstanceState))
+THEN
+  sMapping  := 'InstanceState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(AppState) <> SIZEOF(GVL_APPLICATION.AppState))
+THEN
+  sMapping  := 'AppState sizes DO NOT match';
+  RETURN;
+END_IF
+*)
+//---------------------------------------------------------------------
+IF (SIZEOF(TransportState) <> SIZEOF(GVL_XTS.XtsTransportState))
+THEN
+  sMapping  := 'TransportState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(StationState) <> SIZEOF(GVL_XTS.StationState))
+THEN
+  sMapping  := 'StationState sizes DO NOT match';
+  RETURN;
+END_IF
+IF (SIZEOF(MoverState) <> SIZEOF(GVL_XTS.MoverState))
+THEN
+  sMapping  := 'MoverState sizes DO NOT match';
+  RETURN;
+END_IF
+IF (SIZEOF(MoverInfo) <> SIZEOF(GVL_XTS.MoverInfo))
+THEN
+  sMapping  := 'MoverInfo sizes DO NOT match';
+  RETURN;
+END_IF
+sMapping    := 'MAPPING ACTIVE';
+//-----------------------------------------------------------------------------------------
+//       destination,                               source,                size
+//-----------------------------------------------------------------------------------------
+  memcpy(ADR(GVL_XTS.XtsTransportState),            ADR(TransportState),  SIZEOF(TransportState));
+  memcpy(ADR(GVL_XTS.StationState),                 ADR(StationState),    SIZEOF(StationState));
+  memcpy(ADR(GVL_XTS.MoverState),                   ADR(MoverState),      SIZEOF(MoverState));
+  memcpy(ADR(GVL_XTS.MoverInfo),                    ADR(MoverInfo),       SIZEOF(MoverInfo));
+
+  //memcpy(ADR(GVL_APPLICATION.AppState),             ADR(AppState),         SIZEOF(AppState));
+  //GVL_APPLICATION.AppState.AppInit                  := AppSTate.stState.AppInit;
+
+  //memcpy(ADR(GVL_APPLICATION.InstanceState),        ADR(InstanceState),    SIZEOF(InstanceState));
+  //memcpy(ADR(GVL_APPLICATION.TicketListState),      ADR(TicketListState),  SIZEOF(TicketListState));
+  //memcpy(ADR(GVL_APPLICATION.TicketListDataOutput), ADR(TicketListOutput), SIZEOF(TicketListOutput));
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAPPING_in">
+      <LineId Id="1" Count="6" />
+      <LineId Id="81" Count="8" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="8" Count="51" />
+      <LineId Id="90" Count="9" />
+      <LineId Id="60" Count="5" />
+      <LineId Id="100" Count="1" />
+      <LineId Id="66" Count="11" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

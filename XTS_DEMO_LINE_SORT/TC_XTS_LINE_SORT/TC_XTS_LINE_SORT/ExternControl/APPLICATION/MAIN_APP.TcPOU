@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN_APP" Id="{aed82ec5-7c0f-4ed8-9d95-00008ab7747f}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.01.16
+//
+//  - ExternControl
+//
+//    - cyclic call to simulation class which handshakes the XtsStations in XtsTransport PLC
+//
+//---------------------------------------------------------------------------------------------------------------
+PROGRAM MAIN_APP
+VAR
+  eInit             : E_PROGRESS;   // application startup state info
+
+  nProcess          : UINT;
+
+  bNext             : BOOL := TRUE;
+  bEnter            : BOOL := TRUE;
+  bLeave            : BOOL := TRUE;
+
+  tProcess          : array[1..MAX_PROCESS] of time;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// check for MAIN.eInit
+//  - wait for fb_TransportUnit to be fully started up
+//-----------------------------------------------------------------------------------------------------------------
+IF NOT (MAIN.eInit = E_PROGRESS.PROGRESS_DONE) THEN eInit   := E_PROGRESS.PROGRESS_INVALID; RETURN; END_IF
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// /assign dataflow
+//-----------------------------------------------------------------------------------------------------------------
+//FOR nProcess := 1 TO MAX_PROCESS
+//DO
+//  GVL_APPLICATION.Simulation[nProcess].StationCtrl   := ADR(GVL_XTS.StationCtrl);
+//  GVL_APPLICATION.Simulation[nProcess].StationState  := ADR(GVL_XTS.StationState);
+//
+//  GVL_APPLICATION.Simulation[nProcess].ProcessTime   := tProcess[nProcess];
+//END_FOR
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//Init();
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// react to operation modes
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+CASE GVL_XTS.XtsTransportCtrl.Cmd
+OF
+  E_XTS_TRANSPORT_CTRL.CMD_INIT:
+  
+//    FOR nProcess := 1 TO MAX_PROCESS
+//    DO
+//      GVL_APPLICATION.Simulation[nProcess].Init(); // clearing of XtsStations and Simulation
+//    END_FOR
+END_CASE
+
+CASE (GVL_XTS.XtsTransportState.State MOD E_PROGRESS.PROGRESS_DONE)
+OF
+  E_XTS_TRANSPORT_STATE.TRANSPORT_INIT:
+
+END_CASE
+
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="Init" Id="{69838e0d-19cf-48fe-8b42-ee1af1eba2b6}">
+      <Implementation>
+        <ST><![CDATA[CASE eInit
+OF
+  E_PROGRESS.PROGRESS_INVALID:          // startup procedure for your application
+    eInit                               := E_PROGRESS.PROGRESS_INIT;
+
+
+  E_PROGRESS.PROGRESS_INIT:
+      nProcess                                        := 1;
+      tProcess[nProcess]                              := T#2200MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 1;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 1;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 2;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 2;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 2;
+      tProcess[nProcess]                              := T#500MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 2;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 2;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 3;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 3;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 3;
+      tProcess[nProcess]                              := T#2200MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 3;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 3;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 4;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 4;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 4;
+      tProcess[nProcess]                              := T#500MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 4;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 4;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 5;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 5;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 5;
+      tProcess[nProcess]                              := T#2200MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 5;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 5;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 6;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 6;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 6;
+      tProcess[nProcess]                              := T#500MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 6;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 6;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 7;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 7;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 7;
+      tProcess[nProcess]                              := T#800MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 7;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 7;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 8;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 8;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 8;
+      tProcess[nProcess]                              := T#800MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 8;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 8;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 9;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 9;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 9;
+      tProcess[nProcess]                              := T#2200MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 9;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 9;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 10;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 10;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 10;
+      tProcess[nProcess]                              := T#500MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 10;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 10;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 11;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 11;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 11;
+      tProcess[nProcess]                              := T#1900MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 11;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 11;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 12;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 12;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 12;
+      tProcess[nProcess]                              := T#2200MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 12;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 12;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 13;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 13;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 13;
+      tProcess[nProcess]                              := T#500MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 13;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 13;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 14;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 15;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 14;
+      tProcess[nProcess]                              := T#2000MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 14;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 15;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 16;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 17;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+
+      //---------------------------------------------------------
+      nProcess                                        := 16;
+      tProcess[nProcess]                              := T#2300MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 16;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 17;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 18;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 18;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 18;
+      tProcess[nProcess]                              := T#2200MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 18;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 18;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 19;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 19;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      //---------------------------------------------------------
+      nProcess                                        := 19;
+      tProcess[nProcess]                              := T#500MS;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 19;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 19;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 1;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 1;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+    eInit                               := E_PROGRESS.PROGRESS_DONE;
+
+END_CASE
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="MAIN_APP">
+      <LineId Id="1" Count="28" />
+      <LineId Id="31" Count="9" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="67" Count="4" />
+    </LineIds>
+    <LineIds Name="MAIN_APP.Init">
+      <LineId Id="1" Count="197" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

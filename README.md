@@ -24,6 +24,12 @@ All extern examples shall illustrate a specific aspect of the XTS_TRANSPORT_LAYE
 
 ## [XTS_TRANSPORT_EXAMPLES]:
 
+### [XTS_DEMO_LINE_SORT]:
+- 'mover only' example
+- 2 PLCs (XtsTransport and ExternControl)
+- 2 separate parts with one mover each
+- ExternControl is used as command center
+
 ### [XTS_DEMO_22]:
 - simple handshake example
 - multiple XPU controlled in one PLC
