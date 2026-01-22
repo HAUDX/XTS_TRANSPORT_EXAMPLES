@@ -1,21 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="E_INSTANCE_STATE" Id="{365e0e97-149c-4430-980b-c055bcb2a927}">
+  <DUT Name="E_INSTANCE_CMD" Id="{2ff1129e-0247-48da-b7f6-e86cac3f48a9}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
-//{attribute 'strict'}
 {attribute 'to_string'}
-TYPE E_INSTANCE_STATE :
+{attribute 'strict'}
+TYPE E_INSTANCE_CMD : // instructions for fb_Instance executions
 (
-  NULL,
-	INVALID,
+	NULL,
   INIT,
-  DISABLED,
-  DETECTION,
-  ENABLED,
-  WORKING,
-  PROCEEDING,
+  DISABLE,
+  ENABLE,
+  WORK,
+  PROCEED := 100,
   FINISH,
-  CLEARED
+  CLEAR
 )UINT;
 END_TYPE
 ]]></Declaration>

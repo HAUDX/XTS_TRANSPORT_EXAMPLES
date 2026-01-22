@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"12"</v>
+          <v n="UniqueIdGenerator">"15"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -558,7 +558,7 @@
                     </o>
                     <o>
                       <v n="Id">1795088690L</v>
-                      <v n="Value" t="Int16">10</v>
+                      <v n="Value">"20"</v>
                     </o>
                     <o>
                       <v n="Id">3929720075L</v>
@@ -6457,6 +6457,8 @@
                 <v>44ac0b4b-9d0c-4a5c-8e8d-0a21c1e05c55</v>
                 <v>FB_Reinit</v>
                 <v>e96809af-943a-4e17-a399-f0560949bb54</v>
+                <v>GetCallerNamespace</v>
+                <v>ed9c4982-9c8d-52c6-a982-c1302ff04654</v>
                 <v>GetClientData</v>
                 <v>a621556d-0d5f-455b-8c61-636b439024f7</v>
                 <v>GetDialogInterface</v>
@@ -6628,8 +6630,13 @@ END_VAR"</v>
                 <v n="Width">790</v>
                 <v n="Height">731</v>
               </o>
+              <v>2</v>
+              <o>
+                <v n="Width">790</v>
+                <v n="Height">731</v>
+              </o>
             </d2>
-            <v n="Version">1</v>
+            <v n="Version">2</v>
           </o>
           <n n="FrameInterfaceDataModel" />
         </o>

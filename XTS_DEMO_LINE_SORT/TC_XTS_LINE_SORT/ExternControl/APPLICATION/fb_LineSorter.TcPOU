@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fb_LineSorter" Id="{a0ece8a4-447c-4a11-a120-e2e1655065c0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fb_LineSorter
+VAR
+  _sCheck               : STRING;
+
+  // Ctrl and State for executing commands
+  _stCtrlMover          : REFERENCE TO ARRAY[1..MAX_MOVER] OF ST_MOVER_CTRL;
+  _stStateMover         : REFERENCE TO ARRAY[1..MAX_MOVER] OF ST_MOVER_STATE;
+
+  // data structure to use with mover information
+  _stInfoMover          : REFERENCE TO ARRAY[1..MAX_MOVER] OF ST_MOVER_INFO;
+
+  // data structures to use with command parameters
+  _stMoveDataMover      : REFERENCE TO ARRAY[1..MAX_MOVER] OF ST_MOVE_DATA;
+  _stGearDataMover      : REFERENCE TO ARRAY[1..MAX_MOVER] OF ST_GEAR_DATA;
+
+  _eCmd,
+  _eCmdOld              : E_INSTANCE_CMD;
+
+  _eState               : E_INSTANCE_STATE;
+
+  _eResult              : E_PROGRESS;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT Check() THEN RETURN; END_IF
+
+_stMsg.eDevice                := e_Device.Mover + _nMoverId;
+
+// copy to local for debug
+_eCmd                         := _stCtrl[_nMoverId].Cmd;
+
+// cyclic check for command change
+// get state for cmd
+IF (_eCmd <> _eCmdOld)
+THEN
+  // get matching sdtate for Ctrl.Cmd
+  _eState                     := Cmd(_eCmd);
+  _eCmdOld                    := _eCmd;
+END_IF
+
+
+CASE _eResult
+OF
+  E_PROGRESS.PROGRESS_INVALID:
+    _stState[_nMoverId].State := E_MOVER_STATE.MOVER_NULL;
+
+  E_PROGRESS.PROGRESS_ERROR:
+    _stState[_nMoverId].State := _eState + E_PROGRESS.PROGRESS_ERROR;
+
+  E_PROGRESS.PROGRESS_DONE:
+    _stInfo.nErrorId          := 0;
+    _stInfo.bMoverError       := FALSE;
+    _stState[_nMoverId].State := _eState + E_PROGRESS.PROGRESS_DONE;
+
+ELSE
+  // work in progress
+  // update progress for extern use
+  _stState[_nMoverId].State   := _eState + _eResult;
+
+  CASE _eState
+  OF
+    E_MOVER_STATE.MOVER_ENABLE:
+      _eResult                := Enable(TRUE);
+  
+    E_MOVER_STATE.MOVER_DISABLE:
+      _eResult                := Disable(TRUE);
+  
+    E_MOVER_STATE.MOVER_MOVE_TO_POS:
+      _eResult                := MoveToPos(TRUE, _stMoveData[_nMoverId]);
+  
+    E_MOVER_STATE.MOVER_MOVE_TO_POS_CA:
+      _eResult                := MoveToPosCa(TRUE, _stMoveData[_nMoverId]);
+  
+    E_MOVER_STATE.MOVER_SEND_TO_POS_CA:
+      _eResult                := SendToModuloPosCa(TRUE, _stMoveData[_nMoverId]);
+  
+    E_MOVER_STATE.MOVER_HALT:
+      _eResult                := Halt(TRUE, _stMoveData[_nMoverId]);
+  
+    E_MOVER_STATE.MOVER_GEAR_IN:
+      _eResult                := GearIn(TRUE, _stMoveData[_nMoverId], _stGearData[_nMoverId]);
+  
+    E_MOVER_STATE.MOVER_GEAR_IN_POS_CA:
+      _eResult                := GearInPosCa(TRUE, _stMoveData[_nMoverId], _stGearData[_nMoverId]);
+  
+    E_MOVER_STATE.MOVER_GEAR_OUT:
+      _eResult                := GearOut(TRUE);
+  
+    E_MOVER_STATE.MOVER_RESET:
+      _eResult                := Reset(TRUE);
+
+    E_MOVER_STATE.MOVER_MOVE_TO_POS_ABS:
+      _eResult                := MoveToPosAbs(TRUE, _stMoveData[_nMoverId]);
+
+  ELSE
+      _eResult                := E_PROGRESS.PROGRESS_INVALID;
+  END_CASE
+END_CASE
+
+
+]]></ST>
+    </Implementation>
+    <Folder Name="private" Id="{99676286-242d-4945-9c30-ccfbb63bbf90}" />
+    <Method Name="Check" Id="{1af63b03-8013-4732-b163-e5fcd20d1a97}" FolderPath="private\">
+      <Declaration><![CDATA[METHOD PRIVATE Check : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// The thing that should not be
+
+
+IF NOT __ISVALIDREF(_stCtrlMover)
+THEN
+  _sCheck                     := '_stCtrlMover: missing pointer';
+  RETURN;
+END_IF
+
+IF NOT __ISVALIDREF(_stStateMover)
+THEN
+  _sCheck                     := '_stStateMover: missing pointer';
+  RETURN;
+END_IF
+
+IF NOT __ISVALIDREF(_stInfoMover)
+THEN
+  _sCheck                     := '_stInfoMover: missing pointer';
+  RETURN;
+END_IF
+
+IF NOT __ISVALIDREF(_stGearDataMover)
+THEN
+  _sCheck                     := '_stGearDataMover: missing pointer';
+  RETURN;
+END_IF
+
+IF NOT __ISVALIDREF(_stMoveDataMover)
+THEN
+  _sCheck                     := '_stMoveDataMover: missing pointer';
+  RETURN;
+END_IF
+
+_sCheck                       := 'CHECK_DONE';
+Check                         := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Cmd" Id="{58cfd8df-36f9-4dda-a7d0-f13c4aa3979c}" FolderPath="private\">
+      <Declaration><![CDATA[METHOD PRIVATE Cmd : E_MOVER_STATE
+VAR_INPUT
+  Ctrl      : E_MOVER_CTRL;
+END_VAR
+VAR_INST
+  _eState   : E_MOVER_STATE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Check() THEN Cmd := E_MOVER_STATE.MOVER_NULL;  RETURN; END_IF
+
+
+CASE Ctrl
+OF
+  E_MOVER_CTRL.MOVER_ENABLE:
+    _eResult          := Enable(FALSE);
+    _eState           := E_MOVER_STATE.MOVER_ENABLE;
+
+  E_MOVER_CTRL.MOVER_DISABLE:
+    _eResult          := Disable(FALSE);
+    _eState           := E_MOVER_STATE.MOVER_DISABLE;
+
+  E_MOVER_CTRL.MOVER_MOVE_TO_POS:
+    _eResult          := MoveToPos(FALSE, _stMoveData[_nMoverId]);
+    _eState           := E_MOVER_STATE.MOVER_MOVE_TO_POS;
+
+  E_MOVER_CTRL.MOVER_MOVE_TO_POS_CA:
+    _eResult          := MoveToPosCa(FALSE, _stMoveData[_nMoverId]);
+    _eState           := E_MOVER_STATE.MOVER_MOVE_TO_POS_CA;
+
+  E_MOVER_CTRL.MOVER_SEND_TO_POS_CA:
+    _eResult          := SendToModuloPosCa(FALSE, _stMoveData[_nMoverId]);
+    _eState           := E_MOVER_STATE.MOVER_SEND_TO_POS_CA;
+
+  E_MOVER_CTRL.MOVER_HALT:
+    _eResult          := Halt(FALSE, _stMoveData[_nMoverId]);
+    _eState           := E_MOVER_STATE.MOVER_HALT;
+
+  E_MOVER_CTRL.MOVER_GEAR_IN:
+    _eResult          := GearIn(FALSE,  _stMoveData[_nMoverId], _stGearData[_nMoverId]);
+    _eState           := E_MOVER_STATE.MOVER_GEAR_IN;
+
+  E_MOVER_CTRL.MOVER_GEAR_IN_POS_CA:
+    _eResult          := GearInPosCa(FALSE, _stMoveData[_nMoverId], _stGearData[_nMoverId]);
+    _eState           := E_MOVER_STATE.MOVER_GEAR_IN_POS_CA;
+
+  E_MOVER_CTRL.MOVER_GEAR_OUT:
+    _eResult          := GearOut(FALSE);
+    _eState           := E_MOVER_STATE.MOVER_GEAR_OUT;
+
+  E_MOVER_CTRL.MOVER_RESET:
+    _eResult          := Reset(FALSE);
+    _eState           := E_MOVER_STATE.MOVER_RESET;
+
+  E_MOVER_CTRL.MOVER_MOVE_TO_POS_ABS:
+    _eResult          := MoveToPosAbs(FALSE, _stMoveData[_nMoverId]);
+    _eState           := E_MOVER_STATE.MOVER_MOVE_TO_POS_ABS;
+
+ELSE
+    _eResult          := E_PROGRESS.PROGRESS_INVALID; 
+    _eState           := E_MOVER_STATE.MOVER_NULL;
+END_CASE
+
+Cmd                   := _eState;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="fb_LineSorter">
+      <LineId Id="3" Count="75" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_LineSorter.Check">
+      <LineId Id="1" Count="36" />
+    </LineIds>
+    <LineIds Name="fb_LineSorter.Cmd">
+      <LineId Id="1" Count="55" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

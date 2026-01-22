@@ -19,6 +19,10 @@
     <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="APPLICATION\fb_LineSorter.TcPOU">
+      <SubType>Code</SubType>
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </Compile>
     <Compile Include="APPLICATION\fb_Simulation.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -27,6 +31,18 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="APPLICATION\MAIN_APP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Application\E_APP_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Application\E_APP_VARIANT.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Application\ST_APP_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Application\ST_APP_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\E_PROCESS_CHECK.TcDUT">
@@ -41,10 +57,19 @@
     <Compile Include="APPLICATION\_types\fb_Instance\E_INSTANCE_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="APPLICATION\_types\fb_Instance\E_INSTANCE_CMD.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="APPLICATION\_types\fb_Instance\E_INSTANCE_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\fb_Instance\fb_Instance.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\fb_Instance\ST_INSTANCE_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\fb_Instance\ST_INSTANCE_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\LinkedList\fb_Process_LinkedListCtrl.TcPOU">
@@ -407,6 +432,7 @@
   <ItemGroup>
     <Folder Include="APPLICATION" />
     <Folder Include="APPLICATION\_types" />
+    <Folder Include="APPLICATION\_types\Application" />
     <Folder Include="APPLICATION\_types\fb_Instance" />
     <Folder Include="APPLICATION\_types\LinkedList" />
     <Folder Include="MAPPING" />

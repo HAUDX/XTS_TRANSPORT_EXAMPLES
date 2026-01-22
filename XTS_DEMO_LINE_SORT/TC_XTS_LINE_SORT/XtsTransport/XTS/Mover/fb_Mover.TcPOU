@@ -1311,7 +1311,7 @@ OF
         _stMsg.iErrorNumber   := _nErrorId;
         _stMsg.sText          := concat(TO_STRING(_eState), ': ');
         _stMsg.sText          := concat(_stMsg.sText, '.ModuloActPos: ');
-        _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_Mover.NcToPlc.ModuloActPos));
+        _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_Mover.NcToPlc.ActPos));
         f_MessageSet(_stMsg);
       END_IF
     END_IF
@@ -1355,7 +1355,7 @@ OF
           _stMsg.eSubdevice   := e_Subdevice.fbMovePtP;
           _stMsg.iErrorNumber := _nErrorId;
           _stMsg.sText        := concat(TO_STRING(_eState), ': ');
-          _stMsg.sText        := concat(_stMsg.sText, concat('ModActPos: ', TO_STRING(_Mover.NcToPlc.ModuloActPos)));
+          _stMsg.sText        := concat(_stMsg.sText, concat('ModActPos: ', TO_STRING(_Mover.NcToPlc.ActPos)));
           f_MessageSet(_stMsg);
         END_IF
       _fbMoveAbs( 
