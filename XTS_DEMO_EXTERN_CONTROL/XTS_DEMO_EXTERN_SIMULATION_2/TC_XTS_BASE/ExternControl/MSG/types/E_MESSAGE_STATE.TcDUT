@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_MESSAGE_STATE" Id="{933c651b-f617-4d50-b36d-ab05ad3a4c8a}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+//{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_MESSAGE_STATE :
+(
+	MSG_STATE_NULL,
+  MSG_STATE_INIT    := 10,
+  MSG_STATE_IDLE    := 30,
+  MSG_STATE_WRITE   := 50
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

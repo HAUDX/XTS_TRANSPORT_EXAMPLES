@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_APPLICATION" Id="{ef5c8ee7-19c1-4689-9600-6bba8e125d3a}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+  MAX_PROCESS       : UINT := 9;
+END_VAR
+{attribute 'qualified_only'}
+VAR_GLOBAL
+  Simulation        : ARRAY[1..MAX_PROCESS] OF fb_Simulation;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

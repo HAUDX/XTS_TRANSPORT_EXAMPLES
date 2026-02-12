@@ -76,7 +76,8 @@ OF
       GVL_APPLICATION.Simulation[nProcess].Cycle();
     END_FOR
 
-  E_XTS_TRANSPORT_STATE.TRANSPORT_START:
+  E_XTS_TRANSPORT_STATE.TRANSPORT_START,
+  E_XTS_TRANSPORT_STATE.TRANSPORT_RESTART:
     FOR nProcess := 1 TO MAX_PROCESS
     DO
       GVL_APPLICATION.Simulation[nProcess].Next(bNext);
@@ -299,7 +300,9 @@ END_CASE
       </Implementation>
     </Action>
     <LineIds Name="MAIN_APP">
-      <LineId Id="1" Count="70" />
+      <LineId Id="1" Count="52" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="54" Count="17" />
     </LineIds>
     <LineIds Name="MAIN_APP.Init">
       <LineId Id="1" Count="197" />

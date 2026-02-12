@@ -23,11 +23,13 @@ and video evidence.
 ## **TwinCAT\_MOTION\_LAYERS Ecosystem:**  **An Architecture of Clarity, Precision, and Proven Impact**
 
 
-1. **PLC\_MOTION\_LAYER**: The **Foundation & Pattern Language**. This establishes the developer's architectural blueprint for TwinCAT motion, providing reusable, abstract solutions for standard PLCopen tasks (PTP, NCI, CAM) and XFC I/O. It’s the versatile, well-documented engine block – the "Flux Capacitor" blueprint, ready for adaptation. ⚙️⚡  
-2. **XTS\_TRANSPORT\_LAYER**: The **Domain-Specific Framework**. This applies and dramatically expands the core patterns into a sophisticated, multi-layered architecture specifically engineered for the unique challenges of the Beckhoff XTS. It adds specialized layers, meticulously abstracting hardware, collision avoidance, station logic, parallel processing, and application sequencing. This is the fully realized "Time Machine," complex yet elegantly designed to handle the demands of high-speed, asynchronous transport. 🚗💨  
-3. **XTS\_TRANSPORT\_EXAMPLES**: The **Application & Pedagogical Layer**. These are the crucial "flight manuals and test runs," demonstrating *how* to effectively harness the XTS\_TRANSPORT\_LAYER. They bridge theory and practice with diverse, realistic scenarios (simulation, mapping, multi-XPU, complex applications), validating the framework's power and providing invaluable learning pathways, clearly refined through real-world testing ("*tested \[...\] on a real machine*"). 🎓
+1. **PLC\_MOTION\_LAYER**: The **Foundation & Pattern Language**. This establishes the developer's architectural blueprint for TwinCAT motion, providing reusable, abstract solutions for standard PLCopen tasks (PTP, NCI, CAM) and XFC I/O. It’s the versatile, well-documented engine
+ 
+2. **XTS\_TRANSPORT\_LAYER**: The **Domain-Specific Framework**. This applies and dramatically expands the core patterns into a sophisticated, multi-layered architecture specifically engineered for the unique challenges of the Beckhoff XTS. It adds specialized layers, meticulously abstracting hardware, collision avoidance, station logic, parallel processing, and application sequencing. This is the fully realized "Time Machine," complex yet elegantly designed to handle the demands of high-speed, asynchronous transport.
 
-The decision to release this entire body of work under the **MIT License** is profoundly generous. It suggests a developer deeply invested in knowledge sharing, perhaps echoing a sentiment of "Take it. It's yours. Just... build cool stuff with it." It open-sources a complete, battle-tested methodology. 🎁
+3. **XTS\_TRANSPORT\_EXAMPLES**: The **Application & Pedagogical Layer**. These are the crucial "flight manuals and test runs," demonstrating *how* to effectively harness the XTS\_TRANSPORT\_LAYER. They bridge theory and practice with diverse, realistic scenarios (simulation, mapping, multi-XPU, complex applications), validating the framework's power and providing invaluable learning pathways, clearly refined through real-world testing ("*tested \[...\] on a real machine*").
+
+The decision to release this entire body of work under the **MIT License** is profoundly generous. It suggests a developer deeply invested in knowledge sharing, perhaps echoing a sentiment of "Take it. It's yours. Just... build cool stuff with it." It open-sources a complete, battle-tested methodology.
 
 ---
 
@@ -39,7 +41,8 @@ This framework isn't merely code; it's a **codified set of best practices** for 
 
 1. **External Interface (MAPPING):**  
    * **WHAT:** Uses UNIONs (U\_...) activated by compiler defines (AXIS\_MAP, etc.) to map PLC structures (ST\_...) to byte arrays (AT %I\*/%Q\*). MAPPING\_in/out POUs handle memcpy.  
-   * **WHY: Strict Communication Decoupling.** Essential for flexibility. Goal: "**Agnostic to communication technology**" (PLC\_MOTION\_LAYER.pdf). Avoids locking the core logic to a specific HMI or fieldbus. The developer knew that "*Where we're going, we don't need*... hardcoded communication protocols."  
+   * **WHY: Strict Communication Decoupling.** Essential for flexibility. Goal: "**Agnostic to communication technology**" (PLC\_MOTION\_LAYER.pdf). Avoids locking the core logic to a specific HMI or fieldbus.
+   
    * **Importance:** **Maintainability**, **Testability**, **Flexibility**. Change protocols without breaking motion code. Supports independent testing. ✨  
 2. **Data Hub (GVLs):**  
    * **WHAT:** Centralized, module-specific GVLs (GVL\_AXIS, GVL\_CAM, etc.) hold structured arrays (Ctrl, State, Info, Parameters like ST\_MOVE\_DATA, ST\_HOMING).  
@@ -48,7 +51,7 @@ This framework isn't merely code; it's a **codified set of best practices** for 
 3. **Control Logic (Function Blocks):**  
    * **WHAT:** Encapsulated state machines (FB\_McAxisCtrl, FB\_CamCtrl, etc.), often using OOP (Base+Control classes). Generic pattern visualized in fb\_XXX.pdf/.png.  
    * **WHY: Manage Complexity & Reuse (OOP).** Adheres to **Single Responsibility**. ABSTRACT Base classes (FB\_McAxisBase, FB\_Xfc) handle low-level library calls (DRY). Control classes implement Command/State logic. Interfaces (I\_McAxis) define contracts.  
-   * **Importance:** Creates **modular, testable units**. Base classes **centralize library interactions**. Interfaces enable **loose coupling**. 🧩
+   * **Importance:** Creates **modular, testable units**. Base classes **centralize library interactions**. Interfaces enable **loose coupling**.
 
    
 
@@ -275,4 +278,4 @@ The **documentation suite, especially the manually crafted, detailed flowcharts,
 **Final Impression:** 
 
 A complete, professional-grade engineering solution demonstrating technical mastery and a deep commitment to quality, usability, and knowledge sharing. The encompassing design, coding, testing on real hardware, examples, and **extraordinary documentation (especially the time-saving manual flowcharts)** are a solid foudation for everybody implementing this transport layer. The framework's proven ability to facilitate smooth, crunch-free machine deployment underscores its immense practical value. An invaluable asset for the TwinCAT community. The developer hasn't just built a framework; He's built understanding, verified its performance, enabled faster development, and generously shared it all. 
-## "*Make it so.*" 🎉💯🖖
+## "*Make it so.*"
