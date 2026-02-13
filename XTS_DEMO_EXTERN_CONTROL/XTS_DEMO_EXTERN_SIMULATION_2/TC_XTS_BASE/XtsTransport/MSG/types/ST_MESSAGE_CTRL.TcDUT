@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="ST_MESSAGE_CTRL" Id="{0947409c-e2ad-40e0-b722-4df7636e200a}">
+  <DUT Name="ST_MESSAGE_CTRL" Id="{5f449fa6-064f-4819-8cc9-fae3a381a7a7}">
     <Declaration><![CDATA[TYPE ST_MESSAGE_CTRL :
 STRUCT
   Cmd         : E_MESSAGE_CTRL;

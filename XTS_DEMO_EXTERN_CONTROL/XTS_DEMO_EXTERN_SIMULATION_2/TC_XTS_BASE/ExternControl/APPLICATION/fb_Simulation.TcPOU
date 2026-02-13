@@ -160,7 +160,12 @@ DO
       THEN
         IF (_bMoverEnter)
         THEN
-          _stCtrl^[_nStation].Cmd           := E_STATION_CTRL.STATION_ENABLE;
+          IF (_tProcess < T#1MS)
+          THEN
+            _stCtrl^[_nStation].Cmd         := E_STATION_CTRL.STATION_ENABLE;
+          ELSE
+            _stCtrl^[_nStation].Cmd         := E_STATION_CTRL.STATION_ENABLE;
+          END_IF
         ELSE
           _stCtrl^[_nStation].Cmd           := E_STATION_CTRL.STATION_DISABLE;
         END_IF
@@ -173,6 +178,13 @@ DO
       _wEnter                               := SetBitWord(_wEnter, (_nStation-_nFirstStation));
       IF _bMoverEnter
       THEN
+          IF (_tProcess < T#1MS)
+          THEN
+            _stCtrl^[_nStation].Cmd         := E_STATION_CTRL.STATION_MOVER_SEND;
+          ELSE
+            _stCtrl^[_nStation].Cmd         := E_STATION_CTRL.STATION_ENABLE;
+          END_IF
+
         _tonProcess(IN                      := FALSE, 
                     PT                      := _tProcess);
 
@@ -724,7 +736,16 @@ END_VAR
       <LineId Id="1" Count="44" />
     </LineIds>
     <LineIds Name="fb_Simulation.Cycle">
-      <LineId Id="1" Count="175" />
+      <LineId Id="1" Count="22" />
+      <LineId Id="177" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="25" Count="11" />
+      <LineId Id="183" Count="5" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="37" Count="139" />
     </LineIds>
     <LineIds Name="fb_Simulation.DelBitWord">
       <LineId Id="1" Count="5" />

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="ST_STATION_GEAR_PARAMETER" Id="{eecb9c01-f2fd-4afb-81fe-37f366807f34}">
+  <DUT Name="ST_STATION_GEAR_PARAMETER" Id="{569e2fe7-9698-47e5-9203-f08681a62f97}">
     <Declaration><![CDATA[TYPE ST_STATION_GEAR_PARAMETER :
 STRUCT
   eDistance           : E_STATION_GEAR_DISTANCE_AXIS; // follow which leader?

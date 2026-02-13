@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <POU Name="fb_MessageDataCtrl" Id="{211bb405-a684-4003-a4ae-804467263b62}" SpecialFunc="None">
+  <POU Name="fb_MessageDataCtrl" Id="{9f7a1811-2d40-441c-94bb-a840f6e3ccd4}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fb_MessageDataCtrl EXTENDS fb_MessageData
 VAR
   _stCtrl       : REFERENCE TO ST_MESSAGE_CTRL;
@@ -93,7 +93,7 @@ ELSE
 END_CASE
 ]]></ST>
     </Implementation>
-    <Folder Name="methods" Id="{43f8fbc1-eee0-497d-87ee-5cd8eadd69ba}" />
+    <Folder Name="methods" Id="{4227ff19-86c8-4bc8-8c32-2882d7b8d51c}" />
     <Method Name="BuildFileData" Id="{f7ac25e2-99d5-4c0b-91cf-be66388bcc74}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD BuildFileData : e_progress
 VAR_INPUT
@@ -113,6 +113,7 @@ END_VAR
 IF NOT Execute 
 THEN
   _eRes                           := WriteData(FALSE);
+  _eRes                           := BuildFolder(FALSE);
 	_eState                         := E_PROGRESS.PROGRESS_INIT; 
 END_IF 
 //-----------------------------------------------------------------------------
@@ -136,9 +137,30 @@ OF
 
       memset(ADR(_sWriteData),0,SIZEOF(_sWriteData));
 
+      IF (_sFolderDate <> FolderDate(_dtLocalTime))
+      THEN
+        _eState                   := E_PROGRESS.PROGRESS_PREPARE;
+      ELSE
+        _eState                   := E_PROGRESS.PROGRESS_BUSY;
+        _eFlow                    := E_MESSAGE_FLOW.MSG_FLOW_LINE_START;
+      END_IF
+    END_IF
+END_CASE
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+CASE _eState
+OF
+  E_PROGRESS.PROGRESS_PREPARE:
+    _eRes                         := BuildFolder(TRUE);
+    CASE _eRes
+    OF
+      E_PROGRESS.PROGRESS_DONE:
       _eState                     := E_PROGRESS.PROGRESS_BUSY;
       _eFlow                      := E_MESSAGE_FLOW.MSG_FLOW_LINE_START;
-    END_IF
+
+      E_PROGRESS.PROGRESS_ERROR:
+      _eState                     := E_PROGRESS.PROGRESS_ERROR;
+    END_CASE
 END_CASE
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -148,6 +170,7 @@ OF
   CASE _eFlow
   OF
     E_MESSAGE_FLOW.MSG_FLOW_LINE_START:
+      _eRes                       := BuildFolder(FALSE);
       _nErrIndex                  := 0; // rise and shine, all quarrels erased but not forgotten
       _nMsgIndex                  := 0;
   
@@ -237,7 +260,7 @@ BuildFileData                     := _eState;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="BuildFolder" Id="{a146f426-0d1d-4435-bef4-1362c962ae56}" FolderPath="methods\">
+    <Method Name="BuildFolder" Id="{bda97561-8168-4ddb-8af9-ce0562f9c51e}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD BuildFolder : e_progress
 VAR_INPUT
   Execute           : BOOL;
@@ -364,7 +387,7 @@ BuildFolder                     := _eState;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Check" Id="{646fe2aa-cab0-467d-a9bb-f003297f4a67}" FolderPath="methods\">
+    <Method Name="Check" Id="{c3bbcafd-3d07-4d71-9d5a-1519b3e7653c}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Check : BOOL
 VAR_INPUT
 END_VAR
@@ -427,7 +450,7 @@ Check           := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Cmd" Id="{2f19db6b-d736-4f91-b279-0f8a218a05ed}" FolderPath="methods\">
+    <Method Name="Cmd" Id="{0097d3f0-85a7-4895-853a-d8db132c2142}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Cmd : e_message_state
 VAR_INPUT
   Command     : e_message_ctrl;
@@ -465,10 +488,10 @@ END_CASE
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Ctrl" Id="{d9e65253-daa2-44e7-a967-a76393e6a91e}">
+    <Property Name="Ctrl" Id="{aedde0ca-829d-4462-9de3-2029208b06ef}">
       <Declaration><![CDATA[PROPERTY Ctrl : REFERENCE to ST_MESSAGE_CTRL
 ]]></Declaration>
-      <Set Name="Set" Id="{5a48f4a0-505c-41ea-8f46-4bee9ce005fd}">
+      <Set Name="Set" Id="{f8cbe94f-03f2-416d-b5e3-6c652e66a34c}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -478,9 +501,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="FileCreated" Id="{34644d05-7d90-42ef-9545-697fed86fe24}">
+    <Property Name="FileCreated" Id="{62600522-d268-437b-9b6a-14d53d696c42}">
       <Declaration><![CDATA[PROPERTY FileCreated : bool]]></Declaration>
-      <Get Name="Get" Id="{b2393377-3948-4fd4-846e-99bb06f11f62}">
+      <Get Name="Get" Id="{2ea0571b-ffd7-4e01-8f84-f440441e478a}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -489,10 +512,10 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="State" Id="{eea53da0-abee-4f5a-8874-d32ca7c8e4c2}">
+    <Property Name="State" Id="{32cf1939-402c-4b5a-b053-a6e878e0c4f5}">
       <Declaration><![CDATA[PROPERTY State : REFERENCE TO ST_MESSAGE_STATE
 ]]></Declaration>
-      <Set Name="Set" Id="{2f01d0fd-9eb3-4d8b-b35d-737905cce529}">
+      <Set Name="Set" Id="{e86ef351-4271-42c2-856e-7809022fa430}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -506,7 +529,8 @@ END_VAR
       <LineId Id="1" Count="74" />
     </LineIds>
     <LineIds Name="fb_MessageDataCtrl.BuildFileData">
-      <LineId Id="1" Count="125" />
+      <LineId Id="127" Count="147" />
+      <LineId Id="126" Count="0" />
     </LineIds>
     <LineIds Name="fb_MessageDataCtrl.BuildFolder">
       <LineId Id="1" Count="112" />

@@ -140,7 +140,7 @@ OF
 
       //---------------------------------------------------------
       nProcess                                        := 4;
-      tProcess[nProcess]                              := T#250MS;
+      tProcess[nProcess]                              := T#300MS;
 
       GVL_APPLICATION.Simulation[nProcess].StationFirst  := 13;
       GVL_APPLICATION.Simulation[nProcess].StationLast   := 18;
@@ -151,7 +151,7 @@ OF
 
       //---------------------------------------------------------
       nProcess                                        := 5;
-      tProcess[nProcess]                              := T#350MS;
+      tProcess[nProcess]                              := T#150MS;
 
       GVL_APPLICATION.Simulation[nProcess].StationFirst  := 19;
       GVL_APPLICATION.Simulation[nProcess].StationLast   := 21;
@@ -184,7 +184,7 @@ OF
 
       //---------------------------------------------------------
       nProcess                                        := 8;
-      tProcess[nProcess]                              := T#300MS;
+      tProcess[nProcess]                              := T#1300MS;
 
       GVL_APPLICATION.Simulation[nProcess].StationFirst  := 31;
       GVL_APPLICATION.Simulation[nProcess].StationLast   := 36;

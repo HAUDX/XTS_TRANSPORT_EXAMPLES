@@ -3,6 +3,17 @@
   <POU Name="MAIN" Id="{f2e9720a-bda2-4399-8c7d-d9b6e11179c8}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
+//  HAUD 2026.02.11
+//  - transport layer new member:
+//    - MoverSelector
+//      - Cyclic movement execution class
+//      - mapping unions available
+//      - Mover selection (one mover at a time)
+//      - composition using I_XtsTransport_Mover
+//
+//
+//---------------------------------------------------------------------------------------------------------------
+//
 //  HAUD 2025.12.04
 //
 //  - XTS_TRANSPORT_LAYER
@@ -93,9 +104,14 @@ VAR
   eXpuResult              : E_PROGRESS;
   eXpuCheck               : E_XPU_CHECK;
 
+  eSelectorState,
   eMoverState             : E_MOVER_STATE;
+
+  eSelectorResult,
   eMoverResult            : E_PROGRESS;
 
+  sSelectorState,
+  sSelectorResult,
   sCaGroupState,
   sTransportState,
   sTransportCheck,
@@ -117,15 +133,11 @@ VAR
 
   nStn                    : UINT;
 
-
   stMsg                   : ST_Message;
   eMsgState               : e_message_state;
   eMsgProgress            : E_PROGRESS;
   eMtrState               : e_message_state;
   eMtrProgress            : E_PROGRESS;
-
-  bGetVariant             : BOOL := TRUE;
-  nVariant                : UINT;
 
   rGap                    : REAL :=      85.0;
   rAcc                    : REAL :=  20_000.0;
@@ -161,11 +173,11 @@ THEN
 
       FOR nStation := 1 TO MAX_STATION
       DO
-        GVL_MSG.MessageLevelStations[nStation]  := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
+        GVL_MSG.MessageLevelStations[nStation]  := E_MessageType.eMessageInfo; //GVL_MSG.MessageLevel;
       END_FOR
       FOR nMover := 1 TO MAX_MOVER
       DO
-        GVL_MSG.MessageLevelMovers[nMover]      := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
+        GVL_MSG.MessageLevelMovers[nMover]      := E_MessageType.eMessageInfo; //GVL_MSG.MessageLevel;
       END_FOR
 
       
@@ -214,6 +226,7 @@ THEN
       eInit                                     := E_PROGRESS.PROGRESS_WORKING;
       // where are the stations?
       // TODO: after importing this project into your XTS TwinCAT solution, setup of Station parameters is required.
+      StationParameter_PosStop_00();
 
     //-----------------------------------------------------------------------------
     //-----------------------------------------------------------------------------
@@ -423,6 +436,20 @@ END_FOR
 //############################################################################	
 //############################################################################
 //############################################################################
+//  /Mover Selector	
+//############################################################################
+GVL_XTS.MoverSelector.Ctrl              REF= GVL_XTS.SelectorCtrl;
+GVL_XTS.MoverSelector.State             REF= GVL_XTS.SelectorState;
+GVL_XTS.MoverSelector.AxisRef           REF= GVL_XTS.AxisRefMover;
+GVL_XTS.MoverSelector.Info              REF= GVL_XTS.MoverInfo;
+GVL_XTS.MoverSelector.ItfMover          REF= GVL_XTS.MoverItf;
+
+GVL_XTS.MoverSelector();
+//############################################################################
+//  Mover Selector/	
+//############################################################################	
+//############################################################################
+//############################################################################
 //  /logging
 //    - all life is problem solving
 //############################################################################
@@ -534,20 +561,6 @@ VisualizationData();
 //############################################################################
 //  Visualization data/	
 //############################################################################
-IF bGetVariant
-THEN
-  CASE nVariant
-  OF
-    0:
-      StationParameter_PosStop_00();
-
-    1:
-      StationParameter_PosStop_00();
-  ELSE
-      StationParameter_PosStop_00();
-  END_CASE
-  bGetVariant                         := FALSE;
-END_IF
 ]]></ST>
     </Implementation>
     <Action Name="StationParameter_PosStop_00" Id="{ab5142ae-aff4-4834-80ff-6be5268e6d80}">
@@ -930,12 +943,9 @@ tStationSelectedQueue                 := GVL_XTS.StationQueue[nStationSelected];
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="6336" Count="87" />
-      <LineId Id="6731" Count="4" />
-      <LineId Id="6424" Count="43" />
-      <LineId Id="6736" Count="0" />
-      <LineId Id="6468" Count="262" />
-      <LineId Id="6737" Count="13" />
+      <LineId Id="6751" Count="80" />
+      <LineId Id="7166" Count="0" />
+      <LineId Id="6832" Count="333" />
       <LineId Id="6316" Count="0" />
     </LineIds>
     <LineIds Name="MAIN.StationParameter_PosStop_00">

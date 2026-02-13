@@ -1,16 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="E_MESSAGE_BATCH" Id="{0cc8f27b-669a-49d8-8e19-23a4f92909dc}">
+  <DUT Name="E_MOVER_SELECTOR" Id="{488fac83-78dd-4907-b8e7-a4a8007f9fea}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 {attribute 'to_string'}
-TYPE E_MESSAGE_BATCH :
+TYPE E_MOVER_SELECTOR :
 (
-	MSG_BATCH_NULL,
-  MSG_BATCH_JOB_STARTED,
-  MSG_BATCH_NEXT_IN_JOB,
-  MSG_BATCH_JOB_DONE
-)UINT;
+	SELECT_MOVER_INDEX,
+  SELECT_MOVER_AXIS_ID
+);
 END_TYPE
 ]]></Declaration>
   </DUT>
