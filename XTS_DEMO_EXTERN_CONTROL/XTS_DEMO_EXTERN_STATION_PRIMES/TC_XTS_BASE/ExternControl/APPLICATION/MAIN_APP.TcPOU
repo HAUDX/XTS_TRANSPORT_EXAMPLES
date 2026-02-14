@@ -52,19 +52,24 @@ Init();
 //-----------------------------------------------------------------------------------------------------------------
 CASE GVL_XTS.XtsTransportCtrl.Cmd
 OF
-  E_XTS_TRANSPORT_CTRL.CMD_INIT,
-  E_XTS_TRANSPORT_CTRL.CMD_GROUP_CLEAR:
+  E_XTS_TRANSPORT_CTRL.CMD_INIT:
 
     FOR nProcess := 1 TO MAX_PROCESS
     DO
       GVL_APPLICATION.Simulation[nProcess].Init(); // clearing of XtsStations and Simulation
     END_FOR
+
+  E_XTS_TRANSPORT_CTRL.CMD_MOVER_STOP:
+    // if you require a stop of all movers --> reset all release bits
+    bNext                               := FALSE;
+    bEnter                              := FALSE;
+    bLeave                              := FALSE;
+
 END_CASE
 
 CASE (GVL_XTS.XtsTransportState.State MOD E_PROGRESS.PROGRESS_DONE)
 OF
-  E_XTS_TRANSPORT_STATE.TRANSPORT_INIT,
-  E_XTS_TRANSPORT_STATE.TRANSPORT_GROUP_CLEAR:
+  E_XTS_TRANSPORT_STATE.TRANSPORT_INIT:
     FOR nProcess := 1 TO MAX_PROCESS
     DO
       GVL_APPLICATION.Simulation[nProcess].Disable(); // switch off XtsStations and clear Simulation
@@ -211,7 +216,14 @@ END_CASE
       </Implementation>
     </Action>
     <LineIds Name="MAIN_APP">
-      <LineId Id="1" Count="52" />
+      <LineId Id="1" Count="28" />
+      <LineId Id="31" Count="4" />
+      <LineId Id="75" Count="1" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="77" Count="2" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="36" Count="4" />
+      <LineId Id="42" Count="11" />
       <LineId Id="73" Count="0" />
       <LineId Id="54" Count="17" />
     </LineIds>
