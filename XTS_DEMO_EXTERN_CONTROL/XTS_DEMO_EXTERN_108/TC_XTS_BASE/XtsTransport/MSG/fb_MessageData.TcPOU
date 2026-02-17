@@ -445,9 +445,25 @@ CASE _eState
 OF
 
 	E_PROGRESS.PROGRESS_INIT:
-		_fbFileOpen.bExecute      := FALSE;
-		_fbFileWrite.bExecute	    := FALSE;
-		_fbFileClose.bExecute	    := FALSE;
+    _fbFileOpen(
+        sPathName             := _sFilename, 
+        nMode                 := FOPEN_MODEAPPEND OR FOPEN_MODEPLUS, 
+        ePath                 := PATH_GENERIC, 
+        bExecute              := FALSE, 
+        tTimeout              := T#5S);
+
+    _fbFileWrite(
+        hFile                 := _fbFileOpen.hFile, 
+        pWriteBuff            := ADR(_sWriteData), 
+        cbWriteLen            := StringLen(ADR(_sWriteData)),
+        bExecute              := FALSE, 
+        tTimeout              := T#5S);
+
+    _fbFileClose(
+        hFile                 := _fbFileOpen.hFile, 
+        bExecute              := FALSE, 
+        tTimeout              := T#5S);
+
 
 		IF bExecute
 		THEN
@@ -456,11 +472,10 @@ OF
 		END_IF
 
 	E_PROGRESS.PROGRESS_BUSY:
-		_fbFileOpen.bExecute      := TRUE;
+		_fbFileOpen(bExecute      := TRUE);
 
     IF _fbFileOpen.bError
     THEN
-		  _fbFileOpen.bExecute    := FALSE;
       _nErrorId               := _fbFileOpen.nErrId;
       _eState                 := E_PROGRESS.PROGRESS_ERROR;
 
@@ -470,17 +485,23 @@ OF
 		END_IF
 
 	E_PROGRESS.PROGRESS_PREPARE:
+		_fbFileOpen(bExecute      := TRUE);
 		IF NOT _fbFileOpen.bBusy
 		THEN
-		  _fbFileOpen.bExecute    := FALSE;
-			_fbFileWrite.bExecute   := TRUE;
+		  _fbFileOpen(bExecute    := FALSE);
       _eState                 := E_PROGRESS.PROGRESS_STARTUP;
 		END_IF
 
 	E_PROGRESS.PROGRESS_STARTUP:
+    _fbFileWrite(
+        hFile                 := _fbFileOpen.hFile, 
+        pWriteBuff            := ADR(_sWriteData), 
+        cbWriteLen            := StringLen(ADR(_sWriteData)),
+        bExecute              := TRUE, 
+        tTimeout              := T#5S);
+
     IF _fbFileWrite.bError
     THEN
-			_fbFileWrite.bExecute   := FALSE;
       _nErrorId               := _fbFileWrite.nErrId;
       _eState                 := E_PROGRESS.PROGRESS_ERROR;
 
@@ -490,17 +511,21 @@ OF
 		END_IF
 
 	E_PROGRESS.PROGRESS_CHECK:
+	  _fbFileWrite(bExecute     := TRUE);
 		IF NOT _fbFileWrite.bBusy
 		THEN
-			_fbFileWrite.bExecute   := FALSE;
-			_fbFileClose.bExecute   := TRUE;
+			_fbFileWrite(bExecute   := FALSE);
       _eState                 := E_PROGRESS.PROGRESS_OCCUPIED;
 		END_IF
 
 	E_PROGRESS.PROGRESS_OCCUPIED:
+    _fbFileClose(
+        hFile                 := _fbFileOpen.hFile, 
+        bExecute              := TRUE, 
+        tTimeout              := T#5S);
+
     IF _fbFileClose.bError
     THEN
-			_fbFileClose.bExecute   := FALSE;
       _nErrorId               := _fbFileClose.nErrId;
       _eState                 := E_PROGRESS.PROGRESS_ERROR;
 
@@ -510,46 +535,26 @@ OF
 		END_IF
 
 	E_PROGRESS.PROGRESS_WORKING:
+    _fbFileClose(bExecute     := TRUE);
 		IF NOT _fbFileClose.bBusy
 		THEN
-			_fbFileClose.bExecute   := FALSE;
+			_fbFileClose(bExecute   := FALSE);
       _eState                 := E_PROGRESS.PROGRESS_DONE;
 		END_IF
+
+END_CASE
+CASE _eState
+OF
+  E_PROGRESS.PROGRESS_ERROR:
+		_fbFileOpen (bExecute     := FALSE);
+    _fbFileWrite(bExecute     := FALSE);
+    _fbFileClose(bExecute     := FALSE);
+
+
 END_CASE
 
 
-_fbFileOpen(
-	sNetId:= , 
-	sPathName:= _sFilename, 
-	nMode:= FOPEN_MODEAPPEND OR FOPEN_MODEPLUS, 
-	ePath:= PATH_GENERIC, 
-	bExecute:= , 
-	tTimeout:= T#10S, 
-	bBusy=> , 
-	bError=> , 
-	nErrId=> , 
-	hFile=> );
 
-_fbFileWrite(
-	sNetId:= , 
-	hFile:= _fbFileOpen.hFile, 
-	pWriteBuff:= ADR(_sWriteData), 
-	cbWriteLen:= StringLen(ADR(_sWriteData)), 
-	bExecute:= , 
-	tTimeout:= T#10S, 
-	bBusy=> , 
-	bError=> , 
-	nErrId=> , 
-	cbWrite=> );
-
-_fbFileClose(
-	sNetId:= , 
-	hFile:= _fbFileOpen.hFile, 
-	bExecute:= , 
-	tTimeout:= T#10S, 
-	bBusy=> , 
-	bError=> , 
-	nErrId=> );
 
 WriteData                     := _eState;
 ]]></ST>
@@ -592,7 +597,8 @@ WriteData                     := _eState;
       <LineId Id="1" Count="10" />
     </LineIds>
     <LineIds Name="fb_MessageData.WriteData">
-      <LineId Id="1" Count="116" />
+      <LineId Id="118" Count="120" />
+      <LineId Id="117" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

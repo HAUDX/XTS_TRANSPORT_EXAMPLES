@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <POU Name="ProcessInitialization" Id="{8ae0d3f5-bf9f-423d-bf28-ae364d3e015c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION ProcessInitialization : E_PROGRESS
+VAR_INPUT
+  eVariant    : E_APP_VARIANT;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+CASE eVariant
+OF
+  E_APP_VARIANT.VARIANT_OUTPUT_24:
+    Initialization_Robot();
+    ProcessInitialization                 := E_PROGRESS.PROGRESS_DONE;
+
+  E_APP_VARIANT.VARIANT_OUTPUT_CLAMP:
+    Initialization_Clamp();
+    ProcessInitialization                 := E_PROGRESS.PROGRESS_DONE;
+
+ELSE
+    ProcessInitialization                 := E_PROGRESS.PROGRESS_INIT;
+END_CASE
+]]></ST>
+    </Implementation>
+    <LineIds Name="ProcessInitialization">
+      <LineId Id="1" Count="14" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

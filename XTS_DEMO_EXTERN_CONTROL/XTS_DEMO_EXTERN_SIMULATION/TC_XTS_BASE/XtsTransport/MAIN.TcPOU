@@ -3,6 +3,17 @@
   <POU Name="MAIN" Id="{f2e9720a-bda2-4399-8c7d-d9b6e11179c8}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
+//  HAUD 2026.02.11
+//  - transport layer new member:
+//    - MoverSelector
+//      - Cyclic movement execution class
+//      - mapping unions available
+//      - Mover selection (one mover at a time)
+//      - composition using I_XtsTransport_Mover
+//
+//
+//---------------------------------------------------------------------------------------------------------------
+//
 //  HAUD 2025.12.04
 //
 //  - XTS_TRANSPORT_LAYER
@@ -420,6 +431,20 @@ DO
 END_FOR
 //############################################################################
 //  Mover Class/	
+//############################################################################	
+//############################################################################
+//############################################################################
+//  /Mover Selector	
+//############################################################################
+GVL_XTS.MoverSelector.Ctrl              REF= GVL_XTS.SelectorCtrl;
+GVL_XTS.MoverSelector.State             REF= GVL_XTS.SelectorState;
+GVL_XTS.MoverSelector.AxisRef           REF= GVL_XTS.AxisRefMover;
+GVL_XTS.MoverSelector.Info              REF= GVL_XTS.MoverInfo;
+GVL_XTS.MoverSelector.ItfMover          REF= GVL_XTS.MoverItf;
+
+GVL_XTS.MoverSelector();
+//############################################################################
+//  Mover Selector/	
 //############################################################################	
 //############################################################################
 //############################################################################
@@ -924,12 +949,7 @@ tStationSelectedQueue                 := GVL_XTS.StationQueue[nStationSelected];
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="6336" Count="87" />
-      <LineId Id="6731" Count="4" />
-      <LineId Id="6424" Count="43" />
-      <LineId Id="6736" Count="0" />
-      <LineId Id="6468" Count="262" />
-      <LineId Id="6737" Count="13" />
+      <LineId Id="6751" Count="428" />
       <LineId Id="6316" Count="0" />
     </LineIds>
     <LineIds Name="MAIN.StationParameter_PosStop_00">

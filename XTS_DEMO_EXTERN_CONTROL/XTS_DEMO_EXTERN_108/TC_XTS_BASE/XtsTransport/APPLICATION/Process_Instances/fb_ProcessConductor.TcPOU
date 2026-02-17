@@ -7,6 +7,8 @@
 //
 //  - fb_ProcessConductor
 //  -----------------------------
+//  - taking care of the application variant initialization during INIT command
+//
 //  - detects new entry in the cyclic linked list wrapper
 //    - forwards the received entry to target instance
 //
@@ -16,6 +18,8 @@
 //---------------------------------------------------------------------------------------------------------------
 FUNCTION_BLOCK fb_ProcessConductor EXTENDS fb_Instance
 VAR
+  _eAppVariant            : E_APP_VARIANT;
+
   _ItfTicketList          : I_Process_LinkedList;
   _ResultTicketList       : ST_PROCESS_LIST_RESULT;
 
@@ -85,14 +89,20 @@ OF
       E_PROGRESS.PROGRESS_BUSY:
         IF _ItfTicketList.InitList()
         THEN
-          _eInit                      := E_PROGRESS.PROGRESS_DONE;
-
-          _eStateInstance             := E_INSTANCE_STATE.DISABLED;
-          _eStateProgress             := E_PROGRESS.PROGRESS_BUSY;
+          _eInit                      := E_PROGRESS.PROGRESS_STARTUP;
+          _eStateProgress             := E_PROGRESS.PROGRESS_STARTUP;
         ELSE
           _eStateProgress             := E_PROGRESS.PROGRESS_ERROR;
         END_IF
-      END_CASE
+
+      E_PROGRESS.PROGRESS_STARTUP:
+        IF (ProcessInitialization(_eAppVariant) = E_PROGRESS.PROGRESS_DONE)
+        THEN
+          _eInit                      := E_PROGRESS.PROGRESS_DONE;
+          _eStateInstance             := E_INSTANCE_STATE.DISABLED;
+          _eStateProgress             := E_PROGRESS.PROGRESS_BUSY;
+        END_IF
+    END_CASE
 END_CASE
 //-----------------------------------------------------------------------------
 // DISABLED:
@@ -305,6 +315,18 @@ _InstanceState[_nProcess].QueueProcessCount := _ItfProcessCollector[_nProcess].Q
 //-----------------------------------------------------------------------------
 ]]></ST>
     </Implementation>
+    <Property Name="ApplicationVariant" Id="{6ff909a2-3cff-4e8d-9704-13c9887d1bfb}">
+      <Declaration><![CDATA[PROPERTY ApplicationVariant : e_app_variant]]></Declaration>
+      <Set Name="Set" Id="{a5ab1407-00d3-453b-bdc5-c5620dfb48e1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_eAppVariant  := ApplicationVariant;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="TicketLinkedList" Id="{2988c7cc-1b13-497a-90b1-8cee507b37f2}">
       <Declaration><![CDATA[PROPERTY TicketLinkedList : I_Process_LinkedList]]></Declaration>
       <Set Name="Set" Id="{2ed7dba0-c82b-412c-b54d-08cc643be67f}">
@@ -333,9 +355,13 @@ END_VAR
       <LineId Id="75" Count="2" />
       <LineId Id="712" Count="1" />
       <LineId Id="721" Count="0" />
-      <LineId Id="724" Count="0" />
-      <LineId Id="722" Count="1" />
+      <LineId Id="723" Count="0" />
       <LineId Id="715" Count="2" />
+      <LineId Id="739" Count="0" />
+      <LineId Id="738" Count="0" />
+      <LineId Id="740" Count="2" />
+      <LineId Id="744" Count="1" />
+      <LineId Id="743" Count="0" />
       <LineId Id="84" Count="0" />
       <LineId Id="115" Count="8" />
       <LineId Id="137" Count="32" />
@@ -381,6 +407,9 @@ END_VAR
       <LineId Id="587" Count="5" />
       <LineId Id="725" Count="5" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_ProcessConductor.ApplicationVariant.Set">
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_ProcessConductor.TicketLinkedList.Set">
       <LineId Id="1" Count="1" />

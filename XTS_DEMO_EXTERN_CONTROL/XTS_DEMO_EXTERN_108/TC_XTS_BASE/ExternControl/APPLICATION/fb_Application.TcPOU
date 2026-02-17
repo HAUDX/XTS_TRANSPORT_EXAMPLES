@@ -63,7 +63,7 @@ VAR
 
   // Work()
   _bSingleOutput                : BOOL;
-  _bWriteTimeVariant            : BOOL ;
+  _bWriteTimeVariant            : BOOL := TRUE;
   _nTimeVariant                 : UINT := 5;
   _nTimeVariantOld              : UINT;
 
@@ -175,8 +175,8 @@ ELSE
 
 END_CASE
 
-//IF _bWriteTimeVariant
-//THEN
+IF _bWriteTimeVariant
+THEN
   _bWriteTimeVariant            := FALSE;
 
   CASE _nTimeVariant
@@ -230,7 +230,7 @@ END_CASE
 
   END_IF
   _nTimeVariantOld                           := _nTimeVariant;
-//END_IF
+END_IF
 
 _sAppState := TO_STRING(_State.State);
 ]]></ST>

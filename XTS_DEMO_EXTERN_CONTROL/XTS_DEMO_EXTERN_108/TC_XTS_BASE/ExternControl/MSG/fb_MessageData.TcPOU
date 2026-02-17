@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="fb_MessageData" Id="{a6523f69-11be-4d44-a4e8-a8cdf6e59115}" SpecialFunc="None">
+  <POU Name="fb_MessageData" Id="{fc370602-39ef-44c8-96cb-d655312b291c}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT fb_MessageData IMPLEMENTS I_MessageData
 VAR CONSTANT
 {attribute 'hide'}
@@ -41,9 +41,9 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Folder Name="methods" Id="{3dd7c8c4-0295-4e95-a801-983a245d2b7e}" />
-    <Folder Name="properties" Id="{37931ec5-8974-4db8-800c-832a5c8dd085}" />
-    <Method Name="Builder" Id="{c9561732-75b0-49ca-994a-77c64da760e6}" FolderPath="methods\">
+    <Folder Name="methods" Id="{21028534-941c-4202-bbbb-d19d0fef89cf}" />
+    <Folder Name="properties" Id="{a804809d-44e5-4b90-b464-bf06583fdc9e}" />
+    <Method Name="Builder" Id="{1052b8a8-e390-4f56-993d-4b5fe9b8052e}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Builder : BOOL // string concat for length > 255
 VAR_INPUT
   pInString   : POINTER TO STRING;
@@ -88,7 +88,7 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Check" Id="{b8a94b81-a325-4a55-8c76-d21d1bf6e45b}" FolderPath="methods\">
+    <Method Name="Check" Id="{2ac4b0c0-4e47-4595-95a4-8bd0389ad147}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Check : BOOL
 VAR_INPUT
 END_VAR
@@ -138,7 +138,7 @@ Check           := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Device_to_String" Id="{c4df82e6-06e9-458b-8675-2ae811f81a78}" FolderPath="methods\">
+    <Method Name="Device_to_String" Id="{d63063fd-328c-4bdf-8096-e536827239ac}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Device_to_String : string
 VAR_INPUT
   eMsgDevice    : e_Device;
@@ -298,9 +298,9 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="DirRoot" Id="{7632cf51-d8a5-4b34-b0dd-cf27f49f3e81}" FolderPath="properties\">
+    <Property Name="DirRoot" Id="{d6544cf6-18b1-47e8-88e6-b61847cf6688}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY DirRoot : POINTER to string(255)]]></Declaration>
-      <Set Name="Set" Id="{fea85b73-0f61-4326-ba4f-c96f3398fe29}">
+      <Set Name="Set" Id="{a8fede1a-a5b0-4030-af78-dbbf700f8cf3}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -310,9 +310,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="ErrorIndex" Id="{40d116ce-c024-464c-994d-39c70dbde236}" FolderPath="properties\">
+    <Property Name="ErrorIndex" Id="{6940e1de-b282-4d98-a9f3-953cc8890d5a}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY ErrorIndex : reference to uint]]></Declaration>
-      <Set Name="Set" Id="{e6cd432b-5f9c-4534-8357-c62c61057155}">
+      <Set Name="Set" Id="{82d86c06-8a1c-410d-8634-154f721954b8}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -322,9 +322,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="FileRoot" Id="{77e52297-39ee-49ff-bbe9-9575de067738}" FolderPath="properties\">
+    <Property Name="FileRoot" Id="{a416cb99-8b4d-455c-a9f7-4572eeff99eb}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY FileRoot : pointer to string(255)]]></Declaration>
-      <Set Name="Set" Id="{fd34aecd-eb33-46c3-9b7d-ca1cb02eaad2}">
+      <Set Name="Set" Id="{b4e7249f-8893-48fb-8fba-110177741f80}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -334,7 +334,7 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Method Name="FolderDate" Id="{a57b1eb3-be3b-418f-be44-0bdeaa328468}" FolderPath="methods\">
+    <Method Name="FolderDate" Id="{290439e4-f2bd-4c70-9c10-ac185df11a03}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD FolderDate : STRING
 VAR_INPUT
 	LocalTime   : POINTER TO DT;
@@ -364,9 +364,9 @@ FolderDate := sTmp;
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="LocalTime" Id="{a15eeb2b-2fd1-42bd-bab0-31c596e0dedb}" FolderPath="properties\">
+    <Property Name="LocalTime" Id="{5e858f7e-822c-44b1-8a3c-194c0179e79c}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY LocalTime : pointer to DT]]></Declaration>
-      <Set Name="Set" Id="{a8fc14cd-3d55-4d02-8a2f-6c167a473054}">
+      <Set Name="Set" Id="{ceed9f7c-ac80-4c0e-b57e-89d233cf6307}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -376,9 +376,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="MessageIndex" Id="{60143795-d3a6-455b-881b-f188e6bce075}" FolderPath="properties\">
+    <Property Name="MessageIndex" Id="{e03c45e2-cf15-4969-b35f-bf8bcbf8049c}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY MessageIndex : reference to uint]]></Declaration>
-      <Set Name="Set" Id="{effb092d-e9be-4d6d-a6ec-78a7b82c798a}">
+      <Set Name="Set" Id="{de2d36af-1de8-4f30-bd88-2021a6a53d92}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -388,9 +388,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="MsgList" Id="{9c2582e0-35d0-4ec2-9afd-d94acefaf83e}" FolderPath="properties\">
+    <Property Name="MsgList" Id="{fb07cee0-3209-471a-b501-55dbdb4d85cb}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY MsgList : pointer to ARRAY[1..GVL_MSG.MAX_MESSAGE] OF st_message]]></Declaration>
-      <Set Name="Set" Id="{4380812f-9549-4ee0-bf26-34dc2482e273}">
+      <Set Name="Set" Id="{21f253af-4b87-4b01-b107-52ac7bfa6184}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -400,7 +400,7 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Method Name="StringLen" Id="{a5368eff-7928-4bec-a3fc-38002f2aaf13}" FolderPath="methods\">
+    <Method Name="StringLen" Id="{430584c1-2fad-4103-afc1-1e075f6a2d34}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD StringLen : UINT // 	string length for len > 255
 VAR_INPUT
   pInString		: POINTER TO STRING(STR_LEN);
@@ -424,7 +424,7 @@ END_WHILE
 StringLen := Counter;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="WriteData" Id="{52743494-f79a-46c2-8d37-9a73f23c5b7b}" FolderPath="methods\">
+    <Method Name="WriteData" Id="{d3ffab18-19ad-4eaf-ba35-330803f9e984}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD WriteData  : e_progress
 VAR_INPUT
   bExecute        : BOOL;
@@ -445,9 +445,25 @@ CASE _eState
 OF
 
 	E_PROGRESS.PROGRESS_INIT:
-		_fbFileOpen.bExecute      := FALSE;
-		_fbFileWrite.bExecute	    := FALSE;
-		_fbFileClose.bExecute	    := FALSE;
+    _fbFileOpen(
+        sPathName             := _sFilename, 
+        nMode                 := FOPEN_MODEAPPEND OR FOPEN_MODEPLUS, 
+        ePath                 := PATH_GENERIC, 
+        bExecute              := FALSE, 
+        tTimeout              := T#5S);
+
+    _fbFileWrite(
+        hFile                 := _fbFileOpen.hFile, 
+        pWriteBuff            := ADR(_sWriteData), 
+        cbWriteLen            := StringLen(ADR(_sWriteData)),
+        bExecute              := FALSE, 
+        tTimeout              := T#5S);
+
+    _fbFileClose(
+        hFile                 := _fbFileOpen.hFile, 
+        bExecute              := FALSE, 
+        tTimeout              := T#5S);
+
 
 		IF bExecute
 		THEN
@@ -456,11 +472,10 @@ OF
 		END_IF
 
 	E_PROGRESS.PROGRESS_BUSY:
-		_fbFileOpen.bExecute      := TRUE;
+		_fbFileOpen(bExecute      := TRUE);
 
     IF _fbFileOpen.bError
     THEN
-		  _fbFileOpen.bExecute    := FALSE;
       _nErrorId               := _fbFileOpen.nErrId;
       _eState                 := E_PROGRESS.PROGRESS_ERROR;
 
@@ -470,17 +485,23 @@ OF
 		END_IF
 
 	E_PROGRESS.PROGRESS_PREPARE:
+		_fbFileOpen(bExecute      := TRUE);
 		IF NOT _fbFileOpen.bBusy
 		THEN
-		  _fbFileOpen.bExecute    := FALSE;
-			_fbFileWrite.bExecute   := TRUE;
+		  _fbFileOpen(bExecute    := FALSE);
       _eState                 := E_PROGRESS.PROGRESS_STARTUP;
 		END_IF
 
 	E_PROGRESS.PROGRESS_STARTUP:
+    _fbFileWrite(
+        hFile                 := _fbFileOpen.hFile, 
+        pWriteBuff            := ADR(_sWriteData), 
+        cbWriteLen            := StringLen(ADR(_sWriteData)),
+        bExecute              := TRUE, 
+        tTimeout              := T#5S);
+
     IF _fbFileWrite.bError
     THEN
-			_fbFileWrite.bExecute   := FALSE;
       _nErrorId               := _fbFileWrite.nErrId;
       _eState                 := E_PROGRESS.PROGRESS_ERROR;
 
@@ -490,17 +511,21 @@ OF
 		END_IF
 
 	E_PROGRESS.PROGRESS_CHECK:
+	  _fbFileWrite(bExecute     := TRUE);
 		IF NOT _fbFileWrite.bBusy
 		THEN
-			_fbFileWrite.bExecute   := FALSE;
-			_fbFileClose.bExecute   := TRUE;
+			_fbFileWrite(bExecute   := FALSE);
       _eState                 := E_PROGRESS.PROGRESS_OCCUPIED;
 		END_IF
 
 	E_PROGRESS.PROGRESS_OCCUPIED:
+    _fbFileClose(
+        hFile                 := _fbFileOpen.hFile, 
+        bExecute              := TRUE, 
+        tTimeout              := T#5S);
+
     IF _fbFileClose.bError
     THEN
-			_fbFileClose.bExecute   := FALSE;
       _nErrorId               := _fbFileClose.nErrId;
       _eState                 := E_PROGRESS.PROGRESS_ERROR;
 
@@ -510,46 +535,26 @@ OF
 		END_IF
 
 	E_PROGRESS.PROGRESS_WORKING:
+    _fbFileClose(bExecute     := TRUE);
 		IF NOT _fbFileClose.bBusy
 		THEN
-			_fbFileClose.bExecute   := FALSE;
+			_fbFileClose(bExecute   := FALSE);
       _eState                 := E_PROGRESS.PROGRESS_DONE;
 		END_IF
+
+END_CASE
+CASE _eState
+OF
+  E_PROGRESS.PROGRESS_ERROR:
+		_fbFileOpen (bExecute     := FALSE);
+    _fbFileWrite(bExecute     := FALSE);
+    _fbFileClose(bExecute     := FALSE);
+
+
 END_CASE
 
 
-_fbFileOpen(
-	sNetId:= , 
-	sPathName:= _sFilename, 
-	nMode:= FOPEN_MODEAPPEND OR FOPEN_MODEPLUS, 
-	ePath:= PATH_GENERIC, 
-	bExecute:= , 
-	tTimeout:= T#10S, 
-	bBusy=> , 
-	bError=> , 
-	nErrId=> , 
-	hFile=> );
 
-_fbFileWrite(
-	sNetId:= , 
-	hFile:= _fbFileOpen.hFile, 
-	pWriteBuff:= ADR(_sWriteData), 
-	cbWriteLen:= StringLen(ADR(_sWriteData)), 
-	bExecute:= , 
-	tTimeout:= T#10S, 
-	bBusy=> , 
-	bError=> , 
-	nErrId=> , 
-	cbWrite=> );
-
-_fbFileClose(
-	sNetId:= , 
-	hFile:= _fbFileOpen.hFile, 
-	bExecute:= , 
-	tTimeout:= T#10S, 
-	bBusy=> , 
-	bError=> , 
-	nErrId=> );
 
 WriteData                     := _eState;
 ]]></ST>
@@ -592,7 +597,7 @@ WriteData                     := _eState;
       <LineId Id="1" Count="10" />
     </LineIds>
     <LineIds Name="fb_MessageData.WriteData">
-      <LineId Id="1" Count="116" />
+      <LineId Id="1" Count="121" />
     </LineIds>
   </POU>
 </TcPlcObject>

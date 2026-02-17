@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <Visu Name="XPU_VISU" Id="{3c0b783f-4821-448b-9f46-8879e00cb022}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <Visu Name="XPU_VISU" Id="{39a0c2cb-9f32-46bd-aa63-72985586c43d}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
@@ -2277,8 +2277,6 @@
                 <v>71e91b5e-76f8-46d4-92af-5dfd566566df</v>
                 <v>FB_Reinit</v>
                 <v>a05c021a-6d66-4de2-b5c8-999c451fbab2</v>
-                <v>GetCallerNamespace</v>
-                <v>bbf66c11-4153-5e77-9d12-fcde6a229fe6</v>
                 <v>GetClientData</v>
                 <v>1a4895f0-01a2-4d3e-aba1-a7717f7073e6</v>
                 <v>GetElementArray</v>
@@ -2345,7 +2343,7 @@
                 <v>52077d81-26bb-4f71-b9f7-a40aaff748c6</v>
               </d>
               <v n="FbName">"NotImportant"</v>
-              <v n="FbGuid">{3c0b783f-4821-448b-9f46-8879e00cb022}</v>
+              <v n="FbGuid">{39a0c2cb-9f32-46bd-aa63-72985586c43d}</v>
             </o>
             <v n="GeneratedGlobalVisuVarsGuid">{139da292-b619-4949-9819-7a0819719bf0}</v>
             <v n="GeneratedGlobalTheVisuVarlistGuid">{7e9f8d69-2ccd-486c-8e23-3ee7b68bda1b}</v>

@@ -176,6 +176,12 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Compile Include="MAPPING\_types\U_MOVER_INFO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MAPPING\_types\U_MOVER_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -313,10 +319,16 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Compile Include="XTS\Mover\fb_MoverCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\Mover\fb_MoverSelector.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\Mover\I_XtsTransport_Mover.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\types\E_MOVER_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\E_MOVER_SELECTOR.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\types\E_MOVER_STATE.TcDUT">
@@ -329,6 +341,12 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\types\ST_MOVER_INFO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_SELECTOR_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\types\ST_MOVER_STATE.TcDUT">
@@ -396,6 +414,10 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
       <SubType>Code</SubType>
       <DependentUpon>XTS\Visualization\Visualization Manager.TcVMO</DependentUpon>
     </Compile>
+    <Compile Include="XTS\_Visualization\SELECTOR_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
     <Compile Include="XTS\_Visualization\STATION_VISU.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
@@ -412,8 +434,15 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Compile Include="XTS\_Visualization\textlists\TL_E_CTRL_XPU.TcTLO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\_Visualization\textlists\TL_E_MOVER_SELECTOR.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\_Visualization\types\ST_XPU_STRINGS.TcDUT">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\_Visualization\types\T_MOVER_SELECTOR.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
     </Compile>
     <Compile Include="XTS\_Visualization\Visualization Manager.TcVMO">
       <SubType>Code</SubType>
@@ -656,8 +685,8 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -735,15 +764,15 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="Int32">System.Int32</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="Int32">System.Int32</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>
