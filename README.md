@@ -1,90 +1,67 @@
-# Introduction 
-# XTS transport layer examples
 
-## [examples] (..they have all been machines in the past)
-- all examples are split between APPLICATION and XTS (folders named equally)
-- examples strictly follow the idea of namespaces, the TcGVL files may be seen as sovereign territory for which a diplomat (facade or interface) must be employed for communications.
-- The lowest layer (ST_STATION_CTRL/STATE and ST_MOVER_CTRL/STATE) already has a diplomatic "core" you can plug into (see XTS_DEMO_11 and the simulation templates).
+# XTS_TRANSPORT_LAYER: 
+## The Execution Vault
 
-## [XTS_DEMO_EXTERN_CONTROL]:
-All extern examples shall illustrate a specific aspect of the XTS_TRANSPORT_LAYER
-- transport examples for illustrating encapsulation
-- Agnostic to cyclic communication medium
-### [XTS_DEMO_EXTERN_108]:
-- 2 PLC example for high layer abstraction
-- Process Layer (Collectors and Instances) is fully independent from Station Layer (ProcessStation and Mover)
-- Introduction of a LinkedList with cyclic Ctrl/State wrapper for async atomic communication across any means of communication.
+### Introduction to The Examples
+- Welcome to the deployment architecture. 
+- The examples contained within this repository are not theoretical exercises
+- Most examples provided here are derived from a physical, production-ready machine currently operating in the field.
+- Some examples are case studies from POC designs, which later were changed/adapted by users.
 
-### [XTS_DEMO_EXTERN_SIMULATION]:
-- 2 PLC example for Station Layer abstraction
-- Station Layer is controlled via extern entity
-- ExternControl PLC with process abstraction (fb_Simulation) is intended for quick product flow analysis
- 
-***start simulating your transport system before anything is built***
-
-## [XTS_TRANSPORT_EXAMPLES]:
-
-### [XTS_DEMO_LINE_SORT]:
-- 'mover only' example
-- 2 PLCs (XtsTransport and ExternControl)
-- 2 separate parts with one mover each
-- ExternControl is used as command center
-
-### [XTS_DEMO_22]:
-- simple handshake example
-- multiple XPU controlled in one PLC
-- APPLICATION(PRG), simple procedure of how to startup and work Xts stations
-  - wait for (MAIN.eInit = PROGRESS_DONE)
-  - use manual write for bStart; --> move all movers to start position, then start handshaking stations
-  - use manual write for bReset; --> movement is stopped, group cleared, station cleared
- 
-### [XTS_DEMO_11]: 
-- simple handshake example
-- only single stations to illustrate basic handshake procedure with ST_STATION_CTRL / ST_STATION_STATE
-- APPLICATION(PRG), simple procedure of how to startup and work Xts stations
-  - wait for (MAIN.eInit = PROGRESS_DONE)
-  - use manual write for bStart; --> move all movers to start position, then start handshaking stations
-  - use manual write for bReset; --> movement is stopped, group cleared, station cleared
-
-### [XTS_DEMO_GEAR_IN_POS_CA]:
-- Use of ST_MOVER_CTRL / ST_MOVER_STATE
-- APPLICATION(PRG), simple procedure for startup and reset of XtsTransport
-  - wait for (MAIN.eInit = PROGRESS_DONE)
-  - use bStart and bReset for control
+This repository serves as the blueprint for translating the XTS_TRANSPORT_LAYER into physical mechatronic reality. 
+- Architectural Philosophy: **The Diplomat Pattern**
+  - All examples enforce a strict division between **[APPLICATION]** and **[XTS]** environments/folders.
   
-- GEAR_IN_POS_CA(PRG)
-  - gear in  sequence for movers (one at a time)
-  - checks SyncDistance of MasterAxis
-  - sends mover away after MasterAxis moved SyncDistance
-  - utilizes GVL_XTS.MoverCtrl/GVL_XTS.MoverState for control and movements of movers
+- The architecture operates on the principle of strict namespace encapsulation. 
+  - The core TcGVL (Global Variable List) files are treated as sovereign territory. 
+  - No external logic is permitted to read or write to this territory directly.
+  - Instead, communication requires a "diplomat"—a strictly defined Facade or Interface.
+  - The lowest layers of the framework (ST_STATION_CTRL/STATE and ST_MOVER_CTRL/STATE) already possess this diplomatic core, 
+    allowing external layers and C++/any applications to plug into the system without ever risking the integrity of the hardware cycle.
 
-### [XTS_DEMO_APPLICATION_108]:
-- Asynchronuos high throughput machine (500 Mover/Minute)
-  - 4 setups configurable
-- Topl level example of how to connect to XTS_TRANSPORT_LAYER
-- Collector-Level, and Applicatioon-Level classes and templates
-  - fb_ProcessCollector
-  - fb_Instance
-  - fb_ProcessLinkedList
-
-### [XTS_DEMO_SIMULATION_NEW_MC]:
-  ***start simulating your transport system before anything is built***
-
-- MAIN.StationParameterInit:
-  - configuration of XtsStations
- 
-- GVL_APPLICATION:
-  - fb_Simulation: grouping of XtsStation range for synced handling (e.g. process multiplication), automated handshakes with TON timer for process time
+## I. Encapsulation & Agnostic Routing
+These examples illustrate how to command the physical track from an abstracted, agnostic IT or Process layer.
+- **[XTS_DEMO_EXTERN_108]:** The O(1) Linked-List Abstraction. This design is running multiple times in the field. A dual-PLC architecture demonstrating high-layer abstraction.
+  The Application Layer (InstanceControl and AppCtrl) is fully decoupled from the Collector/Instance Layer and Station Layer (ProcessStation and Mover).
+  Introduces the Linked-List structure with cyclic Ctrl/State wrappers, guaranteeing atomic, asynchronous communication across any communication medium.
   
-- APPLICATION(PRG), startup and reset of XtsTransport
-  - Init(): fb_Simulation configuration, initial times are set here
-  - wait for (MAIN.eInit = PROGRESS_DONE)
-  - use XTS_TRANSPORT visualization for manual startup (TransportInit, ClearGroup, BuildGroup, EnableGroup, EnableMovers, TransportStart)
-  - bNext and bEnter for halting fb_Simulation
+- **[XTS_DEMO_EXTERN_SIMULATION]:** A dual-PLC case study demonstrating high-layer abstraction. PLC ExternControl commands the Station Layer via TwinCAT mapping. 
+  Utilizes the ExternControl PLC with process abstraction (fb_Simulation) for rapid product flow analysis.
 
-## [scope]
-- TwinCAT scope project for recording the signals of Stations and Processes
+- **[XTS_DEMO_EXTERN_STATION_PRIMES]:** A dual-PLC simulation study which handles processes consisting of a prime number station count. 
+  This example shows how routing from parallel stations can be done.
 
-## [TR3056 Beckhoff Training]
-- come to Nuernberg and we can talk and code in person for days.
-## [TR3056 Beckhoff Training]
+## II. High-Throughput Mechatronics
+These examples contain the blueprints for building high throughput kinetic environments and managing multi-station handshakes.
+- **[XTS_DEMO_APPLICATION_108]:** The 500 Mover/Minute Blueprint. The architecture for asynchronous, ultra-high-throughput machines. 
+  Features 4 configurable setups demonstrating top-level connections to the XTS_TRANSPORT_LAYER. 
+  Includes Collector-Level and Application-Level classes (fb_ProcessCollector, fb_Instance, fb_ProcessLinkedList).
+
+- **[XTS_DEMO_GEAR_IN_POS_CA]:** Advanced Kinematic Synchronisation. Utilizes the ST_MOVER_CTRL / ST_MOVER_STATE. 
+  Demonstrates a precise gear-in sequence for individual movers, actively verifying the SyncDistance of the MasterAxis before releasing the mover via the sovereign GVL_XTS.
+
+## III. Foundational Handshakes & State Control 
+The baseline mechanics for starting, stopping, and clearing the track safely.
+- **[XTS_DEMO_11] & [XTS_DEMO_22]:** Single & Multi-XPU Handshakes. Demonstrates the basic APPLICATION(PRG) procedures for track startup and station operation. 
+  Illustrates the strict sequential gating: waiting for MAIN.eInit = PROGRESS_DONE before any physical movement is permitted.
+  Shows exact manual override procedures (bStart, bReset) for safely clearing groups and halting movement.
+  
+- **[XTS_DEMO_LINE_SORT]:** Mover-Centric Command. A 2-PLC setup (XtsTransport and ExternControl) managing isolated parts with singular movers. 
+  The ExternControl operates as the absolute command center.
+
+
+## IV. The Digital Twin & Observability
+Risk-reduction through virtual commissioning.
+- **[XTS_DEMO_SIMULATION_NEW_MC]:** Automated Virtual Commissioning. Start simulating the transport system before a single piece of iron is cut.
+  Features fb_Simulation for grouping XTS Station ranges, allowing synced handling (e.g., process multiplication) and automated handshakes using TON timers to simulate process duration.
+
+- **[scope]:** The Diagnostic Ledger. Included TwinCAT Scope projects configured specifically for recording and validating the signals of Stations and Processes, 
+  providing a chronological narrative of mechatronic behavior.
+
+
+#### The Final Step:
+- Institutional Transfer **[TR3056 Beckhoff Training]**
+- The framework is fully documented, but true internalized architecture requires dialogue. 
+- **Join me in Nuremberg at the TR3056 training.**
+- We will talk architecture, review the deterministic logic, and code the physical iron in person.
+
