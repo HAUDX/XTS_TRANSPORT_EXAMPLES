@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="fb_XpuCtrl" Id="{091bf770-45ad-4149-b9fe-34562db5fb95}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -15,7 +15,7 @@
 //  VAR INPUT / OUTPUT --> see properties
 //
 //---------------------------------------------------------------------------------------------------------------
-// This SOFTWARE is provided as an Exemple by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no 
+// This SOFTWARE is provided as an Example by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no 
 // representations or warranties of any kind concerning the safety, suitability, lack of viruses, inaccuracies, 
 // typographical errors, or other harmful components of this SOFTWARE. There are inherent dangers in the use of 
 // any software, and you are solely responsible for determining whether this SOFTWARE is compatible with your 

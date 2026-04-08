@@ -41,11 +41,24 @@ These examples contain the blueprints for building high throughput kinetic envir
   Demonstrates a precise gear-in sequence for individual movers, actively verifying the SyncDistance of the MasterAxis before releasing the mover via the sovereign GVL_XTS.
 
 ## III. Foundational Handshakes & State Control 
-The baseline mechanics for starting, stopping, and clearing the track safely.
-- **[XTS_DEMO_11] & [XTS_DEMO_22]:** Single & Multi-XPU Handshakes. Demonstrates the basic APPLICATION(PRG) procedures for track startup and station operation. 
+The baseline examples for starting, stopping, and clearing a transport application safely.
+
+- **[XTS_DEMO_11]:** Basic Station Handshakes. Demonstrates the basic MAIN_APP(PRG) procedures for track startup and station operation. 
+  MAIN_APP(PRG) is used for running the handshakes in.
   Illustrates the strict sequential gating: waiting for MAIN.eInit = PROGRESS_DONE before any physical movement is permitted.
   Shows exact manual override procedures (bStart, bReset) for safely clearing groups and halting movement.
   
+. 
+- **[XTS_DEMO_22]:** 2 XPU instances with **matching** processes are controlled via fb_Instance transport logic.
+  fb_Instance extensions are using I_ProcessCollector as two dimensional jagged array. 
+  Jagged array approach as intended way of extending the existing arrays.
+  fb_Application acts as cyclic caller to all members and executioner for commands.
+ 
+  **- one Instance extension is controlling two I_ProcessCollectors.**
+  
+  ...**- one set of commands is controlling two sets of stations**
+ 
+.
 - **[XTS_DEMO_LINE_SORT]:** Mover-Centric Command. A 2-PLC setup (XtsTransport and ExternControl) managing isolated parts with singular movers. 
   The ExternControl operates as the absolute command center.
 

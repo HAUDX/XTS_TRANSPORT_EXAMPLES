@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="FB_CaGroup" Id="{bd0fec46-e201-49a9-84a5-1580529635f4}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -17,7 +17,7 @@
 //  VAR INPUT / OUTPUT --> see properties
 //
 //---------------------------------------------------------------------------------------------------------------//
-// This SOFTWARE is provided as an Exemple by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no  //
+// This SOFTWARE is provided as an Example by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no  //
 // representations or warranties of any kind concerning the safety, suitability, lack of viruses, inaccuracies,  //
 // typographical errors, or other harmful components of this SOFTWARE. There are inherent dangers in the use of  //
 // any software, and you are solely responsible for determining whether this SOFTWARE is compatible with your    //
@@ -59,8 +59,12 @@ VAR
   _rtrigGroupStatusRead,
   _rtrigGroupErrorRead        : Tc2_Standard.R_TRIG;
 
+  _eDeviceIdentifier          : e_Device;
   _stMsg                      : ST_Message;
   _eMessageLevel              : E_MessageType;
+
+  _stXpuInfo                  : REFERENCE TO st_xpu_info;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -103,11 +107,11 @@ OF
       ELSE
         _eState               := E_PROGRESS.PROGRESS_DONE;
 
-        IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+        IF (_eMessageLevel > E_MessageType.eMessageInfo)
         THEN
           _stMsg.eType        := E_MessageType.eMessageVerbose;
           _stMsg.eSubdevice   := e_Subdevice.fbGroupAddAxis;
-          _stMsg.iErrorNumber := _nMover;
+          _stMsg.iErrorNumber := 0;
           _stMsg.sText        := TO_STRING(_eState);
           f_MessageSet(_stMsg);
         END_IF
@@ -119,9 +123,9 @@ END_CASE
 CASE _eState
 OF
   E_PROGRESS.PROGRESS_BUSY:
-    IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+    IF (_eMessageLevel > E_MessageType.eMessageVerbose)
     THEN
-      _stMsg.eType            := E_MessageType.eMessageVerbose;
+      _stMsg.eType            := E_MessageType.eMessageSentient;
       _stMsg.eSubdevice       := e_Subdevice.fbGroupAddAxis;
       _stMsg.iErrorNumber     := _nMover;
       _stMsg.sText            := TO_STRING(_eState);
@@ -161,9 +165,9 @@ OF
     THEN
       _eState                 := E_PROGRESS.PROGRESS_CHECK;
 
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageVerbose)
       THEN
-        _stMsg.eType          := E_MessageType.eMessageVerbose;
+        _stMsg.eType          := E_MessageType.eMessageSentient;
         _stMsg.eSubdevice     := e_Subdevice.fbGroupAddAxis;
         _stMsg.iErrorNumber   := _nMover;
         _stMsg.sText          := TO_STRING(_eState);
@@ -188,7 +192,7 @@ END_CASE
 CASE _eState
 OF
   E_PROGRESS.PROGRESS_OCCUPIED:
-    IF (_nMover > MAX_MOVER-1)
+    IF (_nMover > _stXpuInfo.nDetectedAxisCount-1)
     THEN
       _eState                 := E_PROGRESS.PROGRESS_DONE;
 
@@ -247,6 +251,12 @@ THEN
   RETURN;
 END_IF
 
+IF NOT __ISVALIDREF(_stXpuInfo)
+THEN
+  _eCheck                     := E_GROUP_CHECK.CHECK_XPU_INFO_REF_INVALID;
+  RETURN;
+END_IF
+
 _eCheck                       := E_GROUP_CHECK.CHECK_DONE;
 Check                         := TRUE;
 ]]></ST>
@@ -288,7 +298,7 @@ OF
     THEN
       _eState                 := E_PROGRESS.PROGRESS_DONE;
 
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageInfo)
       THEN
         _stMsg.eType          := E_MessageType.eMessageVerbose;
         _stMsg.eSubdevice     := e_Subdevice.fbGroupDisable;
@@ -306,7 +316,7 @@ OF
                 AxesGroup     := _GroupRef, 
                 Execute       := FALSE);
   
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageInfo)
       THEN
         _stMsg.eType          := E_MessageType.eMessageVerbose;
         _stMsg.eSubdevice     := e_Subdevice.fbGroupDisable;
@@ -436,7 +446,7 @@ OF
                 AxesGroup     := _GroupRef, 
                 Execute       := FALSE);
 
-    IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+    IF (_eMessageLevel > E_MessageType.eMessageInfo)
     THEN
       _stMsg.eType            := E_MessageType.eMessageVerbose;
       _stMsg.eSubdevice       := e_Subdevice.fbGroupEnable;
@@ -541,7 +551,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF NOT Check() THEN RETURN; END_IF
 
-_stMsg.eDevice                              := e_Device.CaGroup;
+_stMsg.eDevice                              := _eDeviceIdentifier;
 
 //-----------------------------------------------------------------------------------------------
 // cyclic CA group
@@ -677,7 +687,7 @@ OF
       ELSE
         IF (_fbGroupStop.Done)
         THEN
-          IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+          IF (_eMessageLevel > E_MessageType.eMessageinfo)
           THEN
             _stMsg.eType        := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice   := e_Subdevice.fbGroupStop;
@@ -741,7 +751,7 @@ END_CASE
 CASE _eState
 OF
   E_PROGRESS.PROGRESS_STARTUP:
-    IF (_nMover > MAX_MOVER-1)
+    IF (_nMover > _stXpuInfo.nDetectedAxisCount-1)
     THEN
       _eState                 := E_PROGRESS.PROGRESS_CHECK;
     ELSE
@@ -762,7 +772,7 @@ OF
       _stMsg.eType            := E_MessageType.eMessageInfo;
       _stMsg.eSubdevice       := e_Subdevice.fbCaGroup;
       _stMsg.iErrorNumber     := MAX_MOVER;
-      _stMsg.sText            := concat('McHaltAll: ', TO_STRING(_eState));
+      _stMsg.sText            := concat('McHaltAll: State: ', TO_STRING(_eState));
       f_MessageSet(_stMsg);
     END_IF
 END_CASE
@@ -840,16 +850,16 @@ END_CASE
 CASE _eState
 OF
   E_PROGRESS.PROGRESS_CHECK:
-    IF (_nMover > MAX_MOVER-1)
+    IF (_nMover > _stXpuInfo.nDetectedAxisCount-1)
     THEN
       _eState                   := E_PROGRESS.PROGRESS_DONE;
 
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageError)
       THEN
-        _stMsg.eType            := E_MessageType.eMessageVerbose;
+        _stMsg.eType            := E_MessageType.eMessageInfo;
         _stMsg.eSubdevice       := e_Subdevice.fbReset;
         _stMsg.iErrorNumber     := 0;
-        _stMsg.sText            := concat( 'State: ', TO_STRING(_eState));
+        _stMsg.sText            := concat( 'McResetAll: State: ', TO_STRING(_eState));
         f_MessageSet(_stMsg);
       END_IF
     ELSE
@@ -865,6 +875,17 @@ McResetAll                      := _eState;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="MessageDeviceIndex" Id="{e0db88dc-ca8d-428f-9352-875b16b15148}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY MessageDeviceIndex : udint]]></Declaration>
+      <Set Name="Set" Id="{95f8434b-779f-433a-b52b-b94ab60ff063}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_eDeviceIdentifier   := MessageDeviceIndex;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="MessageLevel" Id="{5f6f5479-cb29-431a-8774-d523b73e449c}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY MessageLevel : e_messagetype]]></Declaration>
       <Set Name="Set" Id="{71cfefb6-db04-4a98-96ee-14b3309968eb}">
@@ -919,7 +940,7 @@ OF
       ELSE
         _eState               := E_PROGRESS.PROGRESS_DONE;
 
-        IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+        IF (_eMessageLevel > E_MessageType.eMessageInfo)
         THEN
           _stMsg.eType        := E_MessageType.eMessageVerbose;
           _stMsg.eSubdevice   := e_Subdevice.fbGroupRemoveAxis;
@@ -935,9 +956,9 @@ END_CASE
 CASE _eState
 OF
   E_PROGRESS.PROGRESS_BUSY:
-    IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+    IF (_eMessageLevel > E_MessageType.eMessageVerbose)
     THEN
-      _stMsg.eType          := E_MessageType.eMessageVerbose;
+      _stMsg.eType          := E_MessageType.eMessageSentient;
       _stMsg.eSubdevice     := e_Subdevice.fbGroupRemoveAxis;
       _stMsg.iErrorNumber   := _nMover;
       _stMsg.sText          := TO_STRING(_eState);
@@ -975,9 +996,9 @@ OF
     THEN
       _eState                 := E_PROGRESS.PROGRESS_CHECK;
 
-      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      IF (_eMessageLevel > E_MessageType.eMessageVerbose)
       THEN
-        _stMsg.eType          := E_MessageType.eMessageVerbose;
+        _stMsg.eType          := E_MessageType.eMessageSentient;
         _stMsg.eSubdevice     := e_Subdevice.fbGroupRemoveAxis;
         _stMsg.iErrorNumber   := _nMover;
         _stMsg.sText          := TO_STRING('DONE');
@@ -1001,7 +1022,7 @@ END_CASE
 CASE _eState
 OF
   E_PROGRESS.PROGRESS_OCCUPIED:
-    IF (_nMover > MAX_MOVER-1)
+    IF (_nMover > _stXpuInfo.nDetectedAxisCount-1)
     THEN
       _eState                 := E_PROGRESS.PROGRESS_DONE;
 
@@ -1073,7 +1094,7 @@ OF
               AxesGroup         := _GroupRef, 
               Execute           := FALSE);
 
-    IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+    IF (_eMessageLevel > E_MessageType.eMessageInfo)
     THEN
       _stMsg.eType              := E_MessageType.eMessageVerbose;
       _stMsg.eSubdevice         := e_Subdevice.fbGroupReset;
@@ -1179,7 +1200,7 @@ OF
                 Deceleration    := GROUP_HALT_DEC, 
                 Jerk            := GROUP_HALT_JERK);
 
-    IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+    IF (_eMessageLevel > E_MessageType.eMessageInfo)
     THEN
       _stMsg.eType              := E_MessageType.eMessageVerbose;
       _stMsg.eSubdevice         := e_Subdevice.fbGroupStop;
@@ -1214,13 +1235,13 @@ OF
               AxesGroup         := _GroupRef, 
               Execute           := FALSE); 
 
-    ELSIF (_fbGroupStop.Done)
+    ELSIF NOT (_fbGroupStop.Busy)
     THEN
-      _eState                   := E_PROGRESS.PROGRESS_DONE;
+      _eState                   := E_PROGRESS.PROGRESS_STARTUP;
 
-      IF (_eMessageLevel > E_MessageType.eMessageError)
+      IF (_eMessageLevel > E_MessageType.eMessageInfo)
       THEN
-        _stMsg.eType            := E_MessageType.eMessageInfo;
+        _stMsg.eType            := E_MessageType.eMessageVerbose;
         _stMsg.eSubdevice       := e_Subdevice.fbGroupStop;
         _stMsg.iErrorNumber     := _nErrorId;
         _stMsg.sText            := TO_STRING(_eState);
@@ -1262,9 +1283,9 @@ OF
               AxesGroup         := _GroupRef, 
               Execute           := FALSE); 
 
-    ELSIF (_fbGroupReset.Done)
+    ELSIF (_fbGroupReset.Done) OR NOT (_fbGroupReset.Busy)
     THEN
-      _eState                   := E_PROGRESS.PROGRESS_BUSY;
+      _eState                   := E_PROGRESS.PROGRESS_DONE;
 
       IF (_eMessageLevel > E_MessageType.eMessageError)
       THEN
@@ -1287,6 +1308,18 @@ Stop                            := _eState;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="XpuInfo" Id="{3f77f4cc-5341-43e6-8d98-bed195b842e0}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY XpuInfo : reference to st_xpu_info]]></Declaration>
+      <Set Name="Set" Id="{b9675b01-6df2-4edf-a98d-70b9ed0a12ad}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_stXpuInfo REF= XpuInfo;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <LineIds Name="FB_CaGroup">
       <LineId Id="224" Count="0" />
       <LineId Id="622" Count="0" />
@@ -1338,6 +1371,7 @@ Stop                            := _eState;
       <LineId Id="37" Count="0" />
       <LineId Id="40" Count="1" />
       <LineId Id="38" Count="0" />
+      <LineId Id="42" Count="5" />
       <LineId Id="19" Count="0" />
       <LineId Id="32" Count="0" />
       <LineId Id="11" Count="0" />
@@ -1425,8 +1459,17 @@ Stop                            := _eState;
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_CaGroup.McResetAll">
-      <LineId Id="517" Count="75" />
+      <LineId Id="333" Count="3" />
+      <LineId Id="431" Count="18" />
+      <LineId Id="451" Count="11" />
+      <LineId Id="466" Count="28" />
+      <LineId Id="497" Count="8" />
+      <LineId Id="429" Count="0" />
+      <LineId Id="411" Count="1" />
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_CaGroup.MessageDeviceIndex.Set">
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_CaGroup.MessageLevel.Set">
       <LineId Id="2" Count="0" />
@@ -1527,6 +1570,9 @@ Stop                            := _eState;
       <LineId Id="430" Count="28" />
       <LineId Id="318" Count="4" />
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_CaGroup.XpuInfo.Set">
+      <LineId Id="1" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

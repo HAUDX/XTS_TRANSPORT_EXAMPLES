@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <DUT Name="e_Subdevice" Id="{b4255e95-d04d-4216-a935-7528bf2b6255}">
     <Declaration><![CDATA[{attribute 'strict'}
 {attribute 'to_string'}
@@ -7,6 +7,7 @@ TYPE e_Subdevice :
 (
   // sub device for message system
   General                 :=  0,
+  MainInit,
   // Motion Control FB Instances
   fbPower,
   fbReset,
@@ -113,6 +114,11 @@ TYPE e_Subdevice :
   StationAddTail,
   StationGetHead,
   StationRemoveHeadValue,
+  StationGearInDistanceToSync,
+  StationGearInSyncStart,
+  StationGearInSyncMove,
+  StationGearInSyncEnd,
+  StationCalcInfeedPosition,
 
   StationControl        := 4000,
   StationState, 
@@ -151,20 +157,37 @@ TYPE e_Subdevice :
   Process_LinkedList_RemoveHead,
   Process_LinkedList_AddTail,
   Process_LinkedList_CheckData,
+  Process_StationQueue_Check,
+
+  Process_LinkedList_Com              := 11200,
+  Process_LinkedList_Com_Init,
+  Process_LinkedList_Com_Cmd,
+  Process_LinkedList_Com_AddHead,
+  Process_LinkedList_Com_AddTail,
+  Process_LinkedList_Com_DelHead,
+  Process_LinkedList_Com_DelTail,
+  Process_LinkedList_Com_GetHead,
+  Process_LinkedList_Com_GetTail,
+
 
   Instance_Command              := 12000,
+  Instance_ProcessConductor,
   Instance_BufferInfeed,
-  Instance_BufferInfeed_InitDisabled,
-  Instance_BufferInfeed_InitEnabled,
-  Instance_BufferInfeed_InitInfeed,
-  Instance_BufferInfeed_InitOutfeed,
-  Instance_BufferInfeed_InitTarget,
   Instance_Infeed,
-  Instance_BufferOutfeedRobot,
-  Instance_OutfeedRobot_R1,
-  Instance_OutfeedRobot_R2,
-  Instance_Sender_Fast,
-  Instance_Sender_BufferInfeed,
+  Instance_BufferOutfeed,
+  Instance_Outfeed,
+  Instance_Sender_Buffer,
+
+  Ticket_LinkedList_Ctrl        := 12100,
+  Ticket_LinkedList_Com_Init,
+  Ticket_LinkedList_Com_Cmd,
+  Ticket_LinkedList_Com_AddHead,
+  Ticket_LinkedList_Com_AddTail,
+  Ticket_LinkedList_Com_DelHead,
+  Ticket_LinkedList_Com_DelTail,
+  Ticket_LinkedList_Com_GetHead,
+  Ticket_LinkedList_Com_GetTail,
+  
 
   Application                 := 13000,
   Application_Check,
@@ -176,6 +199,7 @@ TYPE e_Subdevice :
   Application_Init,
   Application_Proceed,
   Application_Work
+
 
 )DINT;
 END_TYPE

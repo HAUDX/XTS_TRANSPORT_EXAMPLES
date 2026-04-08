@@ -94,9 +94,9 @@ VAR_GLOBAL
 
 {IF defined (TEST)}
   {info 'TEST logging enabled'}
-  MessageLevel                    : E_MessageType := eMessageinfo; // a lot of messages
+  MessageLevel                    : E_MessageType := eMessagewarning; // a lot of messages
 {ELSE}
-  MessageLevel                    : E_MessageType := E_MessageType.eMessageWarning; // only errors are written into list 
+  MessageLevel                    : E_MessageType := eMessageError; // only errors are written into list 
 {END_IF}
 
 END_VAR]]></Declaration>

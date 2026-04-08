@@ -30,6 +30,9 @@
     <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="APPLICATION\fb_ProcessConductor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="APPLICATION\MAIN_APP.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -37,13 +40,178 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="APPLICATION\StationParameterExample.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Application\E_APP_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Application\E_APP_VARIANT.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Application\ST_APP_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Application\ST_APP_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\E_PROCESS_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\E_PROCESS_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\E_PROCESS_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\fb_ProcessCollector.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\fb_StationCollector.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\I_ProcessCollector.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\ST_PROCESS_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\ST_PROCESS_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\T_PROCESS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Instance\E_INSTANCE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Instance\E_INSTANCE_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Instance\E_INSTANCE_CMD.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Instance\E_INSTANCE_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Instance\fb_Instance.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Instance\ST_INSTANCE_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Instance\ST_INSTANCE_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\E_LIST_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\E_LIST_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\E_LIST_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\fb_Process_LinkedList.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\fb_Process_LinkedListCtrl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\I_Process_LinkedList.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\ST_LIST_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\ST_LIST_NODE_DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\ST_LIST_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\ST_PROCESS_DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\LinkedList\ST_PROCESS_LIST_RESULT.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAPPING\MAPPING_in.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\MAPPING_out.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_APP_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_APP_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_GEAR_DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_INSTANCE_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_INSTANCE_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_INFO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVE_DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_TICKET_LIST_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_TICKET_LIST_DATA_INPUT.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_TICKET_LIST_DATA_OUTPUT.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_TICKET_LIST_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_XTS_STATION_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_XTS_STATION_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_XTS_TRANSPORT_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_XTS_TRANSPORT_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MSG\fb_LocalTime.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MSG\fb_MessageData.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MSG\fb_MessageDataCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MSG\f_MessageSet.TcPOU">
@@ -53,13 +221,25 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="MSG\MessageData.TcPOU">
+    <Compile Include="MSG\I_MessageData.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MSG\types\e_Device.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MSG\types\E_MessageType.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MSG\types\E_MESSAGE_BATCH.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MSG\types\E_MESSAGE_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MSG\types\E_MESSAGE_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MSG\types\E_MESSAGE_FLOW.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MSG\types\E_MESSAGE_STATE.TcDUT">
@@ -71,14 +251,40 @@
     <Compile Include="MSG\types\ST_Message.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MSG\types\ST_MESSAGE_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MSG\types\ST_MESSAGE_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MSG\types\TL_E_MESSAGETYPE.TcTLO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MSG\T_MESSAGE_LIST.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
-    </Compile>
     <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UML\fb_Station.TcCD">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\Configuration\fb_Configuration.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\Configuration\types\E_DATA_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\Configuration\types\E_DATA_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\Configuration\types\fb_DataXml.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\Configuration\types\fb_XmlRead.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\Configuration\types\fb_XmlWrite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\Configuration\types\ST_Configuration.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\CaGroup\FB_CaGroup.TcPOU">
@@ -100,16 +306,30 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="XTS\GVL_XTS_CONSTANTS.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="XTS\GVL_XTS_VERSION.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="XTS\Mover\fb_Mover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\fb_MoverCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\Mover\fb_MoverSelector.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\Mover\I_XtsTransport_Mover.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\types\E_MOVER_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\E_MOVER_SELECTOR.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\types\E_MOVER_STATE.TcDUT">
@@ -124,13 +344,22 @@
     <Compile Include="XTS\Mover\types\ST_MOVER_INFO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_SELECTOR_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\Mover\types\ST_MOVER_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\types\ST_MOVE_DATA.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XTS\XtsStation\fb_Station.TcPOU">
+    <Compile Include="XTS\XtsStation\fb_StationGearInPos.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\fb_StationProcess.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\XtsStation\I_XtsTransport_Station.TcIO">
@@ -139,16 +368,28 @@
     <Compile Include="XTS\XtsStation\_types\E_STATION_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\XtsStation\_types\E_STATION_GEAR_DISTANCE_AXIS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\XtsStation\_types\E_STATION_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XTS\XtsStation\_types\fb_Station_LinkedListCtrl.TcPOU">
+    <Compile Include="XTS\XtsStation\_types\E_STATION_TYPE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\_types\fb_StationBase.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\_types\fb_Station_LinkedList.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\XtsStation\_types\I_Station_LinkedList.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\XtsStation\_types\ST_STATION_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\_types\ST_STATION_GEAR_PARAMETER.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\XtsStation\_types\ST_STATION_LIST_RESULT.TcDUT">
@@ -174,6 +415,10 @@
       <SubType>Code</SubType>
       <DependentUpon>XTS\Visualization\Visualization Manager.TcVMO</DependentUpon>
     </Compile>
+    <Compile Include="XTS\_Visualization\SELECTOR_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
     <Compile Include="XTS\_Visualization\STATION_VISU.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
@@ -189,6 +434,16 @@
     </Compile>
     <Compile Include="XTS\_Visualization\textlists\TL_E_CTRL_XPU.TcTLO">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\_Visualization\textlists\TL_E_MOVER_SELECTOR.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\_Visualization\types\ST_XPU_STRINGS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\_Visualization\types\T_MOVER_SELECTOR.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
     </Compile>
     <Compile Include="XTS\_Visualization\Visualization Manager.TcVMO">
       <SubType>Code</SubType>
@@ -246,10 +501,6 @@
     <Compile Include="XTS\XtsTransportUnit\types\ST_XTS_TRANSPORT_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XTS\XTS_Parameter.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="XTS\_types\E_PROGRESS.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -261,6 +512,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <PlaceholderReference Include="CmpDynamicText">
+      <DefaultResolution>CmpDynamicText, * (System)</DefaultResolution>
+      <Namespace>CmpDynamicText</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+    </PlaceholderReference>
     <PlaceholderReference Include="System_VisuElemMeter">
       <DefaultResolution>VisuElemMeter, 4.7.0.0 (System)</DefaultResolution>
       <Namespace>VisuElemMeter</Namespace>
@@ -303,6 +559,10 @@
       <SystemLibrary>true</SystemLibrary>
       <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
     </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_EtherCAT">
+      <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_EtherCAT</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Math">
       <DefaultResolution>Tc2_Math, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_Math</Namespace>
@@ -322,6 +582,10 @@
     <PlaceholderReference Include="Tc2_Utilities">
       <DefaultResolution>Tc2_Utilities, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_Utilities</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_XmlDataSrv">
+      <DefaultResolution>Tc2_XmlDataSrv, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_XmlDataSrv</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc3_McCollisionAvoidance">
       <DefaultResolution>Tc3_McCollisionAvoidance, * (Beckhoff Automation GmbH)</DefaultResolution>
@@ -355,9 +619,20 @@
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="APPLICATION\_types" />
+    <Folder Include="APPLICATION\_types\Application" />
+    <Folder Include="APPLICATION\_types\Collector" />
+    <Folder Include="APPLICATION\_types\Instance" />
+    <Folder Include="APPLICATION\_types\LinkedList" />
+    <Folder Include="MAPPING" />
+    <Folder Include="MAPPING\_types" />
     <Folder Include="MSG" />
     <Folder Include="MSG\types" />
     <Folder Include="APPLICATION" />
+    <Folder Include="UML" />
+    <Folder Include="XML" />
+    <Folder Include="XML\Configuration" />
+    <Folder Include="XML\Configuration\types" />
     <Folder Include="XTS" />
     <Folder Include="XTS\CaGroup" />
     <Folder Include="XTS\CaGroup\types" />
@@ -372,6 +647,7 @@
     <Folder Include="XTS\Xpu\types" />
     <Folder Include="XTS\XtsTransportUnit\types" />
     <Folder Include="XTS\_types" />
+    <Folder Include="XTS\_Visualization\types" />
   </ItemGroup>
   <ItemGroup>
     <None Include="XtsTransport.tmc">
@@ -379,6 +655,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <SubObject Include="fb_ProcessCollector.Template">
+      <ExcludeFromBuild>true</ExcludeFromBuild>
+    </SubObject>
     <SubObject Include="fb_TransportUnit.Template">
       <ExcludeFromBuild>true</ExcludeFromBuild>
     </SubObject>
@@ -399,8 +678,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -469,15 +748,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="Int32">System.Int32</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="Int32">System.Int32</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

@@ -6448,73 +6448,85 @@
                 <v>AreAllElementsHidden</v>
                 <v>d0aa431a-dc0b-5014-86c7-94cd6e2dc3ab</v>
                 <v>ContainsPoint</v>
-                <v>c6333f26-1953-4ed1-a7c0-bf99ee21a6ac</v>
+                <v>cf5c4f22-6025-4041-ab2f-7c213933491a</v>
                 <v>Destruct</v>
-                <v>b6aa9960-f59c-4320-9484-50533fc1f666</v>
+                <v>fa97c1ac-56c2-476d-822b-122ffa721ce8</v>
                 <v>ElementInfo</v>
-                <v>69700d8b-f8d5-47b0-98a6-3f610befbefd</v>
+                <v>bb856402-8232-4cb6-9c72-66d399ed1aed</v>
                 <v>FB_Exit</v>
-                <v>9db168cb-fd2a-4634-8c8b-1ddd098830b4</v>
+                <v>f193d7b3-a09b-4259-8f7b-30d85358effe</v>
                 <v>FB_Reinit</v>
-                <v>59c8afae-92f9-4e13-a748-4646c2198c70</v>
+                <v>601af910-d5f4-4c8f-9db6-81b8f7cd7dbc</v>
                 <v>GetClientData</v>
-                <v>c3abaaa7-ab4c-49ad-86d2-36fc1bcfd602</v>
+                <v>1ca5ba60-e1aa-4151-9e58-06902d9b3c95</v>
+                <v>GetDialogInterface</v>
+                <v>dc97c2a3-54f6-4829-a0ff-5d376cac0225</v>
+                <v>GetDialogInterfaceSize</v>
+                <v>53d35d8f-c874-48b8-92ea-cdecc0a1106d</v>
                 <v>GetElementArray</v>
-                <v>6e48e64a-0308-420a-9d4b-bb5b7ee50260</v>
+                <v>b6352491-a723-4f36-8357-2fbf4b194703</v>
                 <v>GetElementIdArray</v>
-                <v>af86758d-01da-436c-ac6a-491b936e5069</v>
+                <v>3d257b03-933a-4de2-b584-8ac60f323b61</v>
                 <v>GetElementName</v>
                 <v>43037193-fdfc-56c6-80bc-cc819d43a231</v>
                 <v>GetInitializeVersion</v>
-                <v>69341f21-fa92-4b4c-9dd7-c7ac0295da80</v>
+                <v>4904ba0a-93c6-4128-9307-75e370571dad</v>
+                <v>GetInstance</v>
+                <v>1e005599-a046-44d4-bf05-511e9865587b</v>
                 <v>GetLocalUsergroup</v>
-                <v>908d0998-cd65-4239-b761-2d2f1fc91b61</v>
+                <v>11ace994-5637-4d8b-802d-e8a3628391fd</v>
                 <v>GetName</v>
-                <v>657a78bd-7abe-4192-912b-c35c002f58f3</v>
+                <v>e553bc8a-f6ef-432c-b596-a556cc4c9f4e</v>
                 <v>GetNamespace</v>
-                <v>655deb74-445c-4fff-baac-a8e6fe0e9c45</v>
+                <v>dc746f3c-029d-4204-8341-642432d064b2</v>
+                <v>GetResult</v>
+                <v>dd78baa2-8c25-4a7b-a0cd-b42b54618aa9</v>
                 <v>GetSize</v>
-                <v>baa8569c-1156-40d4-9d5c-c53ca0d88904</v>
+                <v>7b94156d-b225-48e3-843f-c92585ee692e</v>
                 <v>GetSurroundingRect</v>
-                <v>6af0e7ef-3afc-40bb-83ea-fe700c5d002f</v>
+                <v>ad69e33b-4150-44e9-812e-5bd3963fe9c8</v>
                 <v>GetTabOrderIdArray</v>
                 <v>f757363b-c319-5222-8bfb-7ea828826e7d</v>
                 <v>GetText</v>
-                <v>aa3cb3b8-31ef-4424-aaaa-3f332907636e</v>
+                <v>5f14decf-9608-4130-824d-6a418ce9e201</v>
                 <v>GetTextProperties</v>
-                <v>c7345a53-05c3-4f55-b4ea-3a704ce8737e</v>
+                <v>45382020-52cb-4716-9156-e8b8ddca022c</v>
                 <v>GetTooltip</v>
-                <v>c261c13d-52d2-471b-a4a3-81151e21e958</v>
+                <v>0efc271e-6198-4e4d-aa67-ba4524282b74</v>
                 <v>GetTranslator</v>
-                <v>c6534ddc-f6d4-4f8d-bd9f-1a8436e5e0a3</v>
+                <v>7c6ce91f-9bfb-4b1c-aa3d-53d528394d09</v>
                 <v>GetUpdateRects</v>
-                <v>1d412097-45f8-4582-942e-78f3a91317d7</v>
+                <v>90768bb9-c354-47b6-b5f4-27f7f2721038</v>
                 <v>HandleInput</v>
-                <v>ced205a5-7c13-42d1-a96e-9982e71fdfa3</v>
+                <v>cc2316f9-97a6-441a-ae80-8f217c941b44</v>
                 <v>HasInputAccess</v>
-                <v>04eb6391-e152-4dd2-a9f6-57e976f5a339</v>
+                <v>2d9d0cd9-3569-4990-8af1-98c1191180ac</v>
                 <v>HasInputAccessIntern</v>
-                <v>a4ff4374-041b-57cf-8ac5-bd7871f7a80d</v>
+                <v>37342277-43d7-479e-906c-7ae5fa9a26be</v>
                 <v>HasVisibilityAccess</v>
-                <v>b7d90e35-4a78-4184-8bb7-2bd57146ea9b</v>
+                <v>274558af-153a-406f-8564-43e54d3ab59f</v>
                 <v>HasVisibilityAccessIntern</v>
-                <v>963ea145-7f9c-5a5d-be4a-b095c97f572f</v>
+                <v>45d7303b-0ca3-4e2f-8134-bf53c430e64a</v>
                 <v>Initialize</v>
-                <v>7ff98356-b69f-401f-85c4-908b7c1a43a9</v>
+                <v>8b9a3238-d192-4475-beeb-bf5ecd289a63</v>
                 <v>IsAntialiasingInactive</v>
-                <v>d049aa24-f687-4766-83db-b0be0a2588d0</v>
+                <v>81dc09f0-aeac-4c6b-b17e-95b1fbb8049e</v>
                 <v>Paint</v>
-                <v>50ab668d-61ab-4cc0-9e46-02641392fc76</v>
+                <v>cc327e58-e7ce-405d-91ce-abf6f8a00a22</v>
                 <v>SetClientData</v>
-                <v>495ca7b4-8fb0-4215-82e3-ef222ec7858d</v>
+                <v>6bad03f3-af9c-4d31-bc64-34e94ea25e9c</v>
                 <v>SetContainerSize</v>
                 <v>376d2072-8c1a-5a11-877e-bf19d3d6549c</v>
+                <v>SetDialogInterface</v>
+                <v>c9904859-2aad-4024-b98e-6632fa718eb9</v>
+                <v>SetResult</v>
+                <v>84098780-ab30-4c77-9b7e-025f88d7d8a5</v>
                 <v>SetStaticState</v>
-                <v>1ebc1c39-1f5d-46c0-9470-f5643f465967</v>
+                <v>d1c47e86-5010-4faa-a649-4632bbab1baa</v>
                 <v>SetVisuFlagsInternal</v>
-                <v>805cc279-f9a9-4801-966e-fcbfbccc4f0a</v>
+                <v>61db115b-170e-4176-b6d7-770b9261bd6c</v>
                 <v>Update</v>
-                <v>10f2096e-1522-4007-9543-d8f83ff30fb0</v>
+                <v>06c64ab5-0b93-4ef3-93e2-64f202a86c99</v>
               </d>
               <d n="FbProperties" t="CaseInsensitiveHashtable" ckt="String" cvt="Guid">
                 <v>__getContainer</v>
@@ -6572,7 +6584,7 @@
                 <v>ExecuteMouseUp</v>
                 <v>c89ee01d-dccc-4bf9-a790-7159ae2330db</v>
                 <v>ExecuteValueChanged</v>
-                <v>bdfe0ba2-db7a-4e03-9e43-6342f2133435</v>
+                <v>65522af8-f85c-48bd-bb70-75ef16293f74</v>
                 <v>GetElementInfo</v>
                 <v>872678c8-5426-422c-9d82-a34b09bc0cb4</v>
                 <v>Initialize</v>

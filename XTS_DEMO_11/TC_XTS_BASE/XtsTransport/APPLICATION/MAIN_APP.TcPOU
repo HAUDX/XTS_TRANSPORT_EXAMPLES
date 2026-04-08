@@ -56,13 +56,6 @@ VAR
 
   JobResult     : E_PROGRESS;
 
-
-  // tons for painting scopes in documentation
-  tonStart,
-  tonEnable,
-  tonEnter,
-  tonOut        : ARRAY[1..MAX_STATION] OF TON;
-
   // example work vars
   eTransportState,
   eTransportStateOld    : E_XTS_TRANSPORT_STATE;
@@ -70,25 +63,16 @@ VAR
   eExecState            : E_XTS_TRANSPORT_STATE;
   eExecResult           : e_progress;
   stMsg                 : ST_Message;
-
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//-----------------------------------------------------------------------------------------------------------------
-// STATE EXAMPLE EVAL START
-//-----------------------------------------------------------------------------------------------------------------
-// EXAMPLE of how to react to operation modes 
-//  you have to split cases yourself, I simply set a message here for illustration
-//    
-//-----------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------
-YourStateExample();
-//-----------------------------------------------------------------------------------------------------------------
-// STATE EXAMPLE EVAL END
-//-----------------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------------
-
-
+      <ST><![CDATA[//-----------------------------------------------------------------------------
+// check mapping switch
+//-----------------------------------------------------------------------------
+IF NOT MAPPING_in.BypassSwitch 
+THEN 
+  eInit                               := E_PROGRESS.PROGRESS_NOT_EXIST;
+END_IF
 //-----------------------------------------------------------------------------
 // wait for initialization to be complete before work may start
 //-----------------------------------------------------------------------------
@@ -109,11 +93,15 @@ THEN
   bStart                              := FALSE;
   nState                              := 9000;  // states for clearing XtsTransport
 END_IF
-
-
+//-----------------------------------------------------------------------------
+// basic example procedures to startup the XTS_TRANSPORT_LAYER
+//  - this is only for showing thw basic handshake mechanics 
+//  - this not a production ready state machine 
+//-----------------------------------------------------------------------------
 CASE nState 
 OF
   0:                                  // first PLC cycle
+    eInit                             := E_PROGRESS.PROGRESS_INIT;
     nState                            := 1;
     FOR nStation := 1 TO MAX_STATION
     DO
@@ -122,9 +110,17 @@ OF
     END_FOR
 
   1:
-    // do other init stuff here
-    eInit                             := E_PROGRESS.PROGRESS_DONE;
-    nState                            := 10;
+    eInit                             := E_PROGRESS.PROGRESS_BUSY;
+    // set ST_STATION_PARAMETER according to your plan
+    JobResult                         := StationParameterExample(); // this is the hardcoded example
+    IF (JobResult <> E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                          := 9; // error, fix your configuration
+    ELSE
+      // do other init stuff here
+      eInit                           := E_PROGRESS.PROGRESS_DONE;
+      nState                          := 10;
+    END_IF
 
   10:                                 // starts from here
     IF bStart
@@ -213,132 +209,75 @@ OF
     END_IF
 
   170:
-    FOR nStation := 1 TO MAX_STATION
-    DO
-      tonStart[nStation](in:=FALSE, pt:=T#20MS);
-      tonEnable[nStation](in:=FALSE, pt:=T#20MS);
-      tonEnter[nStation](in:=FALSE, pt:=T#20MS);
-      tonOut[nStation](in:=FALSE, pt:=T#20MS);
-    END_FOR
-    nState                            := 2000;
+    nState                            := 1000;
 
   1000:                               // automatic handshakes with XtsStations
     FOR nStation := 1 TO MAX_STATION
     DO
-      CASE GVL_XTS.StationState[nStation].eState
+      CASE GVL_XTS.StationState[nStation].State
       OF
+        //-------------------------------------------------------------------------------------
         E_STATION_STATE.STATION_DISABLE:          // switch on XtsStation
-          GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_ENABLE;
+          GVL_XTS.StationCtrl[nStation].Cmd     := E_STATION_CTRL.STATION_ENABLE;
 
+        //-------------------------------------------------------------------------------------
         E_STATION_STATE.STATION_MOVER_ENTER:      // let mover enter
           // mover was detected in list and station is asking for mover entry
-          GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_ENTER;  // allow entry
-          //GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_SEND;  // no process handshake, direct state change to MOVER_OUT 
+          IF (tProcess[nStation] < T#10MS)
+          THEN
+            // this is an example! make the decision whether to work or not in your world, then fire the command you have chosen.
+            GVL_XTS.StationCtrl[nStation].Cmd   := E_STATION_CTRL.STATION_MOVER_SEND;     // no process handshake, direct state change to MOVER_OUT
+          ELSE 
+            GVL_XTS.StationCtrl[nStation].Cmd   := E_STATION_CTRL.STATION_MOVER_ENTER;    // allow entry
+          END_IF
 
+        //-------------------------------------------------------------------------------------
         E_STATION_STATE.STATION_PROCESS_START:    // first process handshake, clear timer
           // mover has arrived and is in standstill, ready for process 
           tonProcess[nStation](
-                              IN                  :=FALSE, 
-                              PT                  :=tProcess[nStation]);
-          GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_PROCESS_START;
+                              IN                :=FALSE, 
+                              PT                :=tProcess[nStation]);
+          GVL_XTS.StationCtrl[nStation].Cmd     := E_STATION_CTRL.STATION_PROCESS_START;  // regular 'double' handshake for you to organise your process procedure
 
+//          GVL_XTS.StationCtrl[nStation].Cmd     := E_STATION_CTRL.STATION_PROCESS_DONE;   // regular 'single' handshake for you to organise your process procedure
+//          GVL_XTS.StationCtrl[nStation].Cmd     := E_STATION_CTRL.STATION_MOVER_OUT;      // the shortest straw has been pulled for you - if you trigger this you MUST be sure that your target data is valid
+
+
+        //-------------------------------------------------------------------------------------
         E_STATION_STATE.STATION_PROCESS_DONE:     // second process handshake, timer runs now
           tonProcess[nStation](
-                              IN                  :=TRUE, 
-                              PT                  :=tProcess[nStation]);
+                              IN                :=TRUE, 
+                              PT                :=tProcess[nStation]);
           IF tonProcess[nStation].Q
           THEN
-            GVL_XTS.StationCtrl[nStation].eCmd    := E_STATION_CTRL.STATION_PROCESS_DONE;
+            GVL_XTS.StationCtrl[nStation].nTargetStation  := TO_USINT(nTarget[nStation]); // static in this example
+            GVL_XTS.StationCtrl[nStation].nMask := 2#1; // bitmask for mover ticket to next XtsStation; if you use more than one StopPos[] in XtsStation
+
+//            GVL_XTS.StationCtrl[nStation].Cmd    := E_STATION_CTRL.STATION_PROCESS_DONE; // regulear 'double' handshake
+
+            GVL_XTS.StationCtrl[nStation].Cmd   := E_STATION_CTRL.STATION_MOVER_OUT;     // the shortest straw has been pulled for you - if you trigger this you MUST be sure that your target data is valid
           END_IF
 
+        //-------------------------------------------------------------------------------------
         E_STATION_STATE.STATION_MOVER_OUT:        // station wants to send out mover
           // when sending out mover, the data on Ctrl struct is absolute important
           // before allowing the outfeed of the mover, the data on Ctrl struct must be entered correctly
           // Ctrl.nTargetStation allows for flexible mover transport, this is fully depending on you to make sense aside this example
 
           GVL_XTS.StationCtrl[nStation].nTargetStation  := TO_USINT(nTarget[nStation]); // static in this example
-          GVL_XTS.StationCtrl[nStation].nMask     := 2#1; // bitmask for mover ticket to next XtsStation; if you use more than one StopPos[] in XtsStation
+          GVL_XTS.StationCtrl[nStation].nMask   := 2#1; // bitmask for mover ticket to next XtsStation; if you use more than one StopPos[] in XtsStation
 
-          GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_OUT;  // allow outfeed of mover
+          GVL_XTS.StationCtrl[nStation].Cmd     := E_STATION_CTRL.STATION_MOVER_OUT;  // allow outfeed of mover
 
+        //-------------------------------------------------------------------------------------
         E_STATION_STATE.STATION_MOVER_GONE:       // mover has travelled ReleaseDistance, XtsStation is now empty and ready for the next mover in queue
           GVL_XTS.StationCtrl[nStation].nTargetStation  := 0;                           // clear target after mover left the station
-          GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_GONE; // last handshake for empty station
-      END_CASE
-    END_FOR
-
-  2000:                               // additional timer to paint scope
-    FOR nStation := 1 TO MAX_STATION
-    DO
-      CASE GVL_XTS.StationState[nStation].eState
-      OF
-        E_STATION_STATE.STATION_DISABLE:          // switch on XtsStation
-          tonStart[nStation](in:=FALSE, pt:=T#20MS);
-          tonEnable[nStation](in:=TRUE, pt:=T#20MS);
-
-          IF tonEnable[nStation].Q
-          THEN
-            GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_ENABLE;
-          END_IF
-
-        E_STATION_STATE.STATION_MOVER_ENTER:      // let mover enter
-          // mover was detected in list and station is asking for mover entry
-          tonEnable[nStation](in:=FALSE, pt:=T#20MS);
-          tonEnter[nStation](in:=TRUE, pt:=T#20MS);
-
-          IF tonEnter[nStation].Q
-          THEN
-            GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_ENTER;  // allow entry
-            //GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_SEND;  // no process handshake, direct state change to MOVER_OUT 
-          END_IF
-
-        E_STATION_STATE.STATION_PROCESS_START:    // first process handshake, clear timer
-          // mover has arrived and is in standstill, ready for process
-          tonEnter[nStation](in:=FALSE, pt:=T#20MS); 
-          tonProcess[nStation](
-                              IN                  :=FALSE, 
-                              PT                  :=tProcess[nStation]);
-
-          tonStart[nStation](in:=TRUE, pt:=T#20MS);
-          IF tonStart[nStation].Q
-          THEN
-            GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_PROCESS_START;
-          END_IF
-
-        E_STATION_STATE.STATION_PROCESS_DONE:     // second process handshake, timer runs now
-          tonStart[nStation](in:=FALSE, pt:=T#20MS);
-          tonOut[nStation](in:=FALSE, pt:=T#20MS);
-          tonProcess[nStation](
-                              IN                  :=TRUE, 
-                              PT                  :=tProcess[nStation]);
-          IF tonProcess[nStation].Q
-          THEN
-            GVL_XTS.StationCtrl[nStation].eCmd    := E_STATION_CTRL.STATION_PROCESS_DONE;
-          END_IF
-
-        E_STATION_STATE.STATION_MOVER_OUT:        // station wants to send out mover
-          // when sending out mover, the data on Ctrl struct is absolute important
-          // before allowing the outfeed of the mover, the data on Ctrl struct must be entered correctly
-          // Ctrl.nTargetStation allows for flexible mover transport, this is fully depending on you to make sense aside this example
-          tonOut[nStation](in:=TRUE, pt:=T#20MS);
-
-          IF tonOut[nStation].Q
-          THEN
-            GVL_XTS.StationCtrl[nStation].nTargetStation  := TO_USINT(nTarget[nStation]); // static in this example
-            GVL_XTS.StationCtrl[nStation].nMask     := 2#1; // bitmask for mover ticket to next XtsStation; if you use more than one StopPos[] in XtsStation
-  
-            GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_OUT;  // allow outfeed of mover
-          END_IF
-
-        E_STATION_STATE.STATION_MOVER_GONE:       // mover has travelled ReleaseDistance, XtsStation is now empty and ready for the next mover in queue
-          tonOut[nStation](in:=FALSE, pt:=T#20MS);
-          GVL_XTS.StationCtrl[nStation].nTargetStation  := 0;                           // clear target after mover left the station
-          GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_MOVER_GONE; // last handshake for empty station
+          GVL_XTS.StationCtrl[nStation].Cmd     := E_STATION_CTRL.STATION_MOVER_GONE; // last handshake for empty station
       END_CASE
     END_FOR
 
 
-  9000:
+  9000:                               // example procedure for halting transport and clearing stations
     GVL_XTS.XtsTransportCtrl.Cmd      := E_XTS_TRANSPORT_CTRL.CMD_NULL;
     nState                            := 9010;
 
@@ -388,254 +327,50 @@ OF
     nState                            := 9300;
     FOR nStation := 1 TO MAX_STATION
     DO
-       GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_INIT;
+       GVL_XTS.StationCtrl[nStation].Cmd      := E_STATION_CTRL.STATION_INIT;
     END_FOR
 
   9300:                               // disable All XtsStations
-    nState                            := 10;   // go back to start
+    nState                            := 9400;   // go back to start
     FOR nStation := 1 TO MAX_STATION
     DO
-       GVL_XTS.StationCtrl[nStation].eCmd      := E_STATION_CTRL.STATION_DISABLE;
+       GVL_XTS.StationCtrl[nStation].Cmd      := E_STATION_CTRL.STATION_DISABLE;
     END_FOR
+
+  9400:
+    nState                            := 10;
+    GVL_MSG.TransportMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
 END_CASE
 
 
 ]]></ST>
     </Implementation>
-    <Action Name="YourStateExample" Id="{069dea4c-97b0-4109-a203-2c8eecf988a6}">
-      <Implementation>
-        <ST><![CDATA[
-
-eTransportState   := GVL_XTS.XtsTransportState.State;
-IF (eTransportState <> eTransportStateOld)
-THEN
-
-  eExecResult           := f_GetProgress(GVL_XTS.XtsTransportState.State);
-  eExecState            := f_GetState(GVL_XTS.XtsTransportState.State);
-
-
-  stMsg.eType           := E_MessageType.eMessageInfo;
-  stMsg.eDevice         := e_Device.General;
-  stMsg.eSubdevice      := e_Subdevice.General;
-  stMsg.iErrorNumber    := eExecState;
-  stMsg.sText           := 'ExampleEvalMachine :';
-  stMsg.sText           := concat(stMsg.sText, TO_STRING(eExecState));
-  stMsg.sText           := concat(stMsg.sText, ': ');
-  stMsg.sText           := concat(stMsg.sText, TO_STRING(eExecResult));
-
-
-  IF (GVL_MSG.MessageLevel > E_MessageType.eMessageError)
-  THEN
-    f_MessageSet(stMsg);
-  END_IF
-
-  eTransportStateOld := eTransportState;
-END_IF
-]]></ST>
-      </Implementation>
-    </Action>
     <LineIds Name="MAIN_APP">
-      <LineId Id="572" Count="7" />
-      <LineId Id="731" Count="0" />
-      <LineId Id="721" Count="3" />
-      <LineId Id="570" Count="1" />
-      <LineId Id="373" Count="0" />
-      <LineId Id="358" Count="0" />
-      <LineId Id="375" Count="0" />
-      <LineId Id="359" Count="1" />
-      <LineId Id="366" Count="0" />
-      <LineId Id="363" Count="1" />
-      <LineId Id="383" Count="0" />
-      <LineId Id="361" Count="1" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="377" Count="0" />
-      <LineId Id="376" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="174" Count="0" />
-      <LineId Id="63" Count="2" />
-      <LineId Id="175" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="54" Count="1" />
-      <LineId Id="173" Count="0" />
-      <LineId Id="91" Count="1" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="199" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="368" Count="1" />
-      <LineId Id="372" Count="0" />
-      <LineId Id="370" Count="1" />
-      <LineId Id="94" Count="0" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="79" Count="3" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="98" Count="0" />
-      <LineId Id="100" Count="1" />
-      <LineId Id="103" Count="0" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="105" Count="2" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="112" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="130" Count="0" />
-      <LineId Id="129" Count="0" />
-      <LineId Id="132" Count="0" />
-      <LineId Id="465" Count="4" />
-      <LineId Id="136" Count="0" />
-      <LineId Id="134" Count="1" />
-      <LineId Id="137" Count="0" />
-      <LineId Id="139" Count="0" />
-      <LineId Id="131" Count="0" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="140" Count="0" />
-      <LineId Id="143" Count="0" />
-      <LineId Id="470" Count="0" />
-      <LineId Id="472" Count="3" />
-      <LineId Id="144" Count="3" />
-      <LineId Id="150" Count="0" />
-      <LineId Id="148" Count="1" />
-      <LineId Id="153" Count="0" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="155" Count="0" />
-      <LineId Id="476" Count="4" />
-      <LineId Id="156" Count="2" />
-      <LineId Id="161" Count="5" />
-      <LineId Id="481" Count="0" />
-      <LineId Id="483" Count="3" />
-      <LineId Id="167" Count="5" />
-      <LineId Id="176" Count="5" />
-      <LineId Id="191" Count="0" />
-      <LineId Id="182" Count="0" />
-      <LineId Id="185" Count="0" />
-      <LineId Id="183" Count="1" />
-      <LineId Id="187" Count="0" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="565" Count="1" />
-      <LineId Id="568" Count="0" />
-      <LineId Id="487" Count="2" />
-      <LineId Id="567" Count="0" />
-      <LineId Id="188" Count="0" />
-      <LineId Id="190" Count="0" />
-      <LineId Id="189" Count="0" />
-      <LineId Id="192" Count="1" />
-      <LineId Id="195" Count="1" />
-      <LineId Id="200" Count="0" />
-      <LineId Id="212" Count="0" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="203" Count="0" />
-      <LineId Id="239" Count="0" />
-      <LineId Id="219" Count="0" />
-      <LineId Id="378" Count="0" />
-      <LineId Id="213" Count="0" />
-      <LineId Id="205" Count="0" />
-      <LineId Id="238" Count="0" />
-      <LineId Id="237" Count="0" />
-      <LineId Id="246" Count="1" />
-      <LineId Id="220" Count="0" />
-      <LineId Id="214" Count="0" />
-      <LineId Id="206" Count="0" />
-      <LineId Id="240" Count="0" />
-      <LineId Id="244" Count="1" />
-      <LineId Id="241" Count="1" />
-      <LineId Id="221" Count="0" />
-      <LineId Id="243" Count="0" />
-      <LineId Id="215" Count="0" />
-      <LineId Id="209" Count="0" />
-      <LineId Id="231" Count="3" />
-      <LineId Id="229" Count="1" />
-      <LineId Id="235" Count="0" />
-      <LineId Id="222" Count="0" />
-      <LineId Id="217" Count="0" />
-      <LineId Id="211" Count="0" />
-      <LineId Id="236" Count="0" />
-      <LineId Id="223" Count="0" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="194" Count="0" />
-      <LineId Id="491" Count="6" />
-      <LineId Id="557" Count="0" />
-      <LineId Id="537" Count="0" />
-      <LineId Id="544" Count="0" />
-      <LineId Id="536" Count="0" />
-      <LineId Id="545" Count="0" />
-      <LineId Id="498" Count="0" />
-      <LineId Id="546" Count="0" />
-      <LineId Id="499" Count="2" />
-      <LineId Id="548" Count="0" />
-      <LineId Id="541" Count="1" />
-      <LineId Id="540" Count="0" />
-      <LineId Id="549" Count="0" />
-      <LineId Id="502" Count="1" />
-      <LineId Id="550" Count="0" />
-      <LineId Id="504" Count="2" />
-      <LineId Id="551" Count="0" />
-      <LineId Id="507" Count="2" />
-      <LineId Id="559" Count="0" />
-      <LineId Id="558" Count="0" />
-      <LineId Id="560" Count="1" />
-      <LineId Id="510" Count="0" />
-      <LineId Id="562" Count="0" />
-      <LineId Id="511" Count="1" />
-      <LineId Id="563" Count="0" />
-      <LineId Id="556" Count="0" />
-      <LineId Id="513" Count="11" />
-      <LineId Id="543" Count="0" />
-      <LineId Id="552" Count="0" />
-      <LineId Id="525" Count="0" />
-      <LineId Id="553" Count="0" />
-      <LineId Id="526" Count="3" />
-      <LineId Id="554" Count="0" />
-      <LineId Id="530" Count="1" />
-      <LineId Id="555" Count="0" />
-      <LineId Id="532" Count="3" />
-      <LineId Id="286" Count="0" />
-      <LineId Id="249" Count="0" />
-      <LineId Id="248" Count="0" />
-      <LineId Id="380" Count="0" />
-      <LineId Id="382" Count="0" />
-      <LineId Id="381" Count="0" />
-      <LineId Id="379" Count="0" />
-      <LineId Id="271" Count="0" />
-      <LineId Id="438" Count="0" />
-      <LineId Id="440" Count="1" />
-      <LineId Id="439" Count="0" />
-      <LineId Id="443" Count="0" />
-      <LineId Id="272" Count="5" />
-      <LineId Id="444" Count="2" />
-      <LineId Id="448" Count="0" />
-      <LineId Id="447" Count="0" />
-      <LineId Id="449" Count="1" />
-      <LineId Id="452" Count="0" />
-      <LineId Id="455" Count="0" />
-      <LineId Id="451" Count="0" />
-      <LineId Id="453" Count="1" />
-      <LineId Id="457" Count="4" />
-      <LineId Id="463" Count="1" />
-      <LineId Id="456" Count="0" />
-      <LineId Id="267" Count="0" />
-      <LineId Id="258" Count="0" />
-      <LineId Id="278" Count="3" />
-      <LineId Id="284" Count="1" />
-      <LineId Id="288" Count="0" />
-      <LineId Id="287" Count="0" />
-      <LineId Id="297" Count="0" />
-      <LineId Id="290" Count="1" />
-      <LineId Id="295" Count="1" />
-      <LineId Id="298" Count="0" />
-      <LineId Id="289" Count="0" />
-      <LineId Id="300" Count="4" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="113" Count="0" />
-      <LineId Id="47" Count="0" />
+      <LineId Id="761" Count="149" />
+      <LineId Id="1047" Count="0" />
+      <LineId Id="911" Count="1" />
+      <LineId Id="1048" Count="0" />
+      <LineId Id="913" Count="4" />
+      <LineId Id="1046" Count="0" />
+      <LineId Id="918" Count="3" />
+      <LineId Id="1049" Count="0" />
+      <LineId Id="922" Count="6" />
+      <LineId Id="1043" Count="0" />
+      <LineId Id="1041" Count="1" />
+      <LineId Id="929" Count="0" />
+      <LineId Id="1050" Count="0" />
+      <LineId Id="1044" Count="0" />
+      <LineId Id="930" Count="5" />
+      <LineId Id="937" Count="1" />
+      <LineId Id="1039" Count="1" />
+      <LineId Id="1045" Count="0" />
+      <LineId Id="939" Count="0" />
+      <LineId Id="941" Count="0" />
+      <LineId Id="1051" Count="0" />
+      <LineId Id="942" Count="9" />
+      <LineId Id="1052" Count="0" />
+      <LineId Id="952" Count="73" />
       <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="MAIN_APP.YourStateExample">
-      <LineId Id="1" Count="4" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="145" Count="0" />
-      <LineId Id="147" Count="10" />
-      <LineId Id="146" Count="0" />
-      <LineId Id="136" Count="8" />
     </LineIds>
   </POU>
 </TcPlcObject>

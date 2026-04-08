@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="U_MOVER_STATE" Id="{590a2308-9232-450a-804e-4b3b27027fd4}">
+    <Declaration><![CDATA[TYPE U_MOVER_STATE :
+UNION
+  stState             : ARRAY[1..MAX_MOVER] OF ST_MOVER_STATE;
+
+  byState   AT %Q*    : ARRAY[1..MAX_MOVER] OF
+                        ARRAY[1..SIZEOF(ST_MOVER_STATE)] OF BYTE;
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
