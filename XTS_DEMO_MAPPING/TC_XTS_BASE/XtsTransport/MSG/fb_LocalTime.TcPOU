@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="fb_LocalTime" Id="{5bc42e5b-644f-451c-ae54-fd9900177cfc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fb_LocalTime
 VAR_INPUT
@@ -10,22 +10,24 @@ VAR_OUTPUT
   dtLocalTime : DT;
 END_VAR
 VAR
-  GetSysTime    : FW_GetSystemTime;
-  strFileTime   : T_FILETIME;
+  //GetSysTime    : FW_GetSystemTime;
+  //strFileTime   : T_FILETIME;
+  strFileTime   : Tc2_Utilities.T_FILETIME64;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[GetSysTime(dwTimeLo=> strFileTime.dwLowDateTime, dwTimeHi=> strFileTime.dwHighDateTime);
+      <ST><![CDATA[//GetSysTime(dwTimeLo=> strFileTime.dwLowDateTime, dwTimeHi=> strFileTime.dwHighDateTime);
+strFileTime    := F_GetSystemTime();
 
-sLocalTime := SYSTEMTIME_TO_STRING( FILETIME_TO_SYSTEMTIME( strFileTime ) );
-dtLocalTime := systemtime_to_dt( FILETIME_TO_SYSTEMTIME( strFileTime ) );
+sLocalTime  := SYSTEMTIME_TO_STRING( FILETIME64_TO_SYSTEMTIME( strFileTime ) );
+dtLocalTime := systemtime_to_dt( FILETIME64_TO_SYSTEMTIME( strFileTime ) );
 
 
 ]]></ST>
     </Implementation>
     <LineIds Name="fb_LocalTime">
-      <LineId Id="3" Count="5" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="9" Count="6" />
+      <LineId Id="7" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

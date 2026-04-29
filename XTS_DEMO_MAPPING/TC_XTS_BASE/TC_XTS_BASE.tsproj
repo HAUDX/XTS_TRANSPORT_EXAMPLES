@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.16">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C929B002-BF94-48A2-937B-5D20DED8EF3B}" Namespace="XTS">OperationMode</Name>
@@ -4960,16 +4960,12 @@ and will return to Group State Standby when the situation permits.
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{930D6CFD-CC96-CEA1-3DA4-BEDF4E9F2E87}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..10] OF ARRAY [1..2] OF BYTE</Name>
-			<BitSize>160</BitSize>
+			<Name GUID="{969AA3E0-02D9-08F4-859B-71A40485A934}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..70] OF BYTE</Name>
+			<BitSize>560</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>10</Elements>
-			</ArrayInfo>
-			<ArrayInfo Level="1">
-				<LBound>1</LBound>
-				<Elements>2</Elements>
+				<Elements>70</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -5101,21 +5097,17 @@ and will return to Group State Standby when the situation permits.
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{E5690A8F-D93B-0E79-2DA2-D2C868CD39AA}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..10] OF ARRAY [1..4] OF BYTE</Name>
-			<BitSize>320</BitSize>
+			<Name GUID="{13DA0C6B-8F81-5615-4C25-8282496EF24B}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..52] OF BYTE</Name>
+			<BitSize>416</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>10</Elements>
-			</ArrayInfo>
-			<ArrayInfo Level="1">
-				<LBound>1</LBound>
-				<Elements>4</Elements>
+				<Elements>52</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{CE0E348D-9D62-E77D-AD2E-2D54F0EB5C77}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..10] OF ARRAY [1..22] OF BYTE</Name>
-			<BitSize>1760</BitSize>
+			<Name GUID="{795359B0-502B-A865-E179-6716BDF79ECB}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..10] OF ARRAY [1..38] OF BYTE</Name>
+			<BitSize>3040</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
@@ -5123,7 +5115,7 @@ and will return to Group State Standby when the situation permits.
 			</ArrayInfo>
 			<ArrayInfo Level="1">
 				<LBound>1</LBound>
-				<Elements>22</Elements>
+				<Elements>38</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -5140,12 +5132,12 @@ and will return to Group State Standby when the situation permits.
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{6C954319-4943-3EF0-FC98-9B33B92F7931}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..50] OF BYTE</Name>
-			<BitSize>400</BitSize>
+			<Name GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..60] OF BYTE</Name>
+			<BitSize>480</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>50</Elements>
+				<Elements>60</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -5266,7 +5258,7 @@ and will return to Group State Standby when the situation permits.
 		<ImageData Id="1016">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1017">424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c00000ffc0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c00000ffc0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c000ff00c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{93087B8E-8B45-410C-842B-030B1FDEA597}" TargetNetId="5.163.199.237.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
+	<Project ProjectGUID="{93087B8E-8B45-410C-842B-030B1FDEA597}" TargetNetId="192.168.1.73.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
 			<Settings MaxCpus="8" NonWinCpus="4" RouterMemory="268435456" MaxStackSize="1024">
 				<Cpu CpuId="3"/>
@@ -5283,14 +5275,11 @@ and will return to Group State Standby when the situation permits.
 				<Task Id="2" Priority="1" CycleTime="2500" AmsPort="350" Affinity="#x00000010" AdtTasks="true">
 					<Name>XTS Task 1</Name>
 				</Task>
-				<Task Id="8" Priority="15" CycleTime="100000" AmsPort="353" Affinity="#x00000008" AdtTasks="true">
-					<Name>PLC_1</Name>
-				</Task>
 				<Task Id="9" Priority="32" Affinity="#x00000020" AdtTasks="true" JobTask="true">
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
-				<Task Id="6" Priority="2" CycleTime="100000" AmsPort="301">
+				<Task Id="6" Priority="15" CycleTime="40000" AmsPort="301" AmsNetId="5.163.199.237.1.1">
 					<Name>PN</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -5301,6 +5290,9 @@ and will return to Group State Standby when the situation permits.
 					<Image Id="17" AddrType="1" ImageType="1">
 						<Name>Image</Name>
 					</Image>
+				</Task>
+				<Task Id="7" Priority="13" CycleTime="20000" AmsPort="351" AdtTasks="true">
+					<Name>PlcTask</Name>
 				</Task>
 			</Tasks>
 			<Modules>
@@ -43410,7 +43402,7 @@ and will return to Group State Standby when the situation permits.
 		</System>
 		<Motion>
 			<NC>
-				<SafTask Priority="4" CycleTime="10000" AmsPort="501" Affinity="#x00000020" IoAtBegin="true" SafTaskInfo="256">
+				<SafTask Priority="4" CycleTime="10000" AmsPort="501" Affinity="#x00000020" IoAtBegin="true" AmsNetId="5.163.199.237.1.1" SafTaskInfo="256">
 					<Name>NC-Task 1 SAF</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -88076,19 +88068,19 @@ and will return to Group State Standby when the situation permits.
 			</NC>
 		</Motion>
 		<Plc>
-			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="MOVER_MAP, STATION_MAP" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9F5F2BFA-BDEC-9C28-13AA-4BEE21689560}" TmcPath="XtsTransport\XtsTransport.tmc">
+			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, MOVER_SELECTOR, TEST" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{CC489973-9B45-5401-1A4D-71B70C6D3B2C}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
 							<Name>MAPPING_out.MoverState.byState</Name>
-							<Type GUID="{E5690A8F-D93B-0E79-2DA2-D2C868CD39AA}">ARRAY [1..10] OF ARRAY [1..4] OF BYTE</Type>
+							<Type GUID="{13DA0C6B-8F81-5615-4C25-8282496EF24B}">ARRAY [1..52] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>MAPPING_out.MoverInfo.byInfo</Name>
-							<Type GUID="{CE0E348D-9D62-E77D-AD2E-2D54F0EB5C77}">ARRAY [1..10] OF ARRAY [1..22] OF BYTE</Type>
+							<Type GUID="{795359B0-502B-A865-E179-6716BDF79ECB}">ARRAY [1..10] OF ARRAY [1..38] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>MAPPING_out.StationState.byState</Name>
@@ -88096,7 +88088,7 @@ and will return to Group State Standby when the situation permits.
 						</Var>
 						<Var>
 							<Name>MAPPING_out.TransportState.byState</Name>
-							<Type GUID="{6C954319-4943-3EF0-FC98-9B33B92F7931}">ARRAY [1..50] OF BYTE</Type>
+							<Type GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}">ARRAY [1..60] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>GVL_XTS.CaGroupRef.PlcToNc</Name>
@@ -88147,7 +88139,7 @@ and will return to Group State Standby when the situation permits.
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>MAPPING_in.MoverCtrl.byCtrl</Name>
-							<Type GUID="{930D6CFD-CC96-CEA1-3DA4-BEDF4E9F2E87}">ARRAY [1..10] OF ARRAY [1..2] OF BYTE</Type>
+							<Type GUID="{969AA3E0-02D9-08F4-859B-71A40485A934}">ARRAY [1..70] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>MAPPING_in.MoveData.byData</Name>
@@ -88215,14 +88207,14 @@ and will return to Group State Standby when the situation permits.
 							<Id>0</Id>
 							<Name>PlcTask</Name>
 							<ManualConfig>
-								<OTCID>#x02010080</OTCID>
+								<OTCID>#x02010070</OTCID>
 							</ManualConfig>
-							<Priority>15</Priority>
-							<CycleTime>10000000</CycleTime>
+							<Priority>13</Priority>
+							<CycleTime>2000000</CycleTime>
 						</Context>
 					</Contexts>
 					<TaskPouOids>
-						<TaskPouOid Prio="15" OTCID="#x08502001"/>
+						<TaskPouOid Prio="13" OTCID="#x08502001"/>
 					</TaskPouOids>
 				</Instance>
 			</Project>
@@ -96329,7 +96321,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT ManualDcSelect="true" DcSyncMode="3"/>
 			</Device>
-			<Device Id="7" DevType="111" DevFlags="#x0003" AmsPort="28679" AmsNetId="5.163.199.237.8.1" RemoteName="Device 7 (EtherCAT)" InfoImageId="15">
+			<Device Id="7" DevType="111" DevFlags="#x0003" AmsPort="28679" AmsNetId="192.168.1.73.8.1" RemoteName="Device 7 (EtherCAT)" InfoImageId="15">
 				<Name>Device 7 (EtherCAT)</Name>
 				<AddressInfo>
 					<Pnp>
@@ -96385,16 +96377,16 @@ and will return to Group State Standby when the situation permits.
 									<Type GUID="{18071995-0000-0000-0000-000300000004}">ARRAY [0..3] OF BYTE</Type>
 								</Entry>
 								<Entry Name="el6633-0010_SubmoduleData_2" Index="#x7001" Sub="#x02" Flags="#x00000100">
-									<Type GUID="{18071995-0000-0000-0000-000300000010}">ARRAY [0..15] OF BYTE</Type>
-								</Entry>
-								<Entry Name="el6633-0010_SubmoduleData_3" Index="#x7001" Sub="#x03" Flags="#x00000100">
 									<Type GUID="{18071995-0000-0000-0000-000300000040}">ARRAY [0..63] OF BYTE</Type>
 								</Entry>
-								<Entry Name="SubIndex 004" Flags="#x00000100">
+								<Entry Name="SubIndex 003" Flags="#x00000100">
 									<Type GUID="{18071995-0000-0000-0000-000300000022}">ARRAY [0..33] OF BYTE</Type>
 								</Entry>
-								<Entry Name="SubIndex 005" Flags="#x00000100">
+								<Entry Name="SubIndex 004" Flags="#x00000100">
 									<Type GUID="{18071995-0000-0000-0000-000300000004}">ARRAY [0..3] OF BYTE</Type>
+								</Entry>
+								<Entry Name="el6633-0010_SubmoduleData_5" Index="#x7001" Sub="#x05" Flags="#x00000100">
+									<Type GUID="{18071995-0000-0000-0000-000300000010}">ARRAY [0..15] OF BYTE</Type>
 								</Entry>
 								<Entry Name="el6633-0010_SubmoduleData_6" Index="#x7001" Sub="#x06" Flags="#x00000100">
 									<Type GUID="{18071995-0000-0000-0000-000300000010}">ARRAY [0..15] OF BYTE</Type>
@@ -96426,7 +96418,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT/>
 			</Device>
-			<Device Id="8" DevType="165" AmsPort="28680" AmsNetId="5.163.199.237.9.1" RemoteName="Device 8 (EL6633-0010)">
+			<Device Id="8" DevType="165" AmsPort="28680" AmsNetId="192.168.1.73.9.1" RemoteName="Device 8 (EL6633-0010)">
 				<Name>Device 8 (EL6633-0010)</Name>
 				<AddressInfo>
 					<Ecat>
@@ -96592,322 +96584,322 @@ Submodule Info: 64 Byte Input
 										<Var>
 											<Name>1 Byte Input[0]</Name>
 											<Type>USINT</Type>
-											<BitOffs>176</BitOffs>
+											<BitOffs>48</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[1]</Name>
 											<Type>USINT</Type>
-											<BitOffs>184</BitOffs>
+											<BitOffs>56</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[2]</Name>
 											<Type>USINT</Type>
-											<BitOffs>192</BitOffs>
+											<BitOffs>64</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[3]</Name>
 											<Type>USINT</Type>
-											<BitOffs>200</BitOffs>
+											<BitOffs>72</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[4]</Name>
 											<Type>USINT</Type>
-											<BitOffs>208</BitOffs>
+											<BitOffs>80</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[5]</Name>
 											<Type>USINT</Type>
-											<BitOffs>216</BitOffs>
+											<BitOffs>88</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[6]</Name>
 											<Type>USINT</Type>
-											<BitOffs>224</BitOffs>
+											<BitOffs>96</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[7]</Name>
 											<Type>USINT</Type>
-											<BitOffs>232</BitOffs>
+											<BitOffs>104</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[8]</Name>
 											<Type>USINT</Type>
-											<BitOffs>240</BitOffs>
+											<BitOffs>112</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[9]</Name>
 											<Type>USINT</Type>
-											<BitOffs>248</BitOffs>
+											<BitOffs>120</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[10]</Name>
 											<Type>USINT</Type>
-											<BitOffs>256</BitOffs>
+											<BitOffs>128</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[11]</Name>
 											<Type>USINT</Type>
-											<BitOffs>264</BitOffs>
+											<BitOffs>136</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[12]</Name>
 											<Type>USINT</Type>
-											<BitOffs>272</BitOffs>
+											<BitOffs>144</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[13]</Name>
 											<Type>USINT</Type>
-											<BitOffs>280</BitOffs>
+											<BitOffs>152</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[14]</Name>
 											<Type>USINT</Type>
-											<BitOffs>288</BitOffs>
+											<BitOffs>160</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[15]</Name>
 											<Type>USINT</Type>
-											<BitOffs>296</BitOffs>
+											<BitOffs>168</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[16]</Name>
 											<Type>USINT</Type>
-											<BitOffs>304</BitOffs>
+											<BitOffs>176</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[17]</Name>
 											<Type>USINT</Type>
-											<BitOffs>312</BitOffs>
+											<BitOffs>184</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[18]</Name>
 											<Type>USINT</Type>
-											<BitOffs>320</BitOffs>
+											<BitOffs>192</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[19]</Name>
 											<Type>USINT</Type>
-											<BitOffs>328</BitOffs>
+											<BitOffs>200</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[20]</Name>
 											<Type>USINT</Type>
-											<BitOffs>336</BitOffs>
+											<BitOffs>208</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[21]</Name>
 											<Type>USINT</Type>
-											<BitOffs>344</BitOffs>
+											<BitOffs>216</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[22]</Name>
 											<Type>USINT</Type>
-											<BitOffs>352</BitOffs>
+											<BitOffs>224</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[23]</Name>
 											<Type>USINT</Type>
-											<BitOffs>360</BitOffs>
+											<BitOffs>232</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[24]</Name>
 											<Type>USINT</Type>
-											<BitOffs>368</BitOffs>
+											<BitOffs>240</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[25]</Name>
 											<Type>USINT</Type>
-											<BitOffs>376</BitOffs>
+											<BitOffs>248</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[26]</Name>
 											<Type>USINT</Type>
-											<BitOffs>384</BitOffs>
+											<BitOffs>256</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[27]</Name>
 											<Type>USINT</Type>
-											<BitOffs>392</BitOffs>
+											<BitOffs>264</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[28]</Name>
 											<Type>USINT</Type>
-											<BitOffs>400</BitOffs>
+											<BitOffs>272</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[29]</Name>
 											<Type>USINT</Type>
-											<BitOffs>408</BitOffs>
+											<BitOffs>280</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[30]</Name>
 											<Type>USINT</Type>
-											<BitOffs>416</BitOffs>
+											<BitOffs>288</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[31]</Name>
 											<Type>USINT</Type>
-											<BitOffs>424</BitOffs>
+											<BitOffs>296</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[32]</Name>
 											<Type>USINT</Type>
-											<BitOffs>432</BitOffs>
+											<BitOffs>304</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[33]</Name>
 											<Type>USINT</Type>
-											<BitOffs>440</BitOffs>
+											<BitOffs>312</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[34]</Name>
 											<Type>USINT</Type>
-											<BitOffs>448</BitOffs>
+											<BitOffs>320</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[35]</Name>
 											<Type>USINT</Type>
-											<BitOffs>456</BitOffs>
+											<BitOffs>328</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[36]</Name>
 											<Type>USINT</Type>
-											<BitOffs>464</BitOffs>
+											<BitOffs>336</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[37]</Name>
 											<Type>USINT</Type>
-											<BitOffs>472</BitOffs>
+											<BitOffs>344</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[38]</Name>
 											<Type>USINT</Type>
-											<BitOffs>480</BitOffs>
+											<BitOffs>352</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[39]</Name>
 											<Type>USINT</Type>
-											<BitOffs>488</BitOffs>
+											<BitOffs>360</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[40]</Name>
 											<Type>USINT</Type>
-											<BitOffs>496</BitOffs>
+											<BitOffs>368</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[41]</Name>
 											<Type>USINT</Type>
-											<BitOffs>504</BitOffs>
+											<BitOffs>376</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[42]</Name>
 											<Type>USINT</Type>
-											<BitOffs>512</BitOffs>
+											<BitOffs>384</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[43]</Name>
 											<Type>USINT</Type>
-											<BitOffs>520</BitOffs>
+											<BitOffs>392</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[44]</Name>
 											<Type>USINT</Type>
-											<BitOffs>528</BitOffs>
+											<BitOffs>400</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[45]</Name>
 											<Type>USINT</Type>
-											<BitOffs>536</BitOffs>
+											<BitOffs>408</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[46]</Name>
 											<Type>USINT</Type>
-											<BitOffs>544</BitOffs>
+											<BitOffs>416</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[47]</Name>
 											<Type>USINT</Type>
-											<BitOffs>552</BitOffs>
+											<BitOffs>424</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[48]</Name>
 											<Type>USINT</Type>
-											<BitOffs>560</BitOffs>
+											<BitOffs>432</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[49]</Name>
 											<Type>USINT</Type>
-											<BitOffs>568</BitOffs>
+											<BitOffs>440</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[50]</Name>
 											<Type>USINT</Type>
-											<BitOffs>576</BitOffs>
+											<BitOffs>448</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[51]</Name>
 											<Type>USINT</Type>
-											<BitOffs>584</BitOffs>
+											<BitOffs>456</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[52]</Name>
 											<Type>USINT</Type>
-											<BitOffs>592</BitOffs>
+											<BitOffs>464</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[53]</Name>
 											<Type>USINT</Type>
-											<BitOffs>600</BitOffs>
+											<BitOffs>472</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[54]</Name>
 											<Type>USINT</Type>
-											<BitOffs>608</BitOffs>
+											<BitOffs>480</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[55]</Name>
 											<Type>USINT</Type>
-											<BitOffs>616</BitOffs>
+											<BitOffs>488</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[56]</Name>
 											<Type>USINT</Type>
-											<BitOffs>624</BitOffs>
+											<BitOffs>496</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[57]</Name>
 											<Type>USINT</Type>
-											<BitOffs>632</BitOffs>
+											<BitOffs>504</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[58]</Name>
 											<Type>USINT</Type>
-											<BitOffs>640</BitOffs>
+											<BitOffs>512</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[59]</Name>
 											<Type>USINT</Type>
-											<BitOffs>648</BitOffs>
+											<BitOffs>520</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[60]</Name>
 											<Type>USINT</Type>
-											<BitOffs>656</BitOffs>
+											<BitOffs>528</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[61]</Name>
 											<Type>USINT</Type>
-											<BitOffs>664</BitOffs>
+											<BitOffs>536</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[62]</Name>
 											<Type>USINT</Type>
-											<BitOffs>672</BitOffs>
+											<BitOffs>544</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[63]</Name>
 											<Type>USINT</Type>
-											<BitOffs>680</BitOffs>
+											<BitOffs>552</BitOffs>
 										</Var>
 									</Vars>
 								</SubModule>
@@ -97011,82 +97003,82 @@ Submodule Info: 16 Byte In- and Output
 										<Var>
 											<Name>1 Byte Input[0]</Name>
 											<Type>USINT</Type>
-											<BitOffs>48</BitOffs>
+											<BitOffs>560</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[1]</Name>
 											<Type>USINT</Type>
-											<BitOffs>56</BitOffs>
+											<BitOffs>568</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[2]</Name>
 											<Type>USINT</Type>
-											<BitOffs>64</BitOffs>
+											<BitOffs>576</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[3]</Name>
 											<Type>USINT</Type>
-											<BitOffs>72</BitOffs>
+											<BitOffs>584</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[4]</Name>
 											<Type>USINT</Type>
-											<BitOffs>80</BitOffs>
+											<BitOffs>592</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[5]</Name>
 											<Type>USINT</Type>
-											<BitOffs>88</BitOffs>
+											<BitOffs>600</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[6]</Name>
 											<Type>USINT</Type>
-											<BitOffs>96</BitOffs>
+											<BitOffs>608</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[7]</Name>
 											<Type>USINT</Type>
-											<BitOffs>104</BitOffs>
+											<BitOffs>616</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[8]</Name>
 											<Type>USINT</Type>
-											<BitOffs>112</BitOffs>
+											<BitOffs>624</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[9]</Name>
 											<Type>USINT</Type>
-											<BitOffs>120</BitOffs>
+											<BitOffs>632</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[10]</Name>
 											<Type>USINT</Type>
-											<BitOffs>128</BitOffs>
+											<BitOffs>640</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[11]</Name>
 											<Type>USINT</Type>
-											<BitOffs>136</BitOffs>
+											<BitOffs>648</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[12]</Name>
 											<Type>USINT</Type>
-											<BitOffs>144</BitOffs>
+											<BitOffs>656</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[13]</Name>
 											<Type>USINT</Type>
-											<BitOffs>152</BitOffs>
+											<BitOffs>664</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[14]</Name>
 											<Type>USINT</Type>
-											<BitOffs>160</BitOffs>
+											<BitOffs>672</BitOffs>
 										</Var>
 										<Var>
 											<Name>1 Byte Input[15]</Name>
 											<Type>USINT</Type>
-											<BitOffs>168</BitOffs>
+											<BitOffs>680</BitOffs>
 										</Var>
 									</Vars>
 								</SubModule>
@@ -97259,9 +97251,9 @@ Submodule Info: 16 Byte Input
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-0100-0304-1001-040300010403}" Id="#x02030030"/>
-		<MappingInfo Identifier="{05000010-2001-0850-1000-120500205008}" Id="#x02030020" Watchdog="28000000040000000400000004000000"/>
-		<MappingInfo Identifier="{05000010-2001-0850-3000-040300205008}" Id="#x02030010" Watchdog="28000000040000000400000004000000"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500800010403}" Id="#x02030010"/>
+		<MappingInfo Identifier="{05000010-2001-0850-1000-120500205008}" Id="#x02030030" Watchdog="08000000040000000400000004000000"/>
+		<MappingInfo Identifier="{05000010-2001-0850-3000-040300205008}" Id="#x02030020" Watchdog="08000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1">
 			<OwnerB Name="TIRC^TcCOM Objects^XtsProcessingUnit 1^Part 1^Module 1">
 				<Link VarA="Term 1 (AT2002-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>
@@ -99011,6 +99003,16 @@ Submodule Info: 16 Byte Input
 				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[48]" Size="8" OffsA="384"/>
 				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[49]" Size="8" OffsA="392"/>
 				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[4]" Size="8" OffsA="32"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[50]" Size="8" OffsA="400"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[51]" Size="8" OffsA="408"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[52]" Size="8" OffsA="416"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[53]" Size="8" OffsA="424"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[54]" Size="8" OffsA="432"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[55]" Size="8" OffsA="440"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[56]" Size="8" OffsA="448"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[57]" Size="8" OffsA="456"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[58]" Size="8" OffsA="464"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[59]" Size="8" OffsA="472"/>
 				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[5]" Size="8" OffsA="40"/>
 				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[6]" Size="8" OffsA="48"/>
 				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[7]" Size="8" OffsA="56"/>
@@ -99058,8 +99060,8 @@ Submodule Info: 16 Byte Input
 				<Link VarA="PlcTask Outputs^GVL_XTS.AxisRefMover[9].PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Objects^Group1 (CA Group)">
-				<Link VarA="PlcTask Inputs^GVL_XTS.CaGroupRef.NcToPlc" VarB="Group Outputs^ToPLC"/>
-				<Link VarA="PlcTask Outputs^GVL_XTS.CaGroupRef.PlcToNc" VarB="Group Inputs^FromPLC"/>
+				<Link VarA="PlcTask Inputs^GVL_XTS.CaGroupRef.NcToPlc^CA" VarB="Group Outputs^ToPLC"/>
+				<Link VarA="PlcTask Outputs^GVL_XTS.CaGroupRef.PlcToNc^CA" VarB="Group Inputs^FromPLC"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

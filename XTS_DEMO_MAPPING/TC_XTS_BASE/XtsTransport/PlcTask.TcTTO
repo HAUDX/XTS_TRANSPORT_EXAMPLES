@@ -1,14 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <Task Name="PlcTask" Id="{bb7cb0de-be32-4ba3-8d5f-2918fb8d6e5f}">
     <!--CycleTime in micro seconds.-->
-    <CycleTime>10000</CycleTime>
-    <Priority>15</Priority>
+    <CycleTime>2000</CycleTime>
+    <Priority>13</Priority>
     <PouCall>
       <Name>MAPPING_in</Name>
     </PouCall>
     <PouCall>
       <Name>MAIN</Name>
+    </PouCall>
+    <PouCall>
+      <Name>MAIN_APP</Name>
     </PouCall>
     <PouCall>
       <Name>MAPPING_out</Name>

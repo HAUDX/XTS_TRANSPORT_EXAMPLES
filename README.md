@@ -26,16 +26,14 @@ These examples illustrate how to command the physical track from an abstracted, 
   Introduces the Linked-List structure with cyclic Ctrl/State wrappers, guaranteeing atomic, asynchronous communication across any communication medium.
   
 - **[XTS_DEMO_EXTERN_SIMULATION]:** A dual-PLC case study demonstrating high-layer abstraction. PLC ExternControl commands the Station Layer via TwinCAT mapping. 
-  Utilizes the ExternControl PLC with process abstraction (fb_Simulation) for rapid product flow analysis.
+  Utilizes the ExternControl PLC with process abstraction (fb_Simulation) for rapid product flow analysis. I use this as a base for transport simulations, in order to estimate a desired output with different process layouts.
 
 - **[XTS_DEMO_EXTERN_STATION_PRIMES]:** A dual-PLC simulation study which handles processes consisting of a prime number station count. 
   This example shows how routing from parallel stations can be done.
 
 ## II. High-Throughput Mechatronics
 These examples contain the blueprints for building high throughput kinetic environments and managing multi-station handshakes.
-- **[XTS_DEMO_APPLICATION_108]:** The 500 Mover/Minute Blueprint. The architecture for asynchronous, ultra-high-throughput machines. 
-  Features 4 configurable setups demonstrating top-level connections to the XTS_TRANSPORT_LAYER. 
-  Includes Collector-Level and Application-Level classes (fb_ProcessCollector, fb_Instance, fb_ProcessLinkedList).
+- **[XTS_DEMO_APPLICATION_108]:** deprecated, this example is fully substituted by [XTS_DEMO_EXTERN_108]
 
 - **[XTS_DEMO_GEAR_IN_POS_CA]:** Advanced Kinematic Synchronisation. Utilizes the ST_MOVER_CTRL / ST_MOVER_STATE. 
   Demonstrates a precise gear-in sequence for individual movers, actively verifying the SyncDistance of the MasterAxis before releasing the mover via the sovereign GVL_XTS.
@@ -48,24 +46,14 @@ The baseline examples for starting, stopping, and clearing a transport applicati
   Illustrates the strict sequential gating: waiting for MAIN.eInit = PROGRESS_DONE before any physical movement is permitted.
   Shows exact manual override procedures (bStart, bReset) for safely clearing groups and halting movement.
   
-. 
-- **[XTS_DEMO_22]:** 2 XPU instances with **matching** processes are controlled via fb_Instance transport logic.
-  fb_Instance extensions are using I_ProcessCollector as two dimensional jagged array. 
-  Jagged array approach as intended way of extending the existing arrays.
-  fb_Application acts as cyclic caller to all members and executioner for commands.
  
-  **- one Instance extension is controlling two I_ProcessCollectors.**
-  
-  ...**- one set of commands is controlling two sets of stations**
- 
-.
 - **[XTS_DEMO_LINE_SORT]:** Mover-Centric Command. A 2-PLC setup (XtsTransport and ExternControl) managing isolated parts with singular movers. 
   The ExternControl operates as the absolute command center.
 
 
 ## IV. The Digital Twin & Observability
 Risk-reduction through virtual commissioning.
-- **[XTS_DEMO_SIMULATION_NEW_MC]:** Automated Virtual Commissioning. Start simulating the transport system before a single piece of iron is cut.
+- **[XTS_DEMO_SIMULATION]:** Automated Virtual Commissioning. Start simulating the transport systems before a single piece of iron is cut.
   Features fb_Simulation for grouping XTS Station ranges, allowing synced handling (e.g., process multiplication) and automated handshakes using TON timers to simulate process duration.
 
 - **[scope]:** The Diagnostic Ledger. Included TwinCAT Scope projects configured specifically for recording and validating the signals of Stations and Processes, 
