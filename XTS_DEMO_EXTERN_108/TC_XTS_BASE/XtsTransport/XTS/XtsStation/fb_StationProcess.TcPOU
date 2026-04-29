@@ -23,6 +23,7 @@
 //---------------------------------------------------------------------------------------------------------------
 FUNCTION_BLOCK fb_StationProcess EXTENDS fb_StationBase
 VAR
+  _rPosInfeedMover : lreal;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -355,12 +356,41 @@ OF
       E_PROGRESS.PROGRESS_BUSY:
         MoveIn();                   // prepare movement into station
 
-        // check if infeed movement has to cross modulo turn
-        _rModActPosFetch              := _Mover[_stMoverData.nMoverId].NcToPlc.ModuloActPos; // wherever you may roam
+        _rModActPosFetch              := Tc2_Math.LMOD(_Mover   [_stState[_nStationId].nMoverId].NcToPlc.SetPos, 
+                                                       _ItfMover[_stState[_nStationId].nMoverId].RailLength);
+
 
         IF (_rModActPosFetch > _stInfeed.rPos + _stParameter[_nStationId].rReleaseDistance)
         THEN
-          _stInfeed.rPos              := _stInfeed.rPos + TO_REAL(_ItfMover[_stMoverData.nMoverId].RailLength);
+          _rPosInfeedMover            := _stInfeed.rPos;
+          _stInfeed.rPos              := _stInfeed.rPos + _ItfMover[_stMoverData.nMoverId].RailLength;
+
+          IF (_eMessageLevel > E_MessageType.eMessageinfo)
+          THEN
+            _stMsg.eType                := E_MessageType.eMessageVerbose;
+            _stMsg.eSubdevice           := StationCalcInfeedPosition;
+            _stMsg.iErrorNumber         := _stState[_nStationId].nMoverId;
+            _stMsg.sText                := concat(TO_STRING(_stState[_nStationId].eState), ': MODULO_CROSSING');
+            _stMsg.sText                := concat(_stMsg.sText, ': _rModActPosFetch: ');
+            _stMsg.sText                := concat(_stMsg.sText , TO_STRING(_rModActPosFetch));
+            f_MessageSet(_stMsg);
+
+            _stMsg.eType                := E_MessageType.eMessageVerbose;
+            _stMsg.eSubdevice           := StationCalcInfeedPosition;
+            _stMsg.iErrorNumber         := _stState[_nStationId].nMoverId;
+            _stMsg.sText                := concat(TO_STRING(_stState[_nStationId].eState), ': MODULO_CROSSING');
+            _stMsg.sText                := concat(_stMsg.sText, ': _rPosInfeedMover: ');
+            _stMsg.sText                := concat(_stMsg.sText , TO_STRING(_rPosInfeedMover));
+            f_MessageSet(_stMsg);
+
+            _stMsg.eType                := E_MessageType.eMessageVerbose;
+            _stMsg.eSubdevice           := StationCalcInfeedPosition;
+            _stMsg.iErrorNumber         := _stState[_nStationId].nMoverId;
+            _stMsg.sText                := concat(TO_STRING(_stState[_nStationId].eState), ': MODULO_CROSSING');
+            _stMsg.sText                := concat(_stMsg.sText, ': _stInfeed.rPos: ');
+            _stMsg.sText                := concat(_stMsg.sText , TO_STRING(_stInfeed.rPos));
+            f_MessageSet(_stMsg);
+          END_IF
         END_IF
 
         _stState[_nStationId].eState  := E_STATION_STATE.STATION_MOVER_IN_TARGET;
@@ -368,11 +398,11 @@ OF
         IF (_eMessageLevel > E_MessageType.eMessageVerbose)
         THEN
           _stMsg.eType                := E_MessageType.eMessageSentient;
-          _stMsg.eSubdevice           := Stationstate;
+          _stMsg.eSubdevice           := StationCalcInfeedPosition;
           _stMsg.iErrorNumber         := _stState[_nStationId].nMoverId;
           _stMsg.sText                := concat(TO_STRING(_stState[_nStationId].eState), ': ');
-          _stMsg.sText                := concat(_stMsg.sText, ': _rModActPosFetch*1000: ');
-          _stMsg.sText                := concat(_stMsg.sText , TO_STRING(TRUNC(1000.0 * _rModActPosFetch)));
+          _stMsg.sText                := concat(_stMsg.sText, ': _rModActPosFetch: ');
+          _stMsg.sText                := concat(_stMsg.sText , TO_STRING(_rModActPosFetch));
           f_MessageSet(_stMsg);
         END_IF
     END_CASE
@@ -914,7 +944,9 @@ _stState[_nStationId].nQueue          := TO_USINT(_ItfStation[_nStationId].Count
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="fb_StationProcess.Cycle">
-      <LineId Id="1" Count="873" />
+      <LineId Id="1" Count="320" />
+      <LineId Id="875" Count="48" />
+      <LineId Id="342" Count="532" />
     </LineIds>
   </POU>
 </TcPlcObject>

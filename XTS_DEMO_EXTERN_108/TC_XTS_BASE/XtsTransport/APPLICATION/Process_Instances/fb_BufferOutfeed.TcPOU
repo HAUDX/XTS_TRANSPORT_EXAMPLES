@@ -62,7 +62,7 @@ END_IF
 //-----------------------------------------------------------------------------
 // check init command (hard reset)
 //-----------------------------------------------------------------------------
-_eCmd                                 := _InstanceCtrl[_nProcess].Cmd;
+_eCmd                                 := _stInstanceCtrl[_nProcess].Cmd;
 IF (_eCmd <> _eCmdOld)
 THEN
   CASE _eCmd
@@ -142,7 +142,7 @@ OF
         // wait for my process collector check (_State.Check) to be done
         //  - checks range of XtsStations
         //  - checks count of XtsStations
-        IF (_State.Check = E_PROCESS_CHECK.PROCESS_CHECK_DONE)
+        IF (_stState.Check = E_PROCESS_CHECK.PROCESS_CHECK_DONE)
         THEN
           _eInit                      := _ItfProcessCollector[_nProcess].Init(TRUE);
   
@@ -171,7 +171,7 @@ OF
                 _nTargetCounter       := 0;
 
                 // initialization of Infeed: _ItfProcessCollector with XtsStation
-                _Ctrl.Cmd             := E_PROCESS_CTRL.PROCESS_DISABLE;  // first, switch off _ItfProcessCollector and XtsStation
+                _stCtrl.Cmd           := E_PROCESS_CTRL.PROCESS_DISABLE;  // first, switch off _ItfProcessCollector and XtsStation
                 _eStateProgress       := E_PROGRESS.PROGRESS_INIT;        // clear sub state
                 _eStateInstance       := E_INSTANCE_STATE.DISABLED;       // switch to disabled as default after startup
               END_IF
@@ -193,18 +193,26 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_INIT:
-        _eStateProgress               := E_PROGRESS.PROGRESS_BUSY;
-        // clear data for a new round
-        memset(ADR(_ListResult), 0, SIZEOF(_ListResult));
-
-        _Ctrl.ActivateStation         := 0;
-        _Ctrl.NestMask                := 1;
+        CASE _stState.State
+        OF
+          E_PROCESS_STATE.PROCESS_DISABLE:
+            CASE _stState.Result
+            OF
+              E_PROGRESS.PROGRESS_BUSY:
+                _eStateProgress               := E_PROGRESS.PROGRESS_BUSY;
+                // clear data for a new round
+                memset(ADR(_stListResult), 0, SIZEOF(_stListResult));
         
-        IF (_nTargetCounter = 0)
-        THEN
-          // init process bitmask to countdown from
-          _ProcessData.wTarget        := _ItfProcessCollector[_nProcess].To_T_Process(_nTargetTotal);
-        END_IF
+                _stCtrl.ActivateStation         := 0;
+                _stCtrl.NestMask                := 1;
+                
+                IF (_nTargetCounter = 0)
+                THEN
+                  // init process bitmask to countdown from
+                  _stProcessData.wTarget        := _ItfProcessCollector[_nProcess].To_T_Process(_nTargetTotal);
+                END_IF
+            END_CASE
+        END_CASE
 
     // E_INSTANCE_STATE.DISABLED:
     //-------------------------------------------------------------------------
@@ -224,7 +232,6 @@ OF
               _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eStateProgress));
               f_MessageSet(_stMsg);
             END_IF
-
         END_CASE
     END_CASE
 END_CASE
@@ -238,14 +245,14 @@ CASE _eStateInstance
 OF
   E_INSTANCE_STATE.DETECTION:
     //-------------------------------------------------------------------------
-    CASE _eStateProgress
-    OF
-      E_PROGRESS.PROGRESS_INIT:
-        IF (_eCmd = E_INSTANCE_CMD.PROCEED)
-        THEN
-          _eStateProgress             := E_PROGRESS.PROGRESS_BUSY;
-        END_IF
-    END_CASE
+//     CASE _eStateProgress
+//     OF
+//       E_PROGRESS.PROGRESS_INIT:
+//         IF (_eCmd = E_INSTANCE_CMD.PROCEED)
+//         THEN
+//           _eStateProgress             := E_PROGRESS.PROGRESS_BUSY;
+//         END_IF
+//     END_CASE
     // E_INSTANCE_STATE.DETECTION
     //-------------------------------------------------------------------------
     CASE _eStateProgress
@@ -288,16 +295,12 @@ OF
     OF
       E_PROGRESS.PROGRESS_CHECK:
         // check for disabled process interface state
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_DISABLE:
 
-          CASE _State.Result
-          OF
-            E_PROGRESS.PROGRESS_BUSY:     // busy from _State.Result means, waiting for input
-              // now the preparation for the target process may begin
-              _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_ENABLE; // switch on my state machine in _ItfProcessCollector
-              _Ctrl.ActivateStation   := 1;                             // enable my XtsStation in _ItfProcessCollector (BufferInfeed has only one XtsStation)
+              _stCtrl.Cmd               := E_PROCESS_CTRL.PROCESS_ENABLE; // switch on my state machine in _ItfProcessCollector
+              _stCtrl.ActivateStation   := 1;                             // enable my XtsStation in _ItfProcessCollector (BufferInfeed has only one XtsStation)
 
               _eStateInstance         := E_INSTANCE_STATE.ENABLED;      // go check if my process is switched on
               _eStateProgress         := E_PROGRESS.PROGRESS_INIT;      // reset substate
@@ -310,10 +313,9 @@ OF
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                 _stMsg.sText          := concat(_stMsg.sText, ': ');
-                _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_Ctrl.Cmd));
+                _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_stCtrl.Cmd));
                 f_MessageSet(_stMsg);
               END_IF
-          END_CASE
         END_CASE
     END_CASE
 END_CASE
@@ -332,15 +334,15 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_INIT:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_ENABLE:
-          CASE _State.Result
+          CASE _stState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:
               // now my process and all XtsStations within are switched on
               // check infeed into my process
-              _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_INFEED; // tells my process to go check the infeed
+              _stCtrl.Cmd             := E_PROCESS_CTRL.PROCESS_STATIONS_SEND; // tells my process to go check the infeed
               _eStateProgress         := E_PROGRESS.PROGRESS_BUSY; // go check how the infeed into my process is doing
 
               IF (_MessageLevel > E_MessageType.eMessageInfo)
@@ -360,27 +362,19 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_BUSY:
-        CASE _State.State
+        CASE _stState.State
         OF
-          E_PROCESS_STATE.PROCESS_STATIONS_INFEED:
-          CASE _State.Result
+          E_PROCESS_STATE.PROCESS_STATIONS_OUTFEED:
+          CASE _stState.Result
           OF
-            E_PROGRESS.PROGRESS_INIT:
-              CASE _eCmd
-              OF
-                E_INSTANCE_CMD.DISABLE:
-                  _eStateInstance       := E_INSTANCE_STATE.DISABLED;
-                  _eStateProgress       := E_PROGRESS.PROGRESS_INIT;
-              END_CASE
-
             E_PROGRESS.PROGRESS_BUSY:
               // now we know who wants to enter
               // check if mover crossed CheckPosition
 
-              IF true or (_MoverInfo.rModuloActPos > _rCheckPos)
+              IF (_MoverInfo.rModuloActPos > _rCheckPos)
               THEN
-                // now we know who wants to enter
-                _Ctrl.Cmd             := E_PROCESS_CTRL.PROCESS_STATIONS_SEND;  // send mover to outfeed process
+                // now we know who wants to pass through
+                _stCtrl.Cmd           := E_PROCESS_CTRL.PROCESS_STATIONS_SEND;  // send mover to outfeed process
                 _eStateProgress       := E_PROGRESS.PROGRESS_PREPARE;           // go check sending of mover
   
                 IF (_MessageLevel > E_MessageType.eMessageError)
@@ -388,7 +382,7 @@ OF
                   _stMsg.eType        := E_MessageType.eMessageInfo;
                   _stMsg.eSubdevice   := e_Subdevice.Instance_BufferOutfeed;
                   _stMsg.iErrorNumber := 0;
-                  _stMsg.sText        := concat(TO_STRING(_Ctrl.Cmd), ': ');
+                  _stMsg.sText        := concat(TO_STRING(_stCtrl.Cmd), ': ');
                   _stMsg.sText        := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                   f_MessageSet(_stMsg);
   
@@ -408,10 +402,10 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_PREPARE:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_STATIONS_OUTFEED:
-          CASE _State.Result
+          CASE _stState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:
               // mover is ready to leave
@@ -456,24 +450,11 @@ OF
         _stMsg.eType                  := E_MessageType.eMessageSentient;
         _stMsg.eSubdevice             := e_Subdevice.Instance_BufferInfeed;
         _stMsg.iErrorNumber           := _nTargetIndex[1];
-        _stMsg.sText                  := concat('I_AM _ProcessData.wTarget: ', 
-                                         _ItfProcessCollector[_nProcess].BitsToString(_ProcessData.wTarget));
+        _stMsg.sText                  := concat('I_AM Target: ', TO_STRING(_nTargetIndex[1])); 
         f_MessageSet(_stMsg);
       END_IF
 
       _ItfProcessCollector[_nProcess].TargetIndex := _nTargetIndex; // write Xts target onto my ProcessCollector interface
-      _ProcessData.wTarget                        := _ItfProcessCollector[_nProcess].
-                                                     BitDel(_ProcessData.wTarget, _nTargetTotal-_nTargetCounter-1);
-
-      IF (_MessageLevel > E_MessageType.eMessageVerbose)
-      THEN
-        _stMsg.eType                  := E_MessageType.eMessageSentient;
-        _stMsg.eSubdevice             := e_Subdevice.Instance_BufferInfeed;
-        _stMsg.iErrorNumber           := _nTargetIndex[1];
-        _stMsg.sText                  := concat('I_WAS _ProcessData.wTarget: ', 
-                                         _ItfProcessCollector[_nProcess].BitsToString(_ProcessData.wTarget));
-        f_MessageSet(_stMsg);
-      END_IF
 
       _nTargetCounter                 := _nTargetCounter + 1;
 
@@ -486,17 +467,14 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_BUSY:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_STATIONS_OUTFEED: // check my process' state
-          CASE _State.Result
-          OF
-            E_PROGRESS.PROGRESS_BUSY:
-            // now data is prepared and copied to the right places
-            CASE _eCmd
+
+            CASE _stInstanceCtrl[_nProcess].Cmd
             OF
               E_INSTANCE_CMD.FINISH:      // send mover out!!
-                _Ctrl.Cmd             := E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED; // release the kraken!
+                _stCtrl.Cmd           := E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED; // release the kraken!
                 _eStateProgress       := E_PROGRESS.PROGRESS_DONE;                // mover is on its way, we're done here
       
                 IF (_MessageLevel > E_MessageType.eMessageError)
@@ -509,18 +487,13 @@ OF
                   f_MessageSet(_stMsg);
                 END_IF
             END_CASE
-          END_CASE
         END_CASE
 
       E_PROGRESS.PROGRESS_DONE:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_DISABLE: // check my process' state
-          CASE _State.Result
-          OF
-            E_PROGRESS.PROGRESS_BUSY:
-              IF (_ProcessData.wTarget = 0)
-              THEN
+                // more work to do in this batch
                 _eStateInstance       := E_INSTANCE_STATE.DISABLED;
                 _eStateProgress       := E_PROGRESS.PROGRESS_INIT;
 
@@ -529,31 +502,7 @@ OF
                   _stMsg.eType        := E_MessageType.eMessageSentient;
                   _stMsg.eSubdevice   := e_Subdevice.Instance_BufferInfeed;
                   _stMsg.iErrorNumber := 0;
-                  _stMsg.sText        := concat('I_GONE _ProcessData.wTarget: ', 
-                                         _ItfProcessCollector[_nProcess].BitsToString(_ProcessData.wTarget));
-                  f_MessageSet(_stMsg);
-                END_IF
-                IF (_MessageLevel > E_MessageType.eMessageEmpty)
-                THEN
-                  _stMsg.eType        := E_MessageType.eMessageBatch;
-                  _stMsg.eSubdevice   := e_Subdevice.Instance_BufferOutfeed;
-                  _stMsg.iErrorNumber := 0;
-                  _stMsg.sText        := concat(TO_STRING(_eStateProgress), ': ');
-                  _stMsg.sText        := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_DONE));
-                  f_MessageSet(_stMsg);
-                END_IF
-              ELSE
-                // more work to do in this batch
-                _eStateInstance       := E_INSTANCE_STATE.DETECTION;
-                _eStateProgress       := E_PROGRESS.PROGRESS_BUSY;
-
-                IF (_MessageLevel > E_MessageType.eMessageVerbose)
-                THEN
-                  _stMsg.eType        := E_MessageType.eMessageSentient;
-                  _stMsg.eSubdevice   := e_Subdevice.Instance_BufferInfeed;
-                  _stMsg.iErrorNumber := 0;
-                  _stMsg.sText        := concat('I_RETURN _ProcessData.wTarget: ', 
-                                                   _ItfProcessCollector[_nProcess].BitsToString(_ProcessData.wTarget));
+                  _stMsg.sText        := concat('I_GONE Target: ', TO_STRING(_nTargetIndex[1]));
                   f_MessageSet(_stMsg);
                 END_IF
                 IF (_MessageLevel > E_MessageType.eMessageEmpty)
@@ -563,21 +512,19 @@ OF
                   _stMsg.iErrorNumber := 0;
                   _stMsg.sText        := concat(TO_STRING(_eStateProgress), ': ');
                   _stMsg.sText        := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_NEXT_IN_JOB));
-                f_MessageSet(_stMsg);
+                  f_MessageSet(_stMsg);
                 END_IF
-              END_IF
-          END_CASE
         END_CASE
     END_CASE
 END_CASE
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-_InstanceState[_nProcess].State       := _eStateInstance;
-_InstanceState[_nProcess].Progress    := _eStateProgress;
+_stInstanceState[_nProcess].State       := _eStateInstance;
+_stInstanceState[_nProcess].Progress    := _eStateProgress;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-_InstanceState[_nProcess].StationCount      := _ItfProcessCollector[_nProcess].StationCount;
-_InstanceState[_nProcess].QueueProcessCount := _ItfProcessCollector[_nProcess].QueueProcessCount;
+_stInstanceState[_nProcess].StationCount      := _ItfProcessCollector[_nProcess].StationCount;
+_stInstanceState[_nProcess].QueueProcessCount := _ItfProcessCollector[_nProcess].QueueProcessCount;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 ]]></ST>
@@ -642,7 +589,30 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_BufferOutfeed">
-      <LineId Id="1" Count="523" />
+      <LineId Id="1" Count="142" />
+      <LineId Id="539" Count="0" />
+      <LineId Id="541" Count="1" />
+      <LineId Id="545" Count="1" />
+      <LineId Id="548" Count="0" />
+      <LineId Id="550" Count="11" />
+      <LineId Id="547" Count="0" />
+      <LineId Id="544" Count="0" />
+      <LineId Id="156" Count="18" />
+      <LineId Id="176" Count="66" />
+      <LineId Id="247" Count="16" />
+      <LineId Id="265" Count="50" />
+      <LineId Id="324" Count="83" />
+      <LineId Id="409" Count="3" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="426" Count="13" />
+      <LineId Id="536" Count="0" />
+      <LineId Id="535" Count="0" />
+      <LineId Id="537" Count="0" />
+      <LineId Id="446" Count="13" />
+      <LineId Id="461" Count="5" />
+      <LineId Id="494" Count="9" />
+      <LineId Id="505" Count="10" />
+      <LineId Id="518" Count="6" />
       <LineId Id="527" Count="5" />
       <LineId Id="525" Count="0" />
     </LineIds>

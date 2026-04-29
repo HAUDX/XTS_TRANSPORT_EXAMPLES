@@ -59,7 +59,7 @@ END_IF
 //-----------------------------------------------------------------------------
 // check init command (hard reset)
 //-----------------------------------------------------------------------------
-_eCmd                                 := _InstanceCtrl[_nProcess].Cmd;
+_eCmd                                 := _stInstanceCtrl[_nProcess].Cmd;
 IF (_eCmd <> _eCmdOld)
 THEN
   CASE _eCmd
@@ -122,7 +122,7 @@ OF
         // wait for my process collector check (_State.Check) to be done
         //  - checks range of XtsStations
         //  - checks count of XtsStations
-        IF (_State.Check = E_PROCESS_CHECK.PROCESS_CHECK_DONE)
+        IF (_stState.Check = E_PROCESS_CHECK.PROCESS_CHECK_DONE)
         THEN
           _eInit                      := _ItfProcessCollector[_nProcess].Init(TRUE);
   
@@ -146,7 +146,7 @@ OF
               _nTargetStationFirst    := _ItfProcessCollector[_nProcessTarget].StationFirst;
       
               // initialization of Infeed: _ItfProcessCollector with XtsStation
-              _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_DISABLE;  // first, switch off _ItfProcessCollector and XtsStation
+              _stCtrl.Cmd               := E_PROCESS_CTRL.PROCESS_DISABLE;  // first, switch off _ItfProcessCollector and XtsStation
               _eStateProgress         := E_PROGRESS.PROGRESS_INIT;        // clear sub state
               _eStateInstance                 := E_INSTANCE_STATE.DISABLED;       // switch to disabled as default after startup
             END_IF
@@ -169,10 +169,10 @@ OF
       E_PROGRESS.PROGRESS_INIT:
         _eStateProgress               := E_PROGRESS.PROGRESS_BUSY;
         // clear data for a new round
-        memset(ADR(_ListResult), 0, SIZEOF(_ListResult));
+        memset(ADR(_stListResult), 0, SIZEOF(_stListResult));
 
-        _Ctrl.ActivateStation         := 0;
-        _Ctrl.NestMask                := 1;
+        _stCtrl.ActivateStation         := 0;
+        _stCtrl.NestMask                := 1;
         
     END_CASE
     // E_INSTANCE_STATE.DISABLED:
@@ -231,9 +231,9 @@ OF
         THEN
           // get new order for my process
           // check my list for a new round of movers
-          _ListResult                 := _ItfProcessList[_nProcess].GetHead();  // the list results carries information about the requirements of the target process (who and where)
+          _stListResult                 := _ItfProcessList[_nProcess].GetHead();  // the list results carries information about the requirements of the target process (who and where)
 
-          IF (_ListResult.wState <> 0)
+          IF (_stListResult.wState <> 0)
           THEN
             // error in list results must not appear
             // if you land here, there is somethng wrong with the initialization or configuration of the linked list
@@ -241,13 +241,13 @@ OF
 
             _stMsg.eType              := E_MessageType.eMessageError;
             _stMsg.eSubdevice         := e_Subdevice.Process_LinkedList_GetHead;
-            _stMsg.iErrorNumber       := _ListResult.wState;
+            _stMsg.iErrorNumber       := _stListResult.wState;
             _stMsg.sText              := concat(TO_STRING(_eStateInstance), ': _ListResult.wState: ');
             _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_eStateProgress));
             f_MessageSet(_stMsg);
 
           ELSE
-            _ProcessData              := _ListResult.stData;  // list result contains data for target process
+            _stProcessData              := _stListResult.stData;  // list result contains data for target process
             _eStateProgress           := E_PROGRESS.PROGRESS_CHECK;
 
             IF (_MessageLevel > E_MessageType.eMessageWarning)
@@ -257,21 +257,21 @@ OF
               _stMsg.iErrorNumber     := 0;
               _stMsg.sText            := concat(TO_STRING(_eStateInstance), ': ');
               _stMsg.sText            := concat(_stMsg.sText, '_ListResult.stData.wTarget: ');
-              _stMsg.sText            := concat(_stMsg.sText, _ItfProcessCollector[_nProcess].BitsToString(_ListResult.stData.wTarget));
+              _stMsg.sText            := concat(_stMsg.sText, _ItfProcessCollector[_nProcess].BitsToString(_stListResult.stData.wTarget));
               f_MessageSet(_stMsg);
             END_IF
             IF (_MessageLevel > E_MessageType.eMessageEmpty)
             THEN
               _stMsg.eType            := E_MessageType.eMessageBatch;
               _stMsg.eSubdevice       := e_Subdevice.Instance_Infeed;
-              _stMsg.iErrorNumber     := _ProcessData.wTarget;
+              _stMsg.iErrorNumber     := _stProcessData.wTarget;
               _stMsg.sText            := concat(TO_STRING(_eStateProgress), ': ');
               _stMsg.sText            := concat(_stMsg.sText, TO_STRING(e_message_batch.MSG_BATCH_JOB_STARTED));
               f_MessageSet(_stMsg);
             END_IF
 
             // as movers are about to enter, tell fb_SenderBufferInfeed to send a new batch
-            _WriteResult              := _ItfProcessList[E_INSTANCE.SENDER_BUFFER_INFEED].AddTailValue(_ProcessData);
+            _WriteResult              := _ItfProcessList[E_INSTANCE.SENDER_BUFFER_INFEED].AddTailValue(_stProcessData);
 
             IF (_WriteResult.wState <> 0)
             THEN
@@ -305,16 +305,16 @@ OF
     OF
       E_PROGRESS.PROGRESS_CHECK:
         // check for disabled process interface state
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_DISABLE:
 
-          CASE _State.Result
+          CASE _stState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:     // busy from _State.Result means, waiting for input
               // now the preparation may begin
-              _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_ENABLE; // switch on my state machine in _ItfProcessCollector
-              _Ctrl.ActivateStation   := _ProcessData.wTarget;          // get active stations from list result
+              _stCtrl.Cmd               := E_PROCESS_CTRL.PROCESS_ENABLE; // switch on my state machine in _ItfProcessCollector
+              _stCtrl.ActivateStation   := _stProcessData.wTarget;          // get active stations from list result
 
               FOR _idx := _ItfProcessCollector[_nProcess].StationLast TO _ItfProcessCollector[_nProcess].StationFirst BY (-1)
               DO
@@ -328,7 +328,7 @@ OF
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
                 _stMsg.eSubdevice     := e_Subdevice.Instance_Infeed;
-                _stMsg.iErrorNumber   := _Ctrl.ActivateStation;
+                _stMsg.iErrorNumber   := _stCtrl.ActivateStation;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                 f_MessageSet(_stMsg);
@@ -352,22 +352,22 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_INIT:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_ENABLE:
-          CASE _State.Result
+          CASE _stState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:
               // now my process and all XtsStations within are switched on
               // check infeed into my process
-              _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_INFEED; // tells my process to go check the infeed
+              _stCtrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_INFEED; // tells my process to go check the infeed
               _eStateProgress         := E_PROGRESS.PROGRESS_BUSY; // go check how the infeed into my process is doing
 
               IF (_MessageLevel = E_MessageType.eMessageVerbose)
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
                 _stMsg.eSubdevice     := e_Subdevice.Instance_Infeed;
-                _stMsg.iErrorNumber   := _Ctrl.ActivateStation;
+                _stMsg.iErrorNumber   := _stCtrl.ActivateStation;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                 f_MessageSet(_stMsg);
@@ -380,10 +380,10 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_BUSY:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_STATIONS_INFEED:
-          CASE _State.Result
+          CASE _stState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:
               // now we know who wants to enter
@@ -393,7 +393,7 @@ OF
               THEN
                 _stMsg.eType          := E_MessageType.eMessageVerbose;
                 _stMsg.eSubdevice     := e_Subdevice.Instance_Infeed;
-                _stMsg.iErrorNumber   := _Ctrl.ActivateStation;
+                _stMsg.iErrorNumber   := _stCtrl.ActivateStation;
                 _stMsg.sText          := concat(TO_STRING(_eStateInstance), ': ');
                 _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eStateProgress));
                 f_MessageSet(_stMsg);
@@ -406,16 +406,16 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_OCCUPIED:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_STATIONS_INFEED:
-          CASE _State.Result
+          CASE _stState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:
               CASE _eCmd              // check for proceed command
               OF
                 E_INSTANCE_CMD.PROCEED:
-                  _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_ENTER; // Infeed has work to do, let all movers enter
+                  _stCtrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_ENTER; // Infeed has work to do, let all movers enter
                   _eStateProgress         := E_PROGRESS.PROGRESS_STARTUP;           // go check start of my process
 
 // HAUD 2025 12 21 - I keep it, I might need it in this place for more complex queueing
@@ -459,10 +459,10 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_STARTUP:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_START:
-          CASE _State.Result
+          CASE _stState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:
               // all movers at PosStop[1] in standstill
@@ -495,16 +495,16 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_BUSY:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_START:
-          CASE _State.Result
+          CASE _stState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:
               CASE _eCmd
               OF
                 E_INSTANCE_CMD.WORK:
-                  _Ctrl.Cmd             := E_PROCESS_CTRL.PROCESS_START;
+                  _stCtrl.Cmd             := E_PROCESS_CTRL.PROCESS_START;
                   _eStateProgress       := E_PROGRESS.PROGRESS_CHECK;
 
                   FOR _idx := _ItfProcessCollector[_nProcess].StationLast TO _ItfProcessCollector[_nProcess].StationFirst BY (-1)
@@ -529,16 +529,16 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_CHECK:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_DONE:
-          CASE _State.Result
+          CASE _stState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:
               CASE _eCmd
               OF
                 E_INSTANCE_CMD.FINISH:
-                  _Ctrl.Cmd             := E_PROCESS_CTRL.PROCESS_DONE;
+                  _stCtrl.Cmd             := E_PROCESS_CTRL.PROCESS_DONE;
   
                   _eStateInstance       := E_INSTANCE_STATE.FINISH;
                   _eStateProgress       := E_PROGRESS.PROGRESS_INIT;
@@ -582,22 +582,22 @@ OF
         _nTargetIndex[1+_idx-_ItfProcessCollector[_nProcess].StationFirst]  := TO_USINT(_ItfProcessCollector[_nProcessTarget].StationFirst);
   
         _ItfProcessCollector[_nProcess].TargetIndex := _nTargetIndex; // write Xts target onto my ProcessCollector interface
-        _ProcessData.wTarget                        := _ItfProcessCollector[_nProcess].
-                                                       BitDel(_ProcessData.wTarget, _idx-_nTargetStationFirst);
+        _stProcessData.wTarget                        := _ItfProcessCollector[_nProcess].
+                                                       BitDel(_stProcessData.wTarget, _idx-_nTargetStationFirst);
       END_FOR
     END_CASE
     //-------------------------------------------------------------------------
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_BUSY:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_STATIONS_OUTFEED: // check my process' state
-          CASE _State.Result
+          CASE _stState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:
               // now data is prepared and copied to the right places
-              _Ctrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED; // release the kraken!
+              _stCtrl.Cmd               := E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED; // release the kraken!
               _eStateProgress         := E_PROGRESS.PROGRESS_CHECK;               // go check for more
 
               IF (_MessageLevel > E_MessageType.eMessageInfo)
@@ -633,7 +633,7 @@ OF
             _stMsg.eSubdevice         := e_Subdevice.Instance_Infeed;
             _stMsg.iErrorNumber       := _idx;
             _stMsg.sText              := concat('ALL_GONE _ProcessData.wTarget: ', 
-                                         _ItfProcessCollector[_nProcess].BitsToString(_ProcessData.wTarget));
+                                         _ItfProcessCollector[_nProcess].BitsToString(_stProcessData.wTarget));
             f_MessageSet(_stMsg);
           END_IF
           IF (_MessageLevel > E_MessageType.eMessageEmpty)
@@ -651,7 +651,7 @@ OF
     CASE _eStateProgress
     OF
       E_PROGRESS.PROGRESS_DONE:
-        CASE _State.State
+        CASE _stState.State
         OF
           E_PROCESS_STATE.PROCESS_DISABLE:
             IF (_MessageLevel > E_MessageType.eMessageVerbose)
@@ -671,12 +671,12 @@ OF
 END_CASE
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-_InstanceState[_nProcess].State       := _eStateInstance;
-_InstanceState[_nProcess].Progress    := _eStateProgress;
+_stInstanceState[_nProcess].State       := _eStateInstance;
+_stInstanceState[_nProcess].Progress    := _eStateProgress;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-_InstanceState[_nProcess].StationCount      := _ItfProcessCollector[_nProcess].StationCount;
-_InstanceState[_nProcess].QueueProcessCount := _ItfProcessCollector[_nProcess].QueueProcessCount;
+_stInstanceState[_nProcess].StationCount      := _ItfProcessCollector[_nProcess].StationCount;
+_stInstanceState[_nProcess].QueueProcessCount := _ItfProcessCollector[_nProcess].QueueProcessCount;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 ]]></ST>

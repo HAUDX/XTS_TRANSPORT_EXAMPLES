@@ -170331,7 +170331,7 @@ and will return to Group State Standby when the situation permits.
 		</System>
 		<Motion>
 			<NC>
-				<SafTask Priority="4" CycleTime="10000" AmsPort="501" Affinity="#x00000020" IoAtBegin="true" AmsNetId="192.168.1.70.1.1" SafTaskInfo="256">
+				<SafTask Priority="4" CycleTime="10000" AmsPort="501" Affinity="#x00000020" IoAtBegin="true" SafTaskInfo="256">
 					<Name>NC-Task 1</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -318988,7 +318988,7 @@ and will return to Group State Standby when the situation permits.
 							</Contexts>
 							<Parameters>
 								<Group><![CDATA[Geometry]]></Group>
-								<Group Collapsed="true"><![CDATA[Gap Control]]></Group>
+								<Group><![CDATA[Gap Control]]></Group>
 								<Parameter HideParameter="true">
 									<Name>TraceLevel</Name>
 									<BitSize>32</BitSize>
@@ -319186,11 +319186,11 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>Gap Control Direction</Name>
-									<EnumText>mcGapCtrlDirectionPositive</EnumText>
+									<EnumText>mcGapCtrlDirectionBoth</EnumText>
 								</Value>
 								<Value>
 									<Name>Active Gap Establishing</Name>
-									<EnumText>FALSE</EnumText>
+									<EnumText>TRUE</EnumText>
 								</Value>
 								<Value>
 									<Name>Standby Gap Control</Name>
@@ -319233,8 +319233,8 @@ and will return to Group State Standby when the situation permits.
 			</NC>
 		</Motion>
 		<Plc>
-			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="TEST" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{2F5BAE74-B399-782C-1B58-C78D05B8D1A8}" TmcPath="XtsTransport\XtsTransport.tmc">
+			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="TEST, WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{288C46AE-4A61-285F-0C1B-479BD29EE0FF}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -320178,8 +320178,8 @@ and will return to Group State Standby when the situation permits.
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<Project GUID="{D083EE86-F0E4-4E86-B9F5-5606BF356788}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="TEST" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{B2408EBB-135C-D6D7-23F6-A31356DC6867}" TmcPath="ExternControl\ExternControl.tmc">
+			<Project GUID="{D083EE86-F0E4-4E86-B9F5-5606BF356788}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="TEST, WIN" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{BC6DFD68-52BB-A077-A73E-4DA5FD9AD9C5}" TmcPath="ExternControl\ExternControl.tmc">
 					<Name>ExternControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">

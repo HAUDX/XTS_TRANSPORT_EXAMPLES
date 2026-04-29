@@ -2425,15 +2425,19 @@ VAR_INST
   _TransportState         : E_XTS_TRANSPORT_STATE;
   _JobResult              : E_PROGRESS;
 
-  _tonListData            : Tc2_Standard.TON;
-  _tListDataIntervall     : time := t#20ms;
+  _bSwitchManual          : BOOL; // stepping through
+
+  _bLeave,
+  _bEnter                 : ARRAY[1..MAX_PROCESS] OF BOOL; // debug, testing, stepping through
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[//-----------------------------------------------------------------------------
 IF NOT Execute 
 THEN 
-	_eState                                   := E_PROGRESS.PROGRESS_INIT; 
+	_eState                                   := E_PROGRESS.PROGRESS_INIT;
+  memset(ADR(_bLeave), 1, SIZEOF(_bLeave));
+  memset(ADR(_bEnter), 1, SIZEOF(_bEnter));
 END_IF 
 //-----------------------------------------------------------------------------
 IF NOT Check() 
@@ -2580,7 +2584,10 @@ END_CASE
 CASE _eState
 OF
   E_PROGRESS.PROGRESS_OCCUPIED:
-    _eState                     := E_PROGRESS.PROGRESS_WORKING;
+    IF NOT _bSwitchManual
+    THEN
+      _eState                               := E_PROGRESS.PROGRESS_WORKING;
+    END_IF
 
     IF (_MessageLevel > E_MessageType.eMessageError)
     THEN
@@ -2614,8 +2621,7 @@ OF
                 OF
                   E_INSTANCE_STATE.DETECTION:
                     _eRslt                  := ListData(FALSE);
-                    _tonListData( IN        := FALSE,
-                                  PT        := _tListDataIntervall);
+
                     IF NOT _bTicketCountOverride
                     THEN
                       IF (_nTicketCount < _nTicketCountEnd+1)
@@ -2627,7 +2633,7 @@ OF
                     END_IF
                 END_CASE
             ELSE
-                _InstanceCtrl[_eInst].Cmd := E_INSTANCE_CMD.ENABLE;
+                _InstanceCtrl[_eInst].Cmd   := E_INSTANCE_CMD.ENABLE;
             END_CASE
           END_CASE
       
@@ -2689,16 +2695,11 @@ OF
               _InstanceCtrl[_eInst].Cmd     := E_INSTANCE_CMD.PROCEED;
 
             E_PROGRESS.PROGRESS_DONE:
-              _tonListData(IN               := TRUE,
-                           PT               := _tListDataIntervall);
-              IF (_tonListData.Q)
-              THEN
-                _eRslt                        := ListData(_bRunListData);
+                _eRslt                      := ListData(_bRunListData);
                 IF (_eRslt = E_PROGRESS.PROGRESS_DONE)
                 THEN
-                  _InstanceCtrl[_eInst].Cmd   := E_INSTANCE_CMD.FINISH;
+                  _InstanceCtrl[_eInst].Cmd := E_INSTANCE_CMD.FINISH;
                 END_IF
-              END_IF
           END_CASE
         END_CASE
     END_FOR
@@ -2925,7 +2926,9 @@ END_VAR
       <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Application.Work">
-      <LineId Id="1" Count="88" />
+      <LineId Id="1" Count="3" />
+      <LineId Id="437" Count="1" />
+      <LineId Id="5" Count="84" />
       <LineId Id="266" Count="0" />
       <LineId Id="95" Count="0" />
       <LineId Id="336" Count="0" />
@@ -2952,7 +2955,11 @@ END_VAR
       <LineId Id="310" Count="1" />
       <LineId Id="309" Count="0" />
       <LineId Id="308" Count="0" />
-      <LineId Id="144" Count="21" />
+      <LineId Id="144" Count="5" />
+      <LineId Id="439" Count="1" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="151" Count="14" />
       <LineId Id="168" Count="9" />
       <LineId Id="390" Count="0" />
       <LineId Id="396" Count="0" />
@@ -2961,7 +2968,9 @@ END_VAR
       <LineId Id="402" Count="0" />
       <LineId Id="404" Count="0" />
       <LineId Id="407" Count="0" />
-      <LineId Id="409" Count="11" />
+      <LineId Id="409" Count="0" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="412" Count="8" />
       <LineId Id="405" Count="0" />
       <LineId Id="398" Count="0" />
       <LineId Id="400" Count="0" />
@@ -2969,12 +2978,7 @@ END_VAR
       <LineId Id="179" Count="57" />
       <LineId Id="322" Count="0" />
       <LineId Id="321" Count="0" />
-      <LineId Id="351" Count="3" />
-      <LineId Id="342" Count="0" />
-      <LineId Id="356" Count="1" />
-      <LineId Id="359" Count="0" />
-      <LineId Id="358" Count="0" />
-      <LineId Id="355" Count="0" />
+      <LineId Id="432" Count="4" />
       <LineId Id="237" Count="5" />
       <LineId Id="244" Count="1" />
     </LineIds>
