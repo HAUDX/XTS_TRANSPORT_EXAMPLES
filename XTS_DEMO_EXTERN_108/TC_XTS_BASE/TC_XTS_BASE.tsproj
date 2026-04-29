@@ -5518,7 +5518,7 @@ and will return to Group State Standby when the situation permits.
 				<Task Id="2" Priority="1" CycleTime="2500" AmsPort="350" Affinity="#x00000080" AdtTasks="true">
 					<Name>XTS Task 1</Name>
 				</Task>
-				<Task Id="8" Priority="15" CycleTime="10000" AmsPort="353" Affinity="#x00000010" AdtTasks="true">
+				<Task Id="8" Priority="15" CycleTime="20000" AmsPort="353" Affinity="#x00000010" AdtTasks="true">
 					<Name>PLC_1</Name>
 				</Task>
 				<Task Id="4" Priority="2" CycleTime="2500" AmsPort="351" Affinity="#x00000040" AdtTasks="true">
@@ -319234,7 +319234,7 @@ and will return to Group State Standby when the situation permits.
 		</Motion>
 		<Plc>
 			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="TEST, WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{288C46AE-4A61-285F-0C1B-479BD29EE0FF}" TmcPath="XtsTransport\XtsTransport.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{D7C3AA7A-9CCD-41AE-9247-D2FD017EFA6B}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -320170,7 +320170,7 @@ and will return to Group State Standby when the situation permits.
 								<OTCID>#x02010080</OTCID>
 							</ManualConfig>
 							<Priority>15</Priority>
-							<CycleTime>1000000</CycleTime>
+							<CycleTime>2000000</CycleTime>
 						</Context>
 					</Contexts>
 					<TaskPouOids>
@@ -320179,7 +320179,7 @@ and will return to Group State Standby when the situation permits.
 				</Instance>
 			</Project>
 			<Project GUID="{D083EE86-F0E4-4E86-B9F5-5606BF356788}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="TEST, WIN" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{BC6DFD68-52BB-A077-A73E-4DA5FD9AD9C5}" TmcPath="ExternControl\ExternControl.tmc">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{738D3C56-03D7-1BFD-8C11-6CA5C38FA439}" TmcPath="ExternControl\ExternControl.tmc">
 					<Name>ExternControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -320236,7 +320236,7 @@ and will return to Group State Standby when the situation permits.
 								<OTCID>#x02010080</OTCID>
 							</ManualConfig>
 							<Priority>15</Priority>
-							<CycleTime>1000000</CycleTime>
+							<CycleTime>2000000</CycleTime>
 						</Context>
 					</Contexts>
 					<TaskPouOids>
@@ -349255,8 +349255,8 @@ and will return to Group State Standby when the situation permits.
 	</Project>
 	<Mappings>
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500840205008}" Id="#x02030030"/>
-		<MappingInfo Identifier="{05000010-2001-0850-1000-120500205008}" Id="#x02030020" Watchdog="04000000040000000400000004000000"/>
-		<MappingInfo Identifier="{05000010-2001-0850-9002-040300205008}" Id="#x02030010" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{05000010-2001-0850-1000-120500205008}" Id="#x02030020" Watchdog="08000000040000000400000004000000"/>
+		<MappingInfo Identifier="{05000010-2001-0850-9002-040300205008}" Id="#x02030010" Watchdog="08000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1">
 			<OwnerB Name="TIRC^TcCOM Objects^XTS ProcessingUnit 1^Part 1^Module 1">
 				<Link VarA="Term 1 (AT2002-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>

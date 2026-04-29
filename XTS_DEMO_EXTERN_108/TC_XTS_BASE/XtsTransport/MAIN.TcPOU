@@ -151,17 +151,17 @@ THEN
       GVL_MSG.MetricsMessageCtrl.Cmd            := E_MESSAGE_CTRL.MSG_CTRL_NULL;
 
 
-      GVL_MSG.MessageLevelXpu                   := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
-      GVL_XTS.CaGroup.MessageLevel              := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
-      GVL_XTS.XtsTransport.MessageLevel         := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
+      GVL_MSG.MessageLevelXpu                   := GVL_MSG.MessageLevel;
+      GVL_XTS.CaGroup.MessageLevel              := GVL_MSG.MessageLevel;
+      GVL_XTS.XtsTransport.MessageLevel         := GVL_MSG.MessageLevel;
 
       FOR nStation := 1 TO MAX_STATION
       DO
-        GVL_MSG.MessageLevelStations[nStation]  := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
+        GVL_MSG.MessageLevelStations[nStation]  := GVL_MSG.MessageLevel;
       END_FOR
       FOR nMover := 1 TO MAX_MOVER
       DO
-        GVL_MSG.MessageLevelMovers[nMover]      := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
+        GVL_MSG.MessageLevelMovers[nMover]      := GVL_MSG.MessageLevel;
       END_FOR
 
       
@@ -197,8 +197,15 @@ THEN
     //-----------------------------------------------------------------------------
     //-----------------------------------------------------------------------------
     E_PROGRESS.PROGRESS_STARTUP:
-      eInit                                   := E_PROGRESS.PROGRESS_CHECK;
-
+      IF (GVL_XTS.XpuInfo.IdDetectionValid) OR
+         (GVL_XTS.XpuInfo.OperationMode = OperationMode.Simulation)
+      THEN
+        IF (GVL_XTS.XpuState.State = E_XPU_STATE.XTS_IDLE + E_PROGRESS.PROGRESS_WORKING)
+        THEN
+          GVL_MSG.TransportMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          eInit                                 := E_PROGRESS.PROGRESS_CHECK;
+        END_IF
+      END_IF
     //-----------------------------------------------------------------------------
     //-----------------------------------------------------------------------------
     E_PROGRESS.PROGRESS_CHECK:
@@ -4553,7 +4560,13 @@ tStationSelectedQueue                 := GVL_XTS.StationQueue[nStationSelected];
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="1" Count="86" />
+      <LineId Id="1" Count="67" />
+      <LineId Id="461" Count="3" />
+      <LineId Id="466" Count="0" />
+      <LineId Id="465" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="467" Count="0" />
+      <LineId Id="70" Count="17" />
       <LineId Id="426" Count="0" />
       <LineId Id="89" Count="51" />
       <LineId Id="427" Count="1" />
