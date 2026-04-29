@@ -50,6 +50,7 @@ The baseline examples for starting, stopping, and clearing a transport applicati
 - **[XTS_DEMO_LINE_SORT]:** Mover-Centric Command. A 2-PLC setup (XtsTransport and ExternControl) managing isolated parts with singular movers. 
   The ExternControl operates as the absolute command center.
 
+- **[XTS_DEMO_MAPPING]:** EL6633-0010 very simple example for Profinet connectivity.
 
 ## IV. The Digital Twin & Observability
 Risk-reduction through virtual commissioning.
