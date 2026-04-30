@@ -61,6 +61,9 @@ TYPE e_Subdevice :
   fbWriteParameter,
   fbWriteBoolParameter,
   fbWriteParameterPersistent,
+  fbXmlRead,
+  fbXmlWrite,
+  fbCreateFolder,
 
   fbBuildGroup            := 200,
   fbClearGroup,
@@ -118,6 +121,7 @@ TYPE e_Subdevice :
   StationGearInSyncStart,
   StationGearInSyncMove,
   StationGearInSyncEnd,
+  StationCalcInfeedPosition,
 
   StationControl        := 4000,
   StationState, 
@@ -197,8 +201,11 @@ TYPE e_Subdevice :
   Application_Finish,
   Application_Init,
   Application_Proceed,
-  Application_Work
+  Application_Work,
 
+  Utilities                   := 13100,
+  Utilities_GetStationOnModule,
+  Utilities_SetGlobalConstraints
 
 )DINT;
 END_TYPE

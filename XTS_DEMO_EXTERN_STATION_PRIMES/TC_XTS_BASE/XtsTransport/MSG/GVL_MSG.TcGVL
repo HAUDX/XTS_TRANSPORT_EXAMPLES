@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <GVL Name="GVL_MSG" Id="{917a2bd3-fa93-4f29-962e-4437f89d7d0d}">
+  <GVL Name="GVL_MSG" Id="{4548888e-ebdc-45e2-b2b4-5369e92f8e60}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
   //-----------------------------------------------------------------------------
@@ -9,10 +9,12 @@ VAR_GLOBAL CONSTANT
   //-----------------------------------------------------------------------------
 {IF defined (WIN)}
   {info 'WIN folders'}
-  LOG_DIR               : STRING  := 'C:\TwinCAT\#MsgFiles\'; // delimiter at the end is mandatory!!
+  LOG_DIR               : STRING  := 'C:\TwinCAT\#MsgFiles\';       // delimiter at the end is mandatory!!
+  CON_DIR               : STRING  := 'C:\TwinCAT\#Configuration\';  // delimiter at the end is mandatory!!
 {ELSE}
   {info 'BSD folders'}
-  LOG_DIR               : STRING  := '/usr/local/etc/TwinCAT/#MsgFiles/'; // delimiter at the end is mandatory!!
+  LOG_DIR               : STRING  := '/usr/local/etc/TwinCAT/#MsgFiles/';       // delimiter at the end is mandatory!!
+  CON_DIR               : STRING  := '/usr/local/etc/TwinCAT/#Configuration/';  // delimiter at the end is mandatory!!
 {END_IF}
 
   LOG_FILE              : STRING  := 'MSG_XtsTransport_';
@@ -94,7 +96,7 @@ VAR_GLOBAL
 
 {IF defined (TEST)}
   {info 'TEST logging enabled'}
-  MessageLevel                    : E_MessageType := E_MessageType.eMessageSentient; // a lot of messages
+  MessageLevel                    : E_MessageType := eMessageinfo; // a lot of messages
 {ELSE}
   MessageLevel                    : E_MessageType := eMessageEmpty; // only errors are written into list 
 {END_IF}

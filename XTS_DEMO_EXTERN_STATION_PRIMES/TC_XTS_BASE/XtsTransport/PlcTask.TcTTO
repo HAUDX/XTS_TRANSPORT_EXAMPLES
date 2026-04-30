@@ -11,6 +11,9 @@
       <Name>MAIN</Name>
     </PouCall>
     <PouCall>
+      <Name>MAIN_APP</Name>
+    </PouCall>
+    <PouCall>
       <Name>MAPPING_out</Name>
     </PouCall>
     <TaskFBGuid>{caaf307a-3806-43f0-992e-af2fe28f94b7}</TaskFBGuid>

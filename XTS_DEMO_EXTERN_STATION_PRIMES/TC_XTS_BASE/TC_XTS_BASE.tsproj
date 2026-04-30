@@ -5653,12 +5653,12 @@ and will return to Group State Standby when the situation permits.
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{6C954319-4943-3EF0-FC98-9B33B92F7931}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..50] OF BYTE</Name>
-			<BitSize>400</BitSize>
+			<Name GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..60] OF BYTE</Name>
+			<BitSize>480</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>50</Elements>
+				<Elements>60</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -5848,7 +5848,7 @@ and will return to Group State Standby when the situation permits.
 		<ImageData Id="1024">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c30e0000c30e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0d5fe2ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0d5fe2ff00ffff00ffff00ffff00ffff00ffff00ffff00ff0d5fe20d5fe20d5fe20d5fe20d5fe20d5fe20d5fe20d5fe20d5fe2ff00ffff00ffff00ffff00ffff00ffff00ffff00ff170517ff00ffff00ffff00ffff00ffff00ffff00ff170517ff00ffff00ffff00ffff00ffff00ffff00ffff00ff1705171705171705172525254a4a4a4a4a4a252525170517170517170517ff00ffff00ffff00ffff00ffff00ffff00ff170517828282828282828282170517170517828282828282828282170517ff00ffff00ffff00ffff00ffff00ffff00ff170517828282170517828282828282828282818181170517828282170517ff00ffff00ffff00ffff00ffff00ff000000000000828282170517828282423e42423e42828282170517828282000000000000ff00ffff00ffff00ffff00ff1705175b5b5b828282170517828282423e42423e42828282170517828282535353170517ff00ffff00ffff00ff0000001705176b6b6b828282828282828282423e42423e42828282828282828282646464170517000000ff00ffff00ffff00ffff00ff1705171705174a4a4a8282828282828282828282824a4a4a170517170517ff00fffe00feff00ffff00ffff00ffff00ffff00ffff00ff2f2f2f1705171705171705171705172f2f2fff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1025">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c30e0000c30e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0d5fe2ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0d5fe2ff00ffff00ffff00ffff00ffff00ffff00ffff00ff0d5fe20d5fe20d5fe20d5fe20d5fe20d5fe20d5fe20d5fe20d5fe2ff00ffff00ffff00ffff00ffff00ffff00ffff00ff170517ff00ffff00ffff00ffff00ffff00ffff00ff170517ff00ffff00ffff00ffff00ffff00ffff00ffff00ff1705171705171705172525254a4a4a4a4a4a252525170517170517170517ff00ffff00ffff00ffff00ffff00ffff00ff170517edc532edc532edc532170517170517edc532edc532edc532170517ff00ffff00ffff00ffff00ffff00ffff00ff170517edc532170517edc532edc532edc532edc532170517edc532170517ff00ffff00ffff00ffff00ffff00ff000000000000edc532170517edc532423e42423e42edc532170517edc532000000000000ff00ffff00ffff00ffff00ff170517a68a23edc532170517edc532423e42423e42edc532170517edc532a68a23170517ff00ffff00ffff00ff000000170517c3a229edc532edc532edc532423e42423e42edc532edc532edc532c3a229170517000000ff00ffff00ffff00ffff00ff1705171705174a4a4aedc532edc532edc532edc5324a4a4a170517170517ff00fffe00feff00ffff00ffff00ffff00ffff00ffff00ff2f2f2f1705171705171705171705172f2f2fff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{0D33BF96-E768-4312-8E76-7F2D2635C2C0}" TargetNetId="5.163.199.237.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
+	<Project ProjectGUID="{0D33BF96-E768-4312-8E76-7F2D2635C2C0}" TargetNetId="192.168.1.73.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
 			<Settings MaxCpus="4" NonWinCpus="3" RouterMemory="134217728" MaxStackSize="512">
 				<Cpu CpuId="1" BaseTime="2500"/>
@@ -79555,7 +79555,7 @@ and will return to Group State Standby when the situation permits.
 						</ParameterValues>
 					</TmcDesc>
 					<Module Id="#x010108d0" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
-						<Name>Station 1</Name>
+						<Name>Process 1</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
 							<Name>XtsStationInfo</Name>
@@ -79806,7 +79806,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x010108c0" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
-						<Name>Station 2</Name>
+						<Name>Process 2</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
 							<Name>XtsStationInfo</Name>
@@ -80061,7 +80061,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x01010950" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
-						<Name>Station 3</Name>
+						<Name>Process 3</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
 							<Name>XtsStationInfo</Name>
@@ -80306,7 +80306,7 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>PartObjectIds[0]</Name>
-									<Value>4294967145</Value>
+									<Value>16843680</Value>
 								</Value>
 								<Value>
 									<Name>IsEnabled</Name>
@@ -80320,7 +80320,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x01010940" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
-						<Name>Station 4</Name>
+						<Name>Process 4</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
 							<Name>XtsStationInfo</Name>
@@ -80415,11 +80415,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>StopPositions</Name>
 									<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>768</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="0" MaxUnbounded="true">0</Elements>
+										<Elements Min="0" MaxUnbounded="true">12</Elements>
 									</ArrayInfo>
 									<Unit><![CDATA[mm]]></Unit>
 									<PTCID>#x0308028d</PTCID>
@@ -80428,11 +80428,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>PartObjectIds</Name>
 									<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>32</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="1" MaxUnbounded="true">0</Elements>
+										<Elements Min="1" MaxUnbounded="true">1</Elements>
 									</ArrayInfo>
 									<PTCID>#x03080224</PTCID>
 									<ContextId>1</ContextId>
@@ -80529,19 +80529,71 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>StationColor</Name>
-									<Value>4278190080</Value>
+									<Value>4289593135</Value>
 								</Value>
 								<Value>
 									<Name>StartPositionOnPart</Name>
-									<Value>10</Value>
+									<Value>2800</Value>
 								</Value>
 								<Value>
 									<Name>EndPositionOnPart</Name>
-									<Value>200</Value>
+									<Value>3500</Value>
 								</Value>
 								<Value>
 									<Name>StopPosition</Name>
 									<Value>100</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[0]</Name>
+									<Value>100</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[1]</Name>
+									<Value>145</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[2]</Name>
+									<Value>200</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[3]</Name>
+									<Value>245</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[4]</Name>
+									<Value>300</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[5]</Name>
+									<Value>345</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[6]</Name>
+									<Value>400</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[7]</Name>
+									<Value>445</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[8]</Name>
+									<Value>500</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[9]</Name>
+									<Value>545</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[10]</Name>
+									<Value>600</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[11]</Name>
+									<Value>645</Value>
+								</Value>
+								<Value>
+									<Name>PartObjectIds[0]</Name>
+									<Value>16843680</Value>
 								</Value>
 								<Value>
 									<Name>IsEnabled</Name>
@@ -80555,7 +80607,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x01010930" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
-						<Name>Station 5</Name>
+						<Name>Process 5</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
 							<Name>XtsStationInfo</Name>
@@ -80650,11 +80702,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>StopPositions</Name>
 									<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>384</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="0" MaxUnbounded="true">0</Elements>
+										<Elements Min="0" MaxUnbounded="true">6</Elements>
 									</ArrayInfo>
 									<Unit><![CDATA[mm]]></Unit>
 									<PTCID>#x0308028d</PTCID>
@@ -80663,11 +80715,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>PartObjectIds</Name>
 									<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>32</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="1" MaxUnbounded="true">0</Elements>
+										<Elements Min="1" MaxUnbounded="true">1</Elements>
 									</ArrayInfo>
 									<PTCID>#x03080224</PTCID>
 									<ContextId>1</ContextId>
@@ -80764,19 +80816,47 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>StationColor</Name>
-									<Value>4278190080</Value>
+									<Value>4289593135</Value>
 								</Value>
 								<Value>
 									<Name>StartPositionOnPart</Name>
-									<Value>10</Value>
+									<Value>4100</Value>
 								</Value>
 								<Value>
 									<Name>EndPositionOnPart</Name>
-									<Value>200</Value>
+									<Value>4500</Value>
 								</Value>
 								<Value>
 									<Name>StopPosition</Name>
 									<Value>100</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[0]</Name>
+									<Value>90</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[1]</Name>
+									<Value>135</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[2]</Name>
+									<Value>180</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[3]</Name>
+									<Value>225</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[4]</Name>
+									<Value>270</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[5]</Name>
+									<Value>315</Value>
+								</Value>
+								<Value>
+									<Name>PartObjectIds[0]</Name>
+									<Value>16843680</Value>
 								</Value>
 								<Value>
 									<Name>IsEnabled</Name>
@@ -80790,7 +80870,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x01010920" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
-						<Name>Station 6</Name>
+						<Name>Process 6</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
 							<Name>XtsStationInfo</Name>
@@ -80885,11 +80965,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>StopPositions</Name>
 									<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>256</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="0" MaxUnbounded="true">0</Elements>
+										<Elements Min="0" MaxUnbounded="true">4</Elements>
 									</ArrayInfo>
 									<Unit><![CDATA[mm]]></Unit>
 									<PTCID>#x0308028d</PTCID>
@@ -80898,11 +80978,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>PartObjectIds</Name>
 									<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>32</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="1" MaxUnbounded="true">0</Elements>
+										<Elements Min="1" MaxUnbounded="true">1</Elements>
 									</ArrayInfo>
 									<PTCID>#x03080224</PTCID>
 									<ContextId>1</ContextId>
@@ -80999,19 +81079,39 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>StationColor</Name>
-									<Value>4278190080</Value>
+									<Value>4289593135</Value>
 								</Value>
 								<Value>
 									<Name>StartPositionOnPart</Name>
-									<Value>10</Value>
+									<Value>4750</Value>
 								</Value>
 								<Value>
 									<Name>EndPositionOnPart</Name>
-									<Value>200</Value>
+									<Value>5150</Value>
 								</Value>
 								<Value>
 									<Name>StopPosition</Name>
 									<Value>100</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[0]</Name>
+									<Value>90</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[1]</Name>
+									<Value>180</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[2]</Name>
+									<Value>270</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[3]</Name>
+									<Value>360</Value>
+								</Value>
+								<Value>
+									<Name>PartObjectIds[0]</Name>
+									<Value>16843680</Value>
 								</Value>
 								<Value>
 									<Name>IsEnabled</Name>
@@ -81025,7 +81125,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x01010910" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
-						<Name>Station 7</Name>
+						<Name>Process 7</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
 							<Name>XtsStationInfo</Name>
@@ -81120,11 +81220,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>StopPositions</Name>
 									<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>320</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="0" MaxUnbounded="true">0</Elements>
+										<Elements Min="0" MaxUnbounded="true">5</Elements>
 									</ArrayInfo>
 									<Unit><![CDATA[mm]]></Unit>
 									<PTCID>#x0308028d</PTCID>
@@ -81133,11 +81233,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>PartObjectIds</Name>
 									<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>32</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="1" MaxUnbounded="true">0</Elements>
+										<Elements Min="1" MaxUnbounded="true">1</Elements>
 									</ArrayInfo>
 									<PTCID>#x03080224</PTCID>
 									<ContextId>1</ContextId>
@@ -81234,19 +81334,43 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>StationColor</Name>
-									<Value>4278190080</Value>
+									<Value>4289593135</Value>
 								</Value>
 								<Value>
 									<Name>StartPositionOnPart</Name>
-									<Value>10</Value>
+									<Value>5555</Value>
 								</Value>
 								<Value>
 									<Name>EndPositionOnPart</Name>
-									<Value>200</Value>
+									<Value>6045</Value>
 								</Value>
 								<Value>
 									<Name>StopPosition</Name>
 									<Value>100</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[0]</Name>
+									<Value>45</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[1]</Name>
+									<Value>145</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[2]</Name>
+									<Value>245</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[3]</Name>
+									<Value>345</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[4]</Name>
+									<Value>445</Value>
+								</Value>
+								<Value>
+									<Name>PartObjectIds[0]</Name>
+									<Value>16843680</Value>
 								</Value>
 								<Value>
 									<Name>IsEnabled</Name>
@@ -81260,7 +81384,7 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 					<Module Id="#x01010900" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
-						<Name>Station 8</Name>
+						<Name>Process 8</Name>
 						<ImageId>1008</ImageId>
 						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
 							<Name>XtsStationInfo</Name>
@@ -81355,11 +81479,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>StopPositions</Name>
 									<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>384</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="0" MaxUnbounded="true">0</Elements>
+										<Elements Min="0" MaxUnbounded="true">6</Elements>
 									</ArrayInfo>
 									<Unit><![CDATA[mm]]></Unit>
 									<PTCID>#x0308028d</PTCID>
@@ -81368,11 +81492,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>PartObjectIds</Name>
 									<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>32</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="1" MaxUnbounded="true">0</Elements>
+										<Elements Min="1" MaxUnbounded="true">1</Elements>
 									</ArrayInfo>
 									<PTCID>#x03080224</PTCID>
 									<ContextId>1</ContextId>
@@ -81469,19 +81593,47 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>StationColor</Name>
-									<Value>4278190080</Value>
+									<Value>4289593135</Value>
 								</Value>
 								<Value>
 									<Name>StartPositionOnPart</Name>
-									<Value>10</Value>
+									<Value>6800</Value>
 								</Value>
 								<Value>
 									<Name>EndPositionOnPart</Name>
-									<Value>200</Value>
+									<Value>7445</Value>
 								</Value>
 								<Value>
 									<Name>StopPosition</Name>
 									<Value>100</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[0]</Name>
+									<Value>100</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[1]</Name>
+									<Value>200</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[2]</Name>
+									<Value>300</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[3]</Name>
+									<Value>400</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[4]</Name>
+									<Value>500</Value>
+								</Value>
+								<Value>
+									<Name>StopPositions[5]</Name>
+									<Value>600</Value>
+								</Value>
+								<Value>
+									<Name>PartObjectIds[0]</Name>
+									<Value>16843680</Value>
 								</Value>
 								<Value>
 									<Name>IsEnabled</Name>
@@ -81603,11 +81755,11 @@ and will return to Group State Standby when the situation permits.
 								<Parameter Group="General">
 									<Name>PartObjectIds</Name>
 									<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
-									<BitSize>0</BitSize>
+									<BitSize>32</BitSize>
 									<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 									<ArrayInfo>
 										<LBound>0</LBound>
-										<Elements Min="1" MaxUnbounded="true">0</Elements>
+										<Elements Min="1" MaxUnbounded="true">1</Elements>
 									</ArrayInfo>
 									<PTCID>#x03080224</PTCID>
 									<ContextId>1</ContextId>
@@ -81704,254 +81856,23 @@ and will return to Group State Standby when the situation permits.
 								</Value>
 								<Value>
 									<Name>StationColor</Name>
-									<Value>4278190080</Value>
+									<Value>4289593135</Value>
 								</Value>
 								<Value>
 									<Name>StartPositionOnPart</Name>
-									<Value>10</Value>
+									<Value>7755</Value>
 								</Value>
 								<Value>
 									<Name>EndPositionOnPart</Name>
-									<Value>200</Value>
+									<Value>7845</Value>
 								</Value>
 								<Value>
 									<Name>StopPosition</Name>
 									<Value>100</Value>
 								</Value>
 								<Value>
-									<Name>IsEnabled</Name>
-									<EnumText>TRUE</EnumText>
-								</Value>
-								<Value>
-									<Name>Description</Name>
-									<String></String>
-								</Value>
-							</ParameterValues>
-						</TmcDesc>
-					</Module>
-					<Module Id="#x010108e0" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
-						<Name>Station 10</Name>
-						<ImageId>1008</ImageId>
-						<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.3.78.0">
-							<Name>XtsStationInfo</Name>
-							<CLSID ClassFactory="TcIoXts">{21393816-31C8-4469-A831-2CFE338CA04E}</CLSID>
-							<Info>
-								<ImageData>424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000000000000000000ababab00a6a6a600000000000000000000000000000000000000000000000000000000000000000000000000000000006a6a6a00646464000000000000000000b4b4b400afafaf0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d20000000000737373006e6e6e000000000000000000bdbdbd00b8b8b80000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200000000007c7c7c00777777000000000000000000c6c6c600c1c1c10000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000808080000000000000000000d0d0d000cacaca0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000898989000000000000000000d9d9d900d3d3d3000000000069696900696969006969690069696900696969006969690069696900696969000000000000000000929292000000000000000000e2e2e2000000000000000000000000002424240049494900494949004949490049494900494949004949490049494900000000009b9b9b000000000000000000ebebeb00000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000a5a5a5000000000000000000f4f4f400000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000aeaeae000000000000000000fbfbfb00000000006d6d6d0036363600000000000000000000000000000000000000000000000000000000000000000000000000b7b7b7000000000000000000fbfbfb00000000006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d0000000000d0d0d000cbcbcb00c5c5c500c0c0c0000000000000000000fbfbfb00000000000101010001010100010101000101010001010100010101000101010000000000d9d9d900d4d4d400cfcfcf00c9c9c9000000000000000000fbfbfb00f9f9f900f9f9f900f9f9f900f9f9f900f9f9f900f6f6f600f1f1f100ebebeb00e6e6e600e3e3e300dddddd00d8d8d800d2d2d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</ImageData>
-							</Info>
-							<InitSequence>PSO</InitSequence>
-							<Contexts>
-								<Context>
-									<Id>1</Id>
-								</Context>
-							</Contexts>
-							<Interfaces>
-								<Interface>
-									<Type GUID="{00000012-0000-0000-E000-000000000064}">ITComObject</Type>
-								</Interface>
-							</Interfaces>
-							<Parameters>
-								<Group><![CDATA[General]]></Group>
-								<Group Collapsed="true"><![CDATA[Structure]]></Group>
-								<Group><![CDATA[Info]]></Group>
-								<Parameter HideParameter="true" Group="General">
-									<Name>AdsPort</Name>
-									<Comment><![CDATA[Gets/sets the ads port. The port should be used to read/write parameters via ADS.]]></Comment>
-									<BitSize>16</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
-									<Default>
-										<Value>0</Value>
-									</Default>
-									<PTCID>#x03002090</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>StationId</Name>
-									<Comment><![CDATA[Gets/sets the station ID.]]></Comment>
-									<BitSize>32</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
-									<Default>
-										<Value>0</Value>
-									</Default>
-									<PTCID>#x03080271</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>StationColor</Name>
-									<Comment><![CDATA[Gets/sets the station color in ARGB.]]></Comment>
-									<BitSize>32</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
-									<Default>
-										<Value>4278190080</Value>
-									</Default>
-									<PTCID>#x03080277</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>StartPositionOnPart</Name>
-									<Comment><![CDATA[Gets/sets the start position on the first part.]]></Comment>
-									<BitSize>64</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
-									<Unit><![CDATA[mm]]></Unit>
-									<Default>
-										<Value>10.0</Value>
-									</Default>
-									<PTCID>#x03080272</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>EndPositionOnPart</Name>
-									<Comment><![CDATA[Gets/sets the end position on the last part.]]></Comment>
-									<BitSize>64</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
-									<Unit><![CDATA[mm]]></Unit>
-									<Default>
-										<Value>200.0</Value>
-									</Default>
-									<PTCID>#x03080273</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter HideParameter="true" Group="General">
-									<Name>StopPosition</Name>
-									<Comment><![CDATA[Gets/sets the stop position. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
-									<BitSize>64</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
-									<Unit><![CDATA[mm]]></Unit>
-									<Default>
-										<Value>100.0</Value>
-									</Default>
-									<PTCID>#x03080274</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>StopPositions</Name>
-									<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
-									<BitSize>0</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
-									<ArrayInfo>
-										<LBound>0</LBound>
-										<Elements Min="0" MaxUnbounded="true">0</Elements>
-									</ArrayInfo>
-									<Unit><![CDATA[mm]]></Unit>
-									<PTCID>#x0308028d</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>PartObjectIds</Name>
-									<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
-									<BitSize>0</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
-									<ArrayInfo>
-										<LBound>0</LBound>
-										<Elements Min="1" MaxUnbounded="true">0</Elements>
-									</ArrayInfo>
-									<PTCID>#x03080224</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>IsEnabled</Name>
-									<Comment><![CDATA[Gets/sets whether the station is enabled or not.]]></Comment>
-									<BitSize>8</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-									<Default>
-										<EnumText>TRUE</EnumText>
-									</Default>
-									<PTCID>#x0308023c</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter Group="General">
-									<Name>Description</Name>
-									<Comment><![CDATA[Description of the station (Optional).]]></Comment>
-									<BitSize>8192</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-0001000003FF}">STRING(1023)</BaseType>
-									<PTCID>#x0308023a</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
-									<Name>PartCount</Name>
-									<Comment><![CDATA[Returns the number of parts.]]></Comment>
-									<BitSize>32</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
-									<PTCID>#x03080203</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
-									<Name>StopPositionsCount</Name>
-									<Comment><![CDATA[Returns the number of stop positions.]]></Comment>
-									<BitSize>32</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
-									<PTCID>#x0308028e</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
-									<Name>VersionString</Name>
-									<Comment><![CDATA[Returns the version string of the driver.]]></Comment>
-									<BitSize>384</BitSize>
-									<BaseType GUID="{18071995-0000-0000-0000-00010000002F}">STRING(47)</BaseType>
-									<PTCID>#x03080287</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-								<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
-									<Name>Version</Name>
-									<Comment><![CDATA[Returns the version of the driver.]]></Comment>
-									<BitSize>128</BitSize>
-									<BaseType GUID="{C8A3EBBF-E67F-491F-AAC6-16D5D5E9699B}" Namespace="XTS">TcVersion</BaseType>
-									<PTCID>#x03080510</PTCID>
-									<ContextId>1</ContextId>
-								</Parameter>
-							</Parameters>
-							<EventMessages>
-								<EventMessage>
-									<Id>9029</Id>
-									<Message><![CDATA[Could not register by {0}.]]></Message>
-								</EventMessage>
-							</EventMessages>
-							<Properties>
-								<Property>
-									<Name>Category</Name>
-									<Value>XTS</Value>
-								</Property>
-								<Property>
-									<Name>Category</Name>
-									<Value>TcIoXts</Value>
-								</Property>
-								<Property>
-									<Name>Category</Name>
-									<Value>XtsStationInfo</Value>
-								</Property>
-								<Property>
-									<Name>Category</Name>
-									<Value>XtsInfoServerChild</Value>
-								</Property>
-								<Property>
-									<Name>ChildCategory</Name>
-									<Value>XtsStationInfoChild</Value>
-								</Property>
-							</Properties>
-							<ParentOTCID>#x010108b0</ParentOTCID>
-							<ParameterValues>
-								<Value>
-									<Name>AdsPort</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>StationId</Name>
-									<Value>0</Value>
-								</Value>
-								<Value>
-									<Name>StationColor</Name>
-									<Value>4278190080</Value>
-								</Value>
-								<Value>
-									<Name>StartPositionOnPart</Name>
-									<Value>10</Value>
-								</Value>
-								<Value>
-									<Name>EndPositionOnPart</Name>
-									<Value>200</Value>
-								</Value>
-								<Value>
-									<Name>StopPosition</Name>
-									<Value>100</Value>
+									<Name>PartObjectIds[0]</Name>
+									<Value>16843680</Value>
 								</Value>
 								<Value>
 									<Name>IsEnabled</Name>
@@ -126842,7 +126763,7 @@ and will return to Group State Standby when the situation permits.
 		</Motion>
 		<Plc>
 			<Project GUID="{00BE0468-0531-4D3C-A850-75BC3062D9F6}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="TEST" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{DC26512C-4301-8CFF-9B12-BAF3F7EAC510}" TmcPath="ExternControl\ExternControl.tmc">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{729C3CB8-DF44-3280-EE85-437B7CF5383E}" TmcPath="ExternControl\ExternControl.tmc">
 					<Name>ExternControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -126860,7 +126781,7 @@ and will return to Group State Standby when the situation permits.
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>MAPPING_in.TransportState.byState</Name>
-							<Type GUID="{6C954319-4943-3EF0-FC98-9B33B92F7931}">ARRAY [1..50] OF BYTE</Type>
+							<Type GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}">ARRAY [1..60] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>MAPPING_in.StationState.byState</Name>
@@ -126883,8 +126804,8 @@ and will return to Group State Standby when the situation permits.
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{0B852EF0-84C3-7303-6DDA-469CBF023F05}" TmcPath="XtsTransport\XtsTransport.tmc">
+			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, TEST, WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{88BC97DB-0731-923B-9913-5DEA2F8E4779}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -126895,7 +126816,7 @@ and will return to Group State Standby when the situation permits.
 						</Var>
 						<Var>
 							<Name>MAPPING_out.TransportState.byState</Name>
-							<Type GUID="{6C954319-4943-3EF0-FC98-9B33B92F7931}">ARRAY [1..50] OF BYTE</Type>
+							<Type GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}">ARRAY [1..60] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>GVL_XTS.CaGroupRef.PlcToNc</Name>
@@ -127320,7 +127241,7 @@ and will return to Group State Standby when the situation permits.
 			<PlcAuxTask Affinity="#x00000008"/>
 		</Plc>
 		<Io>
-			<Device Id="1" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="5.163.199.237.2.1" RemoteName="Device 1" InfoImageId="2">
+			<Device Id="1" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="192.168.1.73.2.1" RemoteName="Device 1" InfoImageId="2">
 				<Name>Device 1</Name>
 				<AddressInfo>
 					<Pnp>
@@ -128670,7 +128591,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT ManualDcSelect="true" DcSyncMode="3"/>
 			</Device>
-			<Device Id="2" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="5.163.199.237.3.1" RemoteName="Device 3" InfoImageId="4">
+			<Device Id="2" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="192.168.1.73.3.1" RemoteName="Device 3" InfoImageId="4">
 				<Name>Device 3</Name>
 				<AddressInfo>
 					<Pnp>
@@ -130020,7 +129941,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT DcSyncMode="3"/>
 			</Device>
-			<Device Id="3" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28675" AmsNetId="5.163.199.237.4.1" RemoteName="Device 4" InfoImageId="6">
+			<Device Id="3" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28675" AmsNetId="192.168.1.73.4.1" RemoteName="Device 4" InfoImageId="6">
 				<Name>Device 4</Name>
 				<AddressInfo>
 					<Pnp>
@@ -131370,7 +131291,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT DcSyncMode="3"/>
 			</Device>
-			<Device Id="4" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28676" AmsNetId="5.163.199.237.5.1" RemoteName="Device 5" InfoImageId="8">
+			<Device Id="4" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28676" AmsNetId="192.168.1.73.5.1" RemoteName="Device 5" InfoImageId="8">
 				<Name>Device 5</Name>
 				<AddressInfo>
 					<Pnp>
@@ -133054,7 +132975,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT DcSyncMode="3"/>
 			</Device>
-			<Device Id="5" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28677" AmsNetId="5.163.199.237.6.1" RemoteName="Device 6" InfoImageId="10">
+			<Device Id="5" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28677" AmsNetId="192.168.1.73.6.1" RemoteName="Device 6" InfoImageId="10">
 				<Name>Device 6</Name>
 				<AddressInfo>
 					<Pnp>
@@ -134404,7 +134325,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT DcSyncMode="3"/>
 			</Device>
-			<Device Id="6" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28678" AmsNetId="5.163.199.237.7.1" RemoteName="Device 7" InfoImageId="12">
+			<Device Id="6" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28678" AmsNetId="192.168.1.73.7.1" RemoteName="Device 7" InfoImageId="12">
 				<Name>Device 7</Name>
 				<AddressInfo>
 					<Pnp>
@@ -135754,7 +135675,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT DcSyncMode="3"/>
 			</Device>
-			<Device Id="7" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28679" AmsNetId="5.163.199.237.8.1" RemoteName="Device 8" InfoImageId="14">
+			<Device Id="7" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28679" AmsNetId="192.168.1.73.8.1" RemoteName="Device 8" InfoImageId="14">
 				<Name>Device 8</Name>
 				<AddressInfo>
 					<Pnp>
@@ -137104,7 +137025,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT DcSyncMode="3"/>
 			</Device>
-			<Device Id="8" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28680" AmsNetId="5.163.199.237.9.1" RemoteName="Device 9" InfoImageId="16">
+			<Device Id="8" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28680" AmsNetId="192.168.1.73.9.1" RemoteName="Device 9" InfoImageId="16">
 				<Name>Device 9</Name>
 				<AddressInfo>
 					<Pnp>
@@ -138123,9 +138044,9 @@ and will return to Group State Standby when the situation permits.
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500840205008}" Id="#x02030010"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500840205008}" Id="#x02030030"/>
 		<MappingInfo Identifier="{05000010-2001-0850-1000-120500205008}" Id="#x02030020" Watchdog="04000000040000000400000004000000"/>
-		<MappingInfo Identifier="{05000010-2001-0850-1001-040300205008}" Id="#x02030030" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{05000010-2001-0850-1001-040300205008}" Id="#x02030010" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1">
 			<OwnerB Name="TIRC^TcCOM Objects^XTS ProcessingUnit 1^Part 1^Module 1">
 				<Link VarA="Term 1 (AT2002-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>

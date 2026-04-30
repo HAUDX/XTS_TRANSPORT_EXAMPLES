@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="E_STATION_GEAR_DISTANCE_AXIS" Id="{c2361380-32e6-44fc-8112-c1d5b728c3bd}">
+  <DUT Name="E_STATION_GEAR_DISTANCE_AXIS" Id="{fa32b825-da63-4cdf-9530-38f6615485df}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 {attribute 'to_string'}

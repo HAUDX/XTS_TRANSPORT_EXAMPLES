@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <POU Name="fb_MessageDataCtrl" Id="{9f7a1811-2d40-441c-94bb-a840f6e3ccd4}" SpecialFunc="None">
+  <POU Name="fb_MessageDataCtrl" Id="{59d09bb6-447a-44ac-b1df-6e719437b059}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fb_MessageDataCtrl EXTENDS fb_MessageData
 VAR
   _stCtrl       : REFERENCE TO ST_MESSAGE_CTRL;
@@ -93,7 +93,7 @@ ELSE
 END_CASE
 ]]></ST>
     </Implementation>
-    <Folder Name="methods" Id="{4227ff19-86c8-4bc8-8c32-2882d7b8d51c}" />
+    <Folder Name="methods" Id="{bcf2f8ff-26ae-4aa6-af90-ae93884eaf1a}" />
     <Method Name="BuildFileData" Id="{f7ac25e2-99d5-4c0b-91cf-be66388bcc74}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD BuildFileData : e_progress
 VAR_INPUT
@@ -260,7 +260,7 @@ BuildFileData                     := _eState;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="BuildFolder" Id="{bda97561-8168-4ddb-8af9-ce0562f9c51e}" FolderPath="methods\">
+    <Method Name="BuildFolder" Id="{bce95b23-81a8-47e2-bcb7-f691ccc6c4bc}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD BuildFolder : e_progress
 VAR_INPUT
   Execute           : BOOL;
@@ -387,7 +387,7 @@ BuildFolder                     := _eState;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Check" Id="{c3bbcafd-3d07-4d71-9d5a-1519b3e7653c}" FolderPath="methods\">
+    <Method Name="Check" Id="{1fb81cd2-7ca9-421e-b842-2f4fcce96c16}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Check : BOOL
 VAR_INPUT
 END_VAR
@@ -396,61 +396,61 @@ END_VAR
         <ST><![CDATA[
 IF NOT __ISVALIDREF(_stCtrl)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_CTRL;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_CTRL_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_stState)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_STATE;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_STATE_INVALID;
   RETURN;
 END_IF
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 IF NOT (_dtLocalTime <> 0)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_TIME;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_TIME_INVALID;
   RETURN;
 END_IF
 
 IF NOT (_pMsgList <> 0)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_LIST;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_LIST_INVALID;
   RETURN;
 END_IF
 
 IF NOT (_pFileRoot <> 0)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_ROOT_FILE;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_ROOT_FILE_INVALID;
   RETURN;
 END_IF
 
 IF NOT (_pDirRoot <> 0)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_ROOT_DIR;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_ROOT_DIR_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_nMsgIndex)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_MSG_IDX;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_MSG_IDX_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_nErrIndex)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_ERR_IDX;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_ERR_IDX_INVALID;
   RETURN;
 END_IF
 
 
-_eCheck         := E_MESSAGE_CHECK.MSG_CHECK_DONE;
+_eCheck         := E_MESSAGE_CHECK.CHECK_DONE;
 Check           := TRUE;
 
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Cmd" Id="{0097d3f0-85a7-4895-853a-d8db132c2142}" FolderPath="methods\">
+    <Method Name="Cmd" Id="{e6ba8cb7-729c-4a79-bcfa-ad3cc5e36c51}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Cmd : e_message_state
 VAR_INPUT
   Command     : e_message_ctrl;
@@ -488,10 +488,10 @@ END_CASE
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Ctrl" Id="{aedde0ca-829d-4462-9de3-2029208b06ef}">
+    <Property Name="Ctrl" Id="{76315965-27e2-470c-b308-03794459fd13}">
       <Declaration><![CDATA[PROPERTY Ctrl : REFERENCE to ST_MESSAGE_CTRL
 ]]></Declaration>
-      <Set Name="Set" Id="{f8cbe94f-03f2-416d-b5e3-6c652e66a34c}">
+      <Set Name="Set" Id="{ec7dd5ce-81cb-4fd4-8604-57d45e1f7989}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -501,9 +501,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="FileCreated" Id="{62600522-d268-437b-9b6a-14d53d696c42}">
+    <Property Name="FileCreated" Id="{8025b5ef-a162-4c1a-b881-da13950a1e72}">
       <Declaration><![CDATA[PROPERTY FileCreated : bool]]></Declaration>
-      <Get Name="Get" Id="{2ea0571b-ffd7-4e01-8f84-f440441e478a}">
+      <Get Name="Get" Id="{6561ee2f-cc12-4d82-8f5b-752470ff498d}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -512,10 +512,10 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="State" Id="{32cf1939-402c-4b5a-b053-a6e878e0c4f5}">
+    <Property Name="State" Id="{576781a9-ad6f-45ee-9bc3-4927bef5c5cf}">
       <Declaration><![CDATA[PROPERTY State : REFERENCE TO ST_MESSAGE_STATE
 ]]></Declaration>
-      <Set Name="Set" Id="{e86ef351-4271-42c2-856e-7809022fa430}">
+      <Set Name="Set" Id="{357ce5f0-e326-4bbe-a1c8-fd0a87728d65}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>

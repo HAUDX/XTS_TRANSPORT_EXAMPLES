@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <POU Name="StationPrimesExample" Id="{5063ccf8-cc61-4a5f-af3a-cab9dad7def4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION StationPrimesExample : bool
+VAR
+  nStationParameter           : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.04.30
+//
+//  - StationPrimes example
+//
+//  - hard coded station parameters as example
+//  - TODO: xml DataServer implementation for station parameter read/write
+//
+//  - reminder: (this you HAVE to check manually when setting up the transport)
+//-----------------------------------------------------------------------------
+//    - DO NOT place the modulo turn within the range of a station
+//
+//    - in case the extern process requires multiple xts stations, 
+//      - the range must be closed and in strict order
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+// THIS IS ONLY FOR EXAMPLE USE, 
+//  CHECK GVL_XTS.MAX_STATION MANUALLY
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+nStationParameter                    := 1;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST011';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=     10.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=     90.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     80.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 2;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST012';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=     10.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    180.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 3;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST013';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=     10.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    270.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+nStationParameter                    := 4;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST021';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=    600.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     70.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 5;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST022';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=    690.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     45.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 6;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST023';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=    780.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     25.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+
+nStationParameter                    := 7;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST024';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=    870.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+nStationParameter                    := 8;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST031';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   1500.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=     90.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    110.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 9;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST032';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   1500.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    180.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     70.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 10;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST033';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   1500.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    270.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     45.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 11;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST034';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   1500.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    360.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     25.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 12;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST035';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   1500.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    450.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+nStationParameter                    := 13;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST041';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   2900.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]         :=     45.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    500.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount:= 2;
+
+nStationParameter                    := 14;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST042';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   3000.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]         :=     45.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    400.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount:= 2;
+
+nStationParameter                    := 15;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST043';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   3100.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]         :=     45.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    300.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount:= 2;
+
+nStationParameter                    := 16;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST044';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   3200.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]         :=     45.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    200.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount:= 2;
+
+nStationParameter                    := 17;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST045';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   3300.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]         :=     45.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    100.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount:= 2;
+
+nStationParameter                    := 18;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST046';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   3400.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]         :=     45.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount:= 2;
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+nStationParameter                    := 19;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST051';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   4100.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=     90.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]         :=    135.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    200.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount:= 2;
+
+nStationParameter                    := 20;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST052';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   4100.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    180.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]         :=    225.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    100.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount:= 2;
+
+nStationParameter                    := 21;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST053';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   4100.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    270.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]         :=    315.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount:= 2;
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+nStationParameter                    := 22;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST061';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   4750.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=     90.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     70.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 23;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST062';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   4750.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    180.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     45.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 24;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST063';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   4750.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    270.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     25.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+
+nStationParameter                    := 25;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST064';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   4750.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=    360.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+nStationParameter                    := 26;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST071';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   5600.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    110.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 27;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST072';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   5700.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     70.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 28;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST073';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   5800.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     45.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 29;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST074';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   5900.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     25.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 30;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST075';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   6000.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+nStationParameter                    := 31;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST081';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   6900.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    500.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 32;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST082';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   7000.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    400.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 33;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST083';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   7100.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    300.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 34;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST084';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   7200.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    200.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 35;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST085';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   7300.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=    100.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+nStationParameter                    := 36;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'ST086';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   7400.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+nStationParameter                    := 37;
+GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText               := 'START';
+GVL_XTS.StationParameter[nStationParameter].rPosWait            :=   7800.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]         :=      0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
+GVL_XTS.StationParameter[nStationParameter].rVelo               :=   2500.0;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="StationPrimesExample">
+      <LineId Id="1" Count="356" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
