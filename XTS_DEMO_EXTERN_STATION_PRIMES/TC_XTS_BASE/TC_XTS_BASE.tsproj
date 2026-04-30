@@ -5850,26 +5850,28 @@ and will return to Group State Standby when the situation permits.
 	</ImageDatas>
 	<Project ProjectGUID="{0D33BF96-E768-4312-8E76-7F2D2635C2C0}" TargetNetId="192.168.1.73.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
-			<Settings MaxCpus="4" NonWinCpus="3" RouterMemory="134217728" MaxStackSize="512">
-				<Cpu CpuId="1" BaseTime="2500"/>
+			<Settings MaxCpus="8" NonWinCpus="6" RouterMemory="134217728" MaxStackSize="512">
 				<Cpu CpuId="2" BaseTime="2500"/>
-				<Cpu CpuId="3"/>
-				<IoIdleTask Affinity="#x00000004"/>
+				<Cpu CpuId="3" BaseTime="2500"/>
+				<Cpu CpuId="4"/>
+				<Cpu CpuId="5"/>
+				<Cpu CpuId="6"/>
+				<IoIdleTask Affinity="#x00000008"/>
 			</Settings>
 			<Tasks>
-				<Task Id="2" Priority="1" CycleTime="2500" AmsPort="350" Affinity="#x00000002" AdtTasks="true">
+				<Task Id="2" Priority="1" CycleTime="2500" AmsPort="350" Affinity="#x00000004" AdtTasks="true">
 					<Name>XTS Task 1</Name>
 				</Task>
-				<Task Id="3" Priority="2" CycleTime="2500" AmsPort="351" Affinity="#x00000002" AdtTasks="true">
+				<Task Id="3" Priority="2" CycleTime="2500" AmsPort="351" Affinity="#x00000004" AdtTasks="true">
 					<Name>XTS AUX Task 1</Name>
 				</Task>
-				<Task Id="4" Priority="3" CycleTime="2500" AmsPort="352" Affinity="#x00000004" AdtTasks="true">
+				<Task Id="4" Priority="3" CycleTime="2500" AmsPort="352" Affinity="#x00000008" AdtTasks="true">
 					<Name>XTS Task 2</Name>
 				</Task>
-				<Task Id="8" Priority="15" CycleTime="20000" AmsPort="353" Affinity="#x00000008" AdtTasks="true">
+				<Task Id="8" Priority="15" CycleTime="20000" AmsPort="353" Affinity="#x00000020" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
-				<Task Id="9" Priority="32" Affinity="#x00000008" AdtTasks="true" JobTask="true">
+				<Task Id="9" Priority="32" Affinity="#x00000010" AdtTasks="true" JobTask="true">
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
@@ -83456,7 +83458,7 @@ and will return to Group State Standby when the situation permits.
 		</System>
 		<Motion>
 			<NC>
-				<SafTask Priority="4" CycleTime="20000" AmsPort="501" Affinity="#x00000008" IoAtBegin="true" SafTaskInfo="256" HighPrioAds="true">
+				<SafTask Priority="4" CycleTime="20000" AmsPort="501" Affinity="#x00000010" IoAtBegin="true" SafTaskInfo="256" HighPrioAds="true">
 					<Name>NC-Task 1</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -83468,7 +83470,7 @@ and will return to Group State Standby when the situation permits.
 						<Name>Image</Name>
 					</Image>
 				</SafTask>
-				<SvbTask Priority="8" CycleTime="100000" AmsPort="511" Affinity="#x00000008">
+				<SvbTask Priority="8" CycleTime="100000" AmsPort="511" Affinity="#x00000010">
 					<Name>NC-Task 1 SVB</Name>
 				</SvbTask>
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
@@ -126763,7 +126765,7 @@ and will return to Group State Standby when the situation permits.
 		</Motion>
 		<Plc>
 			<Project GUID="{00BE0468-0531-4D3C-A850-75BC3062D9F6}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="TEST" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{729C3CB8-DF44-3280-EE85-437B7CF5383E}" TmcPath="ExternControl\ExternControl.tmc">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{6F02A473-AB20-1D5D-6DEB-ACB5F4EAA793}" TmcPath="ExternControl\ExternControl.tmc">
 					<Name>ExternControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -126805,7 +126807,7 @@ and will return to Group State Standby when the situation permits.
 				</Instance>
 			</Project>
 			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, TEST, WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{88BC97DB-0731-923B-9913-5DEA2F8E4779}" TmcPath="XtsTransport\XtsTransport.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F002B69C-796C-C46E-4A61-D4CE6922610B}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -127238,7 +127240,7 @@ and will return to Group State Standby when the situation permits.
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<PlcAuxTask Affinity="#x00000008"/>
+			<PlcAuxTask Affinity="#x00000020"/>
 		</Plc>
 		<Io>
 			<Device Id="1" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="192.168.1.73.2.1" RemoteName="Device 1" InfoImageId="2">

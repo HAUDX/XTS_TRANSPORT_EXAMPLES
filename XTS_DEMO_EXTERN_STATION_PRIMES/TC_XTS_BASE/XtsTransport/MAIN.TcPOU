@@ -231,17 +231,17 @@ THEN
       GVL_MSG.MetricsMessageCtrl.Cmd            := E_MESSAGE_CTRL.MSG_CTRL_NULL;
 
       // set detailed message levvel for startup
-      GVL_MSG.MessageLevelXpu                   := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
-      GVL_XTS.CaGroup.MessageLevel              := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
-      GVL_XTS.XtsTransport.MessageLevel         := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
+      GVL_MSG.MessageLevelXpu                   := GVL_MSG.MessageLevel;
+      GVL_XTS.CaGroup.MessageLevel              := GVL_MSG.MessageLevel;
+      GVL_XTS.XtsTransport.MessageLevel         := GVL_MSG.MessageLevel;
 
       FOR nStation := 1 TO MAX_STATION
       DO
-        GVL_MSG.MessageLevelStations[nStation]  := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
+        GVL_MSG.MessageLevelStations[nStation]  := GVL_MSG.MessageLevel;
       END_FOR
       FOR nMover := 1 TO MAX_MOVER
       DO
-        GVL_MSG.MessageLevelMovers[nMover]      := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
+        GVL_MSG.MessageLevelMovers[nMover]      := GVL_MSG.MessageLevel;
       END_FOR
       
     //-----------------------------------------------------------------------------

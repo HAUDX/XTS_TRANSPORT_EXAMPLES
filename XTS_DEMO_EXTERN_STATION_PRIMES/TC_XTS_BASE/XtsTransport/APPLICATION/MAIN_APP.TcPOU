@@ -3,7 +3,7 @@
   <POU Name="MAIN_APP" Id="{589cd8b7-b619-4bed-ad7a-c17614b60e90}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
-//  HAUD 2026.03.21
+//  HAUD 2026.04.30
 //
 //  - MAIN_APPLICATION helper
 //    - example PRG for setting up your application startup
