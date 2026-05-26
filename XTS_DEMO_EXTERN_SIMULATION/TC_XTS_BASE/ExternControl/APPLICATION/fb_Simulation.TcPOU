@@ -72,6 +72,9 @@ VAR
   _nMoverPerMinute,
   _nMoverCount,
   _nMoverCountOld             : ARRAY[1..MAX_STATION]  OF UDINT;
+
+  _rCheckRangeLow,
+  _rCheckRangeHigh            : lreal; // position range the mover has to be in for infeed or sending to happen.
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -129,6 +132,48 @@ Check                         := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="CheckRangeHigh" Id="{f550ee6d-be72-4b7c-ba7c-ff7b600c7bce}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY CheckRangeHigh : lreal]]></Declaration>
+      <Get Name="Get" Id="{4ff63a5a-a849-40f3-909d-48416303ff09}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CheckRangeHigh := _rCheckRangeHigh;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{45b309d2-7575-413f-b610-5f1eebdc1271}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rCheckRangeHigh := CheckRangeHigh;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="CheckRangeLow" Id="{e6ae35f3-a074-4cb6-9951-51f04f294138}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY CheckRangeLow : lreal]]></Declaration>
+      <Get Name="Get" Id="{b439127d-6a03-4995-9e64-565cc2ddaf1c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CheckRangeLow := _rCheckRangeLow;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8537a4ad-6964-40cf-888e-6df91fac39d5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rCheckRangeLow := CheckRangeLow;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="Cycle" Id="{5de7d7d1-0b78-4d2d-8797-36a2cf0d91ca}">
       <Declaration><![CDATA[METHOD Cycle
 VAR_INST
@@ -177,7 +222,21 @@ DO
                     PT                      := _tProcess);
 
         _stCtrl^[_nStation].nTargetStation  := 0;
-        _stCtrl^[_nStation].Cmd             := E_STATION_CTRL.STATION_MOVER_ENTER;
+
+        IF (_tProcess < T#10MS)
+        THEN
+          IF (_stState^[_nStation].rMoverModPos > _rCheckRangeLow) AND
+             (_stState^[_nStation].rMoverModPos < _rCheckRangeHigh)
+          THEN
+            _stCtrl^[_nStation].Cmd         := E_STATION_CTRL.STATION_MOVER_SEND;
+          END_IF
+        ELSE
+          IF (_stState^[_nStation].rMoverModPos > _rCheckRangeLow) AND
+             (_stState^[_nStation].rMoverModPos < _rCheckRangeHigh)
+          THEN
+            _stCtrl^[_nStation].Cmd         := E_STATION_CTRL.STATION_MOVER_ENTER;
+          END_IF
+        END_IF
       END_IF
 
     E_STATION_STATE.STATION_PROCESS_START:
@@ -718,13 +777,34 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_Simulation">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="fb_Simulation.Check">
       <LineId Id="1" Count="44" />
     </LineIds>
+    <LineIds Name="fb_Simulation.CheckRangeHigh.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.CheckRangeHigh.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.CheckRangeLow.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.CheckRangeLow.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
     <LineIds Name="fb_Simulation.Cycle">
-      <LineId Id="1" Count="175" />
+      <LineId Id="1" Count="39" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="177" Count="1" />
+      <LineId Id="187" Count="4" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="183" Count="2" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="42" Count="134" />
     </LineIds>
     <LineIds Name="fb_Simulation.DelBitWord">
       <LineId Id="1" Count="5" />

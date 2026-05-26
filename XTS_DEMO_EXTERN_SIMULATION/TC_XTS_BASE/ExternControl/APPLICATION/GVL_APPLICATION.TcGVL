@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <GVL Name="GVL_APPLICATION" Id="{ef5c8ee7-19c1-4689-9600-6bba8e125d3a}">
     <Declaration><![CDATA[VAR_GLOBAL CONSTANT
-  MAX_PROCESS       : UINT := 21;
+  MAX_PROCESS       : UINT := 13;
 END_VAR
 {attribute 'qualified_only'}
 VAR_GLOBAL

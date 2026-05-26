@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MAIN" Id="{ecdf5414-09e1-47c4-8716-6d4427ef2a63}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -161,7 +161,7 @@ THEN
       END_FOR
       FOR nMover := 1 TO MAX_MOVER
       DO
-        GVL_MSG.MessageLevelMovers[nMover]      := GVL_MSG.MessageLevel;
+        GVL_MSG.MessageLevelMovers[nMover]      := E_MessageType.eMessageWarning;//GVL_MSG.MessageLevel;
       END_FOR
 
       
@@ -4560,7 +4560,8 @@ tStationSelectedQueue                 := GVL_XTS.StationQueue[nStationSelected];
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="1" Count="67" />
+      <LineId Id="468" Count="0" />
+      <LineId Id="2" Count="66" />
       <LineId Id="461" Count="3" />
       <LineId Id="466" Count="0" />
       <LineId Id="465" Count="0" />

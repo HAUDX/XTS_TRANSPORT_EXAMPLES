@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"47"</v>
+          <v n="UniqueIdGenerator">"50"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -193,7 +193,7 @@
                     </o>
                     <o>
                       <v n="Id">1795088690L</v>
-                      <v n="Value" t="Int16">10</v>
+                      <v n="Value">"20"</v>
                     </o>
                     <o>
                       <v n="Id">3929720075L</v>
@@ -2125,6 +2125,8 @@
                 <v>d266b783-a965-43e0-b093-2ca75b662671</v>
                 <v>FB_Reinit</v>
                 <v>5d9594a0-cff3-4ee9-8795-042c4ee4aacc</v>
+                <v>GetCallerNamespace</v>
+                <v>ae9da7e9-c1b4-5b7f-8018-e4a1b0b43d73</v>
                 <v>GetClientData</v>
                 <v>a1f92d49-6f3e-409f-aef2-a2e2d5a97890</v>
                 <v>GetElementArray</v>

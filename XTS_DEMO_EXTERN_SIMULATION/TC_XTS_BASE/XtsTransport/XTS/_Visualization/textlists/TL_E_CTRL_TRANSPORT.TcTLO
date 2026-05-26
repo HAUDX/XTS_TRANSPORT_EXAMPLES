@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
-  <TextList Name="TL_E_CTRL_TRANSPORT" Id="{c4e76cbd-d55e-4369-850a-2c2406cc5bd3}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <TextList Name="TL_E_CTRL_TRANSPORT" Id="{3fe3d153-171e-4275-b9d4-aa0c2d78e093}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="TextListObject">
@@ -78,9 +78,9 @@
             </o>
           </l>
           <l n="Languages" t="ArrayList" />
-          <v n="GuidInit">{2c368627-1373-48ca-9886-0f981100f03d}</v>
-          <v n="GuidReInit">{2dee37e2-6cbe-43ad-bab5-28af4532c440}</v>
-          <v n="GuidExitX">{06ec1d9d-8243-4fae-8898-7bded1789de4}</v>
+          <v n="GuidInit">{82a1e4c3-af32-4587-8e83-c2d321623805}</v>
+          <v n="GuidReInit">{73e6e513-7feb-47dd-b78b-12b155922f0a}</v>
+          <v n="GuidExitX">{125848d0-e3ed-400b-8228-9c4e230347eb}</v>
         </o>
       </Data>
       <TypeList>

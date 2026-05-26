@@ -9,7 +9,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>XtsTransport</Name>
-    <ProgramVersion>3.1.4026.19</ProgramVersion>
+    <ProgramVersion>3.1.4026.22</ProgramVersion>
     <Application>{166233b6-ed3a-4555-847f-b00a56bed48f}</Application>
     <TypeSystem>{21378df7-81ee-4451-8fc5-a465311ee17c}</TypeSystem>
     <Implicit_Task_Info>{7fa85632-7c81-4445-b822-3712a089ca13}</Implicit_Task_Info>
@@ -49,6 +49,12 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Compile Include="APPLICATION\GVL_APPLICATION.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="APPLICATION\MAIN_APP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\StationParameterExample.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\Application\E_APP_CHECK.TcDUT">
       <SubType>Code</SubType>
@@ -153,6 +159,9 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\MAPPING_out.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\E_MAPPING_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_APP_CTRL.TcDUT">
@@ -276,22 +285,37 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Compile Include="XML\Configuration\fb_Configuration.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XML\Configuration\types\E_DATA_CTRL.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XML\Configuration\types\E_DATA_STATE.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XML\Configuration\types\fb_DataXml.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XML\Configuration\types\fb_XmlRead.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XML\Configuration\types\fb_XmlWrite.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="XML\Configuration\types\ST_Configuration.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\fb_XmlBase.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\PositionOffsets\fb_MoverPositionOffsetData.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\PositionOffsets\types\ST_MOVER_OFFSETS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\E_DATA_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\E_DATA_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\E_DATA_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\fb_XmlRead.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\fb_XmlWrite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\ST_DATA_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\ST_DATA_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\CaGroup\FB_CaGroup.TcPOU">
@@ -313,6 +337,14 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="XTS\GVL_XTS_CONSTANTS.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="XTS\GVL_XTS_VERSION.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="XTS\Mover\fb_Mover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -323,6 +355,9 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\I_XtsTransport_Mover.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\E_MOVER_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\types\E_MOVER_CTRL.TcDUT">
@@ -355,6 +390,9 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Compile Include="XTS\Mover\types\ST_MOVE_DATA.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\Xpu\I_XtsTransport_Xpu.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\XtsStation\fb_StationGearInPos.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -362,6 +400,9 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\XtsStation\I_XtsTransport_Station.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\_types\E_STATION_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\XtsStation\_types\E_STATION_CTRL.TcDUT">
@@ -437,12 +478,12 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Compile Include="XTS\_Visualization\textlists\TL_E_MOVER_SELECTOR.TcTLO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XTS\_Visualization\types\ST_XPU_STRINGS.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="XTS\_Visualization\types\T_MOVER_SELECTOR.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="XTS\_Visualization\types\ST_XPU_STRINGS.TcDUT">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\_Visualization\Visualization Manager.TcVMO">
       <SubType>Code</SubType>
@@ -500,10 +541,6 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Compile Include="XTS\XtsTransportUnit\types\ST_XTS_TRANSPORT_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XTS\XTS_Parameter.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="XTS\_types\E_PROGRESS.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -515,6 +552,11 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <PlaceholderReference Include="CmpDynamicText">
+      <DefaultResolution>CmpDynamicText, * (System)</DefaultResolution>
+      <Namespace>CmpDynamicText</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+    </PlaceholderReference>
     <PlaceholderReference Include="System_VisuElemMeter">
       <DefaultResolution>VisuElemMeter, 4.7.0.0 (System)</DefaultResolution>
       <Namespace>VisuElemMeter</Namespace>
@@ -600,16 +642,6 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <PlaceholderReference Include="Tc3_XTS_Utility">
       <DefaultResolution>Tc3_XTS_Utility, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_XTS_Utility</Namespace>
-      <Parameters>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST" xmlns="">
-          <Key>MAXXTSMOVERSPERXPU</Key>
-          <Value>28</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST" xmlns="">
-          <Key>MAXXTSNCTBASEUNITINTERFACES</Key>
-          <Value>28</Value>
-        </Parameter>
-      </Parameters>
     </PlaceholderReference>
     <PlaceholderReference Include="VisuDialogs">
       <DefaultResolution>VisuDialogs, * (System)</DefaultResolution>
@@ -622,15 +654,18 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Folder Include="APPLICATION\_types\Collector" />
     <Folder Include="APPLICATION\_types\Instance" />
     <Folder Include="APPLICATION\_types\LinkedList" />
-    <Folder Include="MAPPING" />
     <Folder Include="MAPPING\_types" />
     <Folder Include="MSG" />
     <Folder Include="MSG\types" />
     <Folder Include="APPLICATION" />
+    <Folder Include="MAPPING" />
     <Folder Include="UML" />
     <Folder Include="XML" />
     <Folder Include="XML\Configuration" />
     <Folder Include="XML\Configuration\types" />
+    <Folder Include="XML\PositionOffsets" />
+    <Folder Include="XML\PositionOffsets\types" />
+    <Folder Include="XML\types" />
     <Folder Include="XTS" />
     <Folder Include="XTS\CaGroup" />
     <Folder Include="XTS\CaGroup\types" />
@@ -750,15 +785,6 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
           <d n="Values" t="Hashtable" ckt="String" cvt="String">
             <v>DisabledWarningIds</v>
             <v>5410</v>
-          </d>
-        </o>
-        <v>{F66C7017-BDD8-4114-926C-81D6D687E35F}</v>
-        <o>
-          <v n="Name">"{F66C7017-BDD8-4114-926C-81D6D687E35F}"</v>
-          <d n="SubKeys" t="Hashtable" />
-          <d n="Values" t="Hashtable" ckt="String" cvt="Boolean">
-            <v>CalcActiveTransOnly</v>
-            <v>True</v>
           </d>
         </o>
       </d>

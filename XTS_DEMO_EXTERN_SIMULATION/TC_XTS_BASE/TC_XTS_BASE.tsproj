@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.22">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C929B002-BF94-48A2-937B-5D20DED8EF3B}" Namespace="XTS">OperationMode</Name>
@@ -5510,6 +5510,14 @@ External Setpoint Generation:
 				<Text><![CDATA[mcGroupStateSuspended]]></Text>
 				<Enum>8</Enum>
 			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateFollowingMCS]]></Text>
+				<Enum>9</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateFollowingACS]]></Text>
+				<Enum>10</Enum>
+			</EnumInfo>
 		</DataType>
 		<DataType>
 			<Name GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Name>
@@ -5526,7 +5534,7 @@ and will return to Group State Standby when the situation permits.
 			<SubItem>
 				<Name>AllAxesStanding</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<Comment><![CDATA[Indicate whether all axes are physically standing, i.e. velocity and acceleration are zero. This definition differs from the definition of the GroupStateMoving, which indicates whether a Motion Command is currently active.]]></Comment>
+				<Comment><![CDATA[Indicates whether all axes are physically standing, i.e. velocity and acceleration are zero. This definition differs from the definition of the GroupStateMoving, which indicates whether a Motion Command is currently active.]]></Comment>
 				<BitSize>1</BitSize>
 				<BitOffs>1</BitOffs>
 			</SubItem>
@@ -5552,7 +5560,9 @@ and will return to Group State Standby when the situation permits.
 5 = ErrorStop	(mcGroupStateErrorStop),
 6 = Homing	(mcGroupStateHoming),
 7 = NotReady	(mcGroupStateNotReady),
-8 = Suspended	(mcGroupStateSuspended)]]></Comment>
+8 = Suspended	(mcGroupStateSuspended),
+9 = FollowingMCS	(mcGroupStateFollowingMCS),
+10 = FollowingACS	(mcGroupStateFollowingACS)]]></Comment>
 				<BitSize>16</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
@@ -5653,26 +5663,97 @@ and will return to Group State Standby when the situation permits.
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{6C954319-4943-3EF0-FC98-9B33B92F7931}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..50] OF BYTE</Name>
-			<BitSize>400</BitSize>
+			<Name GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..60] OF BYTE</Name>
+			<BitSize>480</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>50</Elements>
+				<Elements>60</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{979F9C7C-05EC-7F14-76A9-EB6D2EEFF1FB}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..20] OF ARRAY [1..14] OF BYTE</Name>
-			<BitSize>2240</BitSize>
+			<Name GUID="{39897148-8CFB-FDD7-0F0A-C9084046B0F9}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..21] OF ARRAY [1..14] OF BYTE</Name>
+			<BitSize>2352</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>20</Elements>
+				<Elements>21</Elements>
 			</ArrayInfo>
 			<ArrayInfo Level="1">
 				<LBound>1</LBound>
 				<Elements>14</Elements>
 			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{E5B4B710-2AC3-1039-86D5-33777854E02B}" AutoDeleteType="true">E_PROGRESS</Name>
+			<Comment><![CDATA[{attribute 'strict'}]]></Comment>
+			<BitSize>16</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_INVALID]]></Text>
+				<Enum>0</Enum>
+				<Comment><![CDATA[ progress has 2 use cases
+ 1. as offset to cyclic interface's state 
+    for the requested command/function
+    e.g. State := <Enum equivalent to eCmd> + E_PROGRESS
+
+ 2. as state feedback (result) from (any) method]]></Comment>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_NOT_EXIST]]></Text>
+				<Enum>100</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_INIT]]></Text>
+				<Enum>1000</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_BUSY]]></Text>
+				<Enum>2000</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_PREPARE]]></Text>
+				<Enum>3000</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_STARTUP]]></Text>
+				<Enum>4000</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_CHECK]]></Text>
+				<Enum>5000</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_OCCUPIED]]></Text>
+				<Enum>6000</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_WORKING]]></Text>
+				<Enum>7000</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_STILL_WORKING]]></Text>
+				<Enum>8000</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_ERROR]]></Text>
+				<Enum>9000</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[PROGRESS_DONE]]></Text>
+				<Enum>10000</Enum>
+			</EnumInfo>
+			<Properties>
+				<Property>
+					<Name>qualified_only</Name>
+				</Property>
+				<Property>
+					<Name>to_string</Name>
+				</Property>
+				<Property>
+					<Name>generate_implicit_init_function</Name>
+				</Property>
+			</Properties>
 		</DataType>
 		<DataType>
 			<Name GUID="{A973D240-0BBB-8261-35B4-E09CC3C8301C}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..2] OF BYTE</Name>
@@ -5684,12 +5765,12 @@ and will return to Group State Standby when the situation permits.
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{78018AB8-1A1C-468B-0516-D7A02B6EE245}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..20] OF ARRAY [1..8] OF BYTE</Name>
-			<BitSize>1280</BitSize>
+			<Name GUID="{1D44D19B-58CD-CEE5-3964-83496142616E}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..21] OF ARRAY [1..8] OF BYTE</Name>
+			<BitSize>1344</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>20</Elements>
+				<Elements>21</Elements>
 			</ArrayInfo>
 			<ArrayInfo Level="1">
 				<LBound>1</LBound>
@@ -5847,28 +5928,23 @@ and will return to Group State Standby when the situation permits.
 	</ImageDatas>
 	<Project ProjectGUID="{0D33BF96-E768-4312-8E76-7F2D2635C2C0}" TargetNetId="5.163.199.237.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
-			<Settings MaxCpus="8" NonWinCpus="6" RouterMemory="134217728" MaxStackSize="512">
+			<Settings MaxCpus="4" NonWinCpus="3" RouterMemory="134217728" MaxStackSize="512">
+				<Cpu CpuId="1" BaseTime="2500"/>
+				<Cpu CpuId="2" BaseTime="2500"/>
 				<Cpu CpuId="3"/>
-				<Cpu CpuId="4"/>
-				<Cpu CpuId="5" BaseTime="2500"/>
-				<Cpu CpuId="6" BaseTime="2500"/>
-				<Cpu CpuId="7" BaseTime="2500"/>
 				<IoIdleTask Affinity="#x00000008"/>
 			</Settings>
 			<Tasks>
-				<Task Id="2" Priority="1" CycleTime="2500" AmsPort="350" Affinity="#x00000080" AdtTasks="true">
+				<Task Id="2" Priority="1" CycleTime="2500" AmsPort="350" AdtTasks="true">
 					<Name>XTS Task 1</Name>
 				</Task>
-				<Task Id="3" Priority="2" CycleTime="2500" AmsPort="351" Affinity="#x00000040" AdtTasks="true">
-					<Name>XTS AUX Task 1</Name>
-				</Task>
-				<Task Id="4" Priority="3" CycleTime="2500" AmsPort="352" Affinity="#x00000020" AdtTasks="true">
+				<Task Id="4" Priority="3" CycleTime="2500" AmsPort="352" Affinity="#x00000004" AdtTasks="true">
 					<Name>XTS Task 2</Name>
 				</Task>
 				<Task Id="8" Priority="15" CycleTime="10000" AmsPort="353" Affinity="#x00000008" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
-				<Task Id="9" Priority="32" Affinity="#x00000010" AdtTasks="true" JobTask="true">
+				<Task Id="9" Priority="32" Affinity="#x00000008" AdtTasks="true" JobTask="true">
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
@@ -5900,11 +5976,6 @@ and will return to Group State Standby when the situation permits.
 							</Context>
 							<Context>
 								<Id>2</Id>
-								<ManualConfig>
-									<OTCID>#x02010030</OTCID>
-								</ManualConfig>
-								<Priority>2</Priority>
-								<CycleTime>250000</CycleTime>
 							</Context>
 						</Contexts>
 						<Interfaces>
@@ -8296,7 +8367,7 @@ and will return to Group State Standby when the situation permits.
 						<InterfacePointerValues>
 							<Value>
 								<Name>AuxiliaryTask</Name>
-								<OTCID>#x02010030</OTCID>
+								<OTCID>#x00000000</OTCID>
 							</Value>
 						</InterfacePointerValues>
 					</TmcDesc>
@@ -141027,7 +141098,7 @@ and will return to Group State Standby when the situation permits.
 		</System>
 		<Motion>
 			<NC>
-				<SafTask Priority="4" CycleTime="20000" AmsPort="501" Affinity="#x00000010" IoAtBegin="true" SafTaskInfo="256" HighPrioAds="true">
+				<SafTask Priority="4" CycleTime="20000" AmsPort="501" Affinity="#x00000008" IoAtBegin="true" SafTaskInfo="256" HighPrioAds="true">
 					<Name>NC-Task 1</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -141039,7 +141110,7 @@ and will return to Group State Standby when the situation permits.
 						<Name>Image</Name>
 					</Image>
 				</SafTask>
-				<SvbTask Priority="8" CycleTime="100000" AmsPort="511" Affinity="#x00000010">
+				<SvbTask Priority="8" CycleTime="100000" AmsPort="511" Affinity="#x00000008">
 					<Name>NC-Task 1 SVB</Name>
 				</SvbTask>
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
@@ -166130,6 +166201,86 @@ and will return to Group State Standby when the situation permits.
 						</TmcDesc>
 					</Module>
 				</Axis>
+				<Instance Id="#x05000100" KeepUnrestoredLinks="2">
+					<Name>Mc-Instance for NcPtp</Name>
+					<ImageId>4</ImageId>
+					<TmcDesc GUID="{6445FBA6-B920-4AD2-873B-8C61DD652099}">
+						<Name>MC Instance Unversioned</Name>
+						<CLSID ClassFactory="TcNc3">{05030084-0000-0000-F000-000000000064}</CLSID>
+						<InitSequence>PSO</InitSequence>
+						<Contexts>
+							<Context>
+								<Id>0</Id>
+								<Name>MET</Name>
+							</Context>
+							<Context>
+								<Id>1</Id>
+								<Name>MPT</Name>
+							</Context>
+							<Context>
+								<Id>3</Id>
+								<Name>MJT</Name>
+							</Context>
+						</Contexts>
+						<Parameters>
+							<Parameter ReadOnly="true">
+								<Name>Execution-Task OID (MET)</Name>
+								<Comment><![CDATA[OID of task used for very time-critical command execution (Motion-Execution-Task)]]></Comment>
+								<BitSize>32</BitSize>
+								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+								<PTCID>#x03002060</PTCID>
+							</Parameter>
+							<Parameter ReadOnly="true">
+								<Name>Preparation-Task OID (MPT)</Name>
+								<Comment><![CDATA[OID of task used for less time-critical command preparation (Motion-Preparation-Task)]]></Comment>
+								<BitSize>32</BitSize>
+								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+								<PTCID>#x03002061</PTCID>
+							</Parameter>
+							<Parameter ReadOnly="true">
+								<Name>Job-Task OID (MJT)</Name>
+								<Comment><![CDATA[OID of JobTask for asynchronous processing (Motion-Job-Task)]]></Comment>
+								<BitSize>32</BitSize>
+								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+								<Properties>
+									<Property>
+										<Name>TcJobTaskOID</Name>
+									</Property>
+								</Properties>
+								<PTCID>#x0300a11b</PTCID>
+							</Parameter>
+						</Parameters>
+						<Properties>
+							<Property>
+								<Name>Category</Name>
+								<Value>TcNc3Instance</Value>
+							</Property>
+							<Property>
+								<Name>Category</Name>
+								<Value>HideTcComContextPP</Value>
+							</Property>
+							<Property>
+								<Name>ChildCategory</Name>
+								<Value>MC Object</Value>
+							</Property>
+						</Properties>
+						<ParentOTCID>#x05000010</ParentOTCID>
+						<ParameterValues>
+							<Value>
+								<Name>Execution-Task OID (MET)</Name>
+								<Value>83886096</Value>
+							</Value>
+							<Value>
+								<Name>Preparation-Task OID (MPT)</Name>
+								<Value>83886112</Value>
+							</Value>
+							<Value>
+								<Name>Job-Task OID (MJT)</Name>
+								<Value>33620112</Value>
+							</Value>
+						</ParameterValues>
+					</TmcDesc>
+				</Instance>
 				<Modules>
 					<Module Id="#x05120010" KeepUnrestoredLinks="2">
 						<Name>Group1 (CA Group)</Name>
@@ -166403,18 +166554,12 @@ and will return to Group State Standby when the situation permits.
 							</ParameterValues>
 						</TmcDesc>
 					</Module>
-					<Parameters>
-						<Parameter>
-							<PTCID>#x300a11b</PTCID>
-							<Data>02010090</Data>
-						</Parameter>
-					</Parameters>
 				</Modules>
 			</NC>
 		</Motion>
 		<Plc>
-			<Project GUID="{00BE0468-0531-4D3C-A850-75BC3062D9F6}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="TEST" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9B8B785A-FAF2-71F9-3CBF-33EC0F0C6D80}" TmcPath="ExternControl\ExternControl.tmc">
+			<Project GUID="{00BE0468-0531-4D3C-A850-75BC3062D9F6}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="TEST" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F885EF25-FE98-02E5-F98F-09B571325FF8}" TmcPath="ExternControl\ExternControl.tmc">
 					<Name>ExternControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -166425,18 +166570,22 @@ and will return to Group State Standby when the situation permits.
 						</Var>
 						<Var>
 							<Name>MAPPING_out.StationControl.byCtrl</Name>
-							<Type GUID="{78018AB8-1A1C-468B-0516-D7A02B6EE245}">ARRAY [1..20] OF ARRAY [1..8] OF BYTE</Type>
+							<Type GUID="{1D44D19B-58CD-CEE5-3964-83496142616E}">ARRAY [1..21] OF ARRAY [1..8] OF BYTE</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>MAPPING_in.TransportState.byState</Name>
-							<Type GUID="{6C954319-4943-3EF0-FC98-9B33B92F7931}">ARRAY [1..50] OF BYTE</Type>
+							<Type GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}">ARRAY [1..60] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>MAPPING_in.StationState.byState</Name>
-							<Type GUID="{979F9C7C-05EC-7F14-76A9-EB6D2EEFF1FB}">ARRAY [1..20] OF ARRAY [1..14] OF BYTE</Type>
+							<Type GUID="{39897148-8CFB-FDD7-0F0A-C9084046B0F9}">ARRAY [1..21] OF ARRAY [1..14] OF BYTE</Type>
+						</Var>
+						<Var>
+							<Name>MAIN_APP.eInitXtsTransport</Name>
+							<Type GUID="{E5B4B710-2AC3-1039-86D5-33777854E02B}">E_PROGRESS</Type>
 						</Var>
 					</Vars>
 					<Contexts>
@@ -166451,23 +166600,28 @@ and will return to Group State Standby when the situation permits.
 						</Context>
 					</Contexts>
 					<TaskPouOids>
-						<TaskPouOid Prio="15" OTCID="#x08502041"/>
+						<TaskPouOid Prio="15" OTCID="#x08502001"/>
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, TEST" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{E30CB7FB-F377-12C6-D6E5-68D49B5C3599}" TmcPath="XtsTransport\XtsTransport.tmc">
+			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, TEST" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{1E62D3B9-4DE6-A97F-BF6C-05292034F3BD}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
+							<Name>MAIN_APP.eInit</Name>
+							<Comment><![CDATA[ startup state machine after MAIN is initialized]]></Comment>
+							<Type GUID="{E5B4B710-2AC3-1039-86D5-33777854E02B}">E_PROGRESS</Type>
+						</Var>
+						<Var>
 							<Name>MAPPING_out.StationState.byState</Name>
-							<Type GUID="{979F9C7C-05EC-7F14-76A9-EB6D2EEFF1FB}">ARRAY [1..20] OF ARRAY [1..14] OF BYTE</Type>
+							<Type GUID="{39897148-8CFB-FDD7-0F0A-C9084046B0F9}">ARRAY [1..21] OF ARRAY [1..14] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>MAPPING_out.TransportState.byState</Name>
-							<Type GUID="{6C954319-4943-3EF0-FC98-9B33B92F7931}">ARRAY [1..50] OF BYTE</Type>
+							<Type GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}">ARRAY [1..60] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>GVL_XTS.CaGroupRef.PlcToNc</Name>
@@ -166590,7 +166744,7 @@ and will return to Group State Standby when the situation permits.
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>MAPPING_in.StationControl.byCtrl</Name>
-							<Type GUID="{78018AB8-1A1C-468B-0516-D7A02B6EE245}">ARRAY [1..20] OF ARRAY [1..8] OF BYTE</Type>
+							<Type GUID="{1D44D19B-58CD-CEE5-3964-83496142616E}">ARRAY [1..21] OF ARRAY [1..8] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>MAPPING_in.TransportControl.byCtrl</Name>
@@ -166713,6 +166867,18 @@ and will return to Group State Standby when the situation permits.
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 					</Vars>
+					<UnrestoredVarLinks ImportTime="2026-05-26T14:57:45">
+						<OwnerA Name="InputDst" Prefix="TIPC^XtsTransport^XtsTransport Instance" Type="1">
+							<OwnerB Name="TIPC^ExternControl^ExternControl Instance">
+								<Link VarA="MAPPING_in.StationControl.byCtrl" TypeA="ARRAY [1..20] OF ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{78018AB8-1A1C-468B-0516-D7A02B6EE245}" VarB="PlcTask Outputs^MAPPING_out.StationControl.byCtrl" RestoreInfo="TypeMismatch" OldTypeA="ARRAY [1..20] OF ARRAY [1..8] OF BYTE" OldGuidA="{78018AB8-1A1C-468B-0516-D7A02B6EE245}" NewTypeA="ARRAY [1..21] OF ARRAY [1..8] OF BYTE" NewGuidA="{1D44D19B-58CD-CEE5-3964-83496142616E}"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^XtsTransport^XtsTransport Instance" Type="2">
+							<OwnerB Name="TIPC^ExternControl^ExternControl Instance">
+								<Link VarA="MAPPING_out.StationState.byState" TypeA="ARRAY [1..20] OF ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{979F9C7C-05EC-7F14-76A9-EB6D2EEFF1FB}" VarB="PlcTask Inputs^MAPPING_in.StationState.byState" RestoreInfo="TypeMismatch" OldTypeA="ARRAY [1..20] OF ARRAY [1..14] OF BYTE" OldGuidA="{979F9C7C-05EC-7F14-76A9-EB6D2EEFF1FB}" NewTypeA="ARRAY [1..21] OF ARRAY [1..14] OF BYTE" NewGuidA="{39897148-8CFB-FDD7-0F0A-C9084046B0F9}"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
 					<Contexts>
 						<Context>
 							<Id>0</Id>
@@ -166725,7 +166891,7 @@ and will return to Group State Standby when the situation permits.
 						</Context>
 					</Contexts>
 					<TaskPouOids>
-						<TaskPouOid Prio="15" OTCID="#x08502001"/>
+						<TaskPouOid Prio="15" OTCID="#x08502041"/>
 					</TaskPouOids>
 				</Instance>
 			</Project>
@@ -196352,8 +196518,8 @@ and will return to Group State Standby when the situation permits.
 	</Project>
 	<Mappings>
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500840205008}" Id="#x02030030"/>
-		<MappingInfo Identifier="{05000010-2001-0850-1000-120500205008}" Id="#x02030020" Watchdog="04000000080000000400000004000000"/>
-		<MappingInfo Identifier="{05000010-2001-0850-1002-040300205008}" Id="#x02030010" Watchdog="04000000080000000400000004000000"/>
+		<MappingInfo Identifier="{05000010-2041-0850-1000-120540205008}" Id="#x02030020" Watchdog="04000000080000000400000004000000"/>
+		<MappingInfo Identifier="{05000010-2041-0850-1002-040340205008}" Id="#x02030010" Watchdog="04000000080000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1">
 			<OwnerB Name="TIRC^TcCOM Objects^XTS ProcessingUnit 1^Part 1^Module 1">
 				<Link VarA="Term 1 (AT2002-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>
@@ -202196,6 +202362,7 @@ and will return to Group State Standby when the situation permits.
 		</OwnerA>
 		<OwnerA Name="TIPC^ExternControl^ExternControl Instance">
 			<OwnerB Name="TIPC^XtsTransport^XtsTransport Instance">
+				<Link VarA="PlcTask Inputs^MAIN_APP.eInitXtsTransport" VarB="PlcTask Outputs^MAIN_APP.eInit"/>
 				<Link VarA="PlcTask Inputs^MAPPING_in.StationState.byState" VarB="PlcTask Outputs^MAPPING_out.StationState.byState"/>
 				<Link VarA="PlcTask Inputs^MAPPING_in.TransportState.byState" VarB="PlcTask Outputs^MAPPING_out.TransportState.byState"/>
 				<Link VarA="PlcTask Outputs^MAPPING_out.StationControl.byCtrl" VarB="PlcTask Inputs^MAPPING_in.StationControl.byCtrl"/>

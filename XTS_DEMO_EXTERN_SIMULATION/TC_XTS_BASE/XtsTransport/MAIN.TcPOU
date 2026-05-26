@@ -3,6 +3,35 @@
   <POU Name="MAIN" Id="{f2e9720a-bda2-4399-8c7d-d9b6e11179c8}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
+//  HAUD 2026.04.23
+//  - fb_Xpu
+//    - .Init() initialisation sequence with explicit init of all local instances
+//    - .GetPartModule added, gets all Tc3_XTS_Utility.I_TcIoXtsPartModule 
+// 
+//  - MAPPING
+//    - MOVER_SELECTOR and MOVER_MAPPING compile defines are mutually exclusive.
+//    - switching memcpy destinations/sources according to compile define
+//
+//  - I_XtsTransport_Xpu
+//    - you might need this interface to access methods for passing along the XTS_Utility interfaces
+//
+// 
+//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.03.15
+//  - refactoring of the constants
+//  - I never really used the parameter list anyway 
+//
+//  - XTS Utility lib parameter and project constants now reside in:
+//    GVL_XTS_CONSTANTS
+//
+//  - addition of MAIN_APP (also see call tree)
+//    - this might be a point of entry for you
+//    - advanced transport logic may live here
+//    - Beware the Collectors, they need instances to be really useful
+//
+//---------------------------------------------------------------------------------------------------------------
+//
 //  HAUD 2026.02.11
 //  - transport layer new member:
 //    - MoverSelector
@@ -85,11 +114,37 @@
 //---------------------------------------------------------------------------------------------------------------
 PROGRAM MAIN
 VAR
+  //-------------------------------------------------------------------------------------------------------------
+  //  MAIN - important members
+  //-------------------------------------------------------------------------------------------------------------
 	bInit 				          : BOOL;
   eInit                   : E_PROGRESS;
 
   nStation,
-	nMover,
+	nMover                  : UINT;
+  //-------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------
+  // default initialization data
+  //-------------------------------------------------------------------------------------------------------------
+  nStn                    : UINT;               // startup default data, do not delete
+  rInitVelo               : REAL :=     500.0;  // default data, use your own in a real machine!
+  rInitGap                : REAL :=     100.0;  // default data, use your own in a real machine!
+  rInitAcc                : REAL :=  10_000.0;  // default data, use your own in a real machine!
+  rInitJerk               : REAL := 100_000.0;  // default data, use your own in a real machine!
+  //-------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------
+  // message data used here in MAIN (init state machine etc.)
+  //-------------------------------------------------------------------------------------------------------------
+  stMsg                   : ST_Message;
+  eMsgState               : e_message_state;
+  eMsgProgress            : E_PROGRESS;
+  eMtrState               : e_message_state;
+  eMtrProgress            : E_PROGRESS;
+  //-------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------
+  // visualisations - the helper visus depend on these
+  //                - the helper visus are just that
+  //-------------------------------------------------------------------------------------------------------------
   nMoverSelected,
   nStationSelected,
   nStationParameter       : UINT;
@@ -104,9 +159,14 @@ VAR
   eXpuResult              : E_PROGRESS;
   eXpuCheck               : E_XPU_CHECK;
 
+  eSelectorState,
   eMoverState             : E_MOVER_STATE;
+
+  eSelectorResult,
   eMoverResult            : E_PROGRESS;
 
+  sSelectorState,
+  sSelectorResult,
   sCaGroupState,
   sTransportState,
   sTransportCheck,
@@ -125,22 +185,7 @@ VAR
   bStationGone            : BOOL;
 
   tStationSelectedQueue   : ARRAY[1..MAX_LIST_NODES] OF ST_STATION_MOVER_DATA;
-
-  nStn                    : UINT;
-
-
-  stMsg                   : ST_Message;
-  eMsgState               : e_message_state;
-  eMsgProgress            : E_PROGRESS;
-  eMtrState               : e_message_state;
-  eMtrProgress            : E_PROGRESS;
-
-  bGetVariant             : BOOL := TRUE;
-  nVariant                : UINT;
-
-  rGap                    : REAL :=     105.0;
-  rAcc                    : REAL :=  20_000.0;
-  rJerk                   : REAL := 600_000.0;
+  //-------------------------------------------------------------------------------------------------------------
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -159,13 +204,33 @@ THEN
   CASE eInit
   OF
     E_PROGRESS.PROGRESS_INVALID,
-    E_PROGRESS.PROGRESS_DONE:         // clear command interface
+    E_PROGRESS.PROGRESS_DONE:
+      //---------------------------------------------------------------------------
+      // where are the stations?
+      // TODO: after importing this project into your XTS TwinCAT solution
+      //       setup of Station parameters is required.
+      //---------------------------------------------------------------------------
+      // default initialization, please leave this in here
+      DefaultStationParameters();        
+      //---------------------------------------------------------------------------
+      //---------------------------------------------------------------------------
+      // where to start?
+      // fb_TransportUnit is connected StationStartIndex and StationStart
+      //
+      // TODO: after importing this project into your XTS TwinCAT solution
+      //       setup of StartStation parameters is up to you to decide.
+      //---------------------------------------------------------------------------
+      GVL_XTS.StationStartIndex                 := 1; // this index is yours to change, fbTransportUnit is connected to it
+      GVL_XTS.StationStart                      := GVL_XTS.StationParameter[GVL_XTS.StationStartIndex]; // put in here any plausible data you like
+      //---------------------------------------------------------------------------
+
       eInit                                     := E_PROGRESS.PROGRESS_BUSY;
+      // clear command interface
       GVL_XTS.XpuCtrl.Cmd                       := E_XPU_CTRL.XTS_CMD_NULL;
       GVL_MSG.TransportMessageCtrl.Cmd          := E_MESSAGE_CTRL.MSG_CTRL_NULL;
       GVL_MSG.MetricsMessageCtrl.Cmd            := E_MESSAGE_CTRL.MSG_CTRL_NULL;
 
-
+      // set detailed message levvel for startup
       GVL_MSG.MessageLevelXpu                   := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
       GVL_XTS.CaGroup.MessageLevel              := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
       GVL_XTS.XtsTransport.MessageLevel         := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
@@ -178,7 +243,6 @@ THEN
       DO
         GVL_MSG.MessageLevelMovers[nMover]      := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
       END_FOR
-
       
     //-----------------------------------------------------------------------------
     //-----------------------------------------------------------------------------
@@ -221,24 +285,20 @@ THEN
 
     //-----------------------------------------------------------------------------
     //-----------------------------------------------------------------------------
-    E_PROGRESS.PROGRESS_OCCUPIED:     // StartStation for XtsTransportCtrl.Cmd := E_XTS_TRANSPORT_CTRL.CMD_TRANSPORT_START;
+    E_PROGRESS.PROGRESS_OCCUPIED:
       eInit                                     := E_PROGRESS.PROGRESS_WORKING;
-      // where are the stations?
-      // TODO: after importing this project into your XTS TwinCAT solution, setup of Station parameters is required.
 
     //-----------------------------------------------------------------------------
     //-----------------------------------------------------------------------------
     E_PROGRESS.PROGRESS_WORKING:
-      // Start Position parameters
-      // where to start?
-      // TODO: after import --> setup of start parameters required
-      GVL_XTS.StationStart.rPosWait           :=    GVL_XTS.StationParameter[GVL_XTS.XtsTransport.StationStartIndex].rPosWait -625.0; // this value may differ from the GVL_XTS.StationParameter[StartStationIndex], IF it differs, you MUST have room for positive movement to GVL_XTS.StationParameter[StartStationIndex].rWaitPos
-      GVL_XTS.StationStart.rGap               :=     rGap; // may differ, or just copy from GVL_XTS.StationParameter[StartStationIndex]
-      GVL_XTS.StationStart.rVelo              :=   1750.0; // may differ, or just copy from GVL_XTS.StationParameter[StartStationIndex]
-      GVL_XTS.StationStart.rAccDec            :=  15000.0; // may differ, or just copy from GVL_XTS.StationParameter[StartStationIndex]
-      GVL_XTS.StationStart.rJerk              := 600000.0; // may differ, or just copy from GVL_XTS.StationParameter[StartStationIndex], the movements are more robust if you keep this value in a narrow range, since jumps lead to adjusting movements within the CA Group
-
-
+      //---------------------------------------------------------------------------
+      // how many nests to start with?
+      // - this is for you to decide and me to secure, 
+      //    so leave the initialisation as it is
+      //
+      // TODO: after importing this project into your XTS TwinCAT solution
+      //       setup of StartStation NestMask configuration is up to you to decide.
+      //---------------------------------------------------------------------------
       IF (GVL_XTS.XtsTransport.StationStartIndex > 0) AND
          (GVL_XTS.XtsTransport.StationStartIndex < MAX_STATION+1)
       THEN
@@ -247,6 +307,7 @@ THEN
 
       bInit                                     := TRUE;
       eInit                                     := E_PROGRESS.PROGRESS_DONE;
+      //---------------------------------------------------------------------------
   END_CASE
 END_IF
 //############################################################################
@@ -266,28 +327,28 @@ END_IF
 GVL_XTS.XtsTransport();
 
 // main control
-GVL_XTS.XtsTransport.Ctrl               REF= GVL_XTS.XtsTransportCtrl;   // main control
-GVL_XTS.XtsTransport.State              REF= GVL_XTS.XtsTransportState;  // main state
+GVL_XTS.XtsTransport.Ctrl                       REF= GVL_XTS.XtsTransportCtrl;   // main control
+GVL_XTS.XtsTransport.State                      REF= GVL_XTS.XtsTransportState;  // main state
                                         
 // member controls                      
-GVL_XTS.XtsTransport.XpuCtrl            REF= GVL_XTS.XpuCtrl;
-GVL_XTS.XtsTransport.XpuState           REF= GVL_XTS.XpuState;
-GVL_XTS.XtsTransport.XpuInfo            REF= GVL_XTS.XpuInfo;
+GVL_XTS.XtsTransport.XpuCtrl                    REF= GVL_XTS.XpuCtrl;
+GVL_XTS.XtsTransport.XpuState                   REF= GVL_XTS.XpuState;
+GVL_XTS.XtsTransport.XpuInfo                    REF= GVL_XTS.XpuInfo;
                                         
-GVL_XTS.XtsTransport.GroupItf           :=   GVL_XTS.CaGroupItf;
-GVL_XTS.XtsTransport.GroupInfo          REF= GVL_XTS.CaGroupInfo;
+GVL_XTS.XtsTransport.GroupItf                   :=   GVL_XTS.CaGroupItf;
+GVL_XTS.XtsTransport.GroupInfo                  REF= GVL_XTS.CaGroupInfo;
                                         
-GVL_XTS.XtsTransport.MoverItf           REF= GVL_XTS.MoverItf;
-GVL_XTS.XtsTransport.MoverInfo          REF= GVL_XTS.MoverInfo;
-GVL_XTS.XtsTransport.MoverLastPosition  REF= GVL_XTS.LastPosition;
-GVL_XTS.XtsTransport.MoverLastGap       REF= GVL_XTS.LastGap;
+GVL_XTS.XtsTransport.MoverItf                   REF= GVL_XTS.MoverItf;
+GVL_XTS.XtsTransport.MoverInfo                  REF= GVL_XTS.MoverInfo;
+GVL_XTS.XtsTransport.MoverLastPosition          REF= GVL_XTS.LastPosition;
+GVL_XTS.XtsTransport.MoverLastGap               REF= GVL_XTS.LastGap;
 
-GVL_XTS.XtsTransport.StationStartIndex  :=   GVL_XTS.StationStartIndex;                                        
-GVL_XTS.XtsTransport.StationStart       REF= GVL_XTS.StationStart;      // start position for E_XTS_TRANSPORT_CTRL.CMD_TRANSPORT_START
-GVL_XTS.XtsTransport.StationCtrlItf     REF= GVL_XTS.StationCtrlItf;    // station interfaces are required for accessing station methods
-GVL_XTS.XtsTransport.StationListsItf    REF= GVL_XTS.StationListItf;    // list interface is required for access to linked list methods
-GVL_XTS.XtsTransport.StationControl     REF= GVL_XTS.StationCtrl;
-GVL_XTS.XtsTransport.StationState       REF= GVL_XTS.StationState;
+GVL_XTS.XtsTransport.StationStartIndex          :=   GVL_XTS.StationStartIndex;                                        
+GVL_XTS.XtsTransport.StationStart               REF= GVL_XTS.StationStart;      // start position for E_XTS_TRANSPORT_CTRL.CMD_TRANSPORT_START
+GVL_XTS.XtsTransport.StationCtrlItf             REF= GVL_XTS.StationCtrlItf;    // station interfaces are required for accessing station methods
+GVL_XTS.XtsTransport.StationListsItf            REF= GVL_XTS.StationListItf;    // list interface is required for access to linked list methods
+GVL_XTS.XtsTransport.StationControl             REF= GVL_XTS.StationCtrl;
+GVL_XTS.XtsTransport.StationState               REF= GVL_XTS.StationState;
 //############################################################################
 // 	XTS Transport Unit/
 //############################################################################
@@ -297,24 +358,24 @@ GVL_XTS.XtsTransport.StationState       REF= GVL_XTS.StationState;
 //############################################################################	
 FOR nStation := 1 TO MAX_STATION
 DO
+  GVL_XTS.StationListItf[nStation]              := GVL_XTS.StationList[nStation];   // interfaces for list methods
+  GVL_XTS.StationCtrlItf[nStation]              := GVL_XTS.Station[nStation];       // interfaces for station methods
+
   CASE GVL_XTS.StationParameter[nStation].eType
   OF
     //-----------------------------------------------------------------------------
     E_STATION_TYPE.STATION_PROCESS:
 
-      GVL_XTS.Station[nStation].StationId     := nStation;
-      GVL_XTS.Station[nStation].MessageLevel  := GVL_MSG.MessageLevelStations[nStation];
+      GVL_XTS.Station[nStation].StationId       := nStation;
+      GVL_XTS.Station[nStation].MessageLevel    := GVL_MSG.MessageLevelStations[nStation];
     
-      GVL_XTS.StationListItf[nStation]        := GVL_XTS.StationList[nStation];   // interfaces for list methods
-      GVL_XTS.StationCtrlItf[nStation]        := GVL_XTS.Station[nStation];       // interfaces for station methods
+      GVL_XTS.Station[nStation].Ctrl            REF= GVL_XTS.StationCtrl;           // station ctrl from extern
+      GVL_XTS.Station[nStation].State           REF= GVL_XTS.StationState;          // station state to extern
     
-      GVL_XTS.Station[nStation].Ctrl          REF= GVL_XTS.StationCtrl;           // station ctrl from extern
-      GVL_XTS.Station[nStation].State         REF= GVL_XTS.StationState;          // station state to extern
-    
-      GVL_XTS.Station[nStation].ItfStations   REF= GVL_XTS.StationListItf;        // give every station all list interfaces for writing mover tickets
-      GVL_XTS.Station[nStation].ItfMover      REF= GVL_XTS.MoverItf;              // give every station all mover interfaces for movement in / out of station
-      GVL_XTS.Station[nStation].Mover         REF= GVL_XTS.AxisRefMover;          // AXIS_REF to read infos from
-      GVL_XTS.Station[nStation].MoverOffset   REF= GVL_XTS.PositionOffset;        // static offsets for all stations, all movers, all stop positions
+      GVL_XTS.Station[nStation].ItfStations     REF= GVL_XTS.StationListItf;        // give every station all list interfaces for writing mover tickets
+      GVL_XTS.Station[nStation].ItfMover        REF= GVL_XTS.MoverItf;              // give every station all mover interfaces for movement in / out of station
+      GVL_XTS.Station[nStation].Mover           REF= GVL_XTS.AxisRefMover;          // AXIS_REF to read infos from
+      GVL_XTS.Station[nStation].MoverOffset     REF= GVL_XTS.PositionOffset;        // static offsets for all stations, all movers, all stop positions
     
       GVL_XTS.Station[nStation].StationParameter  REF= GVL_XTS.StationParameter;// give every station all station parameters for sending to WaitPos of target station
     
@@ -322,7 +383,7 @@ DO
       GVL_XTS.Station[nStation].Cycle();                                        // cycle for handshaking with extern
     
       // Queue data for each station
-      GVL_XTS.StationQueue[nStation]          := GVL_XTS.StationListItf[nStation].Data;
+      GVL_XTS.StationQueue[nStation]            := GVL_XTS.StationListItf[nStation].Data;
 
 
     //-----------------------------------------------------------------------------
@@ -330,9 +391,6 @@ DO
 
       GVL_XTS.StationGearIn[nStation].StationId   := nStation;
       GVL_XTS.StationGearIn[nStation].MessageLevel:= GVL_MSG.MessageLevelStations[nStation];
-    
-      GVL_XTS.StationListItf[nStation]            := GVL_XTS.StationList[nStation];   // interfaces for list methods
-      GVL_XTS.StationCtrlItf[nStation]            := GVL_XTS.StationGearIn[nStation]; // interfaces for station methods
     
       GVL_XTS.StationGearIn[nStation].Ctrl        REF= GVL_XTS.StationCtrl;           // station ctrl from extern
       GVL_XTS.StationGearIn[nStation].State       REF= GVL_XTS.StationState;          // station state to extern
@@ -349,7 +407,7 @@ DO
       GVL_XTS.StationGearIn[nStation].Cycle();                                        // cycle for handshaking with extern
     
       // Queue data for each station
-      GVL_XTS.StationQueue[nStation]        := GVL_XTS.StationListItf[nStation].Data;
+      GVL_XTS.StationQueue[nStation]            := GVL_XTS.StationListItf[nStation].Data;
   END_CASE
 END_FOR
 //############################################################################
@@ -359,18 +417,18 @@ END_FOR
 //############################################################################
 // 	/XPU environment
 //############################################################################	
-GVL_XTS.Xpu.XpuInstance               :=   1;
-GVL_XTS.Xpu.MessageLevel              :=   GVL_MSG.MessageLevelXpu;
+GVL_XTS.Xpu.XpuInstance                         :=   1;
+GVL_XTS.Xpu.MessageLevel                        :=   GVL_MSG.MessageLevelXpu;
 
-GVL_XTS.Xpu.Ctrl                      REF= GVL_XTS.XpuCtrl;
-GVL_XTS.Xpu.State                     REF= GVL_XTS.XpuState;
-GVL_XTS.Xpu.XpuModuleInfoData         REF= GVL_XTS.XpuModules;
+GVL_XTS.Xpu.Ctrl                                REF= GVL_XTS.XpuCtrl;
+GVL_XTS.Xpu.State                               REF= GVL_XTS.XpuState;
+GVL_XTS.Xpu.XpuModuleInfoData                   REF= GVL_XTS.XpuModules;
 
-GVL_XTS.Xpu.CaGroupOID                :=   GVL_XTS.CaGroup.GroupInfo.CaGroupOID;
+GVL_XTS.Xpu.CaGroupOID                          :=   GVL_XTS.CaGroup.GroupInfo.CaGroupOID;
 
-// cyclic call
-GVL_XTS.Xpu();
-GVL_XTS.XpuInfo                       :=   GVL_XTS.Xpu.XpuInfo;
+// cyclic call                                
+GVL_XTS.Xpu();                                
+GVL_XTS.XpuInfo                                 :=   GVL_XTS.Xpu.XpuInfo;
 //############################################################################
 // 	XPU environment/
 //############################################################################	
@@ -379,24 +437,19 @@ GVL_XTS.XpuInfo                       :=   GVL_XTS.Xpu.XpuInfo;
 // 	/CA-Group Class
 //############################################################################
 // message device identifier
-GVL_XTS.CaGroup.MessageDeviceIndex    :=   e_Device.CaGroup + 1;	
+GVL_XTS.CaGroup.MessageDeviceIndex              :=   e_Device.CaGroup + 1;	
 // assignment
-GVL_XTS.CaGroup.AxisRef               REF= GVL_XTS.AxisRefMover;
+GVL_XTS.CaGroup.AxisRef                         REF= GVL_XTS.AxisRefMover;
 // Interface to Mover methods
-GVL_XTS.CaGroup.MoverItf              REF= GVL_XTS.MoverItf; 
-
-GVL_XTS.CaGroup.GroupRef              REF= GVL_XTS.CaGroupRef;
-
-GVL_XTS.CaGroup.XpuInfo               REF= GVL_XTS.XpuInfo;
-
+GVL_XTS.CaGroup.MoverItf                        REF= GVL_XTS.MoverItf; 
+GVL_XTS.CaGroup.GroupRef                        REF= GVL_XTS.CaGroupRef;
+GVL_XTS.CaGroup.XpuInfo                         REF= GVL_XTS.XpuInfo;
 // cyclic call
-GVL_XTS.CaGroup.InfoCycle(TRUE); // read group status
-
+GVL_XTS.CaGroup.InfoCycle(TRUE);                // read group status
 // InfoData from group
-GVL_XTS.CaGroupInfo                   :=   GVL_XTS.CaGroup.GroupInfo;
-
+GVL_XTS.CaGroupInfo                             :=   GVL_XTS.CaGroup.GroupInfo;
 // Interface of CaGroup
-GVL_XTS.CaGroupItf                    :=   GVL_XTS.CaGroup;
+GVL_XTS.CaGroupItf                              :=   GVL_XTS.CaGroup;
 //############################################################################	
 // 	CA-Group Class/
 //############################################################################
@@ -404,30 +457,30 @@ GVL_XTS.CaGroupItf                    :=   GVL_XTS.CaGroup;
 //############################################################################
 //  /Mover Class	
 //############################################################################	
-FOR nMover := 1 TO XTS_Parameter.MAX_MOVER
+FOR nMover := 1 TO MAX_MOVER
 DO
-  GVL_XTS.Mover[nMover].MoverId         :=   nMover;
-  GVL_XTS.Mover[nMover].RailLength      :=   GVL_XTS.Xpu.RailLength;  // mover needs RailLength, in order to calc absolute position from modulo input
-  GVL_XTS.Mover[nMover].MessageLevel    :=   GVL_MSG.MessageLevelMovers[nMover];
+  GVL_XTS.Mover[nMover].MoverId                 :=   nMover;
+  GVL_XTS.Mover[nMover].RailLength              :=   GVL_XTS.Xpu.RailLength;  // mover needs RailLength, in order to calc absolute position from modulo input
+  GVL_XTS.Mover[nMover].MessageLevel            :=   GVL_MSG.MessageLevelMovers[nMover];
 
-  GVL_XTS.Mover[nMover].Ctrl            REF= GVL_XTS.MoverCtrl;       // mover control from extern
-  GVL_XTS.Mover[nMover].State           REF= GVL_XTS.MoverState;      // mover state to extern
+  GVL_XTS.Mover[nMover].Ctrl                    REF= GVL_XTS.MoverCtrl;       // mover control from extern
+  GVL_XTS.Mover[nMover].State                   REF= GVL_XTS.MoverState;      // mover state to extern
 
-  GVL_XTS.Mover[nMover].MoveData        REF= GVL_XTS.MoveData;        // dyn constraints for extern to write
-  GVL_XTS.Mover[nMover].GearData        REF= GVL_XTS.GearData;        // GearIn/GearInPosCa data fro extern to write
+  GVL_XTS.Mover[nMover].MoveData                REF= GVL_XTS.MoveData;        // dyn constraints for extern to write
+  GVL_XTS.Mover[nMover].GearData                REF= GVL_XTS.GearData;        // GearIn/GearInPosCa data fro extern to write
 
-  // assignment	
-  GVL_XTS.Mover[nMover].Mover           REF= GVL_XTS.AxisRefMover[nMover];  // axis reference to Mover function block
-  GVL_XTS.Mover[nMover].LastGap         REF= GVL_XTS.LastGap[nMover];       // reference to last used gap value datafield
-  GVL_XTS.Mover[nMover].LastPosition    REF= GVL_XTS.LastPosition[nMover];  // reference to last position datafield
+  // assignment
+  GVL_XTS.Mover[nMover].Mover                   REF= GVL_XTS.AxisRefMover[nMover];  // axis reference to Mover function block
+  GVL_XTS.Mover[nMover].LastGap                 REF= GVL_XTS.LastGap[nMover];       // reference to last used gap value datafield
+  GVL_XTS.Mover[nMover].LastPosition            REF= GVL_XTS.LastPosition[nMover];  // reference to last position datafield
 
-  GVL_XTS.Mover[nMover].MoverInfo		    REF= GVL_XTS.MoverInfo[nMover];     // refernence to mover info data (ActPos, SetPos, ...)
+  GVL_XTS.Mover[nMover].MoverInfo		            REF= GVL_XTS.MoverInfo[nMover];     // refernence to mover info data (ActPos, SetPos, ...)
 
-  GVL_XTS.MoverItf[nMover]              :=   GVL_XTS.Mover[nMover];
+  GVL_XTS.MoverItf[nMover]                      :=   GVL_XTS.Mover[nMover];
 
   // cyclic call
-  GVL_XTS.Mover[nMover].Cycle();  // call AXIS_REF()
-  GVL_XTS.Mover[nMover]();        // call Ctrl/State
+  GVL_XTS.Mover[nMover].Cycle();                // call AXIS_REF()
+  GVL_XTS.Mover[nMover]();                      // call Ctrl/State
 END_FOR
 //############################################################################
 //  Mover Class/	
@@ -436,11 +489,11 @@ END_FOR
 //############################################################################
 //  /Mover Selector	
 //############################################################################
-GVL_XTS.MoverSelector.Ctrl              REF= GVL_XTS.SelectorCtrl;
-GVL_XTS.MoverSelector.State             REF= GVL_XTS.SelectorState;
-GVL_XTS.MoverSelector.AxisRef           REF= GVL_XTS.AxisRefMover;
-GVL_XTS.MoverSelector.Info              REF= GVL_XTS.MoverInfo;
-GVL_XTS.MoverSelector.ItfMover          REF= GVL_XTS.MoverItf;
+GVL_XTS.MoverSelector.Ctrl                      REF= GVL_XTS.MoverSelectorCtrl;
+GVL_XTS.MoverSelector.State                     REF= GVL_XTS.MoverSelectorState;
+GVL_XTS.MoverSelector.AxisRef                   REF= GVL_XTS.AxisRefMover;
+GVL_XTS.MoverSelector.Info                      REF= GVL_XTS.MoverInfo;
+GVL_XTS.MoverSelector.ItfMover                  REF= GVL_XTS.MoverItf;
 
 GVL_XTS.MoverSelector();
 //############################################################################
@@ -451,22 +504,17 @@ GVL_XTS.MoverSelector();
 //  /logging
 //    - all life is problem solving
 //############################################################################
-GVL_MSG.TransportMessageData.Ctrl             REF= GVL_MSG.TransportMessageCtrl;
-GVL_MSG.TransportMessageData.State            REF= GVL_MSG.TransportMessageState;
-
-GVL_MSG.TransportMessageData.MessageIndex     REF= GVL_MSG.MessageTransportIndex;
-GVL_MSG.TransportMessageData.ErrorIndex       REF= GVL_MSG.MessageTransportError;
-
-GVL_MSG.TransportMessageData.DirRoot          :=   ADR(GVL_MSG.LOG_DIR);
-GVL_MSG.TransportMessageData.FileRoot         :=   ADR(GVL_MSG.LOG_FILE);
-
-GVL_MSG.TransportMessageData.MsgList          :=   ADR(GVL_MSG.TransportMessages);
-GVL_MSG.TransportMessageData.LocalTime        :=   ADR(GVL_MSG.dtLocalTime);
-
-GVL_MSG.TransportMessageData();               
-
-eMsgState                                     :=   f_GetState   (GVL_MSG.TransportMessageState.State);
-eMsgProgress                                  :=   f_GetProgress(GVL_MSG.TransportMessageState.State);
+GVL_MSG.TransportMessageData.Ctrl               REF= GVL_MSG.TransportMessageCtrl;
+GVL_MSG.TransportMessageData.State              REF= GVL_MSG.TransportMessageState;
+GVL_MSG.TransportMessageData.MessageIndex       REF= GVL_MSG.MessageTransportIndex;
+GVL_MSG.TransportMessageData.ErrorIndex         REF= GVL_MSG.MessageTransportError;
+GVL_MSG.TransportMessageData.DirRoot            :=   ADR(GVL_MSG.LOG_DIR);
+GVL_MSG.TransportMessageData.FileRoot           :=   ADR(GVL_MSG.LOG_FILE);
+GVL_MSG.TransportMessageData.MsgList            :=   ADR(GVL_MSG.TransportMessages);
+GVL_MSG.TransportMessageData.LocalTime          :=   ADR(GVL_MSG.dtLocalTime);
+GVL_MSG.TransportMessageData();
+eMsgState                                       :=   f_GetState   (GVL_MSG.TransportMessageState.State);
+eMsgProgress                                    :=   f_GetProgress(GVL_MSG.TransportMessageState.State);
 
 CASE eMsgState
 OF
@@ -478,7 +526,7 @@ OF
         IF (GVL_MSG.MessageTransportIndex > GVL_MSG.MAX_MESSAGE/100) OR
            (GVL_MSG.MessageTransportError > 0)
         THEN
-          GVL_MSG.TransportMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          GVL_MSG.TransportMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
         END_IF
     END_CASE
 
@@ -487,14 +535,14 @@ OF
     OF
       E_PROGRESS.PROGRESS_ERROR,
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG.TransportMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        GVL_MSG.TransportMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 
 ELSE
     CASE eMsgProgress
     OF
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG.TransportMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        GVL_MSG.TransportMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 END_CASE
 //############################################################################
@@ -504,22 +552,22 @@ END_CASE
 //############################################################################
 //  /Transport Metrics
 //############################################################################
-GVL_MSG.MetricsMessageData.Ctrl               REF= GVL_MSG.MetricsMessageCtrl;
-GVL_MSG.MetricsMessageData.State              REF= GVL_MSG.MetricsMessageState;
+GVL_MSG.MetricsMessageData.Ctrl                 REF= GVL_MSG.MetricsMessageCtrl;
+GVL_MSG.MetricsMessageData.State                REF= GVL_MSG.MetricsMessageState;
 
-GVL_MSG.MetricsMessageData.MessageIndex       REF= GVL_MSG.MessageMetricsIndex;
-GVL_MSG.MetricsMessageData.ErrorIndex         REF= GVL_MSG.MessageMetricsError;
+GVL_MSG.MetricsMessageData.MessageIndex         REF= GVL_MSG.MessageMetricsIndex;
+GVL_MSG.MetricsMessageData.ErrorIndex           REF= GVL_MSG.MessageMetricsError;
 
-GVL_MSG.MetricsMessageData.DirRoot            :=   ADR(GVL_MSG.LOG_DIR);
-GVL_MSG.MetricsMessageData.FileRoot           :=   ADR(GVL_MSG.LOG_FILE_METRIC);
+GVL_MSG.MetricsMessageData.DirRoot              :=   ADR(GVL_MSG.LOG_DIR);
+GVL_MSG.MetricsMessageData.FileRoot             :=   ADR(GVL_MSG.LOG_FILE_METRIC);
 
-GVL_MSG.MetricsMessageData.MsgList            :=   ADR(GVL_MSG.MetricsMessages);
-GVL_MSG.MetricsMessageData.LocalTime          :=   ADR(GVL_MSG.dtLocalTime);
+GVL_MSG.MetricsMessageData.MsgList              :=   ADR(GVL_MSG.MetricsMessages);
+GVL_MSG.MetricsMessageData.LocalTime            :=   ADR(GVL_MSG.dtLocalTime);
 
 GVL_MSG.MetricsMessageData();
 
-eMtrState                                     := f_GetState   (GVL_MSG.MetricsMessageState.State);
-eMtrProgress                                  := f_GetProgress(GVL_MSG.MetricsMessageState.State);
+eMtrState                                       := f_GetState   (GVL_MSG.MetricsMessageState.State);
+eMtrProgress                                    := f_GetProgress(GVL_MSG.MetricsMessageState.State);
 
 CASE eMtrState
 OF
@@ -530,7 +578,7 @@ OF
         IF (GVL_MSG.MessageMetricsIndex > GVL_MSG.MAX_MESSAGE/100) OR
            (GVL_MSG.MessageMetricsError > 0)
         THEN
-          GVL_MSG.MetricsMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          GVL_MSG.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
         END_IF
     END_CASE
 
@@ -539,13 +587,13 @@ OF
     OF
       E_PROGRESS.PROGRESS_ERROR,
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        GVL_MSG.MetricsMessageCtrl.Cmd          := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 ELSE
     CASE eMtrProgress
     OF
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        GVL_MSG.MetricsMessageCtrl.Cmd          := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 END_CASE
 //############################################################################
@@ -559,332 +607,34 @@ VisualizationData();
 //############################################################################
 //  Visualization data/	
 //############################################################################
-IF bGetVariant
-THEN
-  CASE nVariant
-  OF
-    0:
-      StationParameter_PosStop_00();
-
-    1:
-      StationParameter_PosStop_00_1();
-  ELSE
-      StationParameter_PosStop_00();
-  END_CASE
-  bGetVariant                         := FALSE;
-END_IF
 ]]></ST>
     </Implementation>
-    <Action Name="StationParameter_PosStop_00" Id="{ab5142ae-aff4-4834-80ff-6be5268e6d80}">
+    <Action Name="DefaultStationParameters" Id="{18bbadde-8cfb-42f7-be25-7e2d4d629d9c}">
       <Implementation>
         <ST><![CDATA[//---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 //
-FOR nStn := 1 TO XTS_Parameter.MAX_STATION
+//  Default Station dynamics 
+//  - we do not want an array full of nothing 
+//  - better have something
+//  - leave this initialisation as it is, 
+//  - go to MAIN_APP to configure the global datafields
+//
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+FOR nStn := 1 TO MAX_STATION
 DO
-  GVL_XTS.StationParameter[nStn].rGap              :=     rGap;
-  GVL_XTS.StationParameter[nStn].rAccDec           :=     rAcc;
-  GVL_XTS.StationParameter[nStn].rJerk             :=     rJerk;
+  GVL_XTS.StationParameter[nStn].eType               :=   E_STATION_TYPE.INVALID; // make it valid in your configuration
+  GVL_XTS.StationParameter[nStn].sText               :=   concat('DEaF_STATION_', TO_STRING(nStn));
+
+  GVL_XTS.StationParameter[nStn].rPosWait            :=   TO_REAL(ABS(GVL_XTS.XpuInfo.rRailLength - nStn*10.0));
+  GVL_XTS.StationParameter[nStn].rGap                :=   rInitGap;
+  GVL_XTS.StationParameter[nStn].rVelo               :=   rInitVelo;
+  GVL_XTS.StationParameter[nStn].rAccDec             :=   rInitAcc;
+  GVL_XTS.StationParameter[nStn].rJerk               :=   rInitJerk;
 END_FOR
-//
 //---------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------
-//
-//
-//---------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------
-nStn                    := 1;
-GVL_XTS.StationParameter[nStn].sText               := 'ST031';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   2700.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 2;
-GVL_XTS.StationParameter[nStn].sText               := 'ST032';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   2850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 3;
-GVL_XTS.StationParameter[nStn].sText               := 'ST061';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   5500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 4;
-GVL_XTS.StationParameter[nStn].sText               := 'ST062';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   5850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 5;
-GVL_XTS.StationParameter[nStn].sText               := 'ST071';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   6500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 6;
-GVL_XTS.StationParameter[nStn].sText               := 'ST072';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   6850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   1500.0;
-
-
-nStn                    := 7;
-GVL_XTS.StationParameter[nStn].sText               := 'ST101';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   9500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 8;
-GVL_XTS.StationParameter[nStn].sText               := 'ST102';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   9550.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   1500.0;
-
-nStn                    := 9;
-GVL_XTS.StationParameter[nStn].sText               := 'ST111';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  11700.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 10;
-GVL_XTS.StationParameter[nStn].sText               := 'ST112';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  11850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 11;
-GVL_XTS.StationParameter[nStn].sText               := 'ST121';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  12500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 12;
-GVL_XTS.StationParameter[nStn].sText               := 'ST141';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  14500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 13;
-GVL_XTS.StationParameter[nStn].sText               := 'ST142';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  14850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     50.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 14;
-GVL_XTS.StationParameter[nStn].sText               := 'ST171';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  17500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 15;
-GVL_XTS.StationParameter[nStn].sText               := 'ST172';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  17700.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     50.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 16;
-GVL_XTS.StationParameter[nStn].sText               := 'ST181';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  18500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 17;
-GVL_XTS.StationParameter[nStn].sText               := 'ST182';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  18700.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     50.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 18;
-GVL_XTS.StationParameter[nStn].sText               := 'ST201';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  20500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 19;
-GVL_XTS.StationParameter[nStn].sText               := 'ST202';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  20850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     50.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   1500.0;
-]]></ST>
-      </Implementation>
-    </Action>
-    <Action Name="StationParameter_PosStop_00_1" Id="{9eb7bca5-db59-43b6-af59-18039fd998ad}">
-      <Implementation>
-        <ST><![CDATA[//---------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------
-//
-FOR nStn := 1 TO XTS_Parameter.MAX_STATION
-DO
-  GVL_XTS.StationParameter[nStn].rGap              :=     rGap;
-  GVL_XTS.StationParameter[nStn].rAccDec           :=     rAcc;
-  GVL_XTS.StationParameter[nStn].rJerk             :=     rJerk;
-END_FOR
-//
-//---------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------
-//
-//
-//---------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------
-nStn                    := 1;
-GVL_XTS.StationParameter[nStn].sText               := 'ST031';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   2700.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3000.0;
-
-nStn                    := 2;
-GVL_XTS.StationParameter[nStn].sText               := 'ST032';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   2850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3000.0;
-
-nStn                    := 3;
-GVL_XTS.StationParameter[nStn].sText               := 'ST061';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   5500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3000.0;
-
-nStn                    := 4;
-GVL_XTS.StationParameter[nStn].sText               := 'ST062';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   5850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3000.0;
-
-nStn                    := 5;
-GVL_XTS.StationParameter[nStn].sText               := 'ST071';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   6500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3000.0;
-
-nStn                    := 6;
-GVL_XTS.StationParameter[nStn].sText               := 'ST072';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   6850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3000.0;
-
-
-nStn                    := 7;
-GVL_XTS.StationParameter[nStn].sText               := 'ST101';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   9500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     10.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 8;
-GVL_XTS.StationParameter[nStn].sText               := 'ST102';
-GVL_XTS.StationParameter[nStn].rPosWait            :=   9550.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2000.0;
-
-nStn                    := 9;
-GVL_XTS.StationParameter[nStn].sText               := 'ST111';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  11700.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3000.0;
-
-nStn                    := 10;
-GVL_XTS.StationParameter[nStn].sText               := 'ST112';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  11850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     40.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3000.0;
-
-nStn                    := 11;
-GVL_XTS.StationParameter[nStn].sText               := 'ST121';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  12500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3500.0;
-
-nStn                    := 12;
-GVL_XTS.StationParameter[nStn].sText               := 'ST141';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  14500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3500.0;
-
-nStn                    := 13;
-GVL_XTS.StationParameter[nStn].sText               := 'ST142';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  14850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     50.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3500.0;
-
-nStn                    := 14;
-GVL_XTS.StationParameter[nStn].sText               := 'ST171';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  17500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3500.0;
-
-nStn                    := 15;
-GVL_XTS.StationParameter[nStn].sText               := 'ST172';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  17700.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     50.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3500.0;
-
-nStn                    := 16;
-GVL_XTS.StationParameter[nStn].sText               := 'ST181';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  18500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3500.0;
-
-nStn                    := 17;
-GVL_XTS.StationParameter[nStn].sText               := 'ST182';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  18700.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     50.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   3500.0;
-
-nStn                    := 18;
-GVL_XTS.StationParameter[nStn].sText               := 'ST201';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  20500.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=    150.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2500.0;
-
-nStn                    := 19;
-GVL_XTS.StationParameter[nStn].sText               := 'ST202';
-GVL_XTS.StationParameter[nStn].rPosWait            :=  20850.0; // absolute modulo position
-GVL_XTS.StationParameter[nStn].rPosStop[1]         :=      0.0; // relative to rPosWait
-GVL_XTS.StationParameter[nStn].rReleaseDistance    :=     50.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStn].rVelo               :=   2250.0;
-]]></ST>
+//---------------------------------------------------------------------------------------]]></ST>
       </Implementation>
     </Action>
     <Action Name="VisualizationData" Id="{ef1aa6aa-d8a0-407a-9f2c-db2f36c6cbf2}">
@@ -937,6 +687,12 @@ eMoverResult                          := f_GetProgress(GVL_XTS.MoverState[nMover
 sMoverState                           := TO_STRING(eMoverState);
 sMoverResult                          := TO_STRING(eMoverResult);
 
+eSelectorState                        := f_GetState   (GVL_XTS.MoverSelectorState.State.State);
+eSelectorResult                       := f_GetProgress(GVL_XTS.MoverSelectorState.State.State);
+
+sSelectorState                        := TO_STRING(eSelectorState);
+sSelectorResult                       := TO_STRING(eSelectorResult);
+
 sStationState                         := TO_STRING(GVL_XTS.StationState[nStationSelected].State);
 sStationStateMask                     := Tc2_Utilities.BYTE_TO_BINSTR(GVL_XTS.StationState[nStationSelected].nMask, 8);
 sStationCtrlMask                      := Tc2_Utilities.BYTE_TO_BINSTR(GVL_XTS.StationCtrl[nStationSelected].nMask, 8);
@@ -949,17 +705,66 @@ tStationSelectedQueue                 := GVL_XTS.StationQueue[nStationSelected];
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="6751" Count="428" />
+      <LineId Id="7200" Count="23" />
+      <LineId Id="7641" Count="9" />
+      <LineId Id="7224" Count="1" />
+      <LineId Id="7630" Count="0" />
+      <LineId Id="7226" Count="16" />
+      <LineId Id="7244" Count="43" />
+      <LineId Id="7640" Count="0" />
+      <LineId Id="7298" Count="69" />
+      <LineId Id="7652" Count="1" />
+      <LineId Id="7651" Count="0" />
+      <LineId Id="7368" Count="7" />
+      <LineId Id="7379" Count="22" />
+      <LineId Id="7405" Count="26" />
+      <LineId Id="7656" Count="0" />
+      <LineId Id="7433" Count="2" />
+      <LineId Id="7655" Count="0" />
+      <LineId Id="7437" Count="0" />
+      <LineId Id="7654" Count="0" />
+      <LineId Id="7439" Count="15" />
+      <LineId Id="7456" Count="0" />
+      <LineId Id="7458" Count="0" />
+      <LineId Id="7460" Count="1" />
+      <LineId Id="7463" Count="1" />
+      <LineId Id="7466" Count="13" />
+      <LineId Id="7663" Count="0" />
+      <LineId Id="7481" Count="1" />
+      <LineId Id="7661" Count="0" />
+      <LineId Id="7484" Count="1" />
+      <LineId Id="7660" Count="0" />
+      <LineId Id="7487" Count="3" />
+      <LineId Id="7659" Count="0" />
+      <LineId Id="7492" Count="0" />
+      <LineId Id="7658" Count="0" />
+      <LineId Id="7494" Count="0" />
+      <LineId Id="7657" Count="0" />
+      <LineId Id="7496" Count="27" />
+      <LineId Id="7525" Count="1" />
+      <LineId Id="7528" Count="1" />
+      <LineId Id="7531" Count="1" />
+      <LineId Id="7534" Count="0" />
+      <LineId Id="7536" Count="93" />
       <LineId Id="6316" Count="0" />
     </LineIds>
-    <LineIds Name="MAIN.StationParameter_PosStop_00">
-      <LineId Id="1" Count="151" />
-    </LineIds>
-    <LineIds Name="MAIN.StationParameter_PosStop_00_1">
-      <LineId Id="1" Count="151" />
+    <LineIds Name="MAIN.DefaultStationParameters">
+      <LineId Id="1" Count="5" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="7" Count="4" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="12" Count="6" />
     </LineIds>
     <LineIds Name="MAIN.VisualizationData">
-      <LineId Id="1" Count="56" />
+      <LineId Id="1" Count="46" />
+      <LineId Id="58" Count="2" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="48" Count="9" />
     </LineIds>
   </POU>
 </TcPlcObject>

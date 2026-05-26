@@ -9,7 +9,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>XtsTransport</Name>
-    <ProgramVersion>3.1.4026.19</ProgramVersion>
+    <ProgramVersion>3.1.4026.22</ProgramVersion>
     <Application>{166233b6-ed3a-4555-847f-b00a56bed48f}</Application>
     <TypeSystem>{21378df7-81ee-4451-8fc5-a465311ee17c}</TypeSystem>
     <Implicit_Task_Info>{7fa85632-7c81-4445-b822-3712a089ca13}</Implicit_Task_Info>

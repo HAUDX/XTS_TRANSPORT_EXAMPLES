@@ -6,26 +6,38 @@
 
 ### Introduction to The Examples
 - Welcome to the deployment architecture. 
-- The examples contained within this repository are not theoretical exercises
+- The examples contained within this repository are not theoretical exercises.
 - Most examples provided here are derived from a physical, production-ready machine currently operating in the field.
 - Some examples are case studies from POC designs, which later were changed/adapted by users.
+- The examples shall illustrate the multi layered approach when dealing with complex transport logic and asynchronuous command issuing.
+- All examples are built upon the same basic ctrl/state handshakes.
 
 This repository serves as the blueprint for translating the XTS_TRANSPORT_LAYER into physical mechatronic reality. 
 - Architectural Philosophy: **The Diplomat Pattern**
   - All examples enforce a strict division between **[APPLICATION]** and **[XTS]** environments/folders.
+  - **[XTS_DEMO_11]** is the entry level example, ready to run, showcasing the base implementation all other examples use.
   
 - The architecture operates on the principle of strict namespace encapsulation. 
   - The core TcGVL (Global Variable List) files are treated as sovereign territory. 
   - No external logic is permitted to read or write to this territory directly.
   - Instead, communication requires a "diplomat"—a strictly defined Facade or Interface.
   - The lowest layers of the framework (ST_STATION_CTRL/STATE and ST_MOVER_CTRL/STATE) already possess this diplomatic core, 
-    allowing external layers and C++/any applications to plug into the system without ever risking the integrity of the hardware cycle.
+    allowing external layers like C++ applications (any application that may use ADS) to plug into the system without ever risking cycle time violations (Exceed counter - online tab of the PLC task).
+  - Any cyclic application may be connected via MAPPING procedures (fieldbus, EAP).
+  - Any non-cyclic application may be connected via ADS.
+  - Hybrid access possible
+    - →  A middleware layer to organize access (switching between ADS and cyclic mapping) keeps the base layer unchanged
+      - The most suitable examples would be the EXTERN examples, since they are fully separated and ready to use.
 
 ## I. Encapsulation & Agnostic Routing
 These examples illustrate how to command the physical track from an abstracted, agnostic IT or Process layer.
 - **[XTS_DEMO_EXTERN_108]:** The O(1) Linked-List Abstraction. This design is running multiple times in the field. A dual-PLC architecture demonstrating high-layer abstraction.
   The Application Layer (InstanceControl and AppCtrl) is fully decoupled from the Collector/Instance Layer and Station Layer (ProcessStation and Mover).
   Introduces the Linked-List structure with cyclic Ctrl/State wrappers, guaranteeing atomic, asynchronous communication across any communication medium.
+  The PLC ExternControl is connected via TwinCAT mapping and delivers the tickets into the cyclic LinkedList of the PLC XtsTransport.
+  Within that cyclic LinkedList (fb_Process_LinkedListCtrl) a fb_Instance extension is routing the ticket to the designated target process (fb_ProcessConductor).
+  The XtsTransport PLC contains extensions of fb_Instance which take care of the transport related tasks for a given process (group of XtsStations), in those extensions the job details are coded. 
+  Use those fb_Instance extensions as example for coding complex transport scenarios.
   
 - **[XTS_DEMO_EXTERN_SIMULATION]:** A dual-PLC case study demonstrating high-layer abstraction. PLC ExternControl commands the Station Layer via TwinCAT mapping. 
   Utilizes the ExternControl PLC with process abstraction (fb_Simulation) for rapid product flow analysis. I use this as a base for transport simulations, in order to estimate a desired output with different process layouts.
@@ -47,8 +59,9 @@ The baseline examples for starting, stopping, and clearing a transport applicati
   MAIN_APP(PRG) is used for running the handshakes in.
   Illustrates the strict sequential gating: waiting for MAIN.eInit = PROGRESS_DONE before any physical movement is permitted.
   Shows exact manual override procedures (bStart, bReset) for safely clearing groups and halting movement.
-  
- 
+  This example is the template for all examples in the entire repository. Advanced components, such as Process Collectors (fb_ProcessCollector) and complex routing instances (fb_Instances), are built upon these exact same interfaces.
+
+   
 - **[XTS_DEMO_LINE_SORT]:** Mover-Centric Command. A 2-PLC setup (XtsTransport and ExternControl) managing isolated parts with singular movers. 
   The ExternControl operates as the absolute command center.
 

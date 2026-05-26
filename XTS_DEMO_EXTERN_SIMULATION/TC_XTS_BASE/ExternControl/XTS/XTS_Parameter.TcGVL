@@ -45,7 +45,7 @@ VAR_GLOBAL CONSTANT
 //
 //  MAX_NCT_BASE_UNIT   : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsNctBaseUnitInterfaces);
 
-  MAX_STATION         : UINT    := 20;
+  MAX_STATION         : UINT    := 21;
 
   MAX_STATION_NEST    : UINT    := TO_UINT(SIZEOF(ST_STATION_STATE.nMask)*8);
   MAX_LIST_NODES      : UINT    := MAX_MOVER;

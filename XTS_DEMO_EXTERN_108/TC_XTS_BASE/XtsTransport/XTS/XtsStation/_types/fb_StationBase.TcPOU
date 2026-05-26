@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="fb_StationBase" Id="{0b8dff22-a149-4a45-afd0-c2215976fd93}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -69,7 +69,7 @@ VAR
   _ix                         : UINT;
 
   _rModActPosFetch            : LREAL;
-  _bMatchMessageLevel         : BOOL := TRUE;   // TRUE --> Mover in Station commands have equal message level as station
+  _bMatchMessageLevel         : BOOL;// := TRUE;   // TRUE --> Mover in Station commands have equal message level as station
 
   _stMsg                      : ST_Message;
   _eMessageLevel              : E_MessageType;
@@ -473,7 +473,7 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_StationBase">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="fb_StationBase.BitDel">
       <LineId Id="1" Count="5" />
