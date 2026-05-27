@@ -5928,23 +5928,24 @@ and will return to Group State Standby when the situation permits.
 	</ImageDatas>
 	<Project ProjectGUID="{0D33BF96-E768-4312-8E76-7F2D2635C2C0}" TargetNetId="5.163.199.237.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
-			<Settings MaxCpus="4" NonWinCpus="3" RouterMemory="134217728" MaxStackSize="512">
-				<Cpu CpuId="1" BaseTime="2500"/>
+			<Settings MaxCpus="8" NonWinCpus="6" RouterMemory="134217728" MaxStackSize="512">
 				<Cpu CpuId="2" BaseTime="2500"/>
-				<Cpu CpuId="3"/>
+				<Cpu CpuId="3" BaseTime="2500"/>
+				<Cpu CpuId="4"/>
+				<Cpu CpuId="5"/>
 				<IoIdleTask Affinity="#x00000008"/>
 			</Settings>
 			<Tasks>
-				<Task Id="2" Priority="1" CycleTime="2500" AmsPort="350" AdtTasks="true">
+				<Task Id="2" Priority="1" CycleTime="2500" AmsPort="350" Affinity="#x00000004" AdtTasks="true">
 					<Name>XTS Task 1</Name>
 				</Task>
-				<Task Id="4" Priority="3" CycleTime="2500" AmsPort="352" Affinity="#x00000004" AdtTasks="true">
+				<Task Id="4" Priority="3" CycleTime="2500" AmsPort="352" Affinity="#x00000008" AdtTasks="true">
 					<Name>XTS Task 2</Name>
 				</Task>
-				<Task Id="8" Priority="15" CycleTime="10000" AmsPort="353" Affinity="#x00000008" AdtTasks="true">
+				<Task Id="8" Priority="15" CycleTime="10000" AmsPort="353" Affinity="#x00000020" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
-				<Task Id="9" Priority="32" Affinity="#x00000008" AdtTasks="true" JobTask="true">
+				<Task Id="9" Priority="32" Affinity="#x00000010" AdtTasks="true" JobTask="true">
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
@@ -141098,7 +141099,7 @@ and will return to Group State Standby when the situation permits.
 		</System>
 		<Motion>
 			<NC>
-				<SafTask Priority="4" CycleTime="20000" AmsPort="501" Affinity="#x00000008" IoAtBegin="true" SafTaskInfo="256" HighPrioAds="true">
+				<SafTask Priority="4" CycleTime="20000" AmsPort="501" Affinity="#x00000010" IoAtBegin="true" SafTaskInfo="256" HighPrioAds="true">
 					<Name>NC-Task 1</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -141110,7 +141111,7 @@ and will return to Group State Standby when the situation permits.
 						<Name>Image</Name>
 					</Image>
 				</SafTask>
-				<SvbTask Priority="8" CycleTime="100000" AmsPort="511" Affinity="#x00000008">
+				<SvbTask Priority="8" CycleTime="100000" AmsPort="511" Affinity="#x00000010">
 					<Name>NC-Task 1 SVB</Name>
 				</SvbTask>
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
@@ -166605,7 +166606,7 @@ and will return to Group State Standby when the situation permits.
 				</Instance>
 			</Project>
 			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, TEST" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{55DAA345-2F33-D0CD-2E65-BEC92A8F5B17}" TmcPath="XtsTransport\XtsTransport.tmc">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{1E62D3B9-4DE6-A97F-BF6C-05292034F3BD}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
