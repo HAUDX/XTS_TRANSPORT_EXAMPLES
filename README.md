@@ -45,6 +45,10 @@ These examples illustrate how to command the physical track from an abstracted, 
 - **[XTS_DEMO_EXTERN_STATION_PRIMES]:** A dual-PLC simulation study which handles processes consisting of a prime number station count. 
   This example shows how routing from parallel stations can be done.
 
+- **[XTS_DEMO_EXTERN_RECTANGLE_2]:** A dual-PLC simulation of distributed clusters of stations. This example shall illustrate flexibility towards station design. 
+  The ExternControl PLC carries the process definitions. XtsTransport PLC carries the station definitions. 
+  Parameter driiven approach for flexible transport solutions. The stations you design for a process must be in closed range, AND the modulo turn must NOT intersect the range of clusters. Those are the only prerequisites you have to follow.
+
 ## II. High-Throughput Mechatronics
 These examples contain the blueprints for building high throughput kinetic environments and managing multi-station handshakes.
 - **[XTS_DEMO_APPLICATION_108]:** deprecated, this example is fully substituted by [XTS_DEMO_EXTERN_108]

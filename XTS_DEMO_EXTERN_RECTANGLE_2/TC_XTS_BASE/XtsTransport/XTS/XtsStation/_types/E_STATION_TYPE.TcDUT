@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="E_STATION_TYPE" Id="{6d9c59c1-7fe7-4cb6-aa25-c40a97f05fa7}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_STATION_TYPE :
+(
+	INVALID,
+  STATION_PROCESS,      // default station with/without process
+  STATION_GEAR_IN_POS   // GearInPos station for flying saw with MasterAxis
+)USINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

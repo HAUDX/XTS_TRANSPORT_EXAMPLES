@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.22">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C929B002-BF94-48A2-937B-5D20DED8EF3B}" Namespace="XTS">OperationMode</Name>
@@ -4817,6 +4817,14 @@ External Setpoint Generation:
 				<Text><![CDATA[mcGroupStateSuspended]]></Text>
 				<Enum>8</Enum>
 			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateFollowingMCS]]></Text>
+				<Enum>9</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateFollowingACS]]></Text>
+				<Enum>10</Enum>
+			</EnumInfo>
 		</DataType>
 		<DataType>
 			<Name GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Name>
@@ -4833,7 +4841,7 @@ and will return to Group State Standby when the situation permits.
 			<SubItem>
 				<Name>AllAxesStanding</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<Comment><![CDATA[Indicate whether all axes are physically standing, i.e. velocity and acceleration are zero. This definition differs from the definition of the GroupStateMoving, which indicates whether a Motion Command is currently active.]]></Comment>
+				<Comment><![CDATA[Indicates whether all axes are physically standing, i.e. velocity and acceleration are zero. This definition differs from the definition of the GroupStateMoving, which indicates whether a Motion Command is currently active.]]></Comment>
 				<BitSize>1</BitSize>
 				<BitOffs>1</BitOffs>
 			</SubItem>
@@ -4859,7 +4867,9 @@ and will return to Group State Standby when the situation permits.
 5 = ErrorStop	(mcGroupStateErrorStop),
 6 = Homing	(mcGroupStateHoming),
 7 = NotReady	(mcGroupStateNotReady),
-8 = Suspended	(mcGroupStateSuspended)]]></Comment>
+8 = Suspended	(mcGroupStateSuspended),
+9 = FollowingMCS	(mcGroupStateFollowingMCS),
+10 = FollowingACS	(mcGroupStateFollowingACS)]]></Comment>
 				<BitSize>16</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
@@ -5101,7 +5111,7 @@ and will return to Group State Standby when the situation permits.
 		<ImageData Id="1014">424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000000000000000000ababab00a6a6a600a0a0a0009b9b9b0095959500909090008a8a8a0085858500808080007a7a7a00757575006f6f6f006a6a6a00646464000000000000000000b4b4b400afafaf00a9a9a900a4a4a4009e9e9e0099999900949494008e8e8e00898989006d6d6d006f6f6f0078787800737373006e6e6e000000000000000000bdbdbd00b8b8b800b2b2b200adadad004e77d7000650fb004c74d0009797970092929200828282005a5a5a00666666007b7b7b00777777000000000000000000c6c6c6008a8a8a005353530053535300034df800004dff00054df50053535300535353005353530053535300535353006d6d6d00808080000000000000000000d0d0d000cacaca00c5c5c500bfbfbf005880de000952fb00567dd700aaaaaa00a4a4a400919191005c5c5c006d6d6d008d8d8d00898989000000000000000000d9d9d900d3d3d300cecece00c8c8c800c0c1c300466cc300b5b6b800b3b3b300adadad0081818100878787009d9d9d0098989800929292000000000000000000e2e2e200dcdcdc00d7d7d700d2d2d200406aca00004dff003d67c700bcbcbc00b7b7b700b1b1b100acacac00a6a6a600a1a1a1009b9b9b000000000000000000ebebeb00e6e6e600e0e0e0007790c9000d50ec00004dff000e50ea006782bf00c0c0c000bababa00b5b5b500afafaf00aaaaaa00a5a5a5000000000000000000f4f4f400efefef00e9e9e900577acc00a1afd000004dff0099a7c8005174c600c9c9c900c3c3c300bebebe00b9b9b900b3b3b300aeaeae000000000000000000fbfbfb00f8f8f800f3f3f300ededed00e8e8e800004dff00dddddd00d7d7d700d2d2d200cdcdcd00c7c7c700c2c2c200bcbcbc00b7b7b7000000000000000000fbfbfb00fbfbfb00fbfbfb00f6f6f600f1f1f100004dff00e6e6e600e1e1e100dbdbdb00d6d6d600d0d0d000cbcbcb00c5c5c500c0c0c0000000000000000000fbfbfb00fbfbfb00fbfbfb00fbfbfb00fafafa00004dff00efefef00eaeaea00e4e4e400dfdfdf00d9d9d900d4d4d400cfcfcf00c9c9c9000000000000000000fbfbfb00fbfbfb00fbfbfb00fbfbfb00fbfbfb00fbfbfb00f8f8f800f3f3f300ededed00e8e8e800e3e3e300dddddd00d8d8d800d2d2d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</ImageData>
 		<ImageData Id="1015">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000130b0000130b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff8e8582b1a9a5ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc3bebbaea9a659565355524f5755525a58555e5b5862605d6764616d6a6772706d817f7cff00ffff00ffff00ffff00ff7e7875e1dddca1a09e7673707b7875817f7c817f7d85838084827f84817e827e7c52504d777472ff00ffff00ffff00ff4845428b89886a686b7c78769693909a979599959398969497969395918f73706e5e5b595e5b58acaaa7ff00ffff00ff45423f53504d94908dff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff7e7a7764625f989693ff00ffff00ff474441534f4ca5a19eff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff9793915f5c59989592ff00ffff00ff524e4b4d4a484f4d4aff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff565451625f5caaa8a5ff00ffff00ffff00ff464442504e4b55535054524f5653505755525755525655515554515a58555b5956726f6cff00ffff00ffff00ffff00ffff00ff5653504443404946434a48454c49474e4b484e4b49504e4b514e4b757370ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{93087B8E-8B45-410C-842B-030B1FDEA597}" TargetNetId="192.168.1.73.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
+	<Project ProjectGUID="{93087B8E-8B45-410C-842B-030B1FDEA597}" TargetNetId="5.163.199.237.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
 			<Settings MaxCpus="8" NonWinCpus="4" RouterMemory="268435456" MaxStackSize="1024">
 				<Cpu CpuId="4" BaseTime="2500"/>
@@ -87639,6 +87649,86 @@ and will return to Group State Standby when the situation permits.
 						</Module>
 					</Module>
 				</Axis>
+				<Instance Id="#x05000100" KeepUnrestoredLinks="2">
+					<Name>Mc-Instance for NcPtp</Name>
+					<ImageId>4</ImageId>
+					<TmcDesc GUID="{6445FBA6-B920-4AD2-873B-8C61DD652099}">
+						<Name>MC Instance Unversioned</Name>
+						<CLSID ClassFactory="TcNc3">{05030084-0000-0000-F000-000000000064}</CLSID>
+						<InitSequence>PSO</InitSequence>
+						<Contexts>
+							<Context>
+								<Id>0</Id>
+								<Name>MET</Name>
+							</Context>
+							<Context>
+								<Id>1</Id>
+								<Name>MPT</Name>
+							</Context>
+							<Context>
+								<Id>3</Id>
+								<Name>MJT</Name>
+							</Context>
+						</Contexts>
+						<Parameters>
+							<Parameter ReadOnly="true">
+								<Name>Execution-Task OID (MET)</Name>
+								<Comment><![CDATA[OID of task used for very time-critical command execution (Motion-Execution-Task)]]></Comment>
+								<BitSize>32</BitSize>
+								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+								<PTCID>#x03002060</PTCID>
+							</Parameter>
+							<Parameter ReadOnly="true">
+								<Name>Preparation-Task OID (MPT)</Name>
+								<Comment><![CDATA[OID of task used for less time-critical command preparation (Motion-Preparation-Task)]]></Comment>
+								<BitSize>32</BitSize>
+								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+								<PTCID>#x03002061</PTCID>
+							</Parameter>
+							<Parameter ReadOnly="true">
+								<Name>Job-Task OID (MJT)</Name>
+								<Comment><![CDATA[OID of JobTask for asynchronous processing (Motion-Job-Task)]]></Comment>
+								<BitSize>32</BitSize>
+								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+								<Properties>
+									<Property>
+										<Name>TcJobTaskOID</Name>
+									</Property>
+								</Properties>
+								<PTCID>#x0300a11b</PTCID>
+							</Parameter>
+						</Parameters>
+						<Properties>
+							<Property>
+								<Name>Category</Name>
+								<Value>TcNc3Instance</Value>
+							</Property>
+							<Property>
+								<Name>Category</Name>
+								<Value>HideTcComContextPP</Value>
+							</Property>
+							<Property>
+								<Name>ChildCategory</Name>
+								<Value>MC Object</Value>
+							</Property>
+						</Properties>
+						<ParentOTCID>#x05000010</ParentOTCID>
+						<ParameterValues>
+							<Value>
+								<Name>Execution-Task OID (MET)</Name>
+								<Value>83886096</Value>
+							</Value>
+							<Value>
+								<Name>Preparation-Task OID (MPT)</Name>
+								<Value>83886112</Value>
+							</Value>
+							<Value>
+								<Name>Job-Task OID (MJT)</Name>
+								<Value>33620112</Value>
+							</Value>
+						</ParameterValues>
+					</TmcDesc>
+				</Instance>
 				<Modules>
 					<Module Id="#x05120010">
 						<Name>Group1 (CA Group)</Name>
@@ -87890,18 +87980,12 @@ and will return to Group State Standby when the situation permits.
 							</ParameterValues>
 						</TmcDesc>
 					</Module>
-					<Parameters>
-						<Parameter>
-							<PTCID>#x300a11b</PTCID>
-							<Data>02010090</Data>
-						</Parameter>
-					</Parameters>
 				</Modules>
 			</NC>
 		</Motion>
 		<Plc>
 			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="TEST, WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{8A059CCB-602B-B0FD-AE00-813FF7E714A6}" TmcPath="XtsTransport\XtsTransport.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{C41AA016-937E-879D-31A0-274145D837AF}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
