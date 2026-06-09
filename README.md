@@ -29,6 +29,12 @@ This repository serves as the blueprint for translating the XTS_TRANSPORT_LAYER 
     - →  A middleware layer to organize access (switching between ADS and cyclic mapping) keeps the base layer unchanged
       - The most suitable examples would be the EXTERN examples, since they are fully separated and ready to use.
 
+- The architecture relies on linked lists for information transport
+  - Stations: the linked list is embedded in the base layer of the stations. A closer look you want to take? Read "02_XTS_TRANSPORT_LAYER_Stations.pdf" page 16.
+  - Processes: the linked list is a prepared tool for you to use. A closer look is what you truly desire? Read "XTS_DEMO_APPLICATION.pdf" page 9.
+  - Examples for stations handling the mover tickets based on handshake and movement; any example in here will show you.
+  - Example for processes handling tickets for a range of stations on the process level: **[XTS_DEMO_EXTERN_108]**
+
 ## I. Encapsulation & Agnostic Routing
 These examples illustrate how to command the physical track from an abstracted, agnostic IT or Process layer.
 - **[XTS_DEMO_EXTERN_108]:** The O(1) Linked-List Abstraction. This design is running multiple times in the field. A dual-PLC architecture demonstrating high-layer abstraction.
