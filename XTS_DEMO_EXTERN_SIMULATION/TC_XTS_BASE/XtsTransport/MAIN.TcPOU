@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MAIN" Id="{f2e9720a-bda2-4399-8c7d-d9b6e11179c8}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -408,6 +408,19 @@ DO
     
       // Queue data for each station
       GVL_XTS.StationQueue[nStation]            := GVL_XTS.StationListItf[nStation].Data;
+
+  ELSE
+      GVL_XTS.Station[nStation].StationId       := nStation;
+    
+      GVL_XTS.Station[nStation].Ctrl            REF= GVL_XTS.StationCtrl;           // station ctrl from extern
+      GVL_XTS.Station[nStation].State           REF= GVL_XTS.StationState;          // station state to extern
+    
+      GVL_XTS.Station[nStation].ItfStations     REF= GVL_XTS.StationListItf;        // give every station all list interfaces for writing mover tickets
+      GVL_XTS.Station[nStation].ItfMover        REF= GVL_XTS.MoverItf;              // give every station all mover interfaces for movement in / out of station
+      GVL_XTS.Station[nStation].Mover           REF= GVL_XTS.AxisRefMover;          // AXIS_REF to read infos from
+      GVL_XTS.Station[nStation].MoverOffset     REF= GVL_XTS.PositionOffset;        // static offsets for all stations, all movers, all stop positions
+    
+      GVL_XTS.Station[nStation].StationParameter  REF= GVL_XTS.StationParameter;// give every station all station parameters for sending to WaitPos of target station
   END_CASE
 END_FOR
 //############################################################################
@@ -717,7 +730,12 @@ tStationSelectedQueue                 := GVL_XTS.StationQueue[nStationSelected];
       <LineId Id="7651" Count="0" />
       <LineId Id="7368" Count="7" />
       <LineId Id="7379" Count="22" />
-      <LineId Id="7405" Count="26" />
+      <LineId Id="7405" Count="15" />
+      <LineId Id="7666" Count="0" />
+      <LineId Id="7665" Count="0" />
+      <LineId Id="7667" Count="0" />
+      <LineId Id="7669" Count="9" />
+      <LineId Id="7421" Count="10" />
       <LineId Id="7656" Count="0" />
       <LineId Id="7433" Count="2" />
       <LineId Id="7655" Count="0" />

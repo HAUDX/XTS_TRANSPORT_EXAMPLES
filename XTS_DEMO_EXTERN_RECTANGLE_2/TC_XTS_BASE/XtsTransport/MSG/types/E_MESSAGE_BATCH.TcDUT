@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <DUT Name="E_MESSAGE_BATCH" Id="{b1fd9c46-66eb-4b7d-9091-356e4c799b92}">
+  <DUT Name="E_MESSAGE_BATCH" Id="{b463e9a9-fb53-4354-9354-e6f097d705da}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 {attribute 'to_string'}

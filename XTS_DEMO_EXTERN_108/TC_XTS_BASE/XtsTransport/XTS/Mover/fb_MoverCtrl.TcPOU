@@ -121,63 +121,63 @@ END_CASE
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-// The thing that should not be
+// The things that should not be
 
 IF NOT (_nMoverId > 0)
 THEN
-  _sState                     := 'Mover: missing ID';
-  RETURN;
-END_IF
-
-IF NOT __ISVALIDREF(_stCtrl)
-THEN
-  _sState                     := 'Ctrl: missing pointer';
-  RETURN;
-END_IF
-
-IF NOT __ISVALIDREF(_stState)
-THEN
-  _sState                     := 'State: missing pointer';
+  _eCheck                     := E_MOVER_CHECK.MOVER_ID_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_Mover)
 THEN
-  _sState                     := 'Mover: missing pointer';
+  _eCheck                     := E_MOVER_CHECK.REFERENCE_AXIS_REF_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_rLastPosition)
 THEN
-  _sState                     := '_rLastPosition: missing pointer';
+  _eCheck                     := E_MOVER_CHECK.REFERENCE_LAST_POSITION_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_rLastGap)
 THEN
-  _sState                     := '_rLastGap: missing pointer';
+  _eCheck                     := E_MOVER_CHECK.REFERENCE_LAST_GAP_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_stInfo)
 THEN
-  _sState                     := '_stInfo: missing pointer';
+  _eCheck                     := E_MOVER_CHECK.REFERENCE_INFO_INVALID;
+  RETURN;
+END_IF
+
+IF NOT __ISVALIDREF(_stCtrl)
+THEN
+  _eCheck                     := E_MOVER_CHECK.REFERENCE_CTRL_INVALID;
+  RETURN;
+END_IF
+
+IF NOT __ISVALIDREF(_stState)
+THEN
+  _eCheck                     := E_MOVER_CHECK.REFERENCE_STATE_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_stGearData)
 THEN
-  _sState                     := '_stGearData: missing pointer';
+  _eCheck                     := E_MOVER_CHECK.REFERENCE_GEAR_DATA_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_stMoveData)
 THEN
-  _sState                     := '_stMoveData: missing pointer';
+  _eCheck                     := E_MOVER_CHECK.REFERENCE_MOVE_DATA_INVALID;
   RETURN;
 END_IF
 
-_sState                       := 'CHECK_DONE';
+_eCheck                       := E_MOVER_CHECK.CHECK_DONE;
 Check                         := TRUE;
 ]]></ST>
       </Implementation>
@@ -297,25 +297,84 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_MoverCtrl">
-      <LineId Id="1" Count="72" />
+      <LineId Id="959" Count="0" />
+      <LineId Id="1189" Count="0" />
+      <LineId Id="1188" Count="0" />
+      <LineId Id="960" Count="0" />
+      <LineId Id="965" Count="11" />
+      <LineId Id="1020" Count="9" />
+      <LineId Id="1304" Count="1" />
+      <LineId Id="1030" Count="5" />
+      <LineId Id="1230" Count="31" />
+      <LineId Id="1265" Count="1" />
+      <LineId Id="1264" Count="0" />
+      <LineId Id="1036" Count="1" />
+      <LineId Id="1071" Count="0" />
+      <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="fb_MoverCtrl.Check">
-      <LineId Id="1" Count="59" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="94" Count="28" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="128" Count="10" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="139" Count="10" />
+      <LineId Id="123" Count="2" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_MoverCtrl.Cmd">
-      <LineId Id="1" Count="51" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="92" Count="3" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="64" Count="2" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="67" Count="2" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="70" Count="2" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="73" Count="2" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="77" Count="1" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="83" Count="1" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="10" Count="0" />
     </LineIds>
     <LineIds Name="fb_MoverCtrl.Ctrl.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_MoverCtrl.GearData.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_MoverCtrl.MoveData.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_MoverCtrl.State.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

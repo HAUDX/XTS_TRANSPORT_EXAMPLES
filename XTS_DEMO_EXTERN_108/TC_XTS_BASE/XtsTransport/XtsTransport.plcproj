@@ -186,16 +186,40 @@
     <Compile Include="MAPPING\MAPPING_out.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAPPING\_types\E_MAPPING_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MAPPING\_types\U_APP_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_APP_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAPPING\_types\U_GEAR_DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MAPPING\_types\U_INSTANCE_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_INSTANCE_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_INFO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVE_DATA.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_TICKET_LIST_CTRL.TcDUT">
@@ -208,6 +232,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_TICKET_LIST_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_XTS_STATION_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_XTS_STATION_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_XTS_TRANSPORT_CTRL.TcDUT">
@@ -280,6 +310,42 @@
     <Compile Include="UML\CD_GroupCa.TcCD">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XML\Configuration\fb_Configuration.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\Configuration\types\ST_Configuration.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\fb_XmlBase.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\PositionOffsets\fb_MoverPositionOffsetData.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\PositionOffsets\types\ST_MOVER_OFFSETS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\E_DATA_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\E_DATA_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\E_DATA_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\fb_XmlRead.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\fb_XmlWrite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\ST_DATA_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\ST_DATA_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\CaGroup\FB_CaGroup.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -299,16 +365,33 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="XTS\GVL_XTS_CONSTANTS.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="XTS\GVL_XTS_VERSION.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="XTS\Mover\fb_Mover.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\fb_MoverCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\Mover\fb_MoverSelector.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\Mover\I_XtsTransport_Mover.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\Mover\types\E_MOVER_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\Mover\types\E_MOVER_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\E_MOVER_SELECTOR.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Mover\types\E_MOVER_STATE.TcDUT">
@@ -323,6 +406,12 @@
     <Compile Include="XTS\Mover\types\ST_MOVER_INFO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_SELECTOR_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\Mover\types\ST_MOVER_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -333,6 +422,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Xpu\fb_XpuCtrl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Xpu\I_XtsTransport_Xpu.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Xpu\types\E_XPU_CHECK.TcDUT">
@@ -363,6 +455,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\XtsStation\I_XtsTransport_Station.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\_types\E_STATION_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\XtsStation\_types\E_STATION_CTRL.TcDUT">
@@ -442,6 +537,10 @@
       <SubType>Code</SubType>
       <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
     </Compile>
+    <Compile Include="XTS\_Visualization\SELECTOR_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
     <Compile Include="XTS\_Visualization\STATION_VISU.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
@@ -471,10 +570,6 @@
     <Compile Include="XTS\_Visualization\XTS_TRANSPORT.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
-    </Compile>
-    <Compile Include="XTS_Parameter_108.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -590,6 +685,12 @@
     <Folder Include="MAPPING" />
     <Folder Include="MSG\types" />
     <Folder Include="UML" />
+    <Folder Include="XML" />
+    <Folder Include="XML\Configuration" />
+    <Folder Include="XML\Configuration\types" />
+    <Folder Include="XML\PositionOffsets" />
+    <Folder Include="XML\PositionOffsets\types" />
+    <Folder Include="XML\types" />
     <Folder Include="XTS" />
     <Folder Include="XTS\CaGroup" />
     <Folder Include="XTS\CaGroup\types" />
@@ -633,8 +734,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -776,15 +877,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="Int32">System.Int32</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="Int32">System.Int32</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

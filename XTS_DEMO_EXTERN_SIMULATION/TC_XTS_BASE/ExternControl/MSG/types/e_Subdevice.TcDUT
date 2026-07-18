@@ -141,6 +141,12 @@ TYPE e_Subdevice :
   TransportUnit_Start,
   TransportUnit_XpuInit,
   TransportUnit_StationClearOutfeed,
+  TransportUnit_GroupEnable,
+  TransportUnit_GroupClear,
+  TransportUnit_GroupBuild,
+  TransportUnit_GroupStop,
+  TransportUnit_MoverEnableAll,
+  TransportUnit_MoverDisableAll,
 
   CamControl            := 8000,
   CamStartUp,

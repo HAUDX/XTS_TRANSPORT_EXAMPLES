@@ -435,22 +435,146 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_XpuCtrl">
-      <LineId Id="1" Count="53" />
+      <LineId Id="947" Count="0" />
+      <LineId Id="1034" Count="0" />
+      <LineId Id="948" Count="50" />
+      <LineId Id="53" Count="0" />
     </LineIds>
     <LineIds Name="fb_XpuCtrl.Check">
-      <LineId Id="1" Count="20" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="37" Count="5" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="33" Count="0" />
     </LineIds>
     <LineIds Name="fb_XpuCtrl.Cmd">
-      <LineId Id="1" Count="36" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="83" Count="1" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="54" Count="2" />
+      <LineId Id="87" Count="1" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="10" Count="0" />
     </LineIds>
     <LineIds Name="fb_XpuCtrl.Ctrl.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_XpuCtrl.DetectMoverId">
-      <LineId Id="1" Count="220" />
+      <LineId Id="475" Count="1" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="479" Count="0" />
+      <LineId Id="306" Count="1" />
+      <LineId Id="473" Count="0" />
+      <LineId Id="445" Count="0" />
+      <LineId Id="309" Count="5" />
+      <LineId Id="316" Count="5" />
+      <LineId Id="585" Count="3" />
+      <LineId Id="572" Count="12" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="589" Count="0" />
+      <LineId Id="322" Count="14" />
+      <LineId Id="494" Count="0" />
+      <LineId Id="338" Count="0" />
+      <LineId Id="340" Count="1" />
+      <LineId Id="455" Count="0" />
+      <LineId Id="484" Count="0" />
+      <LineId Id="481" Count="0" />
+      <LineId Id="483" Count="0" />
+      <LineId Id="485" Count="1" />
+      <LineId Id="492" Count="0" />
+      <LineId Id="488" Count="1" />
+      <LineId Id="493" Count="0" />
+      <LineId Id="518" Count="0" />
+      <LineId Id="487" Count="0" />
+      <LineId Id="342" Count="9" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="352" Count="0" />
+      <LineId Id="460" Count="0" />
+      <LineId Id="353" Count="1" />
+      <LineId Id="597" Count="1" />
+      <LineId Id="591" Count="5" />
+      <LineId Id="599" Count="0" />
+      <LineId Id="590" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="495" Count="0" />
+      <LineId Id="358" Count="2" />
+      <LineId Id="496" Count="1" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="508" Count="9" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="446" Count="0" />
+      <LineId Id="370" Count="1" />
+      <LineId Id="461" Count="0" />
+      <LineId Id="372" Count="4" />
+      <LineId Id="519" Count="9" />
+      <LineId Id="377" Count="1" />
+      <LineId Id="447" Count="0" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="386" Count="0" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="462" Count="0" />
+      <LineId Id="389" Count="2" />
+      <LineId Id="539" Count="0" />
+      <LineId Id="530" Count="8" />
+      <LineId Id="392" Count="8" />
+      <LineId Id="402" Count="0" />
+      <LineId Id="463" Count="0" />
+      <LineId Id="403" Count="2" />
+      <LineId Id="540" Count="9" />
+      <LineId Id="406" Count="0" />
+      <LineId Id="467" Count="0" />
+      <LineId Id="466" Count="0" />
+      <LineId Id="414" Count="0" />
+      <LineId Id="416" Count="0" />
+      <LineId Id="458" Count="0" />
+      <LineId Id="417" Count="1" />
+      <LineId Id="420" Count="1" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="550" Count="9" />
+      <LineId Id="423" Count="0" />
+      <LineId Id="567" Count="1" />
+      <LineId Id="561" Count="5" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="560" Count="0" />
+      <LineId Id="424" Count="1" />
+      <LineId Id="429" Count="5" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="443" Count="0" />
+      <LineId Id="202" Count="0" />
     </LineIds>
     <LineIds Name="fb_XpuCtrl.State.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -130,44 +130,22 @@ ELSE
       _eResult                  := Disable(TRUE);
   
     E_INSTANCE_STATE.ENABLED:
-      IF NOT (_XtsTransportState.XpuState.DcLink) OR
-         NOT (_XtsTransportState.XpuInfo.AllPositionsValid)
-      THEN
-        _eResult                := E_PROGRESS.PROGRESS_ERROR;
-      ELSE
-        _eResult                := Enable(TRUE);
-      END_IF
+      _eResult                  := Enable(TRUE);
+
 
     E_INSTANCE_STATE.WORKING:
-      IF NOT (_XtsTransportState.XpuState.DcLink) OR
-         NOT (_XtsTransportState.XpuInfo.AllPositionsValid)
-      THEN
-        _eResult                := E_PROGRESS.PROGRESS_ERROR;
-      ELSE
-        _eResult                := Work(TRUE);
-      END_IF
+      _eResult                  := Work(TRUE);
+
 
     E_INSTANCE_STATE.PROCEEDING:
-      IF NOT (_XtsTransportState.XpuState.DcLink) OR
-         NOT (_XtsTransportState.XpuInfo.AllPositionsValid)
-      THEN
-        _eResult                := E_PROGRESS.PROGRESS_ERROR;
-      ELSE
-        _eResult                := Proceed(TRUE);
-      END_IF
+      _eResult                  := Proceed(TRUE);
 
     E_INSTANCE_STATE.FINISH:
-      IF NOT (_XtsTransportState.XpuState.DcLink) OR
-         NOT (_XtsTransportState.XpuInfo.AllPositionsValid)
-      THEN
-        _eResult                := E_PROGRESS.PROGRESS_ERROR;
-      ELSE
-        _eResult                := Finish(TRUE);
-      END_IF
+      _eResult                  := Finish(TRUE);
+
 
     E_INSTANCE_STATE.CLEARED:
       _eResult                  := Clear(TRUE);
-
 
   ELSE
     _eResult                    := E_PROGRESS.PROGRESS_INVALID;
@@ -2759,7 +2737,14 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_Application">
-      <LineId Id="1" Count="159" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="2" Count="54" />
+      <LineId Id="62" Count="3" />
+      <LineId Id="71" Count="3" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="82" Count="1" />
+      <LineId Id="89" Count="4" />
+      <LineId Id="95" Count="65" />
     </LineIds>
     <LineIds Name="fb_Application.Check">
       <LineId Id="1" Count="38" />

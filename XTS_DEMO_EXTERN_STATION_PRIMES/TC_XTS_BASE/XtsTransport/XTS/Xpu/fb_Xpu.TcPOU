@@ -2163,22 +2163,7 @@ END_VAR
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.XpuInit">
-      <LineId Id="5400" Count="707" />
-      <LineId Id="6537" Count="0" />
-      <LineId Id="6536" Count="0" />
-      <LineId Id="6538" Count="1" />
-      <LineId Id="6108" Count="126" />
-      <LineId Id="6535" Count="0" />
-      <LineId Id="6532" Count="2" />
-      <LineId Id="6235" Count="29" />
-      <LineId Id="6521" Count="2" />
-      <LineId Id="6265" Count="58" />
-      <LineId Id="6527" Count="0" />
-      <LineId Id="6524" Count="2" />
-      <LineId Id="6324" Count="51" />
-      <LineId Id="6531" Count="0" />
-      <LineId Id="6528" Count="2" />
-      <LineId Id="6376" Count="144" />
+      <LineId Id="6521" Count="1139" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.XpuInstance.Set">

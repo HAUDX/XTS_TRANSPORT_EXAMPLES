@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MAIN_APP" Id="{589cd8b7-b619-4bed-ad7a-c17614b60e90}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -79,9 +79,9 @@ OF
 
       FOR nStation := 1 TO MAX_STATION
       DO
-        GVL_XTS.StationParameter[nStation].rGap     :=     rGap;
-        GVL_XTS.StationParameter[nStation].rAccDec  :=     rAcc;
-        GVL_XTS.StationParameter[nStation].rJerk    :=     rJerk;
+        GVL_XTS.StationParameter[nStation].rGap     :=     TO_REAL(rGap);
+        GVL_XTS.StationParameter[nStation].rAccDec  :=     TO_REAL(rAcc);
+        GVL_XTS.StationParameter[nStation].rJerk    :=     TO_REAL(rJerk);
       END_FOR
 
       // the prime the stations

@@ -94,7 +94,7 @@ END_CASE
 ]]></ST>
     </Implementation>
     <Folder Name="methods" Id="{7b7fb26d-2d9f-4358-abe4-81158e2934a0}" />
-    <Method Name="BuildFileData" Id="{978b9010-f862-4d74-940f-e03397073b9f}" FolderPath="methods\">
+    <Method Name="BuildFileData" Id="{f7ac25e2-99d5-4c0b-91cf-be66388bcc74}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD BuildFileData : e_progress
 VAR_INPUT
   Execute     : BOOL;
@@ -396,55 +396,55 @@ END_VAR
         <ST><![CDATA[
 IF NOT __ISVALIDREF(_stCtrl)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_CTRL;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_CTRL_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_stState)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_STATE;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_STATE_INVALID;
   RETURN;
 END_IF
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 IF NOT (_dtLocalTime <> 0)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_TIME;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_TIME_INVALID;
   RETURN;
 END_IF
 
 IF NOT (_pMsgList <> 0)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_LIST;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_LIST_INVALID;
   RETURN;
 END_IF
 
 IF NOT (_pFileRoot <> 0)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_ROOT_FILE;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_ROOT_FILE_INVALID;
   RETURN;
 END_IF
 
 IF NOT (_pDirRoot <> 0)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_ROOT_DIR;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_ROOT_DIR_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_nMsgIndex)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_MSG_IDX;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_MSG_IDX_INVALID;
   RETURN;
 END_IF
 
 IF NOT __ISVALIDREF(_nErrIndex)
 THEN
-  _eCheck       := E_MESSAGE_CHECK.MSG_CHECK_INVALID_POINTER_ERR_IDX;
+  _eCheck       := E_MESSAGE_CHECK.POINTER_ERR_IDX_INVALID;
   RETURN;
 END_IF
 
 
-_eCheck         := E_MESSAGE_CHECK.MSG_CHECK_DONE;
+_eCheck         := E_MESSAGE_CHECK.CHECK_DONE;
 Check           := TRUE;
 
 ]]></ST>

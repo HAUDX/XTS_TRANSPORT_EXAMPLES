@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="fb_StationBase" Id="{0b8dff22-a149-4a45-afd0-c2215976fd93}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -502,7 +502,8 @@ END_VAR
     </LineIds>
     <LineIds Name="fb_StationBase.Init">
       <LineId Id="1" Count="8" />
-      <LineId Id="11" Count="25" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="12" Count="24" />
     </LineIds>
     <LineIds Name="fb_StationBase.ItfMover.Set">
       <LineId Id="1" Count="1" />

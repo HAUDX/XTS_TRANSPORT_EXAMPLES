@@ -58,7 +58,7 @@
 //  - inherit this base class for your application, call Check() cyclic
 //
 //---------------------------------------------------------------------------------------------------------------//
-// This SOFTWARE is provided as an Exemple by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no  //
+// This SOFTWARE is provided as an Example by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no  //
 // representations or warranties of any kind concerning the safety, suitability, lack of viruses, inaccuracies,  //
 // typographical errors, or other harmful components of this SOFTWARE. There are inherent dangers in the use of  //
 // any software, and you are solely responsible for determining whether this SOFTWARE is compatible with your    //
@@ -116,13 +116,13 @@ END_VAR
 //-----------------------------------------------------------------------------
 IF NOT (_nProcess > 0)
 THEN
-  _eCheck                 := E_INSTANCE_CHECK.INVALID_PROCESS_ID_ZERO;
+  _eCheck                 := E_INSTANCE_CHECK.PROCESS_ID_ZERO;
   RETURN;
 END_IF
 
 IF NOT (_nProcess < E_INSTANCE.INSTANCE_MAX)
 THEN
-  _eCheck                 := E_INSTANCE_CHECK.INVALID_PROCESS_ID_MAX;
+  _eCheck                 := E_INSTANCE_CHECK.PROCESS_ID_MAX;
   RETURN;
 END_IF
 //-----------------------------------------------------------------------------
@@ -143,45 +143,37 @@ END_IF
 
 IF NOT (_ItfProcessCollector[_nProcess] <> 0) 
 THEN
-  _eCheck                 := E_INSTANCE_CHECK.INVALID_INTERFACE_POINTER;
+  _eCheck                 := E_INSTANCE_CHECK.POINTER_COLLECTOR_ITF_INVALID;
   RETURN;
 END_IF
 
 IF NOT (_ItfProcessCollector[_nProcess].ProcessId > 0)
 THEN
-  _eCheck                 := E_INSTANCE_CHECK.INVALID_PROCESS_ID_ZERO;
+  _eCheck                 := E_INSTANCE_CHECK.PROCESS_ID_ZERO;
   RETURN;
 END_IF
 
 IF NOT (_ItfProcessCollector[_nProcess].ProcessId < E_INSTANCE.INSTANCE_MAX)
 THEN
-  _eCheck                 := E_INSTANCE_CHECK.INVALID_PROCESS_ID_MAX;
+  _eCheck                 := E_INSTANCE_CHECK.PROCESS_ID_MAX;
   RETURN;
 END_IF
 
 IF NOT (_nProcess = _ItfProcessCollector[_nProcess].ProcessId)
 THEN
-  _eCheck                 := E_INSTANCE_CHECK.INVALID_PROCESS_ID_NOTEQUAL_COLLECTOR_ID;
+  _eCheck                 := E_INSTANCE_CHECK.PROCESS_ID_NOTEQUAL_COLLECTOR_ID;
   RETURN;
 END_IF
 
 IF NOT (_ItfProcessList[_nProcess] <> 0)
 THEN
-  _eCheck                 := E_INSTANCE_CHECK.INVALID_INDEX_IN_LIST;
+  _eCheck                 := E_INSTANCE_CHECK.PROCESS_LIST_ITF_INDEX_INVALID;
   RETURN;
 END_IF
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // connect datafields to interface of ProcessCollector
 //-----------------------------------------------------------------------------
-_ItfProcessCollector[_nProcess].ProcessCtrl   REF= _stCtrl;
-_ItfProcessCollector[_nProcess].ProcessState  REF= _stState;
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-// collect process information for instance state
-//-----------------------------------------------------------------------------
-
 _ItfProcessCollector[_nProcess].ProcessCtrl   REF= _stCtrl;
 _ItfProcessCollector[_nProcess].ProcessState  REF= _stState;
 
@@ -313,88 +305,39 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_Instance">
-      <LineId Id="139" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="fb_Instance.Check">
-      <LineId Id="93" Count="3" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="55" Count="1" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="60" Count="1" />
-      <LineId Id="98" Count="3" />
-      <LineId Id="115" Count="1" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="117" Count="1" />
-      <LineId Id="121" Count="5" />
-      <LineId Id="119" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="9" Count="1" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="26" Count="4" />
-      <LineId Id="43" Count="5" />
-      <LineId Id="62" Count="2" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="1" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="89" Count="3" />
-      <LineId Id="74" Count="1" />
-      <LineId Id="128" Count="4" />
-      <LineId Id="135" Count="0" />
-      <LineId Id="133" Count="1" />
-      <LineId Id="113" Count="0" />
-      <LineId Id="82" Count="6" />
-      <LineId Id="21" Count="2" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="158" Count="77" />
+      <LineId Id="79" Count="0" />
     </LineIds>
     <LineIds Name="fb_Instance.CmdLog">
-      <LineId Id="1" Count="9" />
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="fb_Instance.CollectorInterface.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Instance.InstanceCtrl.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Instance.InstanceState.Set">
-      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="fb_Instance.MessageLevel.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Instance.MessageLevel.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="3" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
+      <LineId Id="1" Count="8" />
     </LineIds>
     <LineIds Name="fb_Instance.ProcessId.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Instance.ProcessId.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Instance.ProcessLinkedLists.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

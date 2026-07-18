@@ -1,7 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MAIN" Id="{f2e9720a-bda2-4399-8c7d-d9b6e11179c8}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.04.23
+//  - fb_Xpu
+//    - .Init() initialisation sequence with explicit init of all local instances
+//    - .GetPartModule added, gets all Tc3_XTS_Utility.I_TcIoXtsPartModule 
+// 
+//  - MAPPING
+//    - MOVER_SELECTOR and MOVER_MAPPING compile defines are mutually exclusive.
+//    - switching memcpy destinations/sources according to compile define
+//
+//  - I_XtsTransport_Xpu
+//    - you might need this interface to access methods for passing along the XTS_Utility interfaces
+//
+// 
+//---------------------------------------------------------------------------------------------------------------
 //
 //  HAUD 2026.03.15
 //  - refactoring of the constants
@@ -474,8 +489,8 @@ END_FOR
 //############################################################################
 //  /Mover Selector	
 //############################################################################
-GVL_XTS.MoverSelector.Ctrl                      REF= GVL_XTS.SelectorCtrl;
-GVL_XTS.MoverSelector.State                     REF= GVL_XTS.SelectorState;
+GVL_XTS.MoverSelector.Ctrl                      REF= GVL_XTS.MoverSelectorCtrl;
+GVL_XTS.MoverSelector.State                     REF= GVL_XTS.MoverSelectorState;
 GVL_XTS.MoverSelector.AxisRef                   REF= GVL_XTS.AxisRefMover;
 GVL_XTS.MoverSelector.Info                      REF= GVL_XTS.MoverInfo;
 GVL_XTS.MoverSelector.ItfMover                  REF= GVL_XTS.MoverItf;
@@ -672,8 +687,8 @@ eMoverResult                          := f_GetProgress(GVL_XTS.MoverState[nMover
 sMoverState                           := TO_STRING(eMoverState);
 sMoverResult                          := TO_STRING(eMoverResult);
 
-eSelectorState                        := f_GetState   (GVL_XTS.SelectorState.State.State);
-eSelectorResult                       := f_GetProgress(GVL_XTS.SelectorState.State.State);
+eSelectorState                        := f_GetState   (GVL_XTS.MoverSelectorState.State.State);
+eSelectorResult                       := f_GetProgress(GVL_XTS.MoverSelectorState.State.State);
 
 sSelectorState                        := TO_STRING(eSelectorState);
 sSelectorResult                       := TO_STRING(eSelectorResult);
@@ -690,7 +705,7 @@ tStationSelectedQueue                 := GVL_XTS.StationQueue[nStationSelected];
       </Implementation>
     </Action>
     <LineIds Name="MAIN">
-      <LineId Id="4752" Count="417" />
+      <LineId Id="5170" Count="417" />
       <LineId Id="491" Count="0" />
     </LineIds>
     <LineIds Name="MAIN.DefaultStationParameters">

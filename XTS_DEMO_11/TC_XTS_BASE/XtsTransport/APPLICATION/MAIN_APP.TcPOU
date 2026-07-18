@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MAIN_APP" Id="{a42cfa77-97a5-4ec9-b576-fd1e63c4d66c}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -31,7 +31,7 @@
 //      - static targets
 //
 //---------------------------------------------------------------------------------------------------------------
-// This SOFTWARE is provided as an Exemple by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no 
+// This SOFTWARE is provided as an Example by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no 
 // representations or warranties of any kind concerning the safety, suitability, lack of viruses, inaccuracies, 
 // typographical errors, or other harmful components of this SOFTWARE. There are inherent dangers in the use of 
 // any software, and you are solely responsible for determining whether this SOFTWARE is compatible with your 
@@ -67,13 +67,6 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//-----------------------------------------------------------------------------
-// check mapping switch
-//-----------------------------------------------------------------------------
-IF NOT MAPPING_in.BypassSwitch 
-THEN 
-  eInit                               := E_PROGRESS.PROGRESS_NOT_EXIST;
-END_IF
-//-----------------------------------------------------------------------------
 // wait for initialization to be complete before work may start
 //-----------------------------------------------------------------------------
 IF NOT (Main.eInit = E_PROGRESS.PROGRESS_DONE)
@@ -346,30 +339,7 @@ END_CASE
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN_APP">
-      <LineId Id="761" Count="149" />
-      <LineId Id="1047" Count="0" />
-      <LineId Id="911" Count="1" />
-      <LineId Id="1048" Count="0" />
-      <LineId Id="913" Count="4" />
-      <LineId Id="1046" Count="0" />
-      <LineId Id="918" Count="3" />
-      <LineId Id="1049" Count="0" />
-      <LineId Id="922" Count="6" />
-      <LineId Id="1043" Count="0" />
-      <LineId Id="1041" Count="1" />
-      <LineId Id="929" Count="0" />
-      <LineId Id="1050" Count="0" />
-      <LineId Id="1044" Count="0" />
-      <LineId Id="930" Count="5" />
-      <LineId Id="937" Count="1" />
-      <LineId Id="1039" Count="1" />
-      <LineId Id="1045" Count="0" />
-      <LineId Id="939" Count="0" />
-      <LineId Id="941" Count="0" />
-      <LineId Id="1051" Count="0" />
-      <LineId Id="942" Count="9" />
-      <LineId Id="1052" Count="0" />
-      <LineId Id="952" Count="73" />
+      <LineId Id="1060" Count="269" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

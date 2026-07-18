@@ -11,10 +11,10 @@ STRUCT
   bMoverAvoidingCollision : BIT;    // Axis[i].NcToPlc.StateDWord2.0
   bMoverInTarget          : BIT;    // Axis[i].NcToPlc.ActPos == rLastSetPos[i]
 
-  rModuloActPos           : REAL;   // TO_REAL(Axis[i].NcToPlc.ModuloActPos)
-  rAbsActPos              : REAL;   // TO_REAL(Axis[i].NcToPlc.ActPos)
-  rAbsTargetPos           : REAL;   // TO_REAL(rLastSetPos[i])
-  rModuloTargetPos        : REAL;   // TO_REAL(Tc2_Math.LMOD(_rLastSetPos[i], _RailLength))
+  rModuloActPos           : LREAL;  // Axis[i].NcToPlc.ModuloActPos
+  rAbsActPos              : LREAL;  // Axis[i].NcToPlc.ActPos
+  rAbsTargetPos           : LREAL;  // rLastSetPos[i]
+  rModuloTargetPos        : LREAL;  // Tc2_Math.LMOD(_rLastSetPos[i], _RailLength)
 
   nErrorId                : UDINT;
 END_STRUCT

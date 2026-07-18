@@ -148,6 +148,9 @@
     <Compile Include="MAPPING\MAPPING_out.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAPPING\_types\E_MAPPING_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MAPPING\_types\U_APP_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -269,22 +272,37 @@
     <Compile Include="XML\Configuration\fb_Configuration.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XML\Configuration\types\E_DATA_CTRL.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XML\Configuration\types\E_DATA_STATE.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XML\Configuration\types\fb_DataXml.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XML\Configuration\types\fb_XmlRead.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XML\Configuration\types\fb_XmlWrite.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="XML\Configuration\types\ST_Configuration.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\fb_XmlBase.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\PositionOffsets\fb_MoverPositionOffsetData.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\PositionOffsets\types\ST_MOVER_OFFSETS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\E_DATA_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\E_DATA_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\E_DATA_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\fb_XmlRead.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\fb_XmlWrite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\ST_DATA_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XML\types\ST_DATA_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\CaGroup\FB_CaGroup.TcPOU">
@@ -326,6 +344,9 @@
     <Compile Include="XTS\Mover\I_XtsTransport_Mover.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\Mover\types\E_MOVER_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\Mover\types\E_MOVER_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -356,6 +377,9 @@
     <Compile Include="XTS\Mover\types\ST_MOVE_DATA.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XTS\Xpu\I_XtsTransport_Xpu.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\XtsStation\fb_StationGearInPos.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -363,6 +387,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\XtsStation\I_XtsTransport_Station.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\_types\E_STATION_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\XtsStation\_types\E_STATION_CTRL.TcDUT">
@@ -602,16 +629,6 @@
     <PlaceholderReference Include="Tc3_XTS_Utility">
       <DefaultResolution>Tc3_XTS_Utility, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_XTS_Utility</Namespace>
-      <Parameters>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST" xmlns="">
-          <Key>MAXXTSMOVERSPERXPU</Key>
-          <Value>10</Value>
-        </Parameter>
-        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST" xmlns="">
-          <Key>MAXXTSNCTBASEUNITINTERFACES</Key>
-          <Value>10</Value>
-        </Parameter>
-      </Parameters>
     </PlaceholderReference>
     <PlaceholderReference Include="VisuDialogs">
       <DefaultResolution>VisuDialogs, * (System)</DefaultResolution>
@@ -633,6 +650,9 @@
     <Folder Include="XML" />
     <Folder Include="XML\Configuration" />
     <Folder Include="XML\Configuration\types" />
+    <Folder Include="XML\PositionOffsets" />
+    <Folder Include="XML\PositionOffsets\types" />
+    <Folder Include="XML\types" />
     <Folder Include="XTS" />
     <Folder Include="XTS\CaGroup" />
     <Folder Include="XTS\CaGroup\types" />

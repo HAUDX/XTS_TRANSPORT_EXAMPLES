@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <DUT Name="e_Subdevice" Id="{b4255e95-d04d-4216-a935-7528bf2b6255}">
     <Declaration><![CDATA[{attribute 'strict'}
 {attribute 'to_string'}
@@ -61,6 +61,9 @@ TYPE e_Subdevice :
   fbWriteParameter,
   fbWriteBoolParameter,
   fbWriteParameterPersistent,
+  fbXmlRead,
+  fbXmlWrite,
+  fbCreateFolder,
 
   fbBuildGroup            := 200,
   fbClearGroup,
@@ -142,6 +145,13 @@ TYPE e_Subdevice :
   TransportUnit_Start,
   TransportUnit_XpuInit,
   TransportUnit_StationClearOutfeed,
+  TransportUnit_GroupEnable,
+  TransportUnit_GroupClear,
+  TransportUnit_GroupBuild,
+  TransportUnit_GroupStop,
+  TransportUnit_MoverEnableAll,
+  TransportUnit_MoverDisableAll,
+
 
   CamControl            := 8000,
   CamStartUp,
@@ -198,8 +208,11 @@ TYPE e_Subdevice :
   Application_Finish,
   Application_Init,
   Application_Proceed,
-  Application_Work
+  Application_Work,
 
+  Utilities                   := 13100,
+  Utilities_GetStationOnModule,
+  Utilities_SetGlobalConstraints
 
 )DINT;
 END_TYPE

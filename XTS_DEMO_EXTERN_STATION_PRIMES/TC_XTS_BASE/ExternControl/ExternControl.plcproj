@@ -9,7 +9,7 @@
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>ExternControl</Name>
-    <ProgramVersion>3.1.4026.19</ProgramVersion>
+    <ProgramVersion>3.1.4026.22</ProgramVersion>
     <Application>{5907efe4-cbda-4e96-8911-5c52561e3899}</Application>
     <TypeSystem>{400a2d83-02cf-402d-900c-0611d6d3e47b}</TypeSystem>
     <Implicit_Task_Info>{8557b4b9-8f07-44c4-b1f5-a910022b4b63}</Implicit_Task_Info>

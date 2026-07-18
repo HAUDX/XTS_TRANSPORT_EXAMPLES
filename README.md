@@ -79,7 +79,7 @@ The baseline examples for starting, stopping, and clearing a transport applicati
 
 ## IV. The Digital Twin & Observability
 Risk-reduction through virtual commissioning.
-- **[XTS_DEMO_SIMULATION]:** Automated Virtual Commissioning. Start simulating the transport systems before a single piece of iron is cut.
+- **[XTS_DEMO_SIMULATION], [XTS_DEMO_EXTERN_SIMULATION]:** Automated Virtual Commissioning. Start simulating the transport systems before a single piece of iron is cut.
   Features fb_Simulation for grouping XTS Station ranges, allowing synced handling (e.g., process multiplication) and automated handshakes using TON timers to simulate process duration.
 
 - **[scope]:** The Diagnostic Ledger. Included TwinCAT Scope projects configured specifically for recording and validating the signals of Stations and Processes, 
@@ -88,7 +88,7 @@ Risk-reduction through virtual commissioning.
 
 #### The Final Step:
 - Institutional Transfer **[TR3056 Beckhoff Training]**
-- The framework is fully documented, but true internalized architecture requires dialogue. 
+- The architecture is fully documented, but true internalized architecture requires dialogue. 
 - **Join me in Nuremberg at the TR3056 training.**
-- We will talk architecture, review the deterministic logic, and code the physical iron in person.
+
 

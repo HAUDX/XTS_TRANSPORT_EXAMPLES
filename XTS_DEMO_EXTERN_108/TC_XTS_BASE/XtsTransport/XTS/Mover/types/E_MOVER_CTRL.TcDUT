@@ -17,7 +17,8 @@ TYPE E_MOVER_CTRL :
 
   MOVER_GEAR_IN_POS_CA,     // GearInPosCA of mover; when FB_GearInPosCa is InSync --> order is done; check SyncDistance yourself and release mover with e_mover_order.mover_SendToPos
   MOVER_GEAR_OUT,           // gear out for mover
-  MOVER_RESET               // MC_RESET for mover
+  MOVER_RESET,              // MC_RESET for mover
+  MOVER_INFO                // used to display MoverInfo in ST_MOVER_SELECTOR_STATE.Info
 )UINT;
 END_TYPE
 ]]></Declaration>

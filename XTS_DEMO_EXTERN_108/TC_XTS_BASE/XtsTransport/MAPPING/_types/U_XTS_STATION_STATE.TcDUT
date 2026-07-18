@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="U_XTS_STATION_STATE" Id="{7b8a9ba5-33f2-4709-9d50-2b02a37bb6a5}">
+    <Declaration><![CDATA[TYPE U_XTS_STATION_STATE :
+UNION
+  stState             : ARRAY[1..MAX_STATION] OF ST_STATION_STATE;
+
+  byState   AT %Q*    : ARRAY[1..MAX_STATION] OF
+                        ARRAY[1..SIZEOF(ST_STATION_STATE)] OF BYTE;
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -12,7 +12,7 @@ TYPE E_XTS_TRANSPORT_CHECK :
 
 
   // errors in fb_TransportUnit.Check()
-  POINTER_CHECK           := 900,
+  POINTER_CHECK           := 9000,
   POINTER_NULL_CTRL,
 
   POINTER_NULL_STATE,

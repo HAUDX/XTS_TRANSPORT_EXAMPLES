@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <GVL Name="GVL_MSG" Id="{1b92f25b-288d-4a93-a965-0bc5d778e666}">
+  <GVL Name="GVL_MSG" Id="{daf89c45-df0c-4a9b-a674-c1fc249d9410}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
   //-----------------------------------------------------------------------------

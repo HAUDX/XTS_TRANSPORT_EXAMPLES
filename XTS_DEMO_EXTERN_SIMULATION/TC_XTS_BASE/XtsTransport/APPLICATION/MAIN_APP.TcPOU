@@ -25,13 +25,6 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//-----------------------------------------------------------------------------
-// check mapping switch
-//-----------------------------------------------------------------------------
-IF NOT MAPPING_in.BypassSwitch 
-THEN 
-  //eInit                                       := E_PROGRESS.PROGRESS_NOT_EXIST; 
-END_IF
-//-----------------------------------------------------------------------------
 // wait for initialization to be complete before work may start
 //-----------------------------------------------------------------------------
 IF NOT (Main.eInit = E_PROGRESS.PROGRESS_DONE)
@@ -108,15 +101,7 @@ GVL_APPLICATION.StationConfig();        // call xml configuration
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN_APP">
-      <LineId Id="521" Count="37" />
-      <LineId Id="593" Count="0" />
-      <LineId Id="559" Count="3" />
-      <LineId Id="594" Count="2" />
-      <LineId Id="563" Count="1" />
-      <LineId Id="597" Count="0" />
-      <LineId Id="565" Count="0" />
-      <LineId Id="598" Count="4" />
-      <LineId Id="567" Count="25" />
+      <LineId Id="610" Count="73" />
       <LineId Id="506" Count="0" />
     </LineIds>
   </POU>

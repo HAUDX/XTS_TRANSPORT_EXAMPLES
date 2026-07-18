@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <POU Name="fb_MessageDataCtrl" Id="{ab3176b4-193c-40c4-ab1e-8f145372f126}" SpecialFunc="None">
+  <POU Name="fb_MessageDataCtrl" Id="{fae434b6-9329-4824-a3ad-719c165aafce}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fb_MessageDataCtrl EXTENDS fb_MessageData
 VAR
   _stCtrl       : REFERENCE TO ST_MESSAGE_CTRL;
@@ -93,7 +93,7 @@ ELSE
 END_CASE
 ]]></ST>
     </Implementation>
-    <Folder Name="methods" Id="{b6c1e71b-dbd2-4490-9e17-6d11a6a13899}" />
+    <Folder Name="methods" Id="{4c96a68b-d011-44f3-8917-b242e926c6c2}" />
     <Method Name="BuildFileData" Id="{f7ac25e2-99d5-4c0b-91cf-be66388bcc74}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD BuildFileData : e_progress
 VAR_INPUT
@@ -260,7 +260,7 @@ BuildFileData                     := _eState;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="BuildFolder" Id="{d487cc1b-e678-44f3-8c48-591b7708086a}" FolderPath="methods\">
+    <Method Name="BuildFolder" Id="{8e20c8b8-dcb0-45e6-a5a0-1042673059a4}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD BuildFolder : e_progress
 VAR_INPUT
   Execute           : BOOL;
@@ -387,7 +387,7 @@ BuildFolder                     := _eState;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Check" Id="{92ca846d-ac03-49bf-a87e-bcde7a9c1b89}" FolderPath="methods\">
+    <Method Name="Check" Id="{8ef1f7f3-6d66-48cb-abcb-379c58651ab6}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Check : BOOL
 VAR_INPUT
 END_VAR
@@ -450,7 +450,7 @@ Check           := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Cmd" Id="{6ac2e18a-542e-4af1-bb5a-793a5d7737f8}" FolderPath="methods\">
+    <Method Name="Cmd" Id="{d15d7278-aeef-4cea-8c32-837a51604637}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Cmd : e_message_state
 VAR_INPUT
   Command     : e_message_ctrl;
@@ -488,10 +488,10 @@ END_CASE
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Ctrl" Id="{fc8d5a22-0c2f-4452-83e3-5b8f3c83dc4b}">
+    <Property Name="Ctrl" Id="{78d985e4-1679-49db-afb7-c816bc903c83}">
       <Declaration><![CDATA[PROPERTY Ctrl : REFERENCE to ST_MESSAGE_CTRL
 ]]></Declaration>
-      <Set Name="Set" Id="{f5f79f47-1bcf-4d19-b013-0bc766ab5178}">
+      <Set Name="Set" Id="{703d8782-f6c1-454f-ad21-6f0be24cc59d}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -501,9 +501,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="FileCreated" Id="{2d12f344-77fc-4c0f-b0c7-a1bca4b32ee2}">
+    <Property Name="FileCreated" Id="{aa27dd3f-8f08-4ca8-93df-ec90ceefebf1}">
       <Declaration><![CDATA[PROPERTY FileCreated : bool]]></Declaration>
-      <Get Name="Get" Id="{d0bafa41-b898-4491-8e37-4d6269a864a5}">
+      <Get Name="Get" Id="{f6acc050-5c2e-4b27-ab7b-778455d3fbde}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -512,10 +512,10 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="State" Id="{845260d1-ae93-4d63-b6c7-4d1fdb3ce864}">
+    <Property Name="State" Id="{ad630d0f-c50c-4838-95ba-fa191244cbd2}">
       <Declaration><![CDATA[PROPERTY State : REFERENCE TO ST_MESSAGE_STATE
 ]]></Declaration>
-      <Set Name="Set" Id="{0675a940-9764-49ef-9b93-558e29739013}">
+      <Set Name="Set" Id="{3d9aae28-ff0d-446f-9f04-8e0de4092165}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -526,8 +526,7 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_MessageDataCtrl">
-      <LineId Id="76" Count="0" />
-      <LineId Id="2" Count="73" />
+      <LineId Id="1" Count="74" />
     </LineIds>
     <LineIds Name="fb_MessageDataCtrl.BuildFileData">
       <LineId Id="127" Count="147" />

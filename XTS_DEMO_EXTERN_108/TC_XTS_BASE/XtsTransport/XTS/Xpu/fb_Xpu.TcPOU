@@ -30,7 +30,7 @@
 // of your equipment and backup of your data, and THE PROVIDER will not be liable for any damages you may suffer 
 // in connection with using, modifying, or distributing this SOFTWARE.
 //---------------------------------------------------------------------------------------------------------------
-FUNCTION_BLOCK fb_Xpu //IMPLEMENTS I_Xpu
+FUNCTION_BLOCK fb_Xpu IMPLEMENTS I_XtsTransport_Xpu
 VAR
   _eCheck                     : E_XPU_CHECK;
   _eInit                      : E_XPU_INIT;       // MUST equal INIT_DONE for anything to work
@@ -313,6 +313,7 @@ OF
   
         IF (_eJobResult = E_PROGRESS.PROGRESS_DONE)
         THEN
+          _eChk                   := E_XPU_CHECK.CHECK_DONE;
           _eState                 := E_PROGRESS.PROGRESS_BUSY;
         END_IF  
       END_IF
@@ -381,6 +382,27 @@ THEN
 ELSE
   GetParameterSet   := _fbParameterSet[Index];
 END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPartModules" Id="{23eabc0c-8977-4906-8978-836420806f19}" FolderPath="methods\">
+      <Declaration><![CDATA[METHOD GetPartModules : ARRAY[1..MAX_MODULE]  OF Tc3_XTS_Utility.I_TcIoXtsPartModule;
+VAR_INPUT
+END_VAR
+VAR_INST
+  _idx    : UINT;
+  _Itf    : ARRAY[1..MAX_MODULE]  OF Tc3_XTS_Utility.I_TcIoXtsPartModule;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT (_eInit = E_XPU_INIT.INIT_DONE) THEN RETURN; END_IF
+
+FOR _idx := 1 TO MAX_MODULE
+DO
+  _Itf[_idx]      := _fbPartModules[_idx];
+END_FOR
+
+GetPartModules    := _Itf;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetProcessingUnit" Id="{bba8950f-e56a-413e-a7a5-de4639f91257}" FolderPath="methods\">
@@ -690,6 +712,10 @@ _XpuInfo.nDetectedAxisCount       := _nDetectedMoverCount;
 _XpuInfo.nExpectedAxisCount       := _nExpectedMoverCount;
 
 _XpuInfo.nParameterSetCount       := _nParameterSetCount;
+
+_XpuInfo.nModuleCount             := _nModuleCount;
+
+_XpuInfo.rRailLength              := _RailLengthXpu;
 
 XpuInfo := _XpuInfo;
 ]]></ST>
@@ -1016,6 +1042,8 @@ OF
           _nGroup                   := _ix;
 
           _fbEnvironment.GetCaGroupOids(FALSE);
+          _fbMc2CaGroup.Init(FALSE, _fbEnvironment.P_CaGroupOids[_nGroup]);
+
           _nState                   := INIT_CA_GROUP_COM; // only continue if match was found
 
           IF (_eMessageLevel > E_MessageType.eMessageInfo)
@@ -1050,6 +1078,8 @@ OF
   INIT_CA_GROUP_COM:                // connect to CaGroup function block in environment
     IF (_fbMc2CaGroup.GetComObject(_fbEnvironment.P_CaGroupOids[_nGroup]))
     THEN
+      IF (_fbMc2CaGroup.Init(TRUE, _fbEnvironment.P_CaGroupOids[_nGroup]))
+      THEN
       _fbEnvironment.GetParameterSetCount(FALSE);
 
       _nState                       := INIT_PARAMETERSET_COUNT;
@@ -1062,6 +1092,7 @@ OF
         _stMsg.sText                := concat(TO_STRING(_eState), ': ');
         _stMsg.sText                := concat(_stMsg.sText, TO_STRING(_nState));
        f_MessageSet(_stMsg);
+      END_IF
       END_IF
     END_IF
 
@@ -1098,6 +1129,7 @@ OF
     ELSIF _fbEnvironment.GetParameterSetOids(TRUE)
     THEN
       _fbEnvironment.GetParameterSetCount(FALSE);
+      _fbParameterSet[_nParaSetIdx].Init(FALSE, _ParameterSet_OTCID[_nParaSetIdx]);
       _ParameterSet_OTCID           := _fbEnvironment.P_ParameterSetOids;
       _nState                       := INIT_PARAMETERSET_COM;
     END_IF
@@ -1109,18 +1141,22 @@ OF
     THEN
       IF _fbParameterSet[_nParaSetIdx].GetComObject(_ParameterSet_OTCID[_nParaSetIdx])
       THEN
-        _nState                     := INIT_PARAMETERSET_COM_NEXT;
-
-        IF (_eMessageLevel > E_MessageType.eMessageInfo)
+        IF NOT (_fbParameterSet[_nParaSetIdx].P_IsInitialized)
         THEN
-          _stMsg.eType              := E_MessageType.eMessageVerbose;
-          _stMsg.eSubdevice         := e_Subdevice.Xpu_fbParameterSet;
-          _stMsg.iErrorNumber       := _ParameterSet_OTCID[_nParaSetIdx];
-          _stMsg.sText              := concat(TO_STRING(_eState), ': ');
-          _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_nState));
-          _stMsg.sText              := concat(_stMsg.sText, ': 0x');
-          _stMsg.sText              := concat(_stMsg.sText, DWORD_TO_HEXSTR(_ParameterSet_OTCID[_nParaSetIdx],8,FALSE));
-          f_MessageSet(_stMsg);
+          _nState                     := INIT_PARAMETERSET_COM_INIT;
+
+        ELSE
+          _nState                     := INIT_PARAMETERSET_COM_NEXT;
+  
+          IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+          THEN
+            _stMsg.eType              := E_MessageType.eMessageVerbose;
+            _stMsg.eSubdevice         := e_Subdevice.Xpu_fbParameterSet;
+            _stMsg.iErrorNumber       := _ParameterSet_OTCID[_nParaSetIdx];
+            _stMsg.sText              := concat(TO_STRING(_eState), ': ');
+            _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_nState));
+            f_MessageSet(_stMsg);
+          END_IF
         END_IF
       END_IF
     ELSE
@@ -1128,7 +1164,14 @@ OF
       _eState                       := E_PROGRESS.PROGRESS_STARTUP;
       _nState                       := INIT_PROCESSING_UNIT_COM;
     END_IF
-      
+
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  INIT_PARAMETERSET_COM_INIT:      
+    IF (_fbParameterSet[_nParaSetIdx].Init(TRUE, _ParameterSet_OTCID[_nParaSetIdx]))
+    THEN
+      _nState                       := INIT_PARAMETERSET_COM;
+    END_IF
 
   //-----------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------
@@ -1150,20 +1193,33 @@ OF
   INIT_PROCESSING_UNIT_COM:         // connect local function block with TcCom object
     IF (_fbProcessingUnit.GetComObject(_Xpu_OTCID))
     THEN
-      // local function block can now be used to get information
-      // get operation mode first
-      _XpuOperationMode             := _fbProcessingUnit.GetOperationMode();
-      _nState                       := INIT_PROCESSING_UNIT_PART_COUNT;
-
-      IF (_eMessageLevel > E_MessageType.eMessageInfo)
+      IF NOT (_fbProcessingUnit.P_IsInitialized)
       THEN
-        _stMsg.eType                := E_MessageType.eMessageVerbose;
-        _stMsg.eSubdevice           := e_Subdevice.Xpu_fbProcessingUnit;
-        _stMsg.iErrorNumber         := _nGroup;
-        _stMsg.sText                := concat(TO_STRING(_eState), ': ');
-        _stMsg.sText                := concat(_stMsg.sText, TO_STRING(_nState));
-        f_MessageSet(_stMsg);
+        _nState                       := INIT_PROCESSING_UNIT_COM_INIT;
+      ELSE
+        // local function block can now be used to get information
+        // get operation mode first
+        _XpuOperationMode             := _fbProcessingUnit.GetOperationMode();
+        _nState                       := INIT_PROCESSING_UNIT_PART_COUNT;
+  
+        IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+        THEN
+          _stMsg.eType                := E_MessageType.eMessageVerbose;
+          _stMsg.eSubdevice           := e_Subdevice.Xpu_fbProcessingUnit;
+          _stMsg.iErrorNumber         := _nGroup;
+          _stMsg.sText                := concat(TO_STRING(_eState), ': ');
+          _stMsg.sText                := concat(_stMsg.sText, TO_STRING(_nState));
+          f_MessageSet(_stMsg);
+        END_IF
       END_IF
+    END_IF
+
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  INIT_PROCESSING_UNIT_COM_INIT:    // init local function block with OTCID
+    IF (_fbProcessingUnit.Init(TRUE, _Xpu_OTCID))
+    THEN
+      _nState                         := INIT_PROCESSING_UNIT_COM;
     END_IF
 
   //-----------------------------------------------------------------------------------------------
@@ -1365,26 +1421,43 @@ OF
   INIT_NCT_CONTROLLER_COM:
     IF (_fbNctController.GetComObject(_Nct_OTCID))
     THEN
-      _sVersionNctController        := _fbNctController.GetVersionString();
-      _nState                       := INIT_NCT_BASE_UNIT_COUNT;
+      IF NOT (_fbNctController.P_IsInitialized)
+      THEN
+        _nState                     := INIT_NCT_CONTROLLER_COM_INIT;
+      ELSE
+        _sVersionNctController      := _fbNctController.GetVersionString();
+        _nState                     := INIT_NCT_BASE_UNIT_COUNT;
+  
+        IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+        THEN
+          _stMsg.eType              := E_MessageType.eMessageVerbose;
+          _stMsg.eSubdevice         := e_Subdevice.Xpu_fbNctController;
+          _stMsg.iErrorNumber       := 0;
+          _stMsg.sText              := concat(TO_STRING(_eState), ': ');
+          _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_nState));
+          f_MessageSet(_stMsg);
+        END_IF
+        IF (_eMessageLevel > E_MessageType.eMessageError)
+        THEN
+          _stMsg.eType              := E_MessageType.eMessageInfo;
+          _stMsg.eSubdevice         := e_Subdevice.Xpu_fbNctController;
+          _stMsg.iErrorNumber       := 0;
+          _stMsg.sText              := concat('NctController VersionString: ', _sVersionNctController);
+          f_MessageSet(_stMsg);
+        END_IF
+      END_IF
+    END_IF
 
-      IF (_eMessageLevel > E_MessageType.eMessageInfo)
-      THEN
-        _stMsg.eType                := E_MessageType.eMessageVerbose;
-        _stMsg.eSubdevice           := e_Subdevice.Xpu_fbNctController;
-        _stMsg.iErrorNumber         := 0;
-        _stMsg.sText                := concat(TO_STRING(_eState), ': ');
-        _stMsg.sText                := concat(_stMsg.sText, TO_STRING(_nState));
-        f_MessageSet(_stMsg);
-      END_IF
-      IF (_eMessageLevel > E_MessageType.eMessageError)
-      THEN
-        _stMsg.eType                := E_MessageType.eMessageInfo;
-        _stMsg.eSubdevice           := e_Subdevice.Xpu_fbNctController;
-        _stMsg.iErrorNumber         := 0;
-        _stMsg.sText                := concat('NctController VersionString: ', _sVersionNctController);
-        f_MessageSet(_stMsg);
-      END_IF
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  INIT_NCT_CONTROLLER_COM_INIT:
+    IF (_fbNctController.Init(TRUE, _Nct_OTCID))
+    THEN
+      _nState                       := INIT_NCT_CONTROLLER_COM;
+
+    ELSIF (_fbNctController.P_IsInitialized)
+    THEN
+      _nState                       := INIT_NCT_CONTROLLER_COM;
     END_IF
 
   //-----------------------------------------------------------------------------------------------
@@ -1488,34 +1561,67 @@ OF
   INIT_TRACK_COM:                   // get TcCom Object for my track (_nTrack is fixed to 1 in this example; multi track is not intended)
     IF _fbXpuTrack.GetComObject(_Track_OTCID[_nTrack])
     THEN
-      _nState                       := INIT_PART_COM;
-
-      IF (_eMessageLevel > E_MessageType.eMessageInfo)
+      IF NOT (_fbXpuTrack.P_IsInitialized)
       THEN
-        _stMsg.eType                := E_MessageType.eMessageVerbose;
-        _stMsg.eSubdevice           := e_Subdevice.Xpu_fbXpuTrack;
-        _stMsg.iErrorNumber         := _nTrack;
-        _stMsg.sText                := concat(TO_STRING(_eState), ': ');
-        _stMsg.sText                := concat(_stMsg.sText, TO_STRING(_nState));
-        f_MessageSet(_stMsg);
+        _fbXpuTrack.Init(FALSE, _Track_OTCID[_nTrack]);
+        _nState                     := INIT_PART_COM_INIT;
+      ELSE
+        _nState                     := INIT_PART_COM;
+  
+        IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+        THEN
+          _stMsg.eType              := E_MessageType.eMessageVerbose;
+          _stMsg.eSubdevice         := e_Subdevice.Xpu_fbXpuTrack;
+          _stMsg.iErrorNumber       := _nTrack;
+          _stMsg.sText              := concat(TO_STRING(_eState), ': ');
+          _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_nState));
+          f_MessageSet(_stMsg);
+        END_IF
       END_IF
+    END_IF
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  INIT_TRACK_COM_INIT:                   // init my track (_nTrack is fixed to 1 in this example; multi track is not intended)
+    IF (_fbXpuTrack.Init(TRUE,_Track_OTCID[_nTrack]))
+    THEN
+      _nState                       := INIT_TRACK_COM;
+
+    ELSIF (_fbXpuTrack.P_IsInitialized) 
+    THEN
+      _nState                       := INIT_TRACK_COM;
     END_IF
   //-----------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------
   INIT_PART_COM:                    // get TcCom object for my part (also fixed to 1 part per ProcessingUnit; multi part is not intended)
     IF _fbXpuPart.GetComObject(_Part_OTCID[1])
     THEN
-      _nState                       := INIT_PART_MODULE_COUNT;
-
-      IF (_eMessageLevel > E_MessageType.eMessageInfo)
+      IF NOT (_fbXpuPart.P_IsInitialized)
       THEN
-        _stMsg.eType                := E_MessageType.eMessageVerbose;
-        _stMsg.eSubdevice           := e_Subdevice.Xpu_fbXpuPart;
-        _stMsg.iErrorNumber         := 1;
-        _stMsg.sText                := concat(TO_STRING(_eState), ': ');
-        _stMsg.sText                := concat(_stMsg.sText, TO_STRING(_nState));
-        f_MessageSet(_stMsg);
+        _fbXpuPart.Init(FALSE, _Part_OTCID[1]);
+        _nState                     := INIT_PART_COM_INIT;
+      ELSE
+        _nState                     := INIT_PART_MODULE_COUNT;
+  
+        IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+        THEN
+          _stMsg.eType              := E_MessageType.eMessageVerbose;
+          _stMsg.eSubdevice         := e_Subdevice.Xpu_fbXpuPart;
+          _stMsg.iErrorNumber       := 1;
+          _stMsg.sText              := concat(TO_STRING(_eState), ': ');
+          _stMsg.sText              := concat(_stMsg.sText, TO_STRING(_nState));
+          f_MessageSet(_stMsg);
+        END_IF
       END_IF
+    END_IF
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  INIT_PART_COM_INIT:                    // init my part (also fixed to 1 part per ProcessingUnit; multi part is not intended)
+    IF (_fbXpuPart.Init(TRUE, _Part_OTCID[1]))
+    THEN
+      _nState                       := INIT_PART_COM;
+    ELSIF (_fbXpuPart.P_IsInitialized)
+    THEN
+      _nState                       := INIT_PART_COM;
     END_IF
   //-----------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------
@@ -1561,19 +1667,24 @@ OF
   INIT_PART_MODULE_COM:           // connect to TcCom object
     IF _fbPartModules[_nModuleIdx].GetComObject(_Module_OTCID[_nModuleIdx])
     THEN
-      IF (_eMessageLevel > E_MessageType.eMessageVerbose)
+      IF NOT (_fbPartModules[_nModuleIdx].P_IsInitialized)
       THEN
-        _stMsg.eType                := E_MessageType.eMessageSentient;
-        _stMsg.eSubdevice           := e_Subdevice.Xpu_fbPartModules;
-        _stMsg.iErrorNumber         := _nModuleIdx;
-        _stMsg.sText                := concat(TO_STRING(_eState), ': ');
-        _stMsg.sText                := concat(_stMsg.sText, TO_STRING(_nState));
-        _stMsg.sText                := concat(_stMsg.sText, ': 0x');
-        _stMsg.sText                := concat(_stMsg.sText, DWORD_TO_HEXSTR(_Module_OTCID[_nModuleIdx],8,FALSE));
-        f_MessageSet(_stMsg);
+        _fbPartModules[_nModuleIdx].Init(FALSE, _Module_OTCID[_nModuleIdx]);
+        _nState                     := INIT_PART_MODULE_COM_INIT;
+      ELSE
+        _nState                     := INIT_PART_MODULE_COM_NEXT;
       END_IF
+    END_IF
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  INIT_PART_MODULE_COM_INIT:           // connect to TcCom object
+    IF (_fbPartModules[_nModuleIdx].Init(TRUE, _Module_OTCID[_nModuleIdx]))
+    THEN
+      _nState                       := INIT_PART_MODULE_COM;
 
-      _nState                       := INIT_PART_MODULE_COM_NEXT;
+    ELSIF (_fbPartModules[_nModuleIdx].P_IsInitialized)
+    THEN
+      _nState                       := INIT_PART_MODULE_COM;
     END_IF
   //-----------------------------------------------------------------------------------------------
   INIT_PART_MODULE_COM_NEXT:
@@ -1596,24 +1707,40 @@ OF
       // still data to fetch, increment search index, go back to fetching data
       _nState                       := INIT_PART_MODULE_COM;    // go back for next
       _nModuleIdx                   := _nModuleIdx + 1;       // next
+
+      IF (_eMessageLevel = E_MessageType.eMessageVerbose)
+      THEN
+        _stMsg.eType                := E_MessageType.eMessageVerbose;
+        _stMsg.eSubdevice           := e_Subdevice.Xpu_fbPartModules;
+        _stMsg.iErrorNumber         := _nModuleIdx;
+        _stMsg.sText                := concat(TO_STRING(_eState), ': ');
+        _stMsg.sText                := concat(_stMsg.sText, TO_STRING(_nState));
+        //f_MessageSet(_stMsg);
+      END_IF
     END_IF
   //-----------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------
   INIT_MOVER_COM:                   // connect to TcCom object
     IF _fbMoverXpu[_nMoverIdx].GetComObject(_Mov_OTCID[_nMoverIdx])
     THEN
-      IF (_eMessageLevel > E_MessageType.eMessageVerbose)
+      IF NOT (_fbMoverXpu[_nMoverIdx].P_IsInitialized)
       THEN
-        _stMsg.eType                := E_MessageType.eMessageSentient;
-        _stMsg.eSubdevice           := e_Subdevice.Xpu_fbMoverXpu;
-        _stMsg.iErrorNumber         := _nMoverIdx;
-        _stMsg.sText                := concat(TO_STRING(_eState), ': ');
-        _stMsg.sText                := concat(_stMsg.sText, TO_STRING(_nState));
-        _stMsg.sText                := concat(_stMsg.sText, ': 0x');
-        _stMsg.sText                := concat(_stMsg.sText, DWORD_TO_HEXSTR(_Mov_OTCID[_nMoverIdx],8,FALSE));
-        f_MessageSet(_stMsg);
+        _fbMoverXpu[_nMoverIdx].Init(FALSE, _Mov_OTCID[_nMoverIdx]);
+        _nState                     := INIT_MOVER_COM_INIT;
+      ELSE
+        _nState                     := INIT_MOVER_COM_NEXT;
       END_IF
-      _nState                       := INIT_MOVER_COM_NEXT;
+    END_IF
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  INIT_MOVER_COM_INIT:                   // init mover object
+    IF (_fbMoverXpu[_nMoverIdx].Init(TRUE, _Mov_OTCID[_nMoverIdx]))
+    THEN
+      _nState                       := INIT_MOVER_COM;
+
+    ELSIF (_fbMoverXpu[_nMoverIdx].P_IsInitialized)
+    THEN
+      _nState                       := INIT_MOVER_COM;
     END_IF
   //-----------------------------------------------------------------------------------------------
   INIT_MOVER_COM_NEXT:
@@ -1720,6 +1847,7 @@ OF
       f_MessageSet(_stMsg);
     ELSE
       _sVersionXpu                  := _fbProcessingUnit.GetVersionString();
+      _eChk                         := E_XPU_CHECK.CHECK_DONE;
       _nState                       := INIT_DONE;                         // write success
     END_IF
 
@@ -1804,106 +1932,256 @@ END_VAR
       </Get>
     </Property>
     <LineIds Name="fb_Xpu">
-      <LineId Id="1" Count="0" />
+      <LineId Id="53" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.AllModulesDcLink.Get">
-      <LineId Id="1" Count="14" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.CaGroupOID.Set">
-      <LineId Id="1" Count="2" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.Cycle">
-      <LineId Id="1" Count="126" />
+      <LineId Id="62" Count="1" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="64" Count="2" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="108" Count="1" />
+      <LineId Id="23" Count="10" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="175" Count="1" />
+      <LineId Id="173" Count="1" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="168" Count="1" />
+      <LineId Id="171" Count="1" />
+      <LineId Id="220" Count="6" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="156" Count="3" />
+      <LineId Id="227" Count="6" />
+      <LineId Id="160" Count="4" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="235" Count="5" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="85" Count="1" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="87" Count="1" />
+      <LineId Id="242" Count="6" />
+      <LineId Id="89" Count="5" />
+      <LineId Id="249" Count="6" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="257" Count="5" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="199" Count="3" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="203" Count="1" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.GetEnvironment">
-      <LineId Id="1" Count="3" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="5" Count="1" />
     </LineIds>
     <LineIds Name="fb_Xpu.GetNctBaseUnit">
-      <LineId Id="1" Count="8" />
+      <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.GetNctController">
-      <LineId Id="1" Count="3" />
+      <LineId Id="3" Count="2" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.GetParameterSet">
+      <LineId Id="13" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="3" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Xpu.GetPartModules">
       <LineId Id="1" Count="8" />
     </LineIds>
     <LineIds Name="fb_Xpu.GetProcessingUnit">
-      <LineId Id="1" Count="3" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="5" Count="1" />
     </LineIds>
     <LineIds Name="fb_Xpu.GetXpuMover">
-      <LineId Id="1" Count="8" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="3" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.GetXpuMoverByAxisId">
       <LineId Id="1" Count="11" />
     </LineIds>
     <LineIds Name="fb_Xpu.IdDetectionModeToString">
-      <LineId Id="1" Count="18" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.MessageLevel.Set">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.ModuleInfoData">
-      <LineId Id="1" Count="99" />
+      <LineId Id="391" Count="0" />
+      <LineId Id="371" Count="0" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="392" Count="0" />
+      <LineId Id="268" Count="0" />
+      <LineId Id="387" Count="2" />
+      <LineId Id="269" Count="2" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="272" Count="2" />
+      <LineId Id="384" Count="2" />
+      <LineId Id="390" Count="0" />
+      <LineId Id="275" Count="16" />
+      <LineId Id="421" Count="7" />
+      <LineId Id="292" Count="0" />
+      <LineId Id="311" Count="1" />
+      <LineId Id="397" Count="5" />
+      <LineId Id="412" Count="1" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="313" Count="7" />
+      <LineId Id="354" Count="0" />
+      <LineId Id="321" Count="4" />
+      <LineId Id="415" Count="4" />
+      <LineId Id="326" Count="0" />
+      <LineId Id="332" Count="9" />
+      <LineId Id="357" Count="0" />
+      <LineId Id="342" Count="5" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="349" Count="4" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.MoverPositionAssignementToString">
-      <LineId Id="1" Count="15" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.OpModeToString">
-      <LineId Id="1" Count="16" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.RailLength.Get">
-      <LineId Id="1" Count="6" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="7" Count="3" />
     </LineIds>
     <LineIds Name="fb_Xpu.XpuInfo.Get">
-      <LineId Id="1" Count="20" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.XpuInit">
-      <LineId Id="1" Count="9" />
-      <LineId Id="973" Count="2" />
-      <LineId Id="977" Count="0" />
-      <LineId Id="976" Count="0" />
-      <LineId Id="972" Count="0" />
-      <LineId Id="978" Count="0" />
-      <LineId Id="11" Count="124" />
-      <LineId Id="1032" Count="0" />
-      <LineId Id="1034" Count="7" />
-      <LineId Id="1045" Count="1" />
-      <LineId Id="1044" Count="0" />
-      <LineId Id="1042" Count="1" />
-      <LineId Id="136" Count="148" />
-      <LineId Id="1026" Count="1" />
-      <LineId Id="1025" Count="0" />
-      <LineId Id="285" Count="89" />
-      <LineId Id="1021" Count="1" />
-      <LineId Id="375" Count="80" />
-      <LineId Id="1024" Count="0" />
-      <LineId Id="1023" Count="0" />
-      <LineId Id="456" Count="214" />
-      <LineId Id="998" Count="9" />
-      <LineId Id="671" Count="16" />
-      <LineId Id="987" Count="9" />
-      <LineId Id="688" Count="105" />
-      <LineId Id="1051" Count="10" />
-      <LineId Id="1050" Count="0" />
-      <LineId Id="794" Count="22" />
-      <LineId Id="827" Count="5" />
-      <LineId Id="1009" Count="6" />
-      <LineId Id="1019" Count="1" />
-      <LineId Id="1016" Count="2" />
-      <LineId Id="834" Count="119" />
-      <LineId Id="979" Count="0" />
-      <LineId Id="981" Count="4" />
-      <LineId Id="980" Count="0" />
-      <LineId Id="954" Count="17" />
+      <LineId Id="6521" Count="1139" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.XpuInstance.Set">
-      <LineId Id="1" Count="5" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.XpuModuleInfoData.Set">
-      <LineId Id="1" Count="2" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="8" Count="0" />
     </LineIds>
     <LineIds Name="fb_Xpu.XpuOtcid.Get">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

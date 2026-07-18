@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="fb_SenderBuffer" Id="{0c3bbcb7-2e32-448d-927f-70f07eaaefdd}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -137,7 +137,7 @@ OF
         // wait for my process collector check (_State.Check) to be done
         //  - checks range of XtsStations
         //  - checks count of XtsStations
-        IF (_stState.Check = E_PROCESS_CHECK.PROCESS_CHECK_DONE)
+        IF (_stState.Check = E_PROCESS_CHECK.CHECK_DONE)
         THEN
           _eInit                      := _ItfProcessCollector[_nProcess].Init(TRUE);
   
@@ -684,7 +684,8 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_SenderBuffer">
-      <LineId Id="1" Count="566" />
+      <LineId Id="576" Count="0" />
+      <LineId Id="2" Count="565" />
       <LineId Id="570" Count="5" />
       <LineId Id="568" Count="0" />
     </LineIds>

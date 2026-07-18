@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="fb_TransportUnit" Id="{0ce87c95-a3e8-4212-b1c2-ee9df67705ee}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -42,8 +42,8 @@ VAR
   _eCheck                       : E_XTS_TRANSPORT_CHECK;
 
   // Transport Ctrl/State
-  _Ctrl                         : REFERENCE TO ST_XTS_TRANSPORT_CTRL;
-  _State                        : REFERENCE TO ST_XTS_TRANSPORT_STATE;
+  _stCtrl                       : REFERENCE TO ST_XTS_TRANSPORT_CTRL;
+  _stState                      : REFERENCE TO ST_XTS_TRANSPORT_STATE;
 
 
   // execute transport commands
@@ -101,7 +101,7 @@ END_VAR
 
 _stMsg.eDevice                  := XtsTransportUnit + 1;
 
-_eCmd                           := _Ctrl.Cmd;
+_eCmd                           := _stCtrl.Cmd;
 // check for command change
 // get state for cmd
 IF (_eCmd <> _eCmdOld)
@@ -124,13 +124,13 @@ END_IF
 CASE _eResult
 OF
   E_PROGRESS.PROGRESS_INVALID:
-    _State.State                := TO_UINT(_eResult);
+    _stState.State                := TO_UINT(_eResult);
 
   E_PROGRESS.PROGRESS_ERROR:
-    _State.State                := _eState + E_PROGRESS.PROGRESS_ERROR;
+    _stState.State                := _eState + E_PROGRESS.PROGRESS_ERROR;
 
   E_PROGRESS.PROGRESS_DONE:
-    _State.State                := _eState + E_PROGRESS.PROGRESS_DONE;
+    _stState.State                := _eState + E_PROGRESS.PROGRESS_DONE;
 
     IF (_GroupInfo.GroupErrorStop) OR
        (_GroupInfo.GroupError)     OR
@@ -139,7 +139,7 @@ OF
       _eResult                  := E_PROGRESS.PROGRESS_ERROR;
     END_IF
 ELSE
-  _State.State                  := _eState + _eResult;
+  _stState.State                  := _eState + _eResult;
 
   CASE _eState
   OF
@@ -157,16 +157,7 @@ ELSE
       END_IF
   
     E_XTS_TRANSPORT_STATE.TRANSPORT_MOVER_ENABLE:
-      IF NOT (_XpuState.DcLink)
-      THEN
-        _eResult                := E_PROGRESS.PROGRESS_BUSY;
-
-      ELSIF NOT (_XpuInfo.AllPositionsValid)
-      THEN
-        _eResult                := E_PROGRESS.PROGRESS_ERROR;
-      ELSE
-        _eResult                := MoverEnableAll(TRUE);
-      END_IF
+      _eResult                  := MoverEnableAll(TRUE);
   
     E_XTS_TRANSPORT_STATE.TRANSPORT_MOVER_DISABLE:
       _eResult                  := MoverDisableAll(TRUE);
@@ -190,37 +181,19 @@ ELSE
       _eResult                  := GroupStop(TRUE);
 
     E_XTS_TRANSPORT_STATE.TRANSPORT_START:
-      IF NOT (_XpuState.DcLink)
-      THEN
-        _eResult                := E_PROGRESS.PROGRESS_BUSY;
-
-      ELSIF NOT (_XpuInfo.AllPositionsValid)
-      THEN
-        _eResult                := E_PROGRESS.PROGRESS_ERROR;
-      ELSE
-        _eResult                := TransportStart(TRUE);
-      END_IF
+      _eResult                  := TransportStart(TRUE);
   
     E_XTS_TRANSPORT_STATE.TRANSPORT_RESTART:
-      IF NOT (_XpuState.DcLink)
-      THEN
-        _eResult                := E_PROGRESS.PROGRESS_BUSY;
-
-      ELSIF NOT (_XpuInfo.AllPositionsValid)
-      THEN
-        _eResult                := E_PROGRESS.PROGRESS_ERROR;
-      ELSE
-        _eResult                := TransportRestart(TRUE);
-      END_IF
+      _eResult                  := TransportRestart(TRUE);
   ELSE
     _eResult                    := E_PROGRESS.PROGRESS_INVALID;
   END_CASE
 
 END_CASE
 
-_State.XpuState                 := _XpuState;
-_State.XpuInfo                  := _XpuInfo;
-_State.GroupInfo                := _GroupInfo;
+_stState.XpuState                 := _XpuState;
+_stState.XpuInfo                  := _XpuInfo;
+_stState.GroupInfo                := _GroupInfo;
 
 ]]></ST>
     </Implementation>
@@ -235,19 +208,19 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-IF NOT __ISVALIDREF(_Ctrl)
+IF NOT __ISVALIDREF(_stCtrl)
 THEN
   _eCheck                     := E_XTS_TRANSPORT_CHECK.POINTER_NULL_CTRL;
   RETURN;
 END_IF
 
-IF NOT __ISVALIDREF(_State)
+IF NOT __ISVALIDREF(_stState)
 THEN
   _eCheck                     := E_XTS_TRANSPORT_CHECK.POINTER_NULL_STATE;
   RETURN;
 END_IF
 
-_State.Check                  := _eCheck;
+_stState.Check                  := _eCheck;
 
 IF NOT __ISVALIDREF(_XpuCtrl)
 THEN
@@ -341,6 +314,15 @@ THEN
   _eCheck                     := E_XTS_TRANSPORT_CHECK.POINTER_NULL_STATION_CTRL_ITF;
   RETURN;
 END_IF
+
+FOR _idx := 1 TO MAX_STATION
+DO
+  IF NOT (_ItfStationCtrl[_idx] <> 0)
+  THEN
+    _eCheck                   := E_XTS_TRANSPORT_CHECK.POINTER_NULL_STATION_CTRL_ITF;
+    RETURN;
+  END_IF
+END_FOR
 
 
 _eCheck                       := E_XTS_TRANSPORT_CHECK.DONE_CHECK;
@@ -452,7 +434,7 @@ Cmd                       := _eState;
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[_Ctrl REF= Ctrl;
+          <ST><![CDATA[_stCtrl REF= Ctrl;
 ]]></ST>
         </Implementation>
       </Set>
@@ -493,9 +475,28 @@ OF
       THEN
         _nErrorId               := 9999;
         _eState                 := E_PROGRESS.PROGRESS_ERROR;
+
+        _stMsg.eType            := E_MessageType.eMessageError;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_GroupBuild;
+        _stMsg.iErrorNumber     := _nErrorId;
+        _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
       ELSE
         _eState                 := E_PROGRESS.PROGRESS_BUSY;
         _eJobReslt              := _GroupItf.AddAll(FALSE);
+
+        IF (_eMessageLevel > E_MessageType.eMessageError)
+        THEN
+          _stMsg.eType          := E_MessageType.eMessageinfo;
+          _stMsg.eSubdevice     := e_Subdevice.TransportUnit_GroupBuild;
+          _stMsg.iErrorNumber   := 0;
+          _stMsg.sText          := concat( 'State: ', TO_STRING(THIS^._eState));
+          _stMsg.sText          := concat(_stMsg.sText, ': ');
+          _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eState));
+          f_MessageSet(_stMsg);
+        END_IF
       END_IF
     END_IF
 END_CASE
@@ -600,6 +601,17 @@ OF
       _eJobReslt                := StationsClearOutfeed(FALSE);
 
       _eState                   := E_PROGRESS.PROGRESS_BUSY;
+
+      IF (_eMessageLevel > E_MessageType.eMessageError)
+      THEN
+        _stMsg.eType            := E_MessageType.eMessageinfo;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_GroupClear;
+        _stMsg.iErrorNumber     := 0;
+        _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
+      END_IF
     END_IF
 END_CASE
 //---------------------------------------------------------------------------
@@ -674,13 +686,14 @@ OF
       IF (_eMessageLevel > E_MessageType.eMessageError)
       THEN
         _stMsg.eType            := E_MessageType.eMessageInfo;
-        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_General;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_GroupClear;
         _stMsg.iErrorNumber     := 0;
         _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
         _stMsg.sText            := concat(_stMsg.sText, ': ');
         _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
         f_MessageSet(_stMsg);
       END_IF
+      GVL_MSG.TransportMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
     ELSE
       _nRepeat                  := _nRepeat + 1;
       IF NOT (_nRepeat > 2)
@@ -734,9 +747,29 @@ OF
       THEN
         _nErrorId               := 9999;
         _eState                 := E_PROGRESS.PROGRESS_ERROR;
+
+        _stMsg.eType            := E_MessageType.eMessageError;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_GroupEnable;
+        _stMsg.iErrorNumber     := _nErrorId;
+        _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
       ELSE
         _eState                 := E_PROGRESS.PROGRESS_BUSY;
         _eJobReslt              := _GroupItf.Enable(FALSE);
+
+        IF (_eMessageLevel > E_MessageType.eMessageError)
+        THEN
+          _stMsg.eType          := E_MessageType.eMessageinfo;
+          _stMsg.eSubdevice     := e_Subdevice.TransportUnit_GroupEnable;
+          _stMsg.iErrorNumber   := 0;
+          _stMsg.sText          := concat( 'State: ', TO_STRING(THIS^._eState));
+          _stMsg.sText          := concat(_stMsg.sText, ': ');
+          _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eState));
+          f_MessageSet(_stMsg);
+        END_IF
+
       END_IF
     END_IF
 END_CASE
@@ -774,7 +807,7 @@ OF
       IF (_eMessageLevel > E_MessageType.eMessageError)
       THEN
         _stMsg.eType            := E_MessageType.eMessageinfo;
-        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_General;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_GroupEnable;
         _stMsg.iErrorNumber     := 0;
         _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
         _stMsg.sText            := concat(_stMsg.sText, ': ');
@@ -856,6 +889,17 @@ OF
       _eJobReslt                := _GroupItf.Stop(FALSE);
 
       _eState                   := E_PROGRESS.PROGRESS_BUSY;
+
+      IF (_eMessageLevel > E_MessageType.eMessageError)
+      THEN
+        _stMsg.eType            := E_MessageType.eMessageinfo;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_GroupStop;
+        _stMsg.iErrorNumber     := 0;
+        _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
+      END_IF
     END_IF
 END_CASE
 //---------------------------------------------------------------------------
@@ -963,6 +1007,17 @@ OF
       _nMover                   := 1;
 
       _eState                   := E_PROGRESS.PROGRESS_BUSY;
+
+      IF (_eMessageLevel > E_MessageType.eMessageError)
+      THEN
+        _stMsg.eType            := E_MessageType.eMessageinfo;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_MoverDisableAll;
+        _stMsg.iErrorNumber     := 0;
+        _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
+      END_IF
     END_IF
 END_CASE
 //-----------------------------------------------------------------------------
@@ -1067,6 +1122,17 @@ OF
       _nMover                   := 1;
 
       _eState                   := E_PROGRESS.PROGRESS_BUSY;
+
+      IF (_eMessageLevel > E_MessageType.eMessageError)
+      THEN
+        _stMsg.eType            := E_MessageType.eMessageinfo;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_MoverEnableAll;
+        _stMsg.iErrorNumber     := 0;
+        _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
+      END_IF
     END_IF
 END_CASE
 //-----------------------------------------------------------------------------
@@ -1170,6 +1236,16 @@ OF
       _nMover                   := 1;
 
       _eState                   := E_PROGRESS.PROGRESS_BUSY;
+
+      IF (_eMessageLevel > E_MessageType.eMessageError)
+      THEN
+        _stMsg.eType            := E_MessageType.eMessageinfo;
+        _stMsg.iErrorNumber     := 0;
+        _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
+      END_IF
     END_IF
 END_CASE
 //-----------------------------------------------------------------------------
@@ -1372,6 +1448,16 @@ OF
       _nMover                   := 1;
 
       _eState                   := E_PROGRESS.PROGRESS_BUSY;
+
+      IF (_eMessageLevel > E_MessageType.eMessageError)
+      THEN
+        _stMsg.eType            := E_MessageType.eMessageinfo;
+        _stMsg.iErrorNumber     := 0;
+        _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
+      END_IF
     END_IF
 END_CASE
 //-----------------------------------------------------------------------------
@@ -1481,7 +1567,7 @@ MoverStopAll                    := _eState;
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[_State ref= State;
+          <ST><![CDATA[_stState ref= State;
 ]]></ST>
         </Implementation>
       </Set>
@@ -1556,6 +1642,16 @@ OF
       _nErrorId                 := 0;
       _nStation                 := 1;
       _eState                   := E_PROGRESS.PROGRESS_BUSY;
+
+      IF (_eMessageLevel > E_MessageType.eMessageError)
+      THEN
+        _stMsg.eType            := E_MessageType.eMessageInfo;
+        _stMsg.iErrorNumber     := 0;
+        _stMsg.sText            := concat( 'StationsClearAll: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
+      END_IF
     END_IF
   //---------------------------------------------------------------------------
   //---------------------------------------------------------------------------
@@ -1585,9 +1681,8 @@ OF
       IF (_eMessageLevel > E_MessageType.eMessageError)
       THEN
         _stMsg.eType            := E_MessageType.eMessageInfo;
-        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_General;
         _stMsg.iErrorNumber     := 0;
-        _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat( 'StationsClearAll: ', TO_STRING(THIS^._eState));
         _stMsg.sText            := concat(_stMsg.sText, ': ');
         _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
         f_MessageSet(_stMsg);
@@ -1647,6 +1742,16 @@ OF
       _nMover                   := 1;
 
       _eState                   := E_PROGRESS.PROGRESS_BUSY;
+
+      IF (_eMessageLevel > E_MessageType.eMessageError)
+      THEN
+        _stMsg.eType            := E_MessageType.eMessageInfo;
+        _stMsg.iErrorNumber     := 0;
+        _stMsg.sText            := concat( 'StationsClearOutfeed: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
+      END_IF
     END_IF
 END_CASE
 //-----------------------------------------------------------------------------
@@ -1656,10 +1761,11 @@ OF
   E_PROGRESS.PROGRESS_BUSY:
     _StnState                   := _StationState[_nStation];
 
-    CASE _StnState.eState
+    CASE _StnState.State
     OF
-      E_STATION_STATE.STATION_MOVER_RELEASE:
-        _StationControl[_nStation].eCmd := E_STATION_CTRL.STATION_MOVER_GONE;
+      E_STATION_STATE.STATION_MOVER_RELEASE,
+      E_STATION_STATE.STATION_ERROR_OUTFEED_ERROR:
+        _StationControl[_nStation].Cmd := E_STATION_CTRL.STATION_MOVER_GONE;
 
     ELSE
       _eState                   := E_PROGRESS.PROGRESS_PREPARE;  
@@ -1841,6 +1947,17 @@ OF
       IF (_GroupInfo.AxisCountEnabled = GVL_XTS.XpuInfo.nDetectedAxisCount)
       THEN
         _eState                 := E_PROGRESS.PROGRESS_BUSY;
+
+        IF (_eMessageLevel > E_MessageType.eMessageError)
+        THEN
+          _stMsg.eType          := E_MessageType.eMessageinfo;
+          _stMsg.eSubdevice     := e_Subdevice.TransportUnit_Restart;
+          _stMsg.iErrorNumber   := 0;
+          _stMsg.sText          := concat( 'State: ', TO_STRING(THIS^._eState));
+          _stMsg.sText          := concat(_stMsg.sText, ': ');
+          _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eState));
+          f_MessageSet(_stMsg);
+        END_IF
       ELSE
         _eState                 := E_PROGRESS.PROGRESS_ERROR;
 
@@ -1860,14 +1977,14 @@ OF
   E_PROGRESS.PROGRESS_BUSY:
     _StnState                   := _StationState[_nStation];
 
-    CASE _StnState.eState
+    CASE _StnState.State
     OF
       E_STATION_STATE.STATION_ERROR_INFEED_ERROR:
-        _StationControl[_nStation].eCmd := E_STATION_CTRL.STATION_MOVER_ENTER_RETRY;
+        _StationControl[_nStation].Cmd := E_STATION_CTRL.STATION_MOVER_ENTER_RETRY;
 
       E_STATION_STATE.STATION_MOVER_RELEASE,
       E_STATION_STATE.STATION_ERROR_OUTFEED_ERROR:
-        _StationControl[_nStation].eCmd := E_STATION_CTRL.STATION_MOVER_GONE;
+        _StationControl[_nStation].Cmd := E_STATION_CTRL.STATION_MOVER_GONE;
 
       E_STATION_STATE.STATION_ERROR_FATAL:
         _eState                 := E_PROGRESS.PROGRESS_ERROR;
@@ -1955,6 +2072,7 @@ OF
         _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
         f_MessageSet(_stMsg);
       END_IF
+      GVL_MSG.TransportMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
     ELSE
       _nMover                   := _nMover + 1;
       _eState                   := E_PROGRESS.PROGRESS_STARTUP;
@@ -1980,10 +2098,8 @@ VAR_INST
   _stMoveData   : ST_MOVE_DATA;
 
   _eRslt,
+  _eStateError,
   _eState       : E_PROGRESS;
-  _stMsg        : ST_Message;
-
-  _stMoverDataSend_1  : ST_STATION_MOVER_DATA;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -2034,7 +2150,19 @@ OF
          (_XpuInfo.nDetectedAxisCount > 0)
       THEN
         _eState                 := E_PROGRESS.PROGRESS_BUSY;
+
+        IF (_eMessageLevel > E_MessageType.eMessageError)
+        THEN
+          _stMsg.eType          := E_MessageType.eMessageinfo;
+          _stMsg.eSubdevice     := e_Subdevice.TransportUnit_Start;
+          _stMsg.iErrorNumber   := 0;
+          _stMsg.sText          := concat( 'State: ', TO_STRING(THIS^._eState));
+          _stMsg.sText          := concat(_stMsg.sText, ': ');
+          _stMsg.sText          := concat(_stMsg.sText, TO_STRING(_eState));
+          f_MessageSet(_stMsg);
+        END_IF
       ELSE
+        _eStateError            := _eState;
         _eState                 := E_PROGRESS.PROGRESS_ERROR;
 
         _stMsg.eType            := E_MessageType.eMessageError;
@@ -2055,6 +2183,7 @@ OF
     ELSE
       IF (_eRslt = E_PROGRESS.PROGRESS_ERROR)
       THEN
+        _eStateError            := _eState;
         _eState                 := E_PROGRESS.PROGRESS_ERROR;
       END_IF
     END_IF
@@ -2064,6 +2193,7 @@ OF
 
     IF (_eRslt = E_PROGRESS.PROGRESS_ERROR)
     THEN
+      _eStateError              := _eState;
       _eState                   := E_PROGRESS.PROGRESS_ERROR;
       _nErrorId                 := _MoverInfo[_nMover].nErrorId;
       _eRslt                    := _MoverItf[_nMover].SendToModuloPosCa(FALSE, _stMoveData); 
@@ -2081,14 +2211,14 @@ OF
       // all mover are sent to start position, now prepare ticket for Mover 1
       _eState                         := E_PROGRESS.PROGRESS_CHECK;
       // ticket data
-      _stMoverDataSend_1.nMask          := TO_USINT(EXPT(2,_StationStart.nConfiguredStopCount))-1;
-      _stMoverDataSend_1.nMoverId       := TO_USINT(1);
-      _stMoverDataSend_1.nTargetStation := TO_USINT(_nStartStation);
+      _stMoverDataSend.nMask          := TO_USINT(EXPT(2,_StationStart.nConfiguredStopCount))-1;
+      _stMoverDataSend.nMoverId       := TO_USINT(1);
+      _stMoverDataSend.nTargetStation := TO_USINT(_nStartStation);
   
       IF (_nStartStation > 0) AND
          (_nStartStation < MAX_STATION+1)
       THEN
-        _stListResult           := _ItfStationList[_nStartStation].AddTailValue(_stMoverDataSend_1); // add first mover to list of _ItfStations[_nStartStation]
+        _stListResult           := _ItfStationList[_nStartStation].AddTailValue(_stMoverDataSend); // add first mover to list of _ItfStations[_nStartStation]
       END_IF
 
     ELSE
@@ -2127,6 +2257,7 @@ OF
 
     IF (_eRslt = E_PROGRESS.PROGRESS_ERROR)
     THEN
+      _eStateError              := _eState;
       _eState                   := E_PROGRESS.PROGRESS_ERROR;
       _nErrorId                 := _MoverInfo[_nMover].nErrorId;
       _eRslt                    := _MoverItf[_nMover].SendToAbsPosCa(FALSE, _stMoveData); 
@@ -2157,13 +2288,14 @@ OF
       IF (_eMessageLevel > E_MessageType.eMessageError)
       THEN
         _stMsg.eType            := E_MessageType.eMessageInfo;
-        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_General;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_Start;
         _stMsg.iErrorNumber     := 0;
         _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
         _stMsg.sText            := concat(_stMsg.sText, ': ');
         _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
         f_MessageSet(_stMsg);
       END_IF
+      GVL_MSG.TransportMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
     ELSE
       _nMover                   := _nMover + 1;
       IF (_stMoveData.rPos < _MoverInfo[_nMover].rAbsActPos)
@@ -2312,112 +2444,495 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_TransportUnit">
-      <LineId Id="1" Count="125" />
+      <LineId Id="1884" Count="59" />
+      <LineId Id="1952" Count="0" />
+      <LineId Id="1954" Count="22" />
+      <LineId Id="1985" Count="0" />
+      <LineId Id="1987" Count="1" />
+      <LineId Id="1997" Count="0" />
+      <LineId Id="1999" Count="9" />
+      <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.Check">
-      <LineId Id="1" Count="111" />
+      <LineId Id="207" Count="119" />
+      <LineId Id="33" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.Cmd">
-      <LineId Id="1" Count="83" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="135" Count="3" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="161" Count="1" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="83" Count="1" />
+      <LineId Id="146" Count="1" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="173" Count="3" />
+      <LineId Id="186" Count="3" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="212" Count="2" />
+      <LineId Id="108" Count="2" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="111" Count="2" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="114" Count="3" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="118" Count="1" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="120" Count="2" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="87" Count="1" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="10" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.Ctrl.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.GroupBuild">
-      <LineId Id="1" Count="86" />
+      <LineId Id="375" Count="18" />
+      <LineId Id="599" Count="4" />
+      <LineId Id="670" Count="0" />
+      <LineId Id="673" Count="6" />
+      <LineId Id="604" Count="2" />
+      <LineId Id="691" Count="0" />
+      <LineId Id="681" Count="9" />
+      <LineId Id="607" Count="0" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="594" Count="0" />
+      <LineId Id="398" Count="1" />
+      <LineId Id="592" Count="1" />
+      <LineId Id="402" Count="0" />
+      <LineId Id="578" Count="4" />
+      <LineId Id="596" Count="0" />
+      <LineId Id="595" Count="0" />
+      <LineId Id="583" Count="5" />
+      <LineId Id="637" Count="0" />
+      <LineId Id="590" Count="0" />
+      <LineId Id="422" Count="2" />
+      <LineId Id="617" Count="15" />
+      <LineId Id="657" Count="6" />
+      <LineId Id="668" Count="0" />
+      <LineId Id="664" Count="2" />
+      <LineId Id="633" Count="3" />
+      <LineId Id="425" Count="1" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.GroupClear">
-      <LineId Id="1" Count="123" />
+      <LineId Id="1132" Count="27" />
+      <LineId Id="1265" Count="0" />
+      <LineId Id="1264" Count="0" />
+      <LineId Id="1266" Count="0" />
+      <LineId Id="1257" Count="6" />
+      <LineId Id="1256" Count="0" />
+      <LineId Id="1160" Count="80" />
+      <LineId Id="1255" Count="0" />
+      <LineId Id="1241" Count="13" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.GroupEnable">
-      <LineId Id="1" Count="82" />
+      <LineId Id="375" Count="18" />
+      <LineId Id="597" Count="0" />
+      <LineId Id="577" Count="0" />
+      <LineId Id="598" Count="0" />
+      <LineId Id="602" Count="0" />
+      <LineId Id="395" Count="0" />
+      <LineId Id="664" Count="7" />
+      <LineId Id="599" Count="0" />
+      <LineId Id="601" Count="0" />
+      <LineId Id="603" Count="0" />
+      <LineId Id="673" Count="10" />
+      <LineId Id="672" Count="0" />
+      <LineId Id="600" Count="0" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="594" Count="0" />
+      <LineId Id="398" Count="1" />
+      <LineId Id="592" Count="1" />
+      <LineId Id="402" Count="0" />
+      <LineId Id="578" Count="4" />
+      <LineId Id="596" Count="0" />
+      <LineId Id="595" Count="0" />
+      <LineId Id="583" Count="5" />
+      <LineId Id="590" Count="0" />
+      <LineId Id="422" Count="2" />
+      <LineId Id="604" Count="2" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="626" Count="2" />
+      <LineId Id="625" Count="0" />
+      <LineId Id="645" Count="2" />
+      <LineId Id="656" Count="6" />
+      <LineId Id="654" Count="0" />
+      <LineId Id="629" Count="0" />
+      <LineId Id="631" Count="2" />
+      <LineId Id="635" Count="0" />
+      <LineId Id="634" Count="0" />
+      <LineId Id="630" Count="0" />
+      <LineId Id="621" Count="2" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.GroupInfo.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.GroupItf.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.GroupStop">
-      <LineId Id="1" Count="81" />
+      <LineId Id="375" Count="17" />
+      <LineId Id="736" Count="0" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="577" Count="0" />
+      <LineId Id="774" Count="0" />
+      <LineId Id="395" Count="0" />
+      <LineId Id="798" Count="10" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="762" Count="0" />
+      <LineId Id="661" Count="1" />
+      <LineId Id="760" Count="1" />
+      <LineId Id="663" Count="11" />
+      <LineId Id="676" Count="1" />
+      <LineId Id="422" Count="2" />
+      <LineId Id="633" Count="3" />
+      <LineId Id="639" Count="1" />
+      <LineId Id="786" Count="6" />
+      <LineId Id="796" Count="0" />
+      <LineId Id="793" Count="2" />
+      <LineId Id="641" Count="3" />
+      <LineId Id="739" Count="0" />
+      <LineId Id="738" Count="0" />
+      <LineId Id="740" Count="0" />
+      <LineId Id="737" Count="0" />
+      <LineId Id="741" Count="0" />
+      <LineId Id="645" Count="0" />
+      <LineId Id="742" Count="0" />
+      <LineId Id="646" Count="4" />
+      <LineId Id="425" Count="1" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.MessageLevel.Set">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.MoverDisableAll">
-      <LineId Id="1" Count="88" />
+      <LineId Id="215" Count="21" />
+      <LineId Id="324" Count="10" />
+      <LineId Id="237" Count="8" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="246" Count="13" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="260" Count="11" />
+      <LineId Id="282" Count="28" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.MoverEnableAll">
-      <LineId Id="1" Count="86" />
+      <LineId Id="11" Count="18" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="123" Count="10" />
+      <LineId Id="32" Count="7" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="40" Count="6" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="47" Count="3" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="52" Count="3" />
+      <LineId Id="57" Count="3" />
+      <LineId Id="68" Count="10" />
+      <LineId Id="85" Count="2" />
+      <LineId Id="100" Count="5" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="106" Count="2" />
+      <LineId Id="88" Count="1" />
+      <LineId Id="79" Count="4" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.MoverHaltAll">
-      <LineId Id="1" Count="137" />
+      <LineId Id="110" Count="19" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="310" Count="3" />
+      <LineId Id="315" Count="5" />
+      <LineId Id="132" Count="7" />
+      <LineId Id="198" Count="1" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="290" Count="5" />
+      <LineId Id="141" Count="5" />
+      <LineId Id="296" Count="5" />
+      <LineId Id="148" Count="3" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="152" Count="12" />
+      <LineId Id="308" Count="0" />
+      <LineId Id="302" Count="5" />
+      <LineId Id="165" Count="16" />
+      <LineId Id="200" Count="5" />
+      <LineId Id="267" Count="6" />
+      <LineId Id="277" Count="0" />
+      <LineId Id="274" Count="2" />
+      <LineId Id="206" Count="6" />
+      <LineId Id="229" Count="2" />
+      <LineId Id="243" Count="3" />
+      <LineId Id="248" Count="5" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="239" Count="2" />
+      <LineId Id="182" Count="1" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.MoverInfo.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.MoverItf.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.MoverLastGap.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.MoverLastPosition.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.MoverStopAll">
-      <LineId Id="1" Count="120" />
+      <LineId Id="110" Count="19" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="316" Count="0" />
+      <LineId Id="306" Count="2" />
+      <LineId Id="310" Count="5" />
+      <LineId Id="132" Count="7" />
+      <LineId Id="198" Count="1" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="292" Count="0" />
+      <LineId Id="141" Count="5" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="148" Count="3" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="152" Count="12" />
+      <LineId Id="304" Count="0" />
+      <LineId Id="166" Count="15" />
+      <LineId Id="200" Count="5" />
+      <LineId Id="267" Count="6" />
+      <LineId Id="277" Count="0" />
+      <LineId Id="274" Count="2" />
+      <LineId Id="206" Count="6" />
+      <LineId Id="229" Count="2" />
+      <LineId Id="243" Count="3" />
+      <LineId Id="248" Count="5" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="239" Count="2" />
+      <LineId Id="182" Count="1" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.State.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.StationControl.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.StationCtrlItf.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.StationListsItf.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.StationsClearAll">
-      <LineId Id="1" Count="63" />
+      <LineId Id="15" Count="18" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="219" Count="2" />
+      <LineId Id="223" Count="5" />
+      <LineId Id="36" Count="3" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="173" Count="7" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="123" Count="2" />
+      <LineId Id="188" Count="2" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="191" Count="1" />
+      <LineId Id="206" Count="3" />
+      <LineId Id="211" Count="1" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="213" Count="2" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="163" Count="3" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.StationsClearOutfeed">
-      <LineId Id="1" Count="57" />
+      <LineId Id="22" Count="22" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="105" Count="9" />
+      <LineId Id="58" Count="11" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="85" Count="17" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="103" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.StationStart.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.StationStartIndex.Get">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.StationStartIndex.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.StationState.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.Template">
-      <LineId Id="1" Count="52" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="346" Count="2" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="349" Count="3" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="366" Count="0" />
+      <LineId Id="273" Count="5" />
+      <LineId Id="335" Count="0" />
+      <LineId Id="280" Count="8" />
+      <LineId Id="292" Count="5" />
+      <LineId Id="301" Count="4" />
+      <LineId Id="309" Count="4" />
+      <LineId Id="363" Count="0" />
+      <LineId Id="317" Count="5" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.TransportRestart">
-      <LineId Id="1" Count="149" />
+      <LineId Id="11" Count="18" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="329" Count="10" />
+      <LineId Id="152" Count="1" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="160" Count="3" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="32" Count="6" />
+      <LineId Id="172" Count="3" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="326" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="262" Count="0" />
+      <LineId Id="273" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="203" Count="6" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="196" Count="1" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="40" Count="5" />
+      <LineId Id="189" Count="6" />
+      <LineId Id="58" Count="2" />
+      <LineId Id="68" Count="2" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="223" Count="7" />
+      <LineId Id="232" Count="1" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="293" Count="0" />
+      <LineId Id="292" Count="0" />
+      <LineId Id="295" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="296" Count="0" />
+      <LineId Id="73" Count="5" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="249" Count="0" />
+      <LineId Id="251" Count="1" />
+      <LineId Id="257" Count="0" />
+      <LineId Id="253" Count="1" />
+      <LineId Id="258" Count="0" />
+      <LineId Id="255" Count="1" />
+      <LineId Id="81" Count="2" />
+      <LineId Id="235" Count="5" />
+      <LineId Id="315" Count="6" />
+      <LineId Id="325" Count="0" />
+      <LineId Id="322" Count="2" />
+      <LineId Id="327" Count="0" />
+      <LineId Id="241" Count="6" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.TransportStart">
-      <LineId Id="1" Count="190" />
+      <LineId Id="586" Count="46" />
+      <LineId Id="782" Count="10" />
+      <LineId Id="633" Count="147" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.XpuCtrl.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.XpuInfo.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.XpuInit">
-      <LineId Id="1" Count="78" />
+      <LineId Id="610" Count="61" />
+      <LineId Id="696" Count="6" />
+      <LineId Id="706" Count="0" />
+      <LineId Id="703" Count="2" />
+      <LineId Id="672" Count="4" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="fb_TransportUnit.XpuState.Set">
-      <LineId Id="1" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
