@@ -79,8 +79,9 @@ The baseline examples for starting, stopping, and clearing a transport applicati
 
 ## IV. The Digital Twin & Observability
 Risk-reduction through virtual commissioning.
-- **[XTS_DEMO_SIMULATION], [XTS_DEMO_EXTERN_SIMULATION]:** Automated Virtual Commissioning. Start simulating the transport systems before a single piece of iron is cut.
+- **[XTS_DEMO_EXTERN_SIMULATION]:** Automated Virtual Commissioning. Start simulating the transport systems before a single piece of iron is cut.
   Features fb_Simulation for grouping XTS Station ranges, allowing synced handling (e.g., process multiplication) and automated handshakes using TON timers to simulate process duration.
+- **[XTS_DEMO_SIMULATION] (deprecated):** - single PLC was more work than it should be setting up a simulation. please use the 2 PLC version above.
 
 - **[scope]:** The Diagnostic Ledger. Included TwinCAT Scope projects configured specifically for recording and validating the signals of Stations and Processes, 
   providing a chronological narrative of mechatronic behavior.
