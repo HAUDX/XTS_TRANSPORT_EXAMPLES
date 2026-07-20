@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="GEAR_IN_POS_CA" Id="{cb292edd-e465-4cd4-a271-a37c7bf7625e}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -164,6 +164,7 @@ CASE nState OF
       nState                        := 1010;
       // see method fb_Mover.GearInPosCa for how the MC_GearInPosCa is connected
       // GVL_XTS.MoverCtrl is triggering fb_MoverCtrl(fb_Mover) instance
+      GVL_XTS.Mover[nMover].Master  ref= GVL_APPLICATION.MasterAxis;
       GVL_XTS.MoveData [nMover]     := GVL_APPLICATION.MoveData;  // feed dynamic constraints into datafield of mover
       GVL_XTS.GearData [nMover]     := GVL_APPLICATION.GearData;  // feed gearing constraints into datafield of mover
 
@@ -259,6 +260,7 @@ END_CASE
       <LineId Id="842" Count="1" />
       <LineId Id="791" Count="0" />
       <LineId Id="854" Count="1" />
+      <LineId Id="895" Count="0" />
       <LineId Id="759" Count="0" />
       <LineId Id="789" Count="0" />
       <LineId Id="856" Count="0" />

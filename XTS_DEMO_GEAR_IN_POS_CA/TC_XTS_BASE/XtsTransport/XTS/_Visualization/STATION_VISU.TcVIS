@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"9"</v>
+          <v n="UniqueIdGenerator">"12"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -5187,7 +5187,7 @@
                     </o>
                     <o>
                       <v n="Id">2998295511L</v>
-                      <v n="Value" t="Int16">80</v>
+                      <v n="Value" t="Int16">120</v>
                     </o>
                     <o>
                       <v n="Id">2115787593L</v>
@@ -5452,7 +5452,7 @@
                 <v>ExecuteMouseUp</v>
                 <v>a37ab291-22ff-439e-b640-645f0515acc1</v>
                 <v>ExecuteValueChanged</v>
-                <v>06ca112d-b135-4440-aa11-1bbc4490117f</v>
+                <v>80ca9802-acf8-44e8-b991-940775439a52</v>
                 <v>GetElementInfo</v>
                 <v>381b39ef-994c-4005-9a97-680148f758e4</v>
                 <v>Initialize</v>
@@ -5496,8 +5496,13 @@ END_VAR"</v>
                 <v n="Width">811</v>
                 <v n="Height">546</v>
               </o>
+              <v>2</v>
+              <o>
+                <v n="Width">811</v>
+                <v n="Height">546</v>
+              </o>
             </d2>
-            <v n="Version">1</v>
+            <v n="Version">2</v>
           </o>
           <n n="FrameInterfaceDataModel" />
         </o>
