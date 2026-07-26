@@ -69,7 +69,7 @@ END_VAR
       <ST><![CDATA[//-----------------------------------------------------------------------------
 // wait for initialization to be complete before work may start
 //-----------------------------------------------------------------------------
-IF NOT (Main.eInit = E_PROGRESS.PROGRESS_DONE)
+IF NOT (MAIN_XTS.eInit = E_PROGRESS.PROGRESS_DONE)
 THEN
   eInit                               := E_PROGRESS.PROGRESS_INIT;
   bReset                              := FALSE;
@@ -332,14 +332,14 @@ OF
 
   9400:
     nState                            := 10;
-    GVL_MSG.TransportMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
 END_CASE
 
 
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN_APP">
-      <LineId Id="1060" Count="269" />
+      <LineId Id="1060" Count="265" />
+      <LineId Id="1327" Count="2" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
