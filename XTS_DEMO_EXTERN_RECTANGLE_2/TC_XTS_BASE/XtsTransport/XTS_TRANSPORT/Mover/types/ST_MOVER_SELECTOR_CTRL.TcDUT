@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="ST_MOVER_SELECTOR_CTRL" Id="{797aa442-3ca9-470e-8c63-784ba218d619}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_MOVER_SELECTOR_CTRL" Id="{05fc9acc-e5ce-4821-b511-6f2af6af3bb4}">
     <Declaration><![CDATA[TYPE ST_MOVER_SELECTOR_CTRL :
 STRUCT
   Selector      : E_MOVER_SELECTOR; // select by array Index OR AXIS_REF.NcToPlc.AxisId 

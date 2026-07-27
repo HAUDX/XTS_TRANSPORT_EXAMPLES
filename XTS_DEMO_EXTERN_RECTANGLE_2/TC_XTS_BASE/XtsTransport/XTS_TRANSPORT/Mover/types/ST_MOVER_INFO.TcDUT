@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="ST_MOVER_INFO" Id="{3f303ca5-15fc-4058-88aa-30720b4d1297}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_MOVER_INFO" Id="{29ff1b39-ae85-4934-a1d9-2815bc42ac7a}">
     <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
 TYPE ST_MOVER_INFO :
 STRUCT

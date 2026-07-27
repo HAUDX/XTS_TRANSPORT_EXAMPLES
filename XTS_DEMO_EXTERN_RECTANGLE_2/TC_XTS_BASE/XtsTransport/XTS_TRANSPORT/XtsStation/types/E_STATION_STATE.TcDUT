@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
-  <DUT Name="E_STATION_STATE" Id="{31640e3a-6e2e-4dec-a5af-60be20de9d9c}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="E_STATION_STATE" Id="{0318cab9-75fd-4478-8e3e-ccd1091aad6b}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'to_string'}
 TYPE E_STATION_STATE :

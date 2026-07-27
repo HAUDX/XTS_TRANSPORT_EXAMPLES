@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="E_XTS_TRANSPORT_CHECK" Id="{10608d75-da05-4b49-a6f5-d7d80ff7bb87}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="E_XTS_TRANSPORT_CHECK" Id="{c6d7bfd0-add1-4291-b922-7b43c8fe54ce}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'to_string'}
 TYPE E_XTS_TRANSPORT_CHECK :

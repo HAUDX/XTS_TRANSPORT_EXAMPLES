@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <TextList Name="TL_E_CTRL_MOVER" Id="{9b6b6994-12d1-49aa-a062-db5b553bf9be}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <TextList Name="TL_E_CTRL_MOVER" Id="{e215f311-627a-4ccf-8128-98e2acdb875b}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="TextListObject">

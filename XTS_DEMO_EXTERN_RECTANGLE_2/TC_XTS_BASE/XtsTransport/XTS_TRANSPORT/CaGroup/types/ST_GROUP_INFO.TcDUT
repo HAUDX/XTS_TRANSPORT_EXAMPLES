@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
-  <DUT Name="ST_GROUP_INFO" Id="{fa1bc841-4934-459e-882e-2c7e4af57157}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_GROUP_INFO" Id="{6128abee-dcca-42f9-9898-5c54a1f034f1}">
     <Declaration><![CDATA[TYPE ST_GROUP_INFO :
 STRUCT
   GroupStatusValid,

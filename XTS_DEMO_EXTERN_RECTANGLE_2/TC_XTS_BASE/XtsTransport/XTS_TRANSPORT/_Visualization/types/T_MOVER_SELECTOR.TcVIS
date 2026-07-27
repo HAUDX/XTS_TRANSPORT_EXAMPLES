@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <Visu Name="T_MOVER_SELECTOR" Id="{ee295cf1-2eec-4bf4-b0de-cc94b5b6e13d}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Visu Name="T_MOVER_SELECTOR" Id="{65e69c75-dfc0-4da3-bff1-08d5329657fc}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
@@ -6733,7 +6733,7 @@
                 <v>6c8587d0-940d-402d-bcbc-b5bc3988162b</v>
               </d>
               <v n="FbName">"NotImportant"</v>
-              <v n="FbGuid">{ee295cf1-2eec-4bf4-b0de-cc94b5b6e13d}</v>
+              <v n="FbGuid">{65e69c75-dfc0-4da3-bff1-08d5329657fc}</v>
             </o>
             <v n="GeneratedGlobalVisuVarsGuid">{c2e29fef-8f7a-45ce-8af0-89c48b437738}</v>
             <v n="GeneratedGlobalTheVisuVarlistGuid">{e88fe5a7-1535-4b1a-9a03-f6dac1409d57}</v>

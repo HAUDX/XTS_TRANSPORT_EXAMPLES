@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="ST_STATION_PARAMETER" Id="{2979b824-0e00-4594-8c54-840b7431832e}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_STATION_PARAMETER" Id="{aa79e146-22a0-450e-9ec3-6af02bb753e0}">
     <Declaration><![CDATA[TYPE ST_STATION_PARAMETER :
 STRUCT
   eType             : E_STATION_TYPE := 1;  // StationProcess or StationGearInPos

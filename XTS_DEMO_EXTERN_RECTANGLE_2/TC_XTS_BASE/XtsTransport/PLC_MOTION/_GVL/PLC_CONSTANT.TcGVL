@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <GVL Name="PLC_CONSTANT" Id="{4cb0bbbd-669b-017e-3f2a-88b0eccf743b}">
+  <GVL Name="PLC_CONSTANT" Id="{3683e833-35d5-466f-b219-b8b58b9ba4fc}">
     <Declaration><![CDATA[//{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
 
