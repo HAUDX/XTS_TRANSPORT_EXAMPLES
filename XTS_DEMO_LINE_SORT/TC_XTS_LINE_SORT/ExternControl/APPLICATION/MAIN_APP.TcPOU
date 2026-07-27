@@ -12,7 +12,8 @@
 //---------------------------------------------------------------------------------------------------------------
 PROGRAM MAIN_APP
 VAR
-  eInit             : E_PROGRESS;   // application startup state info
+  eInit                     : E_PROGRESS;   // application startup state info
+  eInitXtsTransport AT %I*  : E_PROGRESS;
 
   nProcess          : UINT;
 
@@ -29,7 +30,7 @@ END_VAR
 // check for MAIN.eInit
 //  - wait for fb_TransportUnit to be fully started up
 //-----------------------------------------------------------------------------------------------------------------
-IF NOT (MAIN.eInit = E_PROGRESS.PROGRESS_DONE) THEN eInit   := E_PROGRESS.PROGRESS_INVALID; RETURN; END_IF
+IF NOT (eInitXtsTransport = E_PROGRESS.PROGRESS_DONE) THEN eInit   := E_PROGRESS.PROGRESS_INVALID; RETURN; END_IF
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
@@ -71,7 +72,8 @@ END_CASE
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN_APP">
-      <LineId Id="1" Count="28" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="2" Count="27" />
       <LineId Id="31" Count="9" />
       <LineId Id="52" Count="0" />
       <LineId Id="67" Count="4" />
