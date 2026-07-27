@@ -37,7 +37,7 @@ END_VAR
       <ST><![CDATA[//-----------------------------------------------------------------------------
 // wait for initialization to be complete before work may start
 //-----------------------------------------------------------------------------
-IF NOT (Main.eInit = E_PROGRESS.PROGRESS_DONE)
+IF NOT (MAIN_XTS.eInit = E_PROGRESS.PROGRESS_DONE)
 THEN
   eInit                                       := E_PROGRESS.PROGRESS_INIT;
   RETURN;
@@ -125,8 +125,8 @@ GVL_APPLICATION.StationConfig.Ctrl            REF= GVL_APPLICATION.ConfigCtrl;
 GVL_APPLICATION.StationConfig.State           REF= GVL_APPLICATION.ConfigState;
 
 GVL_APPLICATION.StationConfig.MessageDevice   := e_Device.Device_Configuration;
-GVL_APPLICATION.StationConfig.MessageLevel    := GVL_MSG.MessageLevel;
-GVL_APPLICATION.StationConfig.FolderPath      := GVL_MSG.CON_DIR;
+GVL_APPLICATION.StationConfig.MessageLevel    := GVL_MSG_XTS.MessageLevel;
+GVL_APPLICATION.StationConfig.FolderPath      := GVL_MSG_XTS.CON_DIR;
 GVL_APPLICATION.StationConfig.StationParameter:= ADR(GVL_XTS.StationParameter);
 
 GVL_APPLICATION.StationConfig();        // call xml configuration

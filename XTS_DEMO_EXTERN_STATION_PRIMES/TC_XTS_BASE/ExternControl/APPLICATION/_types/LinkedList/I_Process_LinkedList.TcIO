@@ -1,59 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <Itf Name="I_Process_LinkedList" Id="{829273fc-f0e4-421e-8e8f-b1ed075e6f00}">
+  <Itf Name="I_Process_LinkedList" Id="{c6506b67-74dd-453a-a5aa-e797256a65a6}">
     <Declaration><![CDATA[INTERFACE I_Process_LinkedList
 ]]></Declaration>
-    <Method Name="AddHeadValue" Id="{555d3811-677b-41c6-ae5c-3e3de83d404d}">
+    <Method Name="AddHeadValue" Id="{8450ad0c-27f4-4ade-8398-39ad970d46c5}">
       <Declaration><![CDATA[METHOD AddHeadValue : ST_PROCESS_LIST_RESULT
 VAR_INPUT
   stData        : ST_PROCESS_DATA;
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="AddTailValue" Id="{45c5b212-8621-4c6e-9784-533e2c004c61}">
+    <Method Name="AddTailValue" Id="{facfa38e-e691-458f-8658-f59a31b38cd2}">
       <Declaration><![CDATA[METHOD AddTailValue : ST_PROCESS_LIST_RESULT
 VAR_INPUT
   stData        : ST_PROCESS_DATA;
 END_VAR
 ]]></Declaration>
     </Method>
-    <Property Name="Count" Id="{7f89da67-9649-4854-82b0-55285bbdf36e}">
+    <Property Name="Count" Id="{4ae5812d-2455-4957-b637-cb08efe9d9fa}">
       <Declaration><![CDATA[PROPERTY Count : UDINT]]></Declaration>
-      <Get Name="Get" Id="{626d5db2-1b35-4988-886f-eb5573e72a13}">
+      <Get Name="Get" Id="{b84251db-7daa-44b8-945b-5ad8d1a3941e}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="Data" Id="{b0c21623-a37c-4901-8687-96b7a2f9a9e7}">
+    <Property Name="Data" Id="{9c656936-6238-44f2-b712-3b2c0205875c}">
       <Declaration><![CDATA[PROPERTY Data : ARRAY[1..MAX_LIST_NODES] OF ST_PROCESS_DATA]]></Declaration>
-      <Get Name="Get" Id="{bd059851-6a09-4f75-aeaf-fd3416fb6557}">
+      <Get Name="Get" Id="{c3ebf75f-8b52-42ae-983b-37bcb5a26609}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Property Name="Free" Id="{68bbda69-0988-4457-b19e-42457a6014e8}">
+    <Property Name="Free" Id="{2378d969-c423-4413-ba7b-b23047349907}">
       <Declaration><![CDATA[PROPERTY Free : UDINT]]></Declaration>
-      <Get Name="Get" Id="{c2bde1fa-a2d9-4af2-a223-e3f33240b24d}">
+      <Get Name="Get" Id="{5106e45b-d120-454e-a898-5044c80f0ed5}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="GetHead" Id="{dc06304c-71c8-4f34-b570-6515eefadc77}">
+    <Method Name="GetHead" Id="{7162edae-85f9-4f2b-bcd7-0e99527e6211}">
       <Declaration><![CDATA[METHOD GetHead : ST_PROCESS_LIST_RESULT
 VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="InitList" Id="{567ec93b-00c8-47b4-92f7-fe5fccee77f8}">
+    <Method Name="GetTail" Id="{ebd827ea-d9d2-4d8f-b428-fb54c8341f42}">
+      <Declaration><![CDATA[METHOD GetTail : ST_PROCESS_LIST_RESULT
+VAR_INPUT
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="InitList" Id="{ddbf3f45-9fb4-472c-bdbc-1b0931e07c2a}">
       <Declaration><![CDATA[METHOD InitList : BOOL
 ]]></Declaration>
     </Method>
-    <Property Name="Nodes" Id="{bdee395e-92ed-487b-99c3-9b921440af8b}">
+    <Property Name="Nodes" Id="{9c574555-200a-4497-b3f9-eb257067a9ea}">
       <Declaration><![CDATA[PROPERTY Nodes : ARRAY[0..MAX_LIST_NODES] OF T_LinkedListEntry]]></Declaration>
-      <Get Name="Get" Id="{226cce63-7092-4773-af55-2cdb2da2692d}">
+      <Get Name="Get" Id="{3301d776-e4ef-4966-a5e3-e411f44da643}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="RemoveHeadValue" Id="{cdc6830c-ead2-4ea2-b1b0-4d1382816aae}">
+    <Method Name="RemoveHeadValue" Id="{179dbd5d-0cec-4c36-9ed8-91564477a269}">
       <Declaration><![CDATA[METHOD RemoveHeadValue : ST_PROCESS_LIST_RESULT
 VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="RemoveTailValue" Id="{0d030a16-c812-4d66-8d70-c63c29715f6a}">
+      <Declaration><![CDATA[METHOD RemoveTailValue : ST_PROCESS_LIST_RESULT
+VAR_INPUT
+END_VAR
+VAR
 END_VAR
 ]]></Declaration>
     </Method>

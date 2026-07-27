@@ -126849,7 +126849,7 @@ and will return to Group State Standby when the situation permits.
 		</Motion>
 		<Plc>
 			<Project GUID="{00BE0468-0531-4D3C-A850-75BC3062D9F6}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="TEST" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{825E69D8-7F2B-0FCE-1A0D-16B10558DA25}" TmcPath="ExternControl\ExternControl.tmc">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{2217F72E-009B-A763-4E68-460F891FBBD2}" TmcPath="ExternControl\ExternControl.tmc">
 					<Name>ExternControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -126890,18 +126890,18 @@ and will return to Group State Standby when the situation permits.
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, TEST, WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{240EBAF1-A3AD-1DE4-27CC-9585C3B35A1C}" TmcPath="XtsTransport\XtsTransport.tmc">
+			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, TEST" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{D733B6F1-8F3D-7133-D6A8-B4676BE8A61B}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
-							<Name>MAPPING_out.StationState.byState</Name>
+							<Name>MAPPING_XTS_out.StationState.byState</Name>
 							<Type GUID="{4C1B89DB-3EE8-A739-ECA0-46497B0744D2}">ARRAY [1..37] OF ARRAY [1..14] OF BYTE</Type>
 						</Var>
 						<Var>
-							<Name>MAPPING_out.TransportState.byState</Name>
+							<Name>MAPPING_XTS_out.TransportState.byState</Name>
 							<Type GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}">ARRAY [1..60] OF BYTE</Type>
 						</Var>
 						<Var>
@@ -127104,11 +127104,11 @@ and will return to Group State Standby when the situation permits.
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
-							<Name>MAPPING_in.StationControl.byCtrl</Name>
+							<Name>MAPPING_XTS_in.StationControl.byCtrl</Name>
 							<Type GUID="{E6FF4442-B78B-C729-6FBF-E94C1F5BF4FC}">ARRAY [1..37] OF ARRAY [1..8] OF BYTE</Type>
 						</Var>
 						<Var>
-							<Name>MAPPING_in.TransportControl.byCtrl</Name>
+							<Name>MAPPING_XTS_in.TransportControl.byCtrl</Name>
 							<Type GUID="{A973D240-0BBB-8261-35B4-E09CC3C8301C}">ARRAY [1..2] OF BYTE</Type>
 						</Var>
 						<Var>
@@ -127308,6 +127308,20 @@ and will return to Group State Standby when the situation permits.
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 					</Vars>
+					<UnrestoredVarLinks ImportTime="2026-07-27T13:09:10">
+						<OwnerA Name="InputDst" Prefix="TIPC^XtsTransport^XtsTransport Instance" Type="1">
+							<OwnerB Name="TIPC^ExternControl^ExternControl Instance">
+								<Link VarA="MAPPING_in.StationControl.byCtrl" TypeA="ARRAY [1..37] OF ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{E6FF4442-B78B-C729-6FBF-E94C1F5BF4FC}" VarB="PlcTask Outputs^MAPPING_out.StationControl.byCtrl" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.TransportControl.byCtrl" TypeA="ARRAY [1..2] OF BYTE" InOutA="0" GuidA="{A973D240-0BBB-8261-35B4-E09CC3C8301C}" VarB="PlcTask Outputs^MAPPING_out.TransportControl.byCtrl" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^XtsTransport^XtsTransport Instance" Type="2">
+							<OwnerB Name="TIPC^ExternControl^ExternControl Instance">
+								<Link VarA="MAPPING_out.StationState.byState" TypeA="ARRAY [1..37] OF ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C1B89DB-3EE8-A739-ECA0-46497B0744D2}" VarB="PlcTask Inputs^MAPPING_in.StationState.byState" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="PlcTask Inputs^MAPPING_in.TransportState.byState" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
 					<Contexts>
 						<Context>
 							<Id>0</Id>
@@ -140263,10 +140277,10 @@ and will return to Group State Standby when the situation permits.
 		</OwnerA>
 		<OwnerA Name="TIPC^ExternControl^ExternControl Instance">
 			<OwnerB Name="TIPC^XtsTransport^XtsTransport Instance">
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationState.byState" VarB="PlcTask Outputs^MAPPING_out.StationState.byState"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.TransportState.byState" VarB="PlcTask Outputs^MAPPING_out.TransportState.byState"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationControl.byCtrl" VarB="PlcTask Inputs^MAPPING_in.StationControl.byCtrl"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportControl.byCtrl" VarB="PlcTask Inputs^MAPPING_in.TransportControl.byCtrl"/>
+				<Link VarA="PlcTask Inputs^MAPPING_in.StationState.byState" VarB="PlcTask Outputs^MAPPING_XTS_out.StationState.byState"/>
+				<Link VarA="PlcTask Inputs^MAPPING_in.TransportState.byState" VarB="PlcTask Outputs^MAPPING_XTS_out.TransportState.byState"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.StationControl.byCtrl" VarB="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl"/>
+				<Link VarA="PlcTask Outputs^MAPPING_out.TransportControl.byCtrl" VarB="PlcTask Inputs^MAPPING_XTS_in.TransportControl.byCtrl"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TIPC^XtsTransport^XtsTransport Instance">
