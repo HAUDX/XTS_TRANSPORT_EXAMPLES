@@ -28,15 +28,21 @@ VAR
   eMtrProgress,
   eMsgProgress      : e_progress;
   stMsg             : ST_Message;
+  //-------------------------------------------------------------------------------------------------------------
+  tIdleWriteApplication   : TIME := T#5S;
+  tIdleWriteMetric        : TIME := T#5S;
+  tonIdleWriteApplication : Tc2_Standard.TON;
+  tonIdleWriteMetric      : Tc2_Standard.TON;
+  //-------------------------------------------------------------------------------------------------------------
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//############################################################################
 // Local time; used for timestamps
 //############################################################################
-GVL_MSG.fbLocalTime(
-                    sLocalTime          => GVL_MSG.sLocalTime, 
-                    dtLocalTime         => GVL_MSG.dtLocalTime);
+GVL_MSG_XTS.fbLocalTime();
+GVL_MSG_XTS.sLocalTime                              := GVL_MSG_XTS.fbLocalTime.LocalTimeString;
+GVL_MSG_XTS.dtLocalTime                             := GVL_MSG_XTS.fbLocalTime.LocalTime;
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 // check for MAIN.eInit
@@ -109,22 +115,22 @@ END_CASE
 //############################################################################
 // /logging
 //############################################################################
-GVL_MSG.ApplicationMessageData.Ctrl           REF= GVL_MSG.ApplicationMessageCtrl;
-GVL_MSG.ApplicationMessageData.State          REF= GVL_MSG.ApplicationMessageState;
+GVL_MSG_XTS.ApplicationMessageData.Ctrl           REF= GVL_MSG_XTS.ApplicationMessageCtrl;
+GVL_MSG_XTS.ApplicationMessageData.State          REF= GVL_MSG_XTS.ApplicationMessageState;
 
-GVL_MSG.ApplicationMessageData.MessageIndex   REF= GVL_MSG.MessageApplicationIndex;
-GVL_MSG.ApplicationMessageData.ErrorIndex     REF= GVL_MSG.MessageApplicationError;
+GVL_MSG_XTS.ApplicationMessageData.MessageIndex   REF= GVL_MSG_XTS.MessageApplicationIndex;
+GVL_MSG_XTS.ApplicationMessageData.ErrorIndex     REF= GVL_MSG_XTS.MessageApplicationError;
 
-GVL_MSG.ApplicationMessageData.DirRoot        :=   ADR(GVL_MSG.LOG_DIR);
-GVL_MSG.ApplicationMessageData.FileRoot       :=   ADR(GVL_MSG.LOG_FILE_APP);
+GVL_MSG_XTS.ApplicationMessageData.DirRoot        :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.ApplicationMessageData.FileRoot       :=   ADR(GVL_MSG_XTS.LOG_FILE_APP);
 
-GVL_MSG.ApplicationMessageData.MsgList        :=   ADR(GVL_MSG.ApplicationMessages);
-GVL_MSG.ApplicationMessageData.LocalTime      :=   ADR(GVL_MSG.dtLocalTime);
+GVL_MSG_XTS.ApplicationMessageData.MsgList        :=   ADR(GVL_MSG_XTS.ApplicationMessages);
+GVL_MSG_XTS.ApplicationMessageData.LocalTime      :=   ADR(GVL_MSG_XTS.dtLocalTime);
 
-GVL_MSG.ApplicationMessageData();
+GVL_MSG_XTS.ApplicationMessageData();
 
-eMsgState                                     := f_GetState   (GVL_MSG.ApplicationMessageState.State);
-eMsgProgress                                  := f_GetProgress(GVL_MSG.ApplicationMessageState.State);
+eMsgState                                     := f_GetState   (GVL_MSG_XTS.ApplicationMessageState.State);
+eMsgProgress                                  := f_GetProgress(GVL_MSG_XTS.ApplicationMessageState.State);
 
 
 CASE eMsgState
@@ -133,10 +139,16 @@ OF
     CASE eMsgProgress
     OF
       E_PROGRESS.PROGRESS_INVALID:
-        IF (GVL_MSG.MessageApplicationIndex > GVL_MSG.MAX_MESSAGE/100) OR
-           (GVL_MSG.MessageApplicationError > 0)
+        IF (GVL_MSG_XTS.MessageApplicationIndex > GVL_MSG_XTS.MAX_MESSAGE/100) OR
+           (GVL_MSG_XTS.MessageApplicationError > 0)
         THEN
-          GVL_MSG.ApplicationMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          GVL_MSG_XTS.ApplicationMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        ELSE
+          tonIdleWriteApplication(IN := TRUE, PT:= tIdleWriteApplication);
+          IF (tonIdleWriteApplication.Q)
+          THEN
+            GVL_MSG_XTS.TransportMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          END_IF
         END_IF
     END_CASE
 
@@ -145,14 +157,15 @@ OF
     OF
       E_PROGRESS.PROGRESS_ERROR,
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        tonIdleWriteApplication(IN := FALSE, PT:= tIdleWriteApplication);
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 
 ELSE
     CASE eMsgProgress
     OF
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 END_CASE
 //############################################################################
@@ -161,22 +174,22 @@ END_CASE
 //############################################################################
 //  /Transport Metrics
 //############################################################################
-GVL_MSG.MetricsMessageData.Ctrl               REF= GVL_MSG.MetricsMessageCtrl;
-GVL_MSG.MetricsMessageData.State              REF= GVL_MSG.MetricsMessageState;
+GVL_MSG_XTS.MetricsMessageData.Ctrl               REF= GVL_MSG_XTS.MetricsMessageCtrl;
+GVL_MSG_XTS.MetricsMessageData.State              REF= GVL_MSG_XTS.MetricsMessageState;
 
-GVL_MSG.MetricsMessageData.MessageIndex       REF= GVL_MSG.MessageMetricsIndex;
-GVL_MSG.MetricsMessageData.ErrorIndex         REF= GVL_MSG.MessageMetricsError;
+GVL_MSG_XTS.MetricsMessageData.MessageIndex       REF= GVL_MSG_XTS.MessageMetricsIndex;
+GVL_MSG_XTS.MetricsMessageData.ErrorIndex         REF= GVL_MSG_XTS.MessageMetricsError;
 
-GVL_MSG.MetricsMessageData.DirRoot            :=   ADR(GVL_MSG.LOG_DIR);
-GVL_MSG.MetricsMessageData.FileRoot           :=   ADR(GVL_MSG.LOG_FILE_METRIC);
+GVL_MSG_XTS.MetricsMessageData.DirRoot            :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.MetricsMessageData.FileRoot           :=   ADR(GVL_MSG_XTS.LOG_FILE_METRIC);
 
-GVL_MSG.MetricsMessageData.MsgList            :=   ADR(GVL_MSG.MetricsMessages);
-GVL_MSG.MetricsMessageData.LocalTime          :=   ADR(GVL_MSG.dtLocalTime);
+GVL_MSG_XTS.MetricsMessageData.MsgList            :=   ADR(GVL_MSG_XTS.MetricsMessages);
+GVL_MSG_XTS.MetricsMessageData.LocalTime          :=   ADR(GVL_MSG_XTS.dtLocalTime);
 
-GVL_MSG.MetricsMessageData();
+GVL_MSG_XTS.MetricsMessageData();
 
-eMtrState                                     := f_GetState   (GVL_MSG.MetricsMessageState.State);
-eMtrProgress                                  := f_GetProgress(GVL_MSG.MetricsMessageState.State);
+eMtrState                                     := f_GetState   (GVL_MSG_XTS.MetricsMessageState.State);
+eMtrProgress                                  := f_GetProgress(GVL_MSG_XTS.MetricsMessageState.State);
 
 CASE eMtrState
 OF
@@ -184,10 +197,16 @@ OF
     CASE eMtrProgress
     OF
       E_PROGRESS.PROGRESS_INVALID:
-        IF (GVL_MSG.MessageMetricsIndex > GVL_MSG.MAX_MESSAGE/100) OR
-           (GVL_MSG.MessageMetricsError > 0)
+        IF (GVL_MSG_XTS.MessageMetricsIndex > GVL_MSG_XTS.MAX_MESSAGE/100) OR
+           (GVL_MSG_XTS.MessageMetricsError > 0)
         THEN
-          GVL_MSG.MetricsMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          GVL_MSG_XTS.MetricsMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        ELSE
+          tonIdleWriteMetric(IN := TRUE, PT:= tIdleWriteMetric);
+          IF (tonIdleWriteMetric.Q)
+          THEN
+            GVL_MSG_XTS.TransportMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          END_IF
         END_IF
     END_CASE
 
@@ -196,13 +215,14 @@ OF
     OF
       E_PROGRESS.PROGRESS_ERROR,
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        tonIdleWriteMetric(IN := FALSE, PT:= tIdleWriteMetric);
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 ELSE
     CASE eMtrProgress
     OF
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 END_CASE
 //############################################################################
@@ -216,14 +236,14 @@ END_CASE
         <ST><![CDATA[CASE eInit
 OF
   E_PROGRESS.PROGRESS_INVALID:          // startup procedure for your application
-    GVL_MSG.TransportMessageCtrl.Cmd                      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
-    GVL_MSG.MetricsMessageCtrl.Cmd                        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    GVL_MSG_XTS.TransportMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    GVL_MSG_XTS.MetricsMessageCtrl.Cmd                    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
 
     FOR nProcess := 1 TO MAX_PROCESS
     DO
-      GVL_MSG.MessageLevelProcess[nProcess]               := GVL_MSG.MessageLevel;
+      GVL_MSG_XTS.MessageLevelProcess[nProcess]           := GVL_MSG_XTS.MessageLevel;
 
-      GVL_APPLICATION.Simulation[nProcess].MessageLevel   := GVL_MSG.MessageLevelProcess[nProcess];
+      GVL_APPLICATION.Simulation[nProcess].MessageLevel   := GVL_MSG_XTS.MessageLevelProcess[nProcess];
     END_FOR
     eInit                               := E_PROGRESS.PROGRESS_INIT;
 
@@ -448,8 +468,8 @@ OF
     eInit                                                 := E_PROGRESS.PROGRESS_BUSY;
 
   E_PROGRESS.PROGRESS_BUSY:
-    GVL_MSG.TransportMessageCtrl.Cmd                      := E_MESSAGE_CTRL.MSG_CTRL_INIT;
-    GVL_MSG.MetricsMessageCtrl.Cmd                        := E_MESSAGE_CTRL.MSG_CTRL_INIT;
+    GVL_MSG_XTS.TransportMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_INIT;
+    GVL_MSG_XTS.MetricsMessageCtrl.Cmd                    := E_MESSAGE_CTRL.MSG_CTRL_INIT;
     eInit                                                 := E_PROGRESS.PROGRESS_PREPARE;
 
   E_PROGRESS.PROGRESS_PREPARE:
@@ -460,14 +480,22 @@ END_CASE
       </Implementation>
     </Action>
     <LineIds Name="MAIN_APP">
-      <LineId Id="177" Count="5" />
+      <LineId Id="184" Count="5" />
       <LineId Id="74" Count="0" />
       <LineId Id="2" Count="11" />
       <LineId Id="183" Count="0" />
       <LineId Id="14" Count="39" />
       <LineId Id="73" Count="0" />
       <LineId Id="54" Count="13" />
-      <LineId Id="75" Count="101" />
+      <LineId Id="75" Count="30" />
+      <LineId Id="200" Count="5" />
+      <LineId Id="106" Count="7" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="114" Count="42" />
+      <LineId Id="191" Count="5" />
+      <LineId Id="157" Count="7" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="165" Count="11" />
       <LineId Id="70" Count="1" />
     </LineIds>
     <LineIds Name="MAIN_APP.Init">

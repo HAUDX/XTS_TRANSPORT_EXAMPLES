@@ -372,7 +372,7 @@ DO
     IF (_MessageLevel > E_MessageType.eMessageVerbose)
     THEN
       _stMsg.eType          := E_MessageType.eMessageSentient;
-      _stMsg.eDevice        := e_Device.Metrics + TO_UINT(_nProcessId);
+      _stMsg.eDevice        := e_Device.MetricsXts + TO_UINT(_nProcessId);
                             
       _stMsg.eSubdevice     := e_Subdevice.Process_StationCollector;
       _stMsg.iErrorNumber   := _k;
@@ -392,7 +392,7 @@ DO
     IF (_MessageLevel > E_MessageType.eMessageVerbose)
     THEN
       _stMsg.eType          := E_MessageType.eMessageSentient;
-      _stMsg.eDevice        := e_Device.Metrics + TO_UINT(_nProcessId);
+      _stMsg.eDevice        := e_Device.MetricsXts + TO_UINT(_nProcessId);
                             
       _stMsg.eSubdevice     := e_Subdevice.Process_StationCollector;
       _stMsg.iErrorNumber   := _k;
@@ -412,7 +412,7 @@ DO
     IF (_MessageLevel > E_MessageType.eMessageVerbose)
     THEN
       _stMsg.eType          := E_MessageType.eMessageSentient;
-      _stMsg.eDevice        := e_Device.Metrics + TO_UINT(_nProcessId);
+      _stMsg.eDevice        := e_Device.MetricsXts + TO_UINT(_nProcessId);
                             
       _stMsg.eSubdevice     := e_Subdevice.Process_StationCollector;
       _stMsg.iErrorNumber   := _k;
@@ -448,7 +448,7 @@ THEN
   IF (_MessageLevel > E_MessageType.eMessageError)
   THEN
     _stMsg.eType            := E_MessageType.eMessageBatch;
-    _stMsg.eDevice          := e_Device.Metrics + TO_UINT(_nProcessId);
+    _stMsg.eDevice          := e_Device.MetricsXts + TO_UINT(_nProcessId);
   
     _stMsg.eSubdevice       := e_Subdevice.Process_StationCollector;
     _stMsg.iErrorNumber     := _nMoverCountTotal;
