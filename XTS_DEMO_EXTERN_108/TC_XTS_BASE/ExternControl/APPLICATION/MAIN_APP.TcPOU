@@ -85,6 +85,7 @@ GVL_APPLICATION.ApplicationMain.ListInputData               REF=  GVL_APPLICATIO
 CASE eInit
 OF
   E_PROGRESS.PROGRESS_INVALID:                // first cycle startup
+    GVL_APPLICATION.AppControl.Variant        := E_APP_VARIANT.VARIANT_OUTPUT_24;   // this is what you have to decide, two variants are available
     //---------------------------------------------------------------------------------------------------------------
     // first cycle startup
     // - wait for extern to give the command, if we are waiting here MAIN is ready, extern can see that
@@ -231,7 +232,9 @@ END_CASE
       <LineId Id="395" Count="1" />
       <LineId Id="399" Count="0" />
       <LineId Id="397" Count="0" />
-      <LineId Id="239" Count="31" />
+      <LineId Id="239" Count="16" />
+      <LineId Id="429" Count="0" />
+      <LineId Id="256" Count="14" />
       <LineId Id="272" Count="12" />
       <LineId Id="286" Count="14" />
       <LineId Id="309" Count="4" />
