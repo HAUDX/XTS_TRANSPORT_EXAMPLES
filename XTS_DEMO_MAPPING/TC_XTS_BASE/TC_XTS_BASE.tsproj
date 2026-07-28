@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.22">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C929B002-BF94-48A2-937B-5D20DED8EF3B}" Namespace="XTS">OperationMode</Name>
@@ -4817,6 +4817,14 @@ External Setpoint Generation:
 				<Text><![CDATA[mcGroupStateSuspended]]></Text>
 				<Enum>8</Enum>
 			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateFollowingMCS]]></Text>
+				<Enum>9</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[mcGroupStateFollowingACS]]></Text>
+				<Enum>10</Enum>
+			</EnumInfo>
 		</DataType>
 		<DataType>
 			<Name GUID="{A0584CC8-265F-4385-AA12-C3A71CCE6A97}" Namespace="MC">ST_GroupStatusFlags</Name>
@@ -4833,7 +4841,7 @@ and will return to Group State Standby when the situation permits.
 			<SubItem>
 				<Name>AllAxesStanding</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<Comment><![CDATA[Indicate whether all axes are physically standing, i.e. velocity and acceleration are zero. This definition differs from the definition of the GroupStateMoving, which indicates whether a Motion Command is currently active.]]></Comment>
+				<Comment><![CDATA[Indicates whether all axes are physically standing, i.e. velocity and acceleration are zero. This definition differs from the definition of the GroupStateMoving, which indicates whether a Motion Command is currently active.]]></Comment>
 				<BitSize>1</BitSize>
 				<BitOffs>1</BitOffs>
 			</SubItem>
@@ -4859,7 +4867,9 @@ and will return to Group State Standby when the situation permits.
 5 = ErrorStop	(mcGroupStateErrorStop),
 6 = Homing	(mcGroupStateHoming),
 7 = NotReady	(mcGroupStateNotReady),
-8 = Suspended	(mcGroupStateSuspended)]]></Comment>
+8 = Suspended	(mcGroupStateSuspended),
+9 = FollowingMCS	(mcGroupStateFollowingMCS),
+10 = FollowingACS	(mcGroupStateFollowingACS)]]></Comment>
 				<BitSize>16</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
@@ -4995,12 +5005,12 @@ and will return to Group State Standby when the situation permits.
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{F3C340DF-0001-C829-1DB5-7295DAB50CFB}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..5] OF ARRAY [1..8] OF BYTE</Name>
-			<BitSize>320</BitSize>
+			<Name GUID="{F6F0A3A1-60B2-C426-E3E8-2A840F066437}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..4] OF ARRAY [1..8] OF BYTE</Name>
+			<BitSize>256</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>5</Elements>
+				<Elements>4</Elements>
 			</ArrayInfo>
 			<ArrayInfo Level="1">
 				<LBound>1</LBound>
@@ -5119,12 +5129,12 @@ and will return to Group State Standby when the situation permits.
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{1B1FC4C2-C4F0-AF0B-01A6-8FAAA46AF71C}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..5] OF ARRAY [1..14] OF BYTE</Name>
-			<BitSize>560</BitSize>
+			<Name GUID="{AAF25DD2-58E2-FE98-E64F-8343199EDB88}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..4] OF ARRAY [1..14] OF BYTE</Name>
+			<BitSize>448</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>5</Elements>
+				<Elements>4</Elements>
 			</ArrayInfo>
 			<ArrayInfo Level="1">
 				<LBound>1</LBound>
@@ -5258,7 +5268,7 @@ and will return to Group State Standby when the situation permits.
 		<ImageData Id="1016">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1017">424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c00000ffc0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c00000ffc0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c000ff00c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{93087B8E-8B45-410C-842B-030B1FDEA597}" TargetNetId="192.168.1.73.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
+	<Project ProjectGUID="{93087B8E-8B45-410C-842B-030B1FDEA597}" TargetNetId="5.163.199.237.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
 			<Settings MaxCpus="8" NonWinCpus="4" RouterMemory="268435456" MaxStackSize="1024">
 				<Cpu CpuId="3"/>
@@ -5279,7 +5289,7 @@ and will return to Group State Standby when the situation permits.
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
-				<Task Id="6" Priority="15" CycleTime="40000" AmsPort="301" AmsNetId="5.163.199.237.1.1">
+				<Task Id="6" Priority="15" CycleTime="40000" AmsPort="301" AmsNetId="192.168.1.73.1.1">
 					<Name>PN</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -43402,7 +43412,7 @@ and will return to Group State Standby when the situation permits.
 		</System>
 		<Motion>
 			<NC>
-				<SafTask Priority="4" CycleTime="10000" AmsPort="501" Affinity="#x00000020" IoAtBegin="true" AmsNetId="5.163.199.237.1.1" SafTaskInfo="256">
+				<SafTask Priority="4" CycleTime="10000" AmsPort="501" Affinity="#x00000020" IoAtBegin="true" AmsNetId="192.168.1.73.1.1" SafTaskInfo="256">
 					<Name>NC-Task 1 SAF</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -87807,6 +87817,86 @@ and will return to Group State Standby when the situation permits.
 						</Module>
 					</Module>
 				</Axis>
+				<Instance Id="#x05000100" KeepUnrestoredLinks="2">
+					<Name>Mc-Instance for NcPtp</Name>
+					<ImageId>4</ImageId>
+					<TmcDesc GUID="{6445FBA6-B920-4AD2-873B-8C61DD652099}">
+						<Name>MC Instance Unversioned</Name>
+						<CLSID ClassFactory="TcNc3">{05030084-0000-0000-F000-000000000064}</CLSID>
+						<InitSequence>PSO</InitSequence>
+						<Contexts>
+							<Context>
+								<Id>0</Id>
+								<Name>MET</Name>
+							</Context>
+							<Context>
+								<Id>1</Id>
+								<Name>MPT</Name>
+							</Context>
+							<Context>
+								<Id>3</Id>
+								<Name>MJT</Name>
+							</Context>
+						</Contexts>
+						<Parameters>
+							<Parameter ReadOnly="true">
+								<Name>Execution-Task OID (MET)</Name>
+								<Comment><![CDATA[OID of task used for very time-critical command execution (Motion-Execution-Task)]]></Comment>
+								<BitSize>32</BitSize>
+								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+								<PTCID>#x03002060</PTCID>
+							</Parameter>
+							<Parameter ReadOnly="true">
+								<Name>Preparation-Task OID (MPT)</Name>
+								<Comment><![CDATA[OID of task used for less time-critical command preparation (Motion-Preparation-Task)]]></Comment>
+								<BitSize>32</BitSize>
+								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+								<PTCID>#x03002061</PTCID>
+							</Parameter>
+							<Parameter ReadOnly="true">
+								<Name>Job-Task OID (MJT)</Name>
+								<Comment><![CDATA[OID of JobTask for asynchronous processing (Motion-Job-Task)]]></Comment>
+								<BitSize>32</BitSize>
+								<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+								<Properties>
+									<Property>
+										<Name>TcJobTaskOID</Name>
+									</Property>
+								</Properties>
+								<PTCID>#x0300a11b</PTCID>
+							</Parameter>
+						</Parameters>
+						<Properties>
+							<Property>
+								<Name>Category</Name>
+								<Value>TcNc3Instance</Value>
+							</Property>
+							<Property>
+								<Name>Category</Name>
+								<Value>HideTcComContextPP</Value>
+							</Property>
+							<Property>
+								<Name>ChildCategory</Name>
+								<Value>MC Object</Value>
+							</Property>
+						</Properties>
+						<ParentOTCID>#x05000010</ParentOTCID>
+						<ParameterValues>
+							<Value>
+								<Name>Execution-Task OID (MET)</Name>
+								<Value>83886096</Value>
+							</Value>
+							<Value>
+								<Name>Preparation-Task OID (MPT)</Name>
+								<Value>83886112</Value>
+							</Value>
+							<Value>
+								<Name>Job-Task OID (MJT)</Name>
+								<Value>33620112</Value>
+							</Value>
+						</ParameterValues>
+					</TmcDesc>
+				</Instance>
 				<Modules>
 					<Module Id="#x05120010">
 						<Name>Group1 (CA Group)</Name>
@@ -88058,36 +88148,30 @@ and will return to Group State Standby when the situation permits.
 							</ParameterValues>
 						</TmcDesc>
 					</Module>
-					<Parameters>
-						<Parameter>
-							<PTCID>#x300a11b</PTCID>
-							<Data>02010090</Data>
-						</Parameter>
-					</Parameters>
 				</Modules>
 			</NC>
 		</Motion>
 		<Plc>
 			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, MOVER_SELECTOR, TEST" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{CC489973-9B45-5401-1A4D-71B70C6D3B2C}" TmcPath="XtsTransport\XtsTransport.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{3C8FB28E-7043-12CE-D231-7196A5FABB45}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
-							<Name>MAPPING_out.MoverState.byState</Name>
+							<Name>MAPPING_XTS_out.MoverState.byState</Name>
 							<Type GUID="{13DA0C6B-8F81-5615-4C25-8282496EF24B}">ARRAY [1..52] OF BYTE</Type>
 						</Var>
 						<Var>
-							<Name>MAPPING_out.MoverInfo.byInfo</Name>
+							<Name>MAPPING_XTS_out.MoverInfo.byInfo</Name>
 							<Type GUID="{795359B0-502B-A865-E179-6716BDF79ECB}">ARRAY [1..10] OF ARRAY [1..38] OF BYTE</Type>
 						</Var>
 						<Var>
-							<Name>MAPPING_out.StationState.byState</Name>
-							<Type GUID="{1B1FC4C2-C4F0-AF0B-01A6-8FAAA46AF71C}">ARRAY [1..5] OF ARRAY [1..14] OF BYTE</Type>
+							<Name>MAPPING_XTS_out.StationState.byState</Name>
+							<Type GUID="{AAF25DD2-58E2-FE98-E64F-8343199EDB88}">ARRAY [1..4] OF ARRAY [1..14] OF BYTE</Type>
 						</Var>
 						<Var>
-							<Name>MAPPING_out.TransportState.byState</Name>
+							<Name>MAPPING_XTS_out.TransportState.byState</Name>
 							<Type GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}">ARRAY [1..60] OF BYTE</Type>
 						</Var>
 						<Var>
@@ -88138,23 +88222,23 @@ and will return to Group State Standby when the situation permits.
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
-							<Name>MAPPING_in.MoverCtrl.byCtrl</Name>
+							<Name>MAPPING_XTS_in.MoverCtrl.byCtrl</Name>
 							<Type GUID="{969AA3E0-02D9-08F4-859B-71A40485A934}">ARRAY [1..70] OF BYTE</Type>
 						</Var>
 						<Var>
-							<Name>MAPPING_in.MoveData.byData</Name>
+							<Name>MAPPING_XTS_in.MoveData.byData</Name>
 							<Type GUID="{73FAA1CA-D587-96C9-4A01-46134105B871}">ARRAY [1..10] OF ARRAY [1..64] OF BYTE</Type>
 						</Var>
 						<Var>
-							<Name>MAPPING_in.GearData.byData</Name>
+							<Name>MAPPING_XTS_in.GearData.byData</Name>
 							<Type GUID="{A950E505-0AE7-3956-D4AE-B43AE0E699C2}">ARRAY [1..10] OF ARRAY [1..34] OF BYTE</Type>
 						</Var>
 						<Var>
-							<Name>MAPPING_in.StationControl.byCtrl</Name>
-							<Type GUID="{F3C340DF-0001-C829-1DB5-7295DAB50CFB}">ARRAY [1..5] OF ARRAY [1..8] OF BYTE</Type>
+							<Name>MAPPING_XTS_in.StationControl.byCtrl</Name>
+							<Type GUID="{F6F0A3A1-60B2-C426-E3E8-2A840F066437}">ARRAY [1..4] OF ARRAY [1..8] OF BYTE</Type>
 						</Var>
 						<Var>
-							<Name>MAPPING_in.TransportControl.byCtrl</Name>
+							<Name>MAPPING_XTS_in.TransportControl.byCtrl</Name>
 							<Type GUID="{A973D240-0BBB-8261-35B4-E09CC3C8301C}">ARRAY [1..2] OF BYTE</Type>
 						</Var>
 						<Var>
@@ -88202,6 +88286,122 @@ and will return to Group State Standby when the situation permits.
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 					</Vars>
+					<UnrestoredVarLinks ImportTime="2026-07-28T05:59:26">
+						<OwnerA Name="InputDst" Prefix="TIPC^XtsTransport^XtsTransport Instance" Type="1">
+							<OwnerB Name="TIID^Device 8 (EL6633-0010)^el6633-0010">
+								<Link VarA="MAPPING_in.StationControl.byCtrl[1]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[0]" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[1]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[1]" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[1]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[2]" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[1]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[3]" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[1]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[4]" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[1]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[5]" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[1]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[6]" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[1]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[7]" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[2]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[0]" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[2]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[1]" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[2]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[2]" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[2]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[3]" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[2]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[4]" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[2]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[5]" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[2]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[6]" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.StationControl.byCtrl[2]" TypeA="ARRAY [1..8] OF BYTE" InOutA="0" GuidA="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[7]" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.TransportControl.byCtrl" TypeA="ARRAY [1..2] OF BYTE" InOutA="0" GuidA="{A973D240-0BBB-8261-35B4-E09CC3C8301C}" VarB="API^XtsTransportCtrl^Ctrl^Inputs^1 Byte Output[0]" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_in.TransportControl.byCtrl" TypeA="ARRAY [1..2] OF BYTE" InOutA="0" GuidA="{A973D240-0BBB-8261-35B4-E09CC3C8301C}" VarB="API^XtsTransportCtrl^Ctrl^Inputs^1 Byte Output[1]" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^XtsTransport^XtsTransport Instance" Type="2">
+							<OwnerB Name="TIID^Device 8 (EL6633-0010)^el6633-0010">
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[0]" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[10]" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[11]" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[12]" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[13]" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[1]" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[2]" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[3]" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[4]" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[5]" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[6]" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[7]" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[8]" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[1]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[9]" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[0]" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[10]" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[11]" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[12]" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[13]" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[1]" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[2]" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[3]" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[4]" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[5]" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[6]" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[7]" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[8]" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.StationState.byState[2]" TypeA="ARRAY [1..14] OF BYTE" InOutA="1" GuidA="{4C0E11E2-2D7D-A81F-D4C2-E08ACD40C3F8}" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[9]" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[0]" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[10]" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[11]" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[12]" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[13]" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[14]" Size="8" OffsA="112" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[15]" Size="8" OffsA="120" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[16]" Size="8" OffsA="128" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[17]" Size="8" OffsA="136" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[18]" Size="8" OffsA="144" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[19]" Size="8" OffsA="152" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[1]" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[20]" Size="8" OffsA="160" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[21]" Size="8" OffsA="168" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[22]" Size="8" OffsA="176" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[23]" Size="8" OffsA="184" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[24]" Size="8" OffsA="192" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[25]" Size="8" OffsA="200" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[26]" Size="8" OffsA="208" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[27]" Size="8" OffsA="216" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[28]" Size="8" OffsA="224" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[29]" Size="8" OffsA="232" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[2]" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[30]" Size="8" OffsA="240" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[31]" Size="8" OffsA="248" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[32]" Size="8" OffsA="256" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[33]" Size="8" OffsA="264" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[34]" Size="8" OffsA="272" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[35]" Size="8" OffsA="280" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[36]" Size="8" OffsA="288" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[37]" Size="8" OffsA="296" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[38]" Size="8" OffsA="304" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[39]" Size="8" OffsA="312" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[3]" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[40]" Size="8" OffsA="320" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[41]" Size="8" OffsA="328" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[42]" Size="8" OffsA="336" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[43]" Size="8" OffsA="344" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[44]" Size="8" OffsA="352" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[45]" Size="8" OffsA="360" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[46]" Size="8" OffsA="368" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[47]" Size="8" OffsA="376" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[48]" Size="8" OffsA="384" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[49]" Size="8" OffsA="392" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[4]" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[50]" Size="8" OffsA="400" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[51]" Size="8" OffsA="408" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[52]" Size="8" OffsA="416" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[53]" Size="8" OffsA="424" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[54]" Size="8" OffsA="432" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[55]" Size="8" OffsA="440" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[56]" Size="8" OffsA="448" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[57]" Size="8" OffsA="456" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[58]" Size="8" OffsA="464" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[59]" Size="8" OffsA="472" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[5]" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[6]" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[7]" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[8]" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="MAPPING_out.TransportState.byState" TypeA="ARRAY [1..60] OF BYTE" InOutA="1" GuidA="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[9]" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
 					<Contexts>
 						<Context>
 							<Id>0</Id>
@@ -96321,7 +96521,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT ManualDcSelect="true" DcSyncMode="3"/>
 			</Device>
-			<Device Id="7" DevType="111" DevFlags="#x0003" AmsPort="28679" AmsNetId="192.168.1.73.8.1" RemoteName="Device 7 (EtherCAT)" InfoImageId="15">
+			<Device Id="7" DevType="111" DevFlags="#x0003" AmsPort="28679" AmsNetId="5.163.199.237.8.1" RemoteName="Device 7 (EtherCAT)" InfoImageId="15">
 				<Name>Device 7 (EtherCAT)</Name>
 				<AddressInfo>
 					<Pnp>
@@ -96418,7 +96618,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT/>
 			</Device>
-			<Device Id="8" DevType="165" AmsPort="28680" AmsNetId="192.168.1.73.9.1" RemoteName="Device 8 (EL6633-0010)">
+			<Device Id="8" DevType="165" AmsPort="28680" AmsNetId="5.163.199.237.9.1" RemoteName="Device 8 (EL6633-0010)">
 				<Name>Device 8 (EL6633-0010)</Name>
 				<AddressInfo>
 					<Ecat>
@@ -97251,7 +97451,7 @@ Submodule Info: 16 Byte Input
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500800010403}" Id="#x02030010"/>
+		<MappingInfo Identifier="{00000000-0100-0304-1001-040300010403}" Id="#x02030010"/>
 		<MappingInfo Identifier="{05000010-2001-0850-1000-120500205008}" Id="#x02030030" Watchdog="08000000040000000400000004000000"/>
 		<MappingInfo Identifier="{05000010-2001-0850-3000-040300205008}" Id="#x02030020" Watchdog="08000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1">
@@ -98912,112 +99112,50 @@ Submodule Info: 16 Byte Input
 		</OwnerA>
 		<OwnerA Name="TIPC^XtsTransport^XtsTransport Instance">
 			<OwnerB Name="TIID^Device 8 (EL6633-0010)^el6633-0010">
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[0]"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[1]" Size="8" OffsA="8"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[2]" Size="8" OffsA="16"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[3]" Size="8" OffsA="24"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[4]" Size="8" OffsA="32"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[5]" Size="8" OffsA="40"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[6]" Size="8" OffsA="48"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[7]" Size="8" OffsA="56"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[0]"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[1]" Size="8" OffsA="8"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[2]" Size="8" OffsA="16"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[3]" Size="8" OffsA="24"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[4]" Size="8" OffsA="32"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[5]" Size="8" OffsA="40"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[6]" Size="8" OffsA="48"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[7]" Size="8" OffsA="56"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.TransportControl.byCtrl" VarB="API^XtsTransportCtrl^Ctrl^Inputs^1 Byte Output[0]"/>
-				<Link VarA="PlcTask Inputs^MAPPING_in.TransportControl.byCtrl" VarB="API^XtsTransportCtrl^Ctrl^Inputs^1 Byte Output[1]" Size="8" OffsA="8"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[0]"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[10]" Size="8" OffsA="80"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[11]" Size="8" OffsA="88"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[12]" Size="8" OffsA="96"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[13]" Size="8" OffsA="104"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[1]" Size="8" OffsA="8"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[2]" Size="8" OffsA="16"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[3]" Size="8" OffsA="24"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[4]" Size="8" OffsA="32"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[5]" Size="8" OffsA="40"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[6]" Size="8" OffsA="48"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[7]" Size="8" OffsA="56"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[8]" Size="8" OffsA="64"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[9]" Size="8" OffsA="72"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[0]"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[10]" Size="8" OffsA="80"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[11]" Size="8" OffsA="88"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[12]" Size="8" OffsA="96"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[13]" Size="8" OffsA="104"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[1]" Size="8" OffsA="8"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[2]" Size="8" OffsA="16"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[3]" Size="8" OffsA="24"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[4]" Size="8" OffsA="32"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[5]" Size="8" OffsA="40"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[6]" Size="8" OffsA="48"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[7]" Size="8" OffsA="56"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[8]" Size="8" OffsA="64"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[9]" Size="8" OffsA="72"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[0]"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[10]" Size="8" OffsA="80"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[11]" Size="8" OffsA="88"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[12]" Size="8" OffsA="96"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[13]" Size="8" OffsA="104"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[14]" Size="8" OffsA="112"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[15]" Size="8" OffsA="120"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[16]" Size="8" OffsA="128"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[17]" Size="8" OffsA="136"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[18]" Size="8" OffsA="144"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[19]" Size="8" OffsA="152"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[1]" Size="8" OffsA="8"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[20]" Size="8" OffsA="160"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[21]" Size="8" OffsA="168"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[22]" Size="8" OffsA="176"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[23]" Size="8" OffsA="184"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[24]" Size="8" OffsA="192"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[25]" Size="8" OffsA="200"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[26]" Size="8" OffsA="208"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[27]" Size="8" OffsA="216"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[28]" Size="8" OffsA="224"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[29]" Size="8" OffsA="232"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[2]" Size="8" OffsA="16"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[30]" Size="8" OffsA="240"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[31]" Size="8" OffsA="248"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[32]" Size="8" OffsA="256"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[33]" Size="8" OffsA="264"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[34]" Size="8" OffsA="272"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[35]" Size="8" OffsA="280"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[36]" Size="8" OffsA="288"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[37]" Size="8" OffsA="296"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[38]" Size="8" OffsA="304"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[39]" Size="8" OffsA="312"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[3]" Size="8" OffsA="24"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[40]" Size="8" OffsA="320"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[41]" Size="8" OffsA="328"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[42]" Size="8" OffsA="336"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[43]" Size="8" OffsA="344"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[44]" Size="8" OffsA="352"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[45]" Size="8" OffsA="360"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[46]" Size="8" OffsA="368"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[47]" Size="8" OffsA="376"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[48]" Size="8" OffsA="384"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[49]" Size="8" OffsA="392"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[4]" Size="8" OffsA="32"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[50]" Size="8" OffsA="400"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[51]" Size="8" OffsA="408"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[52]" Size="8" OffsA="416"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[53]" Size="8" OffsA="424"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[54]" Size="8" OffsA="432"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[55]" Size="8" OffsA="440"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[56]" Size="8" OffsA="448"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[57]" Size="8" OffsA="456"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[58]" Size="8" OffsA="464"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[59]" Size="8" OffsA="472"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[5]" Size="8" OffsA="40"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[6]" Size="8" OffsA="48"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[7]" Size="8" OffsA="56"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[8]" Size="8" OffsA="64"/>
-				<Link VarA="PlcTask Outputs^MAPPING_out.TransportState.byState" VarB="API^XtsTransportState^State^Outputs^1 Byte Input[9]" Size="8" OffsA="72"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[0]"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[1]" Size="8" OffsA="8"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[2]" Size="8" OffsA="16"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[3]" Size="8" OffsA="24"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[4]" Size="8" OffsA="32"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[5]" Size="8" OffsA="40"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[6]" Size="8" OffsA="48"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[1]" VarB="API^XtsStation_1^Ctrl_State^Ctrl^1 Byte Output[7]" Size="8" OffsA="56"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[0]"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[1]" Size="8" OffsA="8"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[2]" Size="8" OffsA="16"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[3]" Size="8" OffsA="24"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[4]" Size="8" OffsA="32"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[5]" Size="8" OffsA="40"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[6]" Size="8" OffsA="48"/>
+				<Link VarA="PlcTask Inputs^MAPPING_XTS_in.StationControl.byCtrl[2]" VarB="API^XtsStationCtrl_2^Ctrl^Inputs^1 Byte Output[7]" Size="8" OffsA="56"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[0]"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[10]" Size="8" OffsA="80"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[11]" Size="8" OffsA="88"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[12]" Size="8" OffsA="96"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[13]" Size="8" OffsA="104"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[1]" Size="8" OffsA="8"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[2]" Size="8" OffsA="16"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[3]" Size="8" OffsA="24"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[4]" Size="8" OffsA="32"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[5]" Size="8" OffsA="40"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[6]" Size="8" OffsA="48"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[7]" Size="8" OffsA="56"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[8]" Size="8" OffsA="64"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[1]" VarB="API^XtsStation_1^Ctrl_State^State^1 Byte Input[9]" Size="8" OffsA="72"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[0]"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[10]" Size="8" OffsA="80"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[11]" Size="8" OffsA="88"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[12]" Size="8" OffsA="96"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[13]" Size="8" OffsA="104"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[1]" Size="8" OffsA="8"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[2]" Size="8" OffsA="16"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[3]" Size="8" OffsA="24"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[4]" Size="8" OffsA="32"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[5]" Size="8" OffsA="40"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[6]" Size="8" OffsA="48"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[7]" Size="8" OffsA="56"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[8]" Size="8" OffsA="64"/>
+				<Link VarA="PlcTask Outputs^MAPPING_XTS_out.StationState.byState[2]" VarB="API^XtsStationState_2^State^Outputs^1 Byte Input[9]" Size="8" OffsA="72"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Mover Axis 1">
 				<Link VarA="PlcTask Inputs^GVL_XTS.AxisRefMover[1].NcToPlc" VarB="Outputs^ToPlc"/>
