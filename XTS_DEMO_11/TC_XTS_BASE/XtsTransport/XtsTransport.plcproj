@@ -40,6 +40,10 @@
     <Compile Include="APPLICATION\StationParameterExample.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="APPLICATION\XTS_TRANSPORT_1.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>XTS_TRANSPORT\_Visualization\Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
     <Compile Include="APPLICATION\_config\StationParameterExample.TcPOU">
       <SubType>Code</SubType>
     </Compile>
