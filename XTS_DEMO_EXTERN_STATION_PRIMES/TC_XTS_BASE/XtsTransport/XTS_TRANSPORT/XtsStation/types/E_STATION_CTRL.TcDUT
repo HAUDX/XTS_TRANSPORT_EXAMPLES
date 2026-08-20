@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
-  <DUT Name="E_STATION_CTRL" Id="{128533f8-2c2f-4ccf-8328-f25bf81a55d1}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="E_STATION_CTRL" Id="{ae29496b-e1c6-4d1e-b8cf-3e8dd9cae84e}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 {attribute 'to_string'}

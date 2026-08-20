@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
-  <DUT Name="ST_Configuration" Id="{751e9be0-0116-4a27-b9d5-2088d21242fd}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Configuration" Id="{1a6e1536-77e9-4793-aea9-2b95e9d3473a}">
     <Declaration><![CDATA[TYPE ST_Configuration :
 STRUCT
   XtsStationParameter  : ARRAY[1..MAX_STATION] OF ST_STATION_PARAMETER;

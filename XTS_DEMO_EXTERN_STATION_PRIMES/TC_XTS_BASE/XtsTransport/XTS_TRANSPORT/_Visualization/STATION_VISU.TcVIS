@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
-  <Visu Name="STATION_VISU" Id="{4eb84cda-22b7-4c33-965e-9b07ef0c4d4f}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Visu Name="STATION_VISU" Id="{2a2f9d4b-5ed1-4007-b5bd-955f62b095aa}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
@@ -4875,7 +4875,7 @@
                               </o>
                               <v n="TypeNodeId" t="Int16">3</v>
                               <v n="TypeNodeIdLong">1217457711L</v>
-                              <v n="LibraryId">"visuelemswincontrols, 4.7.0.0 (system)"</v>
+                              <v n="LibraryId">"visuelemswincontrols, 4.8.0.0 (system)"</v>
                               <n n="ElementId" />
                               <n n="DisplayTextId" />
                               <n n="DescriptionTextID" />
@@ -4906,7 +4906,7 @@
                             </o>
                             <v n="TypeNodeId" t="Int16">2</v>
                             <v n="TypeNodeIdLong">2702530833L</v>
-                            <v n="LibraryId">"visuelemswincontrols, 4.7.0.0 (system)"</v>
+                            <v n="LibraryId">"visuelemswincontrols, 4.8.0.0 (system)"</v>
                             <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.Column"</v>
                             <n n="DescriptionTextID" />
@@ -4942,7 +4942,7 @@
                             </o>
                             <v n="TypeNodeId" t="Int16">3</v>
                             <v n="TypeNodeIdLong">1217457711L</v>
-                            <v n="LibraryId">"visuelemswincontrols, 4.7.0.0 (system)"</v>
+                            <v n="LibraryId">"visuelemswincontrols, 4.8.0.0 (system)"</v>
                             <n n="ElementId" />
                             <n n="DisplayTextId" />
                             <n n="DescriptionTextID" />
@@ -4989,7 +4989,7 @@
                         </o>
                         <v n="TypeNodeId" t="Int16">1</v>
                         <v n="TypeNodeIdLong">1668544811L</v>
-                        <v n="LibraryId">"visuelemswincontrols, 4.7.0.0 (system)"</v>
+                        <v n="LibraryId">"visuelemswincontrols, 4.8.0.0 (system)"</v>
                         <n n="ElementId" />
                         <v n="DisplayTextId">"TL_ElementProperties.Columns"</v>
                         <v n="DescriptionTextID">"TL_ElementProperties.Desc_Columns"</v>
@@ -5325,6 +5325,8 @@
                 <v>2e585694-d585-43ac-af9e-ff0eeb49b082</v>
                 <v>FB_Reinit</v>
                 <v>be5595f8-5e7a-43b3-a2d3-6587a6ad31b2</v>
+                <v>GetCallerNamespace</v>
+                <v>7ebda012-4708-5166-919e-3a5454db9eb3</v>
                 <v>GetClientData</v>
                 <v>f06203f7-6c52-4688-bfaa-d4a305b4fdab</v>
                 <v>GetDialogInterface</v>
@@ -5403,7 +5405,7 @@
                 <v>7b5ae676-6299-5e75-b932-d9507e58deea</v>
               </d>
               <v n="FbName">"NotImportant"</v>
-              <v n="FbGuid">{4eb84cda-22b7-4c33-965e-9b07ef0c4d4f}</v>
+              <v n="FbGuid">{2a2f9d4b-5ed1-4007-b5bd-955f62b095aa}</v>
             </o>
             <v n="GeneratedGlobalVisuVarsGuid">{40e2b860-e37a-4ee6-8bcb-9d3295ef279b}</v>
             <v n="GeneratedGlobalTheVisuVarlistGuid">{eab7b05e-534c-458a-9b67-27595fac12c6}</v>
@@ -5530,7 +5532,7 @@ END_VAR"</v>
         <Type n="Hashtable">System.Collections.Hashtable</Type>
         <Type n="HotkeyConfiguration">{6b108d46-58af-4e41-a3f4-174d8f160cc4}</Type>
         <Type n="InputBoxInputAction">{e8e7e747-f76f-4dee-ab1c-b9637e41ac26}</Type>
-        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.7.0.0, Culture=neutral, PublicKeyToken=null</Type>
+        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.8.0.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="Int16">System.Int16</Type>
         <Type n="Int32">System.Int32</Type>
         <Type n="Int64">System.Int64</Type>
@@ -5539,7 +5541,7 @@ END_VAR"</v>
         <Type n="String">System.String</Type>
         <Type n="StructuredTypeNode">{503c5b2e-e80e-4ee7-ae00-c5b93a62b1aa}</Type>
         <Type n="STSnippetInputAction">{6302d3fe-6ea5-4c42-819a-a9734a133b3d}</Type>
-        <Type n="STSnippetInputAction[]">_3S.CoDeSys.VisualElem.STSnippetInputAction[], VisualElem.plugin, Version=4.7.0.0, Culture=neutral, PublicKeyToken=null</Type>
+        <Type n="STSnippetInputAction[]">_3S.CoDeSys.VisualElem.STSnippetInputAction[], VisualElem.plugin, Version=4.8.0.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="TextDocument">{f3878285-8e4f-490b-bb1b-9acbb7eb04db}</Type>
         <Type n="TypeClass">{16f7aa24-038f-444e-9d81-b001bc091d35}</Type>
         <Type n="TypeNodeAttributes2">{c1464dbe-c10d-4717-be8f-63efe8638434}</Type>

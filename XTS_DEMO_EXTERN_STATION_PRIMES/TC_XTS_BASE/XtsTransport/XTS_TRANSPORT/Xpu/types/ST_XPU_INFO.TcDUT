@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="ST_XPU_INFO" Id="{21b2b185-aa27-4963-a0ed-da62acce699c}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_XPU_INFO" Id="{c22f480e-0a9f-4fca-9520-50f41302bae5}">
     <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
 TYPE ST_XPU_INFO :
 STRUCT

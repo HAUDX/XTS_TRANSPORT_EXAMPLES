@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <DUT Name="ST_GEAR_DATA" Id="{058e7510-a7ec-4bcf-bb55-c337667a6f5b}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_GEAR_DATA" Id="{09e03144-eb19-446e-83cc-adf1de4bf67d}">
     <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
 TYPE ST_GEAR_DATA :
 STRUCT

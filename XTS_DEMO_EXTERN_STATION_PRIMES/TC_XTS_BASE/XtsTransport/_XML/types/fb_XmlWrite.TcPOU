@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <POU Name="fb_XmlWrite" Id="{f97ffbe8-6921-48b2-adbc-243f0b4d3695}" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="fb_XmlWrite" Id="{5887747a-bd05-4f0d-afa4-d0d2e1e6f71c}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fb_XmlWrite
 VAR_INPUT
   bExecute      : BOOL;

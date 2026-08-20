@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
-  <Visu Name="MOVER_VISU" Id="{c9fb373c-2482-41b3-8168-553de4317393}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Visu Name="MOVER_VISU" Id="{39b641ad-e45e-4d17-b460-65d72154324e}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
@@ -6457,6 +6457,8 @@
                 <v>f193d7b3-a09b-4259-8f7b-30d85358effe</v>
                 <v>FB_Reinit</v>
                 <v>601af910-d5f4-4c8f-9db6-81b8f7cd7dbc</v>
+                <v>GetCallerNamespace</v>
+                <v>9c30845a-02f0-51f3-958c-a504a46bb6a7</v>
                 <v>GetClientData</v>
                 <v>1ca5ba60-e1aa-4151-9e58-06902d9b3c95</v>
                 <v>GetDialogInterface</v>
@@ -6535,7 +6537,7 @@
                 <v>59166de0-a3de-5774-ac04-e37991055577</v>
               </d>
               <v n="FbName">"NotImportant"</v>
-              <v n="FbGuid">{c9fb373c-2482-41b3-8168-553de4317393}</v>
+              <v n="FbGuid">{39b641ad-e45e-4d17-b460-65d72154324e}</v>
             </o>
             <v n="GeneratedGlobalVisuVarsGuid">{cdca0d75-51bd-4b17-95bc-90ee11e889ae}</v>
             <v n="GeneratedGlobalTheVisuVarlistGuid">{9979acd8-2390-4dee-8e27-7b0f0cd1e834}</v>
@@ -6651,7 +6653,7 @@ END_VAR"</v>
         <Type n="Hashtable">System.Collections.Hashtable</Type>
         <Type n="HotkeyConfiguration">{6b108d46-58af-4e41-a3f4-174d8f160cc4}</Type>
         <Type n="InputBoxInputAction">{e8e7e747-f76f-4dee-ab1c-b9637e41ac26}</Type>
-        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.7.0.0, Culture=neutral, PublicKeyToken=null</Type>
+        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.8.0.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="Int16">System.Int16</Type>
         <Type n="Int32">System.Int32</Type>
         <Type n="Int64">System.Int64</Type>

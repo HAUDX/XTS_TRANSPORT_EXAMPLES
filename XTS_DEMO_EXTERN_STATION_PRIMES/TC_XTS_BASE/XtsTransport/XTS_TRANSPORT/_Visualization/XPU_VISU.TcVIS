@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <Visu Name="XPU_VISU" Id="{31b44c17-32c8-458e-b6d5-8ea923b3dc5d}">
+  <Visu Name="XPU_VISU" Id="{b07356dd-eaa8-4a2a-bf96-46ae8e628329}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
@@ -2345,7 +2345,7 @@
                 <v>52077d81-26bb-4f71-b9f7-a40aaff748c6</v>
               </d>
               <v n="FbName">"NotImportant"</v>
-              <v n="FbGuid">{31b44c17-32c8-458e-b6d5-8ea923b3dc5d}</v>
+              <v n="FbGuid">{b07356dd-eaa8-4a2a-bf96-46ae8e628329}</v>
             </o>
             <v n="GeneratedGlobalVisuVarsGuid">{139da292-b619-4949-9819-7a0819719bf0}</v>
             <v n="GeneratedGlobalTheVisuVarlistGuid">{7e9f8d69-2ccd-486c-8e23-3ee7b68bda1b}</v>

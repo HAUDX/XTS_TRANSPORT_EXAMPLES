@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="ST_APP_STATE" Id="{2996069c-dabf-495e-beb7-4ffe15dc0c26}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_APP_STATE" Id="{0a63471f-5d7a-410d-84b1-8dfcda8dc179}">
     <Declaration><![CDATA[TYPE ST_APP_STATE :
 STRUCT
   AppInit             : E_PROGRESS;

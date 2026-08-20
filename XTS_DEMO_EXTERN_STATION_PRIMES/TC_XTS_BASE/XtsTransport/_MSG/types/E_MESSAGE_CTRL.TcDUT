@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <DUT Name="E_MESSAGE_CTRL" Id="{8087737e-4763-4f02-8312-755fcb6fa599}">
+  <DUT Name="E_MESSAGE_CTRL" Id="{a7a6b6ed-98e4-4716-84e6-0d7790c936bb}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 {attribute 'to_string'}

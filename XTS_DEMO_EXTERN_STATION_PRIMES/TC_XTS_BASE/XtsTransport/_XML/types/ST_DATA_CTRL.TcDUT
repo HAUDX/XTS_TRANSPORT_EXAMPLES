@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="ST_DATA_CTRL" Id="{5b1b02c1-1ea1-4c80-a7b2-ac442c0fa634}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_DATA_CTRL" Id="{67c50860-e659-4b76-8476-f836b9442076}">
     <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
 TYPE ST_DATA_CTRL :
 STRUCT

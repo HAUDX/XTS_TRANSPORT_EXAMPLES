@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="ST_APP_CTRL" Id="{a6664517-aaf7-4d6f-b90c-256468254a32}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_APP_CTRL" Id="{56c1e37d-b97c-4631-b981-009431e040b2}">
     <Declaration><![CDATA[TYPE ST_APP_CTRL :
 STRUCT
   Cmd       : E_INSTANCE_CMD;

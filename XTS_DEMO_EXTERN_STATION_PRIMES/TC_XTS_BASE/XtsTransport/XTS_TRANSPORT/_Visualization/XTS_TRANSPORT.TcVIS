@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
-  <Visu Name="XTS_TRANSPORT" Id="{1677eb1f-a145-4dc2-89c6-13c253be66e6}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Visu Name="XTS_TRANSPORT" Id="{1c875790-d019-4867-ade1-f296225738e1}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
@@ -2125,6 +2125,8 @@
                 <v>4a092284-c234-4ee8-9c1b-5c3626751865</v>
                 <v>FB_Reinit</v>
                 <v>69c816b8-d3cb-4bc8-bfdf-912ce5a5b976</v>
+                <v>GetCallerNamespace</v>
+                <v>d13fd47e-4821-53e8-a643-d0f249830a2b</v>
                 <v>GetClientData</v>
                 <v>16c7d678-6862-4239-b687-f372b2dbb88e</v>
                 <v>GetElementArray</v>
@@ -2191,7 +2193,7 @@
                 <v>316f9186-fcca-5a65-90d6-4b9b8579bbca</v>
               </d>
               <v n="FbName">"NotImportant"</v>
-              <v n="FbGuid">{1677eb1f-a145-4dc2-89c6-13c253be66e6}</v>
+              <v n="FbGuid">{1c875790-d019-4867-ade1-f296225738e1}</v>
             </o>
             <v n="GeneratedGlobalVisuVarsGuid">{a26a7a86-a5da-488f-87ca-92bdc7e30fdc}</v>
             <v n="GeneratedGlobalTheVisuVarlistGuid">{d8bc1664-54bc-4fbd-b77d-ed6cc38eba67}</v>
