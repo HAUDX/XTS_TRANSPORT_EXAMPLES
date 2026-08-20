@@ -27,7 +27,7 @@ VAR
   tIdleWriteApplication   : TIME := T#5S;
   tonIdleWriteApplication : Tc2_Standard.TON;
   //-------------------------------------------------------------------------------------------------------------
-  bWriteVariant           : BOOL;
+  bWriteVariant           : BOOL := TRUE;
   nParameterVariant       : UINT;
   //-------------------------------------------------------------------------------------------------------------
   sStationText            : STRING;
