@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_STATION_PARAMETER" Id="{7db89191-8bc2-4b6f-b64f-c0d8eab549e4}">
+    <Declaration><![CDATA[TYPE ST_STATION_PARAMETER :
+STRUCT
+  eType             : E_STATION_TYPE := 1;  // StationProcess or StationGearInPos
+  sText             : STRING(80);           // only description
+  rPosWait          : REAL;                 // start of station, 
+                                            // a sending station is using this value 
+                                            // to send mover to
+
+  rReleaseDistance  : REAL;                 // distance mover has to travel (from ActPos) 
+                                            // in order for station to go back to disable
+
+  rGap              : REAL;
+  rVelo             : REAL;
+  rAccDec           : REAL;
+  rJerk             : REAL;
+
+  // how many nests (stop positions) mover has to stop at (1 = default)
+  nConfiguredStopCount  : USINT := 1; // 1-8 --> NestMask = BYTE
+
+  // mover stop position in station, relative to rPosWait!!
+  rPosStop          : ARRAY[1..8] OF LREAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

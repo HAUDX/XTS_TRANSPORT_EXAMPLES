@@ -11,11 +11,13 @@
 - Some examples are case studies from POC designs, which later were changed/adapted by users.
 - The examples shall illustrate the multi layered approach when dealing with complex transport logic and asynchronuous command issuing.
 - All examples are built upon the same basic ctrl/state handshakes.
+- All examples are ready to run in simulation.
 
 This repository serves as the blueprint for translating the XTS_TRANSPORT_LAYER into physical mechatronic reality. 
 - Architectural Philosophy: **The Diplomat Pattern**
   - All examples enforce a strict division between **[APPLICATION]** and **[XTS]** environments/folders.
   - **[XTS_DEMO_11]** is the entry level example, ready to run, showcasing the base implementation all other examples use.
+  - **[XTS_DEMO_12]** is the entry level example that showcases the 2-PLC approach. This might be helpful if you intend to use the transport layer via a network or fieldbus.
   
 - The architecture operates on the principle of strict namespace encapsulation. 
   - The core TcGVL (Global Variable List) files are treated as sovereign territory. 
@@ -70,6 +72,14 @@ The baseline examples for starting, stopping, and clearing a transport applicati
   Illustrates the strict sequential gating: waiting for MAIN.eInit = PROGRESS_DONE before any physical movement is permitted.
   Shows exact manual override procedures (bStart, bReset) for safely clearing groups and halting movement.
   This example is the template for all examples in the entire repository. Advanced components, such as Process Collectors (fb_ProcessCollector) and complex routing instances (fb_Instances), are built upon these exact same interfaces.
+
+- **[XTS_DEMO_12]:** Basic Station Handshakes. Demonstrates the basic MAIN_APP(PRG) in the second PLC (ExternControl) procedures for track startup and station operation. 
+  MAIN_APP(PRG) is used for running the handshakes in.
+  Illustrates the strict sequential gating: waiting for MAIN.eInit = PROGRESS_DONE before any physical movement is permitted.
+  Shows exact manual override procedures (bStart, bReset) for safely clearing groups and halting movement.
+  Separation into 2-PLC solution enforces clear interfaces and prevents dirty hacks around facades and interfaces.
+  This example is the template for all examples in the entire repository. Advanced components, such as Process Collectors (fb_ProcessCollector) and complex routing instances (fb_Instances), are built upon these exact same interfaces.
+
 
    
 - **[XTS_DEMO_LINE_SORT]:** Mover-Centric Command. A 2-PLC setup (XtsTransport and ExternControl) managing isolated parts with singular movers. 
