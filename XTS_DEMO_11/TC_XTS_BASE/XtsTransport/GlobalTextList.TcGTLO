@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <GlobalTextList Name="GlobalTextList" Id="{b4cc1744-d451-4b9f-9890-15a444eff173}">
     <XmlArchive>
       <Data>
@@ -321,6 +321,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"112"</v>
+              <v n="TextDefault">"nMask"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"529"</v>
+              <v n="TextDefault">"nMoverId"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"756"</v>
               <v n="TextDefault">"nMoverSelected: %d"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -328,6 +338,11 @@
             <o>
               <v n="TextID">"669"</v>
               <v n="TextDefault">"nStation selected: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"93"</v>
+              <v n="TextDefault">"nTargetStation"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -348,6 +363,11 @@
             <o>
               <v n="TextID">"320"</v>
               <v n="TextDefault">"Queue: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"602"</v>
+              <v n="TextDefault">"rOffset"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

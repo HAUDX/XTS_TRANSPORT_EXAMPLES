@@ -56,6 +56,10 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Compile Include="APPLICATION\StationPrimesExample.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="APPLICATION\XTS_TRANSPORT_1.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>XTS_TRANSPORT\_Visualization\Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
     <Compile Include="APPLICATION\_types\Application\E_APP_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <POU Name="MAIN_APP" Id="{1c97d90f-7a21-4183-a188-63046e9cbf94}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -162,12 +162,12 @@ OF
     // first cycle startup
     // - wait for extern to give the command, if we are waiting here MAIN is ready, extern can see that
     //---------------------------------------------------------------------------------------------------------------
-    GVL_XTS.StationStartIndex                 := 52;
-    GVL_XTS.StationStart                      := GVL_XTS.StationParameter[GVL_XTS.StationStartIndex];
     GVL_MSG_XTS.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     eInit                                     := E_PROGRESS.PROGRESS_INIT;
 
   E_PROGRESS.PROGRESS_INIT:
+    GVL_XTS.StationStartIndex                 := 52;
+    GVL_XTS.StationStart                      := GVL_XTS.StationParameter[GVL_XTS.StationStartIndex];
     //---------------------------------------------------------------------------------------------------------------
     // wait for extern to select valid variant
     //---------------------------------------------------------------------------------------------------------------
@@ -310,6 +310,8 @@ END_IF
 //############################################################################
 //  Station Configuration data/	
 //############################################################################
+    GVL_XTS.StationStartIndex                 := 52;
+    GVL_XTS.StationStart                      := GVL_XTS.StationParameter[GVL_XTS.StationStartIndex];
 ]]></ST>
     </Implementation>
     <Action Name="J_100000_V3000" Id="{f4a1ce19-3817-4320-aee0-f83d405e006b}">
@@ -4271,10 +4273,9 @@ GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600000.0;]]
       <LineId Id="88" Count="17" />
       <LineId Id="240" Count="0" />
       <LineId Id="106" Count="0" />
-      <LineId Id="389" Count="0" />
-      <LineId Id="388" Count="0" />
       <LineId Id="108" Count="2" />
       <LineId Id="138" Count="0" />
+      <LineId Id="393" Count="1" />
       <LineId Id="308" Count="1" />
       <LineId Id="311" Count="0" />
       <LineId Id="342" Count="3" />
@@ -4295,6 +4296,7 @@ GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600000.0;]]
       <LineId Id="384" Count="0" />
       <LineId Id="221" Count="12" />
       <LineId Id="349" Count="27" />
+      <LineId Id="390" Count="1" />
       <LineId Id="236" Count="0" />
     </LineIds>
     <LineIds Name="MAIN_APP.J_100000_V3000">
