@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <Visu Name="MOVER_VISU" Id="{c9fb373c-2482-41b3-8168-553de4317393}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"9"</v>
+          <v n="UniqueIdGenerator">"12"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -151,7 +151,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"MAIN.nMoverSelected"</v>
+                      <v n="Value">"VISU_XTS.nMoverSelected"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -186,6 +186,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -343,7 +344,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"MAIN.sMoverState"</v>
+                      <v n="Value">"VISU_XTS.sMoverState"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -702,7 +703,7 @@
                     </o>
                     <o>
                       <v n="Id">397264524L</v>
-                      <v n="Value">"GVL_XTS.MoverCtrl[MAIN.nMoverSelected].Cmd"</v>
+                      <v n="Value">"GVL_XTS.MoverCtrl[VISU_XTS.nMoverSelected].Cmd"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -883,7 +884,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"MAIN.sMoverResult"</v>
+                      <v n="Value">"VISU_XTS.sMoverResult"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -2440,7 +2441,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoveData[MAIN.nMoverSelected].rPos"</v>
+                      <v n="Value">"GVL_XTS.MoveData[VISU_XTS.nMoverSelected].rPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -2475,6 +2476,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -2632,7 +2634,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoveData[MAIN.nMoverSelected].rVelo"</v>
+                      <v n="Value">"GVL_XTS.MoveData[VISU_XTS.nMoverSelected].rVelo"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -2667,6 +2669,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -2824,7 +2827,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoveData[MAIN.nMoverSelected].rAcc"</v>
+                      <v n="Value">"GVL_XTS.MoveData[VISU_XTS.nMoverSelected].rAcc"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -2859,6 +2862,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3016,7 +3020,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoveData[MAIN.nMoverSelected].rJerk"</v>
+                      <v n="Value">"GVL_XTS.MoveData[VISU_XTS.nMoverSelected].rJerk"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -3051,6 +3055,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3208,7 +3213,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoveData[MAIN.nMoverSelected].rGap"</v>
+                      <v n="Value">"GVL_XTS.MoveData[VISU_XTS.nMoverSelected].rGap"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -3243,6 +3248,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3400,7 +3406,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoveData[MAIN.nMoverSelected].rOverride"</v>
+                      <v n="Value">"GVL_XTS.MoveData[VISU_XTS.nMoverSelected].rOverride"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -3435,6 +3441,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3592,7 +3599,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoveData[MAIN.nMoverSelected].rDelta"</v>
+                      <v n="Value">"GVL_XTS.MoveData[VISU_XTS.nMoverSelected].rDelta"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -3627,6 +3634,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3784,7 +3792,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoveData[MAIN.nMoverSelected].rDistance"</v>
+                      <v n="Value">"GVL_XTS.MoveData[VISU_XTS.nMoverSelected].rDistance"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -3819,6 +3827,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -4841,7 +4850,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rAbsActPos"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].rAbsActPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5014,7 +5023,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rModuloActPos"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].rModuloActPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5187,7 +5196,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rAbsTargetPos"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].rAbsTargetPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5360,7 +5369,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rModuloTargetPos"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].rModuloTargetPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5533,7 +5542,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].nErrorId"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].nErrorId"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5643,7 +5652,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverEnabled"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].bMoverEnabled"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -5816,7 +5825,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverError"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].bMoverError"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -5989,7 +5998,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverCoupled"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].bMoverCoupled"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6162,7 +6171,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverStandstill"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].bMoverStandstill"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6335,7 +6344,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverAvoidingCollision"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].bMoverAvoidingCollision"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6457,6 +6466,8 @@
                 <v>f193d7b3-a09b-4259-8f7b-30d85358effe</v>
                 <v>FB_Reinit</v>
                 <v>601af910-d5f4-4c8f-9db6-81b8f7cd7dbc</v>
+                <v>GetCallerNamespace</v>
+                <v>3bee825b-2725-5640-b203-7ce570b16923</v>
                 <v>GetClientData</v>
                 <v>1ca5ba60-e1aa-4151-9e58-06902d9b3c95</v>
                 <v>GetDialogInterface</v>
@@ -6628,8 +6639,13 @@ END_VAR"</v>
                 <v n="Width">790</v>
                 <v n="Height">731</v>
               </o>
+              <v>2</v>
+              <o>
+                <v n="Width">790</v>
+                <v n="Height">731</v>
+              </o>
             </d2>
-            <v n="Version">1</v>
+            <v n="Version">2</v>
           </o>
           <n n="FrameInterfaceDataModel" />
         </o>
@@ -6651,7 +6667,7 @@ END_VAR"</v>
         <Type n="Hashtable">System.Collections.Hashtable</Type>
         <Type n="HotkeyConfiguration">{6b108d46-58af-4e41-a3f4-174d8f160cc4}</Type>
         <Type n="InputBoxInputAction">{e8e7e747-f76f-4dee-ab1c-b9637e41ac26}</Type>
-        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.7.0.0, Culture=neutral, PublicKeyToken=null</Type>
+        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.10.0.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="Int16">System.Int16</Type>
         <Type n="Int32">System.Int32</Type>
         <Type n="Int64">System.Int64</Type>

@@ -5931,12 +5931,12 @@ and will return to Group State Standby when the situation permits.
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{B47A481E-EB9F-357C-E102-48878B97DB7B}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..4] OF BYTE</Name>
-			<BitSize>32</BitSize>
+			<Name GUID="{7BB99BC5-EA9A-9AE9-9479-DBE8E93920B5}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..6] OF BYTE</Name>
+			<BitSize>48</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>4</Elements>
+				<Elements>6</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -6048,6 +6048,15 @@ and will return to Group State Standby when the situation permits.
 			<ArrayInfo>
 				<LBound>1</LBound>
 				<Elements>60</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{EE2DD15A-CE87-F2A7-3633-DEBEFECC6106}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..20] OF BYTE</Name>
+			<BitSize>160</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>20</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -324614,7 +324623,7 @@ and will return to Group State Standby when the situation permits.
 		</Motion>
 		<Plc>
 			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="TEST" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{BCE21F4A-4505-1115-6218-F86D97F66E29}" TmcPath="XtsTransport\XtsTransport.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{84B7D904-1D54-A22F-F60A-B9AA50061F5F}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -324625,7 +324634,7 @@ and will return to Group State Standby when the situation permits.
 						</Var>
 						<Var>
 							<Name>MAPPING_XTS_out.AppState.byState</Name>
-							<Type GUID="{B47A481E-EB9F-357C-E102-48878B97DB7B}">ARRAY [1..4] OF BYTE</Type>
+							<Type GUID="{EE2DD15A-CE87-F2A7-3633-DEBEFECC6106}">ARRAY [1..20] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>MAPPING_XTS_out.InstanceState.byState</Name>
@@ -325453,7 +325462,7 @@ and will return to Group State Standby when the situation permits.
 						</Var>
 						<Var>
 							<Name>MAPPING_XTS_in.AppControl.byCtrl</Name>
-							<Type GUID="{B47A481E-EB9F-357C-E102-48878B97DB7B}">ARRAY [1..4] OF BYTE</Type>
+							<Type GUID="{7BB99BC5-EA9A-9AE9-9479-DBE8E93920B5}">ARRAY [1..6] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>MAPPING_XTS_in.InstanceControl.byCtrl</Name>
@@ -326318,7 +326327,7 @@ and will return to Group State Standby when the situation permits.
 				</Instance>
 			</Project>
 			<Project GUID="{D083EE86-F0E4-4E86-B9F5-5606BF356788}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="TEST, WIN" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{1D3D43A0-A38F-F51E-6CD7-CB6DB3250B28}" TmcPath="ExternControl\ExternControl.tmc">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{6C0D0CBB-845B-9C7C-6123-47A3E374A251}" TmcPath="ExternControl\ExternControl.tmc">
 					<Name>ExternControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -326337,7 +326346,7 @@ and will return to Group State Standby when the situation permits.
 						</Var>
 						<Var>
 							<Name>MAPPING_out.AppControl.byCtrl</Name>
-							<Type GUID="{B47A481E-EB9F-357C-E102-48878B97DB7B}">ARRAY [1..4] OF BYTE</Type>
+							<Type GUID="{7BB99BC5-EA9A-9AE9-9479-DBE8E93920B5}">ARRAY [1..6] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>MAPPING_out.TransportControl.byCtrl</Name>
@@ -326346,10 +326355,6 @@ and will return to Group State Standby when the situation permits.
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PLC_1 Inputs</Name>
-						<Var>
-							<Name>MAPPING_in.AppState.byState</Name>
-							<Type GUID="{B47A481E-EB9F-357C-E102-48878B97DB7B}">ARRAY [1..4] OF BYTE</Type>
-						</Var>
 						<Var>
 							<Name>MAPPING_in.TicketListOutput.byData</Name>
 							<Type GUID="{20DC6834-450D-45F9-0CA0-FFD67A31D79B}">ARRAY [1..8] OF BYTE</Type>
@@ -326363,10 +326368,21 @@ and will return to Group State Standby when the situation permits.
 							<Type GUID="{4FFABB13-41BA-5727-5A7C-BAE56F7EE926}">ARRAY [1..8] OF ARRAY [1..8] OF BYTE</Type>
 						</Var>
 						<Var>
+							<Name>MAPPING_in.AppState.byState</Name>
+							<Type GUID="{EE2DD15A-CE87-F2A7-3633-DEBEFECC6106}">ARRAY [1..20] OF BYTE</Type>
+						</Var>
+						<Var>
 							<Name>MAPPING_in.TransportState.byState</Name>
 							<Type GUID="{743F4BFB-75B7-969D-AC1C-904D1F6CC9C4}">ARRAY [1..60] OF BYTE</Type>
 						</Var>
 					</Vars>
+					<UnrestoredVarLinks ImportTime="2026-09-14T08:07:15">
+						<OwnerA Name="InputDst" Prefix="TIPC^ExternControl^ExternControl Instance" Type="1">
+							<OwnerB Name="TIPC^XtsTransport^XtsTransport Instance">
+								<Link VarA="MAPPING_in.AppState.byState" TypeA="ARRAY [1..4] OF BYTE" InOutA="0" GuidA="{B47A481E-EB9F-357C-E102-48878B97DB7B}" VarB="PlcTask Outputs^MAPPING_XTS_out.AppState.byState" RestoreInfo="TypeMismatch" OldTypeA="ARRAY [1..4] OF BYTE" OldGuidA="{B47A481E-EB9F-357C-E102-48878B97DB7B}" NewTypeA="ARRAY [1..20] OF BYTE" NewGuidA="{EE2DD15A-CE87-F2A7-3633-DEBEFECC6106}"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
 					<Contexts>
 						<Context>
 							<Id>0</Id>

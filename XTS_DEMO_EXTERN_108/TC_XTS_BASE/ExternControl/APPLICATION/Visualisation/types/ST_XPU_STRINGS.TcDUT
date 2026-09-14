@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_XPU_STRINGS" Id="{458cf108-08f8-45f7-8d3f-ecff5a3ee58b}">
+    <Declaration><![CDATA[TYPE ST_XPU_STRINGS :
+STRUCT
+  sXpuState       ,
+  sXpuResult      ,
+  sXpuCyclicCheck ,
+  sXpuOpMode      ,
+  sXpuMoverId_DetectionMode,
+  sXpuMoverPosAssignement : STRING(30) := 'NULL';
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

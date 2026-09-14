@@ -29,6 +29,56 @@
     <Compile Include="APPLICATION\MAIN_APP.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="APPLICATION\Visualisation\APP_CONTROL.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\textlists\TL_E_APP_VARIANT.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\textlists\TL_E_CTRL_MOVER.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\textlists\TL_E_CTRL_STATION.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\textlists\TL_E_CTRL_TRANSPORT.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\textlists\TL_E_CTRL_XPU.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\textlists\TL_E_INSTANCE_CMD.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\textlists\TL_E_MOVER_SELECTOR.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\textlists\TL_E_STATION_PARAMETER_VARIANT.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\types\ST_XPU_STRINGS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\types\T_CA_GROUP.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\types\T_MOVER_SELECTOR.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\types\T_XPU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\VISU_XTS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Visualisation\XTS_TRANSPORT.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
     <Compile Include="APPLICATION\_types\Application\E_APP_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -84,6 +134,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\T_PROCESS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAIN.TcPOU">
@@ -183,6 +236,9 @@
     <Compile Include="PLC_1.TcTTO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Visualization Manager.TcVMO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="XTS\CaGroup\types\E_CA_GROUP_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -194,7 +250,81 @@
     </Compile>
     <Compile Include="XTS\GVL_XTS.TcGVL">
       <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="XTS\GVL_XTS_CONSTANTS.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\GVL_XTS_VERSION.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\E_MOVER_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\E_MOVER_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\E_MOVER_SELECTOR.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\E_MOVER_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_GEAR_DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_INFO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_SELECTOR_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVER_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\Mover\types\ST_MOVE_DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\E_STATION_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\E_STATION_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\E_STATION_GEAR_DISTANCE_AXIS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\E_STATION_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\E_STATION_TYPE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\ST_STATION_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\ST_STATION_GEAR_PARAMETER.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\ST_STATION_LIST_RESULT.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\ST_STATION_MOVER_DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\ST_STATION_PARAMETER.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\ST_STATION_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS\XtsStation\types\T_NEST_OFFSET.TcDUT">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS\Xpu\types\E_XPU_CHECK.TcDUT">
       <SubType>Code</SubType>
@@ -255,6 +385,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="APPLICATION\Visualisation" />
+    <Folder Include="APPLICATION\Visualisation\textlists" />
+    <Folder Include="APPLICATION\Visualisation\types" />
     <Folder Include="APPLICATION\_types" />
     <Folder Include="APPLICATION" />
     <Folder Include="APPLICATION\_types\Application" />
@@ -267,6 +400,10 @@
     <Folder Include="XTS" />
     <Folder Include="XTS\CaGroup" />
     <Folder Include="XTS\CaGroup\types" />
+    <Folder Include="XTS\Mover" />
+    <Folder Include="XTS\Mover\types" />
+    <Folder Include="XTS\XtsStation" />
+    <Folder Include="XTS\XtsStation\types" />
     <Folder Include="XTS\Xpu" />
     <Folder Include="XTS\Xpu\types" />
     <Folder Include="XTS\XtsTransportUnit" />
@@ -274,6 +411,53 @@
     <Folder Include="XTS\_types" />
   </ItemGroup>
   <ItemGroup>
+    <PlaceholderReference Include="CmpDynamicText">
+      <DefaultResolution>CmpDynamicText, * (System)</DefaultResolution>
+      <Namespace>CmpDynamicText</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuElemMeter">
+      <DefaultResolution>VisuElemMeter, 4.10.0.0 (System)</DefaultResolution>
+      <Namespace>VisuElemMeter</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuElems">
+      <DefaultResolution>VisuElems, 4.10.0.0 (System)</DefaultResolution>
+      <Namespace>VisuElems</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuElemsSpecialControls">
+      <DefaultResolution>VisuElemsSpecialControls, 4.7.0.0 (System)</DefaultResolution>
+      <Namespace>VisuElemsSpecialControls</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuElemsWinControls">
+      <DefaultResolution>VisuElemsWinControls, 4.10.0.0 (System)</DefaultResolution>
+      <Namespace>VisuElemsWinControls</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuElemTextEditor">
+      <DefaultResolution>VisuElemTextEditor, 4.8.0.0 (System)</DefaultResolution>
+      <Namespace>VisuElemTextEditor</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuInputs">
+      <DefaultResolution>VisuInputs, 4.7.0.0 (System)</DefaultResolution>
+      <Namespace>VisuInputs</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuNativeControl">
+      <DefaultResolution>VisuNativeControl, 4.9.0.0 (System)</DefaultResolution>
+      <Namespace>VisuNativeControl</Namespace>
+      <SystemLibrary>true</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
     <PlaceholderReference Include="Tc2_EtherCAT">
       <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_EtherCAT</Namespace>
@@ -298,6 +482,10 @@
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
       <SystemLibrary>true</SystemLibrary>
+    </PlaceholderReference>
+    <PlaceholderReference Include="VisuDialogs">
+      <DefaultResolution>VisuDialogs, * (System)</DefaultResolution>
+      <Namespace>VisuDialogs</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>

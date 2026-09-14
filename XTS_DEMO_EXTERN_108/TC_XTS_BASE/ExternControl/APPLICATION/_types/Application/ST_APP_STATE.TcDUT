@@ -3,8 +3,13 @@
   <DUT Name="ST_APP_STATE" Id="{f7ba8976-edb6-4075-a2b7-60fd6a281d24}">
     <Declaration><![CDATA[TYPE ST_APP_STATE :
 STRUCT
-  AppInit             : E_PROGRESS;
-  State            : E_INSTANCE_STATE;
+  AppInit           : E_PROGRESS;
+  State             : E_INSTANCE_STATE;
+
+  Instance          : E_INSTANCE;  // process ID from which the MoverPerMinute counter is copied
+  MoverPerMinute    : UDINT;
+  MoverTotal        : UDINT;
+  StationParameterVariant : UDINT;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

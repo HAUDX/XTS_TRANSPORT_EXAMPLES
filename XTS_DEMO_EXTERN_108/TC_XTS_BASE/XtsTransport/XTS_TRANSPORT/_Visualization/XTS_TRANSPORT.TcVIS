@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"56"</v>
+          <v n="UniqueIdGenerator">"71"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -518,7 +518,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"MAIN_XTS.sTransportState"</v>
+                      <v n="Value">"VISU_XTS.sTransportState"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -691,7 +691,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"MAIN_XTS.sTransportResult"</v>
+                      <v n="Value">"VISU_XTS.sTransportResult"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -864,7 +864,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"MAIN_XTS.sTransportCheck"</v>
+                      <v n="Value">"VISU_XTS.sTransportCheck"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -1361,7 +1361,7 @@
                       <o n="Value" t="VisualizationNode">
                         <v n="VisuNodeReferenceGuid">{00000000-0000-0000-0000-000000000000}</v>
                         <n n="VisuNodeReference" />
-                        <v n="VisNodeRefs33">"XPU_VISU"</v>
+                        <v n="VisNodeRefs33">"T_XPU"</v>
                         <l n="TypeNodeChildren" t="ArrayList" cet="BasicTypeNode">
                           <o>
                             <v n="Flags">2L</v>
@@ -1433,7 +1433,7 @@
                           </o>
                           <o>
                             <v n="Flags">2L</v>
-                            <v n="BasicTypeNodeValue">"MAIN_XTS.stXpuStrings"</v>
+                            <v n="BasicTypeNodeValue">"VISU_XTS.stXpuStrings"</v>
                             <v n="BasicTypeNodeAcceptsExpression">true</v>
                             <n n="BasicTypeNodeFastAccess" />
                             <a n="BasicTypeNodeEnumValues" et="String" />
@@ -1507,7 +1507,7 @@
                     </o>
                     <o>
                       <v n="Id">3919086412L</v>
-                      <v n="Value">"MAIN_XTS.stXpuStrings"</v>
+                      <v n="Value">"VISU_XTS.stXpuStrings"</v>
                     </o>
                   </l>
                 </o>
@@ -1520,7 +1520,7 @@
                   <l n="ContainedGuids" t="ArrayList" />
                   <l n="ContainedVisualizations" t="ArrayList" />
                   <a n="ContainedVisualizations33" cet="String">
-                    <v>XPU_VISU</v>
+                    <v>T_XPU</v>
                   </a>
                 </o>
                 <d n="VisualElementInputActions" t="Hashtable" />
@@ -1971,7 +1971,7 @@
                       <o n="Value" t="VisualizationNode">
                         <v n="VisuNodeReferenceGuid">{00000000-0000-0000-0000-000000000000}</v>
                         <n n="VisuNodeReference" />
-                        <v n="VisNodeRefs33">"GROUP_VISU"</v>
+                        <v n="VisNodeRefs33">"T_CA_GROUP"</v>
                         <l n="TypeNodeChildren" t="ArrayList" cet="BasicTypeNode">
                           <o>
                             <v n="Flags">2L</v>
@@ -2009,7 +2009,7 @@
                           </o>
                           <o>
                             <v n="Flags">2L</v>
-                            <v n="BasicTypeNodeValue">"MAIN_XTS.sCaGroupState"</v>
+                            <v n="BasicTypeNodeValue">"visu_XTS.sCaGroupState"</v>
                             <v n="BasicTypeNodeAcceptsExpression">true</v>
                             <n n="BasicTypeNodeFastAccess" />
                             <a n="BasicTypeNodeEnumValues" et="String" />
@@ -2079,7 +2079,7 @@
                     </o>
                     <o>
                       <v n="Id">1112410829L</v>
-                      <v n="Value">"MAIN_XTS.sCaGroupState"</v>
+                      <v n="Value">"visu_XTS.sCaGroupState"</v>
                     </o>
                     <o>
                       <v n="Id">1013868361L</v>
@@ -2096,7 +2096,7 @@
                   <l n="ContainedGuids" t="ArrayList" />
                   <l n="ContainedVisualizations" t="ArrayList" />
                   <a n="ContainedVisualizations33" cet="String">
-                    <v>GROUP_VISU</v>
+                    <v>T_CA_GROUP</v>
                   </a>
                 </o>
                 <d n="VisualElementInputActions" t="Hashtable" />
@@ -2309,7 +2309,9 @@ END_VAR"</v>
             </d2>
             <v n="Version">2</v>
           </o>
-          <n n="FrameInterfaceDataModel" />
+          <o n="FrameInterfaceDataModel" t="HierarchicalProperties">
+            <l2 n="HierarchicalProperties" />
+          </o>
         </o>
       </Data>
       <TypeList>
@@ -2329,6 +2331,7 @@ END_VAR"</v>
         <Type n="GenericVisualElem">{f86c2928-8614-4cca-824b-e819ac4d58c4}</Type>
         <Type n="Guid">System.Guid</Type>
         <Type n="Hashtable">System.Collections.Hashtable</Type>
+        <Type n="HierarchicalProperties">{af53e824-e51f-4be1-b210-d001ef8efbd1}</Type>
         <Type n="HotkeyConfiguration">{6b108d46-58af-4e41-a3f4-174d8f160cc4}</Type>
         <Type n="Int16">System.Int16</Type>
         <Type n="Int32">System.Int32</Type>

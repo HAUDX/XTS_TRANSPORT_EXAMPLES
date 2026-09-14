@@ -3,8 +3,9 @@
   <DUT Name="ST_APP_CTRL" Id="{fe410bed-3494-4e10-a1c4-088931cd4185}">
     <Declaration><![CDATA[TYPE ST_APP_CTRL :
 STRUCT
-  Cmd       : E_INSTANCE_CMD;
-  Variant   : E_APP_VARIANT;
+  Cmd                     : E_INSTANCE_CMD;
+  Variant                 : E_APP_VARIANT;
+  StationParameterVariant : UINT; // see MAIN_APP for details
 END_STRUCT
 END_TYPE
 ]]></Declaration>

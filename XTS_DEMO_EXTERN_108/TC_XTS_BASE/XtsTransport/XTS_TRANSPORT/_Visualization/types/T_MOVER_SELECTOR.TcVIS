@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <Visu Name="T_MOVER_SELECTOR" Id="{ee295cf1-2eec-4bf4-b0de-cc94b5b6e13d}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"60"</v>
+          <v n="UniqueIdGenerator">"78"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -186,6 +186,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -382,6 +383,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -2671,6 +2673,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -2863,6 +2866,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3055,6 +3059,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3247,6 +3252,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3439,6 +3445,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3631,6 +3638,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3823,6 +3831,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -4015,6 +4024,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -5037,7 +5047,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rAbsActPos"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].rAbsActPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5210,7 +5220,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rModuloActPos"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].rModuloActPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5383,7 +5393,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rAbsTargetPos"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].rAbsTargetPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5556,7 +5566,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rModuloTargetPos"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].rModuloTargetPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5729,7 +5739,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].nErrorId"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].nErrorId"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5839,7 +5849,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverEnabled"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].bMoverEnabled"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6012,7 +6022,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverError"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].bMoverError"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6185,7 +6195,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverCoupled"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].bMoverCoupled"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6228,11 +6238,11 @@
                     </o>
                     <o>
                       <v n="Id">550940142L</v>
-                      <v n="Value">555</v>
+                      <v n="Value">477</v>
                     </o>
                     <o>
                       <v n="Id">1473355128L</v>
-                      <v n="Value">453</v>
+                      <v n="Value">447</v>
                     </o>
                     <o>
                       <v n="Id">2678395525L</v>
@@ -6358,7 +6368,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverStandstill"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].bMoverStandstill"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6531,7 +6541,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverAvoidingCollision"</v>
+                      <v n="Value">"GVL_XTS.MoverInfo[VISU_XTS.nMoverSelected].bMoverAvoidingCollision"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6857,7 +6867,7 @@ END_VAR"</v>
         <Type n="Hashtable">System.Collections.Hashtable</Type>
         <Type n="HotkeyConfiguration">{6b108d46-58af-4e41-a3f4-174d8f160cc4}</Type>
         <Type n="InputBoxInputAction">{e8e7e747-f76f-4dee-ab1c-b9637e41ac26}</Type>
-        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.8.0.0, Culture=neutral, PublicKeyToken=null</Type>
+        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.10.0.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="Int16">System.Int16</Type>
         <Type n="Int32">System.Int32</Type>
         <Type n="Int64">System.Int64</Type>

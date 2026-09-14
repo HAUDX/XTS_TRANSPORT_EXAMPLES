@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <Visu Name="SELECTOR_VISU" Id="{e9505c66-7e20-437e-9859-be1cb953ae7b}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"9"</v>
+          <v n="UniqueIdGenerator">"15"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -522,7 +522,7 @@
                         <l n="TypeNodeChildren" t="ArrayList" cet="BasicTypeNode">
                           <o>
                             <v n="Flags">2L</v>
-                            <v n="BasicTypeNodeValue">"GVL_XTS.SelectorCtrl"</v>
+                            <v n="BasicTypeNodeValue">"GVL_XTS.MoverSelectorCtrl"</v>
                             <v n="BasicTypeNodeAcceptsExpression">true</v>
                             <n n="BasicTypeNodeFastAccess" />
                             <a n="BasicTypeNodeEnumValues" et="String" />
@@ -556,7 +556,7 @@
                           </o>
                           <o>
                             <v n="Flags">2L</v>
-                            <v n="BasicTypeNodeValue">"GVL_XTS.SelectorState"</v>
+                            <v n="BasicTypeNodeValue">"GVL_XTS.MoverSelectorState"</v>
                             <v n="BasicTypeNodeAcceptsExpression">true</v>
                             <n n="BasicTypeNodeFastAccess" />
                             <a n="BasicTypeNodeEnumValues" et="String" />
@@ -590,7 +590,7 @@
                           </o>
                           <o>
                             <v n="Flags">2L</v>
-                            <v n="BasicTypeNodeValue">"MAIN.sSelectorState"</v>
+                            <v n="BasicTypeNodeValue">"VISU_XTS.sSelectorState"</v>
                             <v n="BasicTypeNodeAcceptsExpression">true</v>
                             <n n="BasicTypeNodeFastAccess" />
                             <a n="BasicTypeNodeEnumValues" et="String" />
@@ -624,7 +624,7 @@
                           </o>
                           <o>
                             <v n="Flags">2L</v>
-                            <v n="BasicTypeNodeValue">"MAIN.sSelectorResult"</v>
+                            <v n="BasicTypeNodeValue">"VISU_XTS.sSelectorResult"</v>
                             <v n="BasicTypeNodeAcceptsExpression">true</v>
                             <n n="BasicTypeNodeFastAccess" />
                             <a n="BasicTypeNodeEnumValues" et="String" />
@@ -690,19 +690,19 @@
                     </o>
                     <o>
                       <v n="Id">3405038430L</v>
-                      <v n="Value">"GVL_XTS.SelectorCtrl"</v>
+                      <v n="Value">"GVL_XTS.MoverSelectorCtrl"</v>
                     </o>
                     <o>
                       <v n="Id">264449540L</v>
-                      <v n="Value">"GVL_XTS.SelectorState"</v>
+                      <v n="Value">"GVL_XTS.MoverSelectorState"</v>
                     </o>
                     <o>
                       <v n="Id">2986765929L</v>
-                      <v n="Value">"MAIN.sSelectorState"</v>
+                      <v n="Value">"VISU_XTS.sSelectorState"</v>
                     </o>
                     <o>
                       <v n="Id">226141895L</v>
-                      <v n="Value">"MAIN.sSelectorResult"</v>
+                      <v n="Value">"VISU_XTS.sSelectorResult"</v>
                     </o>
                   </l>
                 </o>

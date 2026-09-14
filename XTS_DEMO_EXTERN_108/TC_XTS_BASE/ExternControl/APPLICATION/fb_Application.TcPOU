@@ -153,7 +153,8 @@ ELSE
 
 END_CASE
 
-IF _bWriteTimeVariant
+IF (_nTimeVariantOld <> _nTimeVariant) OR
+    _bWriteTimeVariant
 THEN
   _bWriteTimeVariant            := FALSE;
 
@@ -2744,7 +2745,9 @@ END_VAR
       <LineId Id="80" Count="0" />
       <LineId Id="82" Count="1" />
       <LineId Id="89" Count="4" />
-      <LineId Id="95" Count="65" />
+      <LineId Id="95" Count="7" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="103" Count="57" />
     </LineIds>
     <LineIds Name="fb_Application.Check">
       <LineId Id="1" Count="38" />

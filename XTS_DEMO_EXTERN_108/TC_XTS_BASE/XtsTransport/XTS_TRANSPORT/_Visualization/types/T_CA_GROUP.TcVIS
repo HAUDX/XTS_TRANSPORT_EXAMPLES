@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
-  <Visu Name="GROUP_VISU" Id="{80965c1a-a8d0-4832-8bac-c39709da9df2}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <Visu Name="T_CA_GROUP" Id="{80965c1a-a8d0-4832-8bac-c39709da9df2}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"36"</v>
+          <v n="UniqueIdGenerator">"48"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -2626,6 +2626,8 @@
                 <v>b3c0ff4f-17b8-461c-b542-77e566d340cd</v>
                 <v>FB_Reinit</v>
                 <v>480089e6-1845-40fc-b6ba-e3ae22ed0f58</v>
+                <v>GetCallerNamespace</v>
+                <v>135e0f60-8ad6-50da-aa90-c17d906b436b</v>
                 <v>GetClientData</v>
                 <v>f6c19680-ace7-481b-8989-42a59b6bc44d</v>
                 <v>GetElementArray</v>

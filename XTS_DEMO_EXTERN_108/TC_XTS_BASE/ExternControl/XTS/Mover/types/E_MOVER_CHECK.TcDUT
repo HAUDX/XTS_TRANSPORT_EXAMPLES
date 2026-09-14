@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_MOVER_CHECK" Id="{b3e5edd6-91d1-4862-831a-9f034d96a36f}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_MOVER_CHECK :
+(
+  NULL,
+  MOVER_ID_INVALID := 9000,
+  REFERENCE_AXIS_REF_INVALID,
+  REFERENCE_LAST_POSITION_INVALID,
+  REFERENCE_LAST_GAP_INVALID,
+  REFERENCE_INFO_INVALID,
+
+  REFERENCE_CTRL_INVALID  := 9100,
+  REFERENCE_STATE_INVALID,
+  REFERENCE_GEAR_DATA_INVALID,
+  REFERENCE_MOVE_DATA_INVALID,
+  REFERENCE_MOVER_ITF_INVALID,
+
+  CHECK_DONE  := 10_000
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

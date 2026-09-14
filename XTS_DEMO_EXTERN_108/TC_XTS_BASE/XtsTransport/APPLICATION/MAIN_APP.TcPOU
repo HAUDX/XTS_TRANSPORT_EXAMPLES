@@ -27,8 +27,8 @@ VAR
   tIdleWriteApplication   : TIME := T#5S;
   tonIdleWriteApplication : Tc2_Standard.TON;
   //-------------------------------------------------------------------------------------------------------------
-  bWriteVariant           : BOOL := TRUE;
-  nParameterVariant       : UINT;
+  nParameterVariant,
+  nParameterVariantOld    : UINT;
   //-------------------------------------------------------------------------------------------------------------
   sStationText            : STRING;
   nStationParameter       : UINT;
@@ -45,15 +45,11 @@ END_VAR
 IF NOT (MAIN_XTS.eInit = E_PROGRESS.PROGRESS_DONE) 
 THEN 
   eInit                                                     := E_PROGRESS.PROGRESS_INVALID;
-  bWriteVariant                                             := TRUE;
-  nParameterVariant                                         := 0;
 
   FOR nProcess := E_INSTANCE.BUFFER_INFEED TO MAX_PROCESS
   DO
     GVL_MSG_XTS.MessageLevelProcess[nProcess]               := GVL_MSG_XTS.MessageLevel;
   END_FOR
-  //ApplicationMain.MessageLevel                              := GVL_MSG_XTS.MessageLevel;
-
   RETURN; 
 END_IF
 //-----------------------------------------------------------------------------------------------------------------
@@ -130,7 +126,7 @@ GVL_APPLICATION.SenderBufferInfeed.MessageLevel             :=    GVL_MSG_XTS.Me
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
-//  main application class
+//  main application class (moved to ExternControl PLC)
 //-----------------------------------------------------------------------------------------------------------------
 (*
 GVL_APPLICATION.ApplicationMain.Ctrl                        REF=  GVL_APPLICATION.AppControl;
@@ -162,6 +158,7 @@ OF
     // first cycle startup
     // - wait for extern to give the command, if we are waiting here MAIN is ready, extern can see that
     //---------------------------------------------------------------------------------------------------------------
+    J_100000_V3000();   // default station parameter set
     GVL_MSG_XTS.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     eInit                                     := E_PROGRESS.PROGRESS_INIT;
 
@@ -180,7 +177,7 @@ OF
     //---------------------------------------------------------------------------------------------------------------
     // first cycle startup of all instances
     //---------------------------------------------------------------------------------------------------------------
-    GVL_MSG_XTS.ApplicationMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_INIT;
+    GVL_MSG_XTS.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_INIT;
 
     IF (GVL_MSG_XTS.ApplicationMessageState.State = E_MESSAGE_STATE.MSG_STATE_INIT + E_PROGRESS.PROGRESS_DONE)
     THEN
@@ -191,7 +188,7 @@ OF
     IF GVL_MSG_XTS.ApplicationMessageData.FileCreated
     THEN
       eInit                                   := E_PROGRESS.PROGRESS_DONE;
-      GVL_MSG_XTS.ApplicationMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+      GVL_MSG_XTS.ApplicationMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_IF
 END_CASE
 GVL_APPLICATION.AppState.AppInit              := eInit;
@@ -285,9 +282,11 @@ END_CASE
 //############################################################################
 //  /Station Configuration data	
 //############################################################################
-IF bWriteVariant
+nParameterVariant                                 := GVL_APPLICATION.AppControl.StationParameterVariant;
+
+IF (nParameterVariant <> nParameterVariantOld)
 THEN
-  bWriteVariant                         := FALSE;
+  nParameterVariantOld                            := nParameterVariant;
 
   CASE nParameterVariant
   OF
@@ -310,9 +309,12 @@ END_IF
 //############################################################################
 //  Station Configuration data/	
 //############################################################################
-    GVL_XTS.StationStartIndex                 := 52;
-    GVL_XTS.StationStart                      := GVL_XTS.StationParameter[GVL_XTS.StationStartIndex];
-]]></ST>
+GVL_APPLICATION.AppState.Instance                 := E_INSTANCE.BUFFER_INFEED;
+GVL_APPLICATION.AppState.MoverPerMinute           := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppState.Instance].MoverPerMinute;
+GVL_APPLICATION.AppState.MoverTotal               := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppState.Instance].MoverCountTotal;
+GVL_APPLICATION.AppState.StationParameterVariant  := nParameterVariantOld;
+//############################################################################
+//############################################################################]]></ST>
     </Implementation>
     <Action Name="J_100000_V3000" Id="{f4a1ce19-3817-4320-aee0-f83d405e006b}">
       <Implementation>
@@ -4252,8 +4254,9 @@ GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600000.0;]]
     <LineIds Name="MAIN_APP">
       <LineId Id="348" Count="0" />
       <LineId Id="2" Count="6" />
-      <LineId Id="385" Count="2" />
-      <LineId Id="9" Count="38" />
+      <LineId Id="398" Count="0" />
+      <LineId Id="9" Count="3" />
+      <LineId Id="15" Count="32" />
       <LineId Id="339" Count="0" />
       <LineId Id="323" Count="0" />
       <LineId Id="325" Count="0" />
@@ -4273,6 +4276,7 @@ GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600000.0;]]
       <LineId Id="88" Count="17" />
       <LineId Id="240" Count="0" />
       <LineId Id="106" Count="0" />
+      <LineId Id="395" Count="0" />
       <LineId Id="108" Count="2" />
       <LineId Id="138" Count="0" />
       <LineId Id="393" Count="1" />
@@ -4295,9 +4299,15 @@ GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600000.0;]]
       <LineId Id="213" Count="7" />
       <LineId Id="384" Count="0" />
       <LineId Id="221" Count="12" />
-      <LineId Id="349" Count="27" />
-      <LineId Id="390" Count="1" />
+      <LineId Id="349" Count="2" />
+      <LineId Id="396" Count="1" />
+      <LineId Id="352" Count="24" />
       <LineId Id="236" Count="0" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="401" Count="0" />
+      <LineId Id="403" Count="0" />
+      <LineId Id="400" Count="0" />
+      <LineId Id="402" Count="0" />
     </LineIds>
     <LineIds Name="MAIN_APP.J_100000_V3000">
       <LineId Id="1" Count="10" />

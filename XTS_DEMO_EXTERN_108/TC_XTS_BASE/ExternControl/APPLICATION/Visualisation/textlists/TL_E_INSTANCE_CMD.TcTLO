@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
-  <TextList Name="TL_E_INSTANCE_CMD" Id="{558d2c0e-5c3a-4624-bb10-83ff7ef138ab}">
+<TcPlcObject Version="1.1.0.1">
+  <TextList Name="TL_E_INSTANCE_CMD" Id="{d6ba9340-1698-4061-aab9-10da4232e43a}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="TextListObject">
@@ -43,9 +43,9 @@
             </o>
           </l>
           <l n="Languages" t="ArrayList" />
-          <v n="GuidInit">{5c89df5a-8378-432c-af9f-66c26635894f}</v>
-          <v n="GuidReInit">{0c6dea83-0eeb-4f6a-9a17-c4a5c5809be5}</v>
-          <v n="GuidExitX">{cf203ece-8f27-42b2-bec3-0df4636089c0}</v>
+          <v n="GuidInit">{7b8eca8e-e8ea-498b-a422-33004da54093}</v>
+          <v n="GuidReInit">{a3c30b93-fd36-4b07-8d87-eac562845b4c}</v>
+          <v n="GuidExitX">{018efeff-6c49-434d-9535-6a860a27318c}</v>
         </o>
       </Data>
       <TypeList>

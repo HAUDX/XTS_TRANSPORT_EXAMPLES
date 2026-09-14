@@ -174,13 +174,6 @@
     <Compile Include="APPLICATION\_types\ProcessInitialization.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APPLICATION\_Visu\SIM_TEST.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
-    </Compile>
-    <Compile Include="APPLICATION\_Visu\textlists\TL_E_INSTANCE_CMD.TcTLO">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
@@ -434,13 +427,20 @@
     <Compile Include="XTS_TRANSPORT\XtsTransportUnit\types\ST_XTS_TRANSPORT_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XTS_TRANSPORT\_Visualization\GROUP_VISU.TcVIS">
+    <Compile Include="XTS_TRANSPORT\_Visualization\types\T_CA_GROUP.TcVIS">
       <SubType>Code</SubType>
-      <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
+      <DependentUpon>XTS_TRANSPORT\_Visualization\Visualization Manager.TcVMO</DependentUpon>
     </Compile>
     <Compile Include="XTS_TRANSPORT\_Visualization\MOVER_VISU.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>XTS\Visualization\Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\_Visualization\types\T_XPU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>XTS_TRANSPORT\_Visualization\Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\_Visualization\VISU_XTS.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS_TRANSPORT\_Visualization\SELECTOR_VISU.TcVIS">
       <SubType>Code</SubType>
@@ -474,10 +474,6 @@
     </Compile>
     <Compile Include="XTS_TRANSPORT\_Visualization\Visualization Manager.TcVMO">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="XTS_TRANSPORT\_Visualization\XPU_VISU.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>XTS\_Visualization\Visualization Manager.TcVMO</DependentUpon>
     </Compile>
     <Compile Include="XTS_TRANSPORT\_Visualization\XTS_TRANSPORT.TcVIS">
       <SubType>Code</SubType>
@@ -696,14 +692,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APPLICATION\_config" />
-    <Folder Include="APPLICATION\_Visu" />
     <Folder Include="APPLICATION\Process_Instances" />
     <Folder Include="APPLICATION\_types" />
     <Folder Include="APPLICATION\_types\LinkedList" />
     <Folder Include="APPLICATION\_types\Instance" />
     <Folder Include="APPLICATION\_types\Collector" />
     <Folder Include="APPLICATION\_types\Application" />
-    <Folder Include="APPLICATION\_Visu\textlists" />
     <Folder Include="MAPPING\_types" />
     <Folder Include="APPLICATION" />
     <Folder Include="MAPPING" />

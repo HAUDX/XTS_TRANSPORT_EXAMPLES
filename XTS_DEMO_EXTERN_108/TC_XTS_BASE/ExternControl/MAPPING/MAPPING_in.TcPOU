@@ -75,7 +75,7 @@ sMapping    := 'MAPPING ACTIVE';
 //       destination,                               source,                size
 //-----------------------------------------------------------------------------------------
   memcpy(ADR(GVL_XTS.XtsTransportState),            ADR(TransportState),   SIZEOF(TransportState));
-  //memcpy(ADR(GVL_APPLICATION.AppState),             ADR(AppState),         SIZEOF(AppState));
+  memcpy(ADR(GVL_APPLICATION.AppState),             ADR(AppState),         SIZEOF(AppState));
   GVL_APPLICATION.AppState.AppInit                  := AppSTate.stState.AppInit;
 
   memcpy(ADR(GVL_APPLICATION.InstanceState),        ADR(InstanceState),    SIZEOF(InstanceState));
@@ -88,7 +88,8 @@ sMapping    := 'MAPPING ACTIVE';
 ]]></ST>
     </Implementation>
     <LineIds Name="MAPPING_in">
-      <LineId Id="1" Count="6" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="2" Count="5" />
       <LineId Id="34" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="35" Count="3" />

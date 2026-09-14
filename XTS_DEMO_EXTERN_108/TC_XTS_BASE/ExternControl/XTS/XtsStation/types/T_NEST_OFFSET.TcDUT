@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="T_NEST_OFFSET" Id="{b6c19093-be05-4807-98f0-bb852377d37e}">
+    <Declaration><![CDATA[TYPE T_NEST_OFFSET : ARRAY[1..MAX_MOVER]        OF
+                     ARRAY[1..MAX_STATION_NEST] OF LREAL;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
