@@ -309,7 +309,7 @@ END_IF
 //############################################################################
 //  Station Configuration data/	
 //############################################################################
-GVL_APPLICATION.AppState.Instance                 := E_INSTANCE.BUFFER_INFEED;
+GVL_APPLICATION.AppState.Instance                 := E_INSTANCE.OUTFEED_ROBOT_R1;
 GVL_APPLICATION.AppState.MoverPerMinute           := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppState.Instance].MoverPerMinute;
 GVL_APPLICATION.AppState.MoverTotal               := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppState.Instance].MoverCountTotal;
 GVL_APPLICATION.AppState.StationParameterVariant  := nParameterVariantOld;
