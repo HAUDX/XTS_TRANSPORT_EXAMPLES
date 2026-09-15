@@ -318,7 +318,7 @@ CASE GVL_APPLICATION.AppState.Instance
 OF
   E_INSTANCE.OUTFEED_ROBOT_R1,
   E_INSTANCE.OUTFEED_ROBOT_R2:
-    CASE GVL_APPLICATION.AppControl.StationParameterVariant
+    CASE GVL_APPLICATION.AppControl.Variant
     OF
       //----------------------------------------------------------------------
       E_APP_VARIANT.VARIANT_OUTPUT_24:
