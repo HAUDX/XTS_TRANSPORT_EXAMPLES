@@ -309,9 +309,38 @@ END_IF
 //############################################################################
 //  Station Configuration data/	
 //############################################################################
+//############################################################################
+//  /Instance metrics to Application state	
+//############################################################################
 GVL_APPLICATION.AppState.Instance                 := E_INSTANCE.OUTFEED_ROBOT_R1;
-GVL_APPLICATION.AppState.MoverPerMinute           := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppState.Instance].MoverPerMinute;
-GVL_APPLICATION.AppState.MoverTotal               := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppState.Instance].MoverCountTotal;
+
+CASE GVL_APPLICATION.AppState.Instance
+OF
+  E_INSTANCE.OUTFEED_ROBOT_R1,
+  E_INSTANCE.OUTFEED_ROBOT_R2:
+    CASE GVL_APPLICATION.AppControl.StationParameterVariant
+    OF
+      //----------------------------------------------------------------------
+      E_APP_VARIANT.VARIANT_OUTPUT_24:
+      //----------------------------------------------------------------------
+        GVL_APPLICATION.AppState.MoverPerMinute       := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverPerMinute
+                                                       + GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R2].MoverPerMinute;
+    
+        GVL_APPLICATION.AppState.MoverTotal           := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverCountTotal
+                                                       + GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R2].MoverCountTotal;
+      //----------------------------------------------------------------------
+      E_APP_VARIANT.VARIANT_OUTPUT_CLAMP:
+      //----------------------------------------------------------------------
+        GVL_APPLICATION.AppState.MoverPerMinute       := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverPerMinute;
+    
+        GVL_APPLICATION.AppState.MoverTotal           := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverCountTotal;
+
+    END_CASE
+ELSE
+    GVL_APPLICATION.AppState.MoverPerMinute       := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppState.Instance].MoverPerMinute;
+    GVL_APPLICATION.AppState.MoverTotal           := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppState.Instance].MoverCountTotal;
+END_CASE
+
 GVL_APPLICATION.AppState.StationParameterVariant  := nParameterVariantOld;
 //############################################################################
 //############################################################################]]></ST>
@@ -4302,9 +4331,27 @@ GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600000.0;]]
       <LineId Id="349" Count="2" />
       <LineId Id="396" Count="1" />
       <LineId Id="352" Count="24" />
+      <LineId Id="421" Count="2" />
       <LineId Id="236" Count="0" />
-      <LineId Id="399" Count="0" />
-      <LineId Id="401" Count="0" />
+      <LineId Id="424" Count="0" />
+      <LineId Id="404" Count="1" />
+      <LineId Id="407" Count="1" />
+      <LineId Id="425" Count="1" />
+      <LineId Id="445" Count="0" />
+      <LineId Id="428" Count="0" />
+      <LineId Id="443" Count="0" />
+      <LineId Id="433" Count="4" />
+      <LineId Id="431" Count="0" />
+      <LineId Id="430" Count="0" />
+      <LineId Id="444" Count="0" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="440" Count="1" />
+      <LineId Id="429" Count="0" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="411" Count="0" />
+      <LineId Id="414" Count="1" />
+      <LineId Id="406" Count="0" />
+      <LineId Id="413" Count="0" />
       <LineId Id="403" Count="0" />
       <LineId Id="400" Count="0" />
       <LineId Id="402" Count="0" />
