@@ -131,7 +131,7 @@ OF
     GVL_MSG.ApplicationMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_INIT;
     IF GVL_MSG.ApplicationMessageData.FileCreated
     THEN
-      eInit                                   := E_PROGRESS.PROGRESS_STARTUP;
+      eInit                                   := E_PROGRESS.PROGRESS_PREPARE;
       GVL_MSG.ApplicationMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_IF
 
@@ -144,7 +144,7 @@ OF
     END_IF
 
   E_PROGRESS.PROGRESS_PREPARE:
-    IF (GVL_APPLICATION.AppState.AppInit = E_PROGRESS.PROGRESS_DONE)
+    IF (GVL_APPLICATION.AppInfo.AppInit = E_PROGRESS.PROGRESS_DONE)
     THEN
       GVL_APPLICATION.TicketListControl.Cmd   := E_LIST_CTRL.LIST_CTRL_NULL; 
       eInit                                   := E_PROGRESS.PROGRESS_CHECK;

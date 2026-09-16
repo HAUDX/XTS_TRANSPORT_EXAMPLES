@@ -9,7 +9,8 @@ VAR
   TicketListOutput  : U_TICKET_LIST_DATA_OUTPUT;
   TicketListState   : U_TICKET_LIST_STATE;
   InstanceState     : U_INSTANCE_STATE;
-  AppState          : U_APP_STATE;
+  //AppState          : U_APP_STATE;
+  AppInfo           : U_APP_INFO;
   TransportState    : U_XTS_TRANSPORT_STATE;
 
   szTransportState  : ARRAY[1..2] OF UDINT;
@@ -75,8 +76,8 @@ sMapping    := 'MAPPING ACTIVE';
 //       destination,                               source,                size
 //-----------------------------------------------------------------------------------------
   memcpy(ADR(GVL_XTS.XtsTransportState),            ADR(TransportState),   SIZEOF(TransportState));
-  memcpy(ADR(GVL_APPLICATION.AppState),             ADR(AppState),         SIZEOF(AppState));
-  GVL_APPLICATION.AppState.AppInit                  := AppSTate.stState.AppInit;
+//  memcpy(ADR(GVL_APPLICATION.AppState),             ADR(AppState),         SIZEOF(AppState));
+  memcpy(ADR(GVL_APPLICATION.AppInfo),              ADR(AppInfo),          SIZEOF(AppInfo));
 
   memcpy(ADR(GVL_APPLICATION.InstanceState),        ADR(InstanceState),    SIZEOF(InstanceState));
   memcpy(ADR(GVL_APPLICATION.TicketListState),      ADR(TicketListState),  SIZEOF(TicketListState));

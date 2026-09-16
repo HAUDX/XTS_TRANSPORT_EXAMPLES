@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="ST_APP_INFO" Id="{a76488ed-38c5-4433-84c6-4d201239df77}">
+    <Declaration><![CDATA[TYPE ST_APP_INFO :
+STRUCT
+  AppInit           : E_PROGRESS;
+  Instance          : E_INSTANCE;  // process ID from which the MoverPerMinute counter is copied
+  MoverPerMinute    : UDINT;
+  MoverTotal        : UDINT;
+  StationParameterVariant : UDINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

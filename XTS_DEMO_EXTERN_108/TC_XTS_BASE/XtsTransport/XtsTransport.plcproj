@@ -81,7 +81,7 @@
     <Compile Include="APPLICATION\_types\Application\ST_APP_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APPLICATION\_types\Application\ST_APP_STATE.TcDUT">
+    <Compile Include="APPLICATION\_types\Application\ST_APP_INFO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\Collector\E_PROCESS_CHECK.TcDUT">
@@ -189,7 +189,7 @@
     <Compile Include="MAPPING\_types\U_APP_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MAPPING\_types\U_APP_STATE.TcDUT">
+    <Compile Include="MAPPING\_types\U_APP_INFO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_GEAR_DATA.TcDUT">
@@ -684,6 +684,16 @@
     <PlaceholderReference Include="Tc3_XTS_Utility">
       <DefaultResolution>Tc3_XTS_Utility, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_XTS_Utility</Namespace>
+      <Parameters>
+        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST" xmlns="">
+          <Key>MAXXTSMOVERSPERXPU</Key>
+          <Value>108</Value>
+        </Parameter>
+        <Parameter ListName="TCIOXTSENVIRONMENTPARAMETERLIST" xmlns="">
+          <Key>MAXXTSNCTBASEUNITINTERFACES</Key>
+          <Value>108</Value>
+        </Parameter>
+      </Parameters>
     </PlaceholderReference>
     <PlaceholderReference Include="VisuDialogs">
       <DefaultResolution>VisuDialogs, * (System)</DefaultResolution>
@@ -755,11 +765,19 @@
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <PlaceholderResolution Include="Tc3_McCollisionAvoidance">
+      <Resolution>Tc3_McCollisionAvoidance, 3.4.60.0 (Beckhoff Automation GmbH)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="Tc3_McCoordinatedMotion">
+      <Resolution>Tc3_McCoordinatedMotion, 3.4.60.0 (Beckhoff Automation GmbH)</Resolution>
+    </PlaceholderResolution>
+  </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -901,15 +919,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="Int32">System.Int32</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="Int32">System.Int32</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

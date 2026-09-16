@@ -5,11 +5,6 @@
 STRUCT
   AppInit           : E_PROGRESS;
   State             : E_INSTANCE_STATE;
-
-  Instance          : E_INSTANCE;  // process ID from which the MoverPerMinute counter is copied
-  MoverPerMinute    : UDINT;
-  MoverTotal        : UDINT;
-  StationParameterVariant : UDINT;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

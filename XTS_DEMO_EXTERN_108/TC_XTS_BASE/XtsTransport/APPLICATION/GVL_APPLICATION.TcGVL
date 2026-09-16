@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <GVL Name="GVL_APPLICATION" Id="{b83de342-914f-4ad1-86ba-5efc40943708}">
     <Declaration><![CDATA[VAR_GLOBAL CONSTANT
   MAX_PROCESS         : E_INSTANCE := E_INSTANCE.SENDER_BUFFER_INFEED;
@@ -14,7 +14,7 @@ VAR_GLOBAL
   //-----------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------
   AppControl            : ST_APP_CTRL;
-  AppState              : ST_APP_STATE;
+  AppInfo               : ST_APP_INFO;
 
   //-----------------------------------------------------------------------------------------------
   // Process instances

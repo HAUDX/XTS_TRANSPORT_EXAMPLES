@@ -159,6 +159,7 @@ OF
     // - wait for extern to give the command, if we are waiting here MAIN is ready, extern can see that
     //---------------------------------------------------------------------------------------------------------------
     J_100000_V3000();   // default station parameter set
+    nParameterVariant                         := 0;
     GVL_MSG_XTS.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     eInit                                     := E_PROGRESS.PROGRESS_INIT;
 
@@ -191,7 +192,7 @@ OF
       GVL_MSG_XTS.ApplicationMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_IF
 END_CASE
-GVL_APPLICATION.AppState.AppInit              := eInit;
+GVL_APPLICATION.AppInfo.AppInit              := eInit;
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 // STARTUP/
@@ -312,9 +313,9 @@ END_IF
 //############################################################################
 //  /Instance metrics to Application state	
 //############################################################################
-GVL_APPLICATION.AppState.Instance                 := E_INSTANCE.OUTFEED_ROBOT_R1;
+GVL_APPLICATION.AppInfo.Instance                  := E_INSTANCE.OUTFEED_ROBOT_R1;
 
-CASE GVL_APPLICATION.AppState.Instance
+CASE GVL_APPLICATION.AppInfo.Instance
 OF
   E_INSTANCE.OUTFEED_ROBOT_R1,
   E_INSTANCE.OUTFEED_ROBOT_R2:
@@ -323,27 +324,32 @@ OF
       //----------------------------------------------------------------------
       E_APP_VARIANT.VARIANT_OUTPUT_24:
       //----------------------------------------------------------------------
-        GVL_APPLICATION.AppState.MoverPerMinute       := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverPerMinute
-                                                       + GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R2].MoverPerMinute;
+        GVL_APPLICATION.AppInfo.MoverPerMinute   := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverPerMinute
+                                                   + GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R2].MoverPerMinute;
     
-        GVL_APPLICATION.AppState.MoverTotal           := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverCountTotal
-                                                       + GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R2].MoverCountTotal;
+        GVL_APPLICATION.AppInfo.MoverTotal       := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverCountTotal
+                                                   + GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R2].MoverCountTotal;
       //----------------------------------------------------------------------
       E_APP_VARIANT.VARIANT_OUTPUT_CLAMP:
       //----------------------------------------------------------------------
-        GVL_APPLICATION.AppState.MoverPerMinute       := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverPerMinute;
+        GVL_APPLICATION.AppInfo.MoverPerMinute   := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverPerMinute;
     
-        GVL_APPLICATION.AppState.MoverTotal           := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverCountTotal;
+        GVL_APPLICATION.AppInfo.MoverTotal       := GVL_APPLICATION.ProcessCollector[E_INSTANCE.OUTFEED_ROBOT_R1].MoverCountTotal;
 
     END_CASE
 ELSE
-    GVL_APPLICATION.AppState.MoverPerMinute       := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppState.Instance].MoverPerMinute;
-    GVL_APPLICATION.AppState.MoverTotal           := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppState.Instance].MoverCountTotal;
+    GVL_APPLICATION.AppInfo.MoverPerMinute       := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppInfo.Instance].MoverPerMinute;
+    GVL_APPLICATION.AppInfo.MoverTotal           := GVL_APPLICATION.ProcessCollector[GVL_APPLICATION.AppInfo.Instance].MoverCountTotal;
 END_CASE
 
-GVL_APPLICATION.AppState.StationParameterVariant  := nParameterVariantOld;
+GVL_APPLICATION.AppInfo.StationParameterVariant  := nParameterVariantOld;
 //############################################################################
-//############################################################################]]></ST>
+//############################################################################
+
+//     GVL_XTS.StationStartIndex                 := 52;
+//     GVL_XTS.StationStart                      := GVL_XTS.StationParameter[GVL_XTS.StationStartIndex];
+
+]]></ST>
     </Implementation>
     <Action Name="J_100000_V3000" Id="{f4a1ce19-3817-4320-aee0-f83d405e006b}">
       <Implementation>
@@ -4258,7 +4264,7 @@ GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=      0.0; /
 GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=    -10.0; // relative to Mover.ActPos
 
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=     76.0;
-GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1500.0;
+GVL_XTS.StationParameter[nStationParameter].rVelo                 :=    1750.0;
 GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600_000.0;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -4276,7 +4282,7 @@ GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=      0.0; /
 GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=    -10.0; // relative to Mover.ActPos
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=    76.0;
 
-GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1250.0;
+GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1500.0;
 GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600000.0;]]></ST>
       </Implementation>
     </Action>
@@ -4306,6 +4312,7 @@ GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600000.0;]]
       <LineId Id="240" Count="0" />
       <LineId Id="106" Count="0" />
       <LineId Id="395" Count="0" />
+      <LineId Id="451" Count="0" />
       <LineId Id="108" Count="2" />
       <LineId Id="138" Count="0" />
       <LineId Id="393" Count="1" />
@@ -4355,6 +4362,10 @@ GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600000.0;]]
       <LineId Id="403" Count="0" />
       <LineId Id="400" Count="0" />
       <LineId Id="402" Count="0" />
+      <LineId Id="447" Count="0" />
+      <LineId Id="449" Count="1" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="446" Count="0" />
     </LineIds>
     <LineIds Name="MAIN_APP.J_100000_V3000">
       <LineId Id="1" Count="10" />

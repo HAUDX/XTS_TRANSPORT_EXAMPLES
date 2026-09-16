@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"74"</v>
+          <v n="UniqueIdGenerator">"77"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -1427,7 +1427,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_APPLICATION.AppState.MoverPerMinute"</v>
+                      <v n="Value">"GVL_APPLICATION.AppInfo.MoverPerMinute"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -1781,7 +1781,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_APPLICATION.AppState.MoverTotal"</v>
+                      <v n="Value">"GVL_APPLICATION.AppInfo.MoverTotal"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>

@@ -28,6 +28,7 @@ VAR_GLOBAL
   ApplicationMain       : fb_Application;
   AppControl            : ST_APP_CTRL;
   AppState              : ST_APP_STATE;
+  AppInfo               : ST_APP_INFO;
 
   //-----------------------------------------------------------------------------------------------
   // fb_Instance control and state

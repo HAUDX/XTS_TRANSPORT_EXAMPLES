@@ -25,6 +25,7 @@ VAR
 
   _Ctrl                         : REFERENCE TO ST_APP_CTRL;
   _State                        : REFERENCE TO ST_APP_STATE;
+  _Info                         : REFERENCE TO ST_APP_INFO;
 
   _eResult                      : E_PROGRESS;
 
@@ -1512,6 +1513,19 @@ Finish                            := _eState;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Info" Id="{d32a928f-d6e9-4f23-9e4b-2152b71bed6c}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY Info : REFERENCE TO ST_APP_INFO
+]]></Declaration>
+      <Set Name="Set" Id="{57dec8bb-0f39-4566-9050-9b6a93c0d5be}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Info REF= Info;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="Init" Id="{ab722eef-0388-45b6-85d1-7a5a0fed75bd}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Init       : E_PROGRESS // used only for first cycle startup, 
                                // use method Clear during operations if you have to clean up the instances 
@@ -2644,6 +2658,17 @@ OF
                 THEN
                   // in this example the outfeed instances are working in sync
                   _InstanceCtrl[_eInst].Cmd := E_INSTANCE_CMD.WORK;
+
+                  IF (_MessageLevel > E_MessageType.eMessageError)
+                  THEN
+                    _stMsg.eSubdevice       := e_Subdevice.Application_Work;
+                    _stMsg.iErrorNumber     := _eInst;
+                    _stMsg.sText            := concat('E_INSTANCE.', TO_STRING(_eInst));
+                    _stMsg.sText            := concat(_stMsg.sText , ': E_INSTANCE_CMD.');
+                    _stMsg.sText            := concat(_stMsg.sText , TO_STRING(_InstanceCtrl[_eInst].Cmd));
+
+                    f_MessageSet(_stMsg);
+                  END_IF
                 END_IF
               END_IF
       
@@ -2656,6 +2681,16 @@ OF
               IF _tonProcess [_eInst].Q
               THEN
                 _InstanceCtrl[_eInst].Cmd   := E_INSTANCE_CMD.FINISH;
+
+                IF (_MessageLevel > E_MessageType.eMessageError)
+                THEN
+                  _stMsg.eSubdevice         := e_Subdevice.Application_Work;
+                  _stMsg.iErrorNumber       := _eInst;
+                  _stMsg.sText              := concat('E_INSTANCE.', TO_STRING(_eInst));
+                  _stMsg.sText              := concat(_stMsg.sText , ': E_INSTANCE_CMD.');
+                  _stMsg.sText              := concat(_stMsg.sText , TO_STRING(_InstanceCtrl[_eInst].Cmd));
+                  f_MessageSet(_stMsg);
+                END_IF
               END_IF
           END_CASE
 
@@ -2812,6 +2847,9 @@ END_VAR
       <LineId Id="466" Count="78" />
       <LineId Id="546" Count="58" />
     </LineIds>
+    <LineIds Name="fb_Application.Info.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
     <LineIds Name="fb_Application.Init">
       <LineId Id="1" Count="38" />
       <LineId Id="186" Count="1" />
@@ -2963,7 +3001,20 @@ END_VAR
       <LineId Id="398" Count="0" />
       <LineId Id="400" Count="0" />
       <LineId Id="397" Count="0" />
-      <LineId Id="179" Count="57" />
+      <LineId Id="179" Count="29" />
+      <LineId Id="444" Count="0" />
+      <LineId Id="443" Count="0" />
+      <LineId Id="445" Count="2" />
+      <LineId Id="462" Count="2" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="209" Count="11" />
+      <LineId Id="459" Count="0" />
+      <LineId Id="452" Count="3" />
+      <LineId Id="460" Count="1" />
+      <LineId Id="456" Count="2" />
+      <LineId Id="221" Count="15" />
       <LineId Id="322" Count="0" />
       <LineId Id="321" Count="0" />
       <LineId Id="432" Count="4" />
