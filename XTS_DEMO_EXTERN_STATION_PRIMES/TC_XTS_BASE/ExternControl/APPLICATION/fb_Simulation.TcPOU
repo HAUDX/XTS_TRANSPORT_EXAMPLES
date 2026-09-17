@@ -26,23 +26,27 @@
 //---------------------------------------------------------------------------------------------------------------
 FUNCTION_BLOCK fb_Simulation
 VAR
+  _nProcessId                 : UINT;
+
   _sCheck                     : STRING;
   _tonProcess                 : Tc2_Standard.TON;
   _tProcess                   : TIME := T#500MS;
 
   _AllStationMoverPerMinute   : UDINT;
+  _nMoverCountTotal           : UDINT;
+
   _tonPartsPerMinute          : Tc2_Standard.TON;
 
   {attribute 'displaymode':='bin'}
-  _wEnter                     : WORD;
+  _wEnter                     : DWORD;
   {attribute 'displaymode':='bin'}
-  _wStart                     : WORD;
+  _wStart                     : DWORD;
   {attribute 'displaymode':='bin'}
-  _wOut                       : WORD;
+  _wOut                       : DWORD;
   {attribute 'displaymode':='bin'}
-  _wGone                      : WORD;
+  _wGone                      : DWORD;
   {attribute 'displaymode':='bin'}
-  _wEnableProcess             : WORD; // bits switch on stations
+  _wEnableProcess             : DWORD; // bits switch on stations
 
   {attribute 'displaymode':='bin'}
   _TargetMask                 : BYTE;
@@ -69,9 +73,19 @@ VAR
 
   _nPreparedTarget            : ARRAY[1..MAX_MOVER]  OF UINT;
 
+  _nMoverCountStartOld,
+  _nMoverCountEnterOld,
+  _nMoverCountEnter,
+  _nMoverCountStart,
   _nMoverPerMinute,
   _nMoverCount,
   _nMoverCountOld             : ARRAY[1..MAX_STATION]  OF UDINT;
+
+  _rCheckRangeLow,
+  _rCheckRangeHigh            : LREAL; // position range the mover has to be in for infeed or sending to happen.
+
+  _MessageLevel               : E_MessageType;
+  _stMsg                      : ST_Message;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -129,34 +143,85 @@ Check                         := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="CheckRangeHigh" Id="{f550ee6d-be72-4b7c-ba7c-ff7b600c7bce}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY CheckRangeHigh : lreal]]></Declaration>
+      <Get Name="Get" Id="{4ff63a5a-a849-40f3-909d-48416303ff09}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CheckRangeHigh := _rCheckRangeHigh;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{45b309d2-7575-413f-b610-5f1eebdc1271}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rCheckRangeHigh := CheckRangeHigh;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="CheckRangeLow" Id="{e6ae35f3-a074-4cb6-9951-51f04f294138}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY CheckRangeLow : lreal]]></Declaration>
+      <Get Name="Get" Id="{b439127d-6a03-4995-9e64-565cc2ddaf1c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CheckRangeLow := _rCheckRangeLow;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8537a4ad-6964-40cf-888e-6df91fac39d5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_rCheckRangeLow := CheckRangeLow;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="Cycle" Id="{5de7d7d1-0b78-4d2d-8797-36a2cf0d91ca}">
       <Declaration><![CDATA[METHOD Cycle
 VAR_INST
-  _k                  : UINT;
+  _interAllStationsCounter    : UDINT;
+
+  _rtrigProcessEnter,
+  _rtrigProcessStart,
   _rtrigProcess       : ARRAY[1..MAX_STATION] OF Tc2_Standard.R_TRIG;
+
+  _k                  : UINT;
+  _wEnable            : DWORD;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT Check() THEN RETURN; END_IF
-
+        <ST><![CDATA[//-----------------------------------------------------------------------------------------------------------------
+IF NOT Check() THEN RETURN; END_IF
+//-----------------------------------------------------------------------------------------------------------------
 _nStationCount                              := _nLastStation - _nFirstStation + 1;
-
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
 IF (_nStationCount < 1)
 THEN
   RETURN;
 END_IF
-
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
 FOR _nStation := _nLastStation TO _nFirstStation BY(-1) 
 DO
   CASE _stState^[_nStation].State
   OF
+    //-------------------------------------------------------------------------------------------------------------
     E_STATION_STATE.STATION_DISABLE,
     E_STATION_STATE.STATION_ENABLE, 
     E_STATION_STATE.STATION_DETECT_MOVER:
-      _wOut    := _wGone                    := 0;
-      _wEnter                               := DelBitWord(_wEnter, (_nStation-_nFirstStation));
-      _wStart                               := DelBitWord(_wStart, (_nStation-_nFirstStation));
-      IF (GetBitWord(_wEnableProcess, (_nStation-_nFirstStation)))
+      _wStart   := _wOut    := _wGone       := 0;
+      _wEnter                               := DelBit(_wEnter, (_nStation-_nFirstStation));
+      IF (GetBit(_wEnableProcess, (_nStation-_nFirstStation)))
       THEN
         IF (_bMoverEnter)
         THEN
@@ -169,29 +234,57 @@ DO
       END_IF
 
 
+    //-------------------------------------------------------------------------------------------------------------
     E_STATION_STATE.STATION_MOVER_ENTER:
-      _wEnter                               := SetBitWord(_wEnter, (_nStation-_nFirstStation));
+      _wEnter                               := SetBit(_wEnter, (_nStation-_nFirstStation));
       IF _bMoverEnter
       THEN
-          IF (_tProcess < T#10MS)
-          THEN
-            _stCtrl^[_nStation].Cmd         := E_STATION_CTRL.STATION_MOVER_SEND;
-          ELSE
-            _stCtrl^[_nStation].Cmd         := E_STATION_CTRL.STATION_MOVER_ENTER;
-          END_IF
-
         _tonProcess(IN                      := FALSE, 
                     PT                      := _tProcess);
 
         _stCtrl^[_nStation].nTargetStation  := 0;
+
+        IF (_tProcess < T#10MS)
+        THEN
+          IF (_rCheckRangeHigh > _rCheckRangeLow)
+          THEN
+            IF (_stState^[_nStation].rMoverModPos > _rCheckRangeLow) AND
+               (_stState^[_nStation].rMoverModPos < _rCheckRangeHigh)
+            THEN
+              _stCtrl^[_nStation].Cmd       := E_STATION_CTRL.STATION_MOVER_SEND;
+            END_IF
+          ELSE
+            IF (_stState^[_nStation].rMoverModPos > _rCheckRangeLow) OR
+               (_stState^[_nStation].rMoverModPos < _rCheckRangeHigh)
+            THEN
+              _stCtrl^[_nStation].Cmd       := E_STATION_CTRL.STATION_MOVER_SEND;
+            END_IF
+          END_IF
+        ELSE
+          IF (_rCheckRangeHigh > _rCheckRangeLow)
+          THEN
+            IF (_stState^[_nStation].rMoverModPos > _rCheckRangeLow) AND
+               (_stState^[_nStation].rMoverModPos < _rCheckRangeHigh)
+            THEN
+              _stCtrl^[_nStation].Cmd       := E_STATION_CTRL.STATION_MOVER_ENTER;
+            END_IF
+          ELSE
+            IF (_stState^[_nStation].rMoverModPos > _rCheckRangeLow) OR
+               (_stState^[_nStation].rMoverModPos < _rCheckRangeHigh)
+            THEN
+              _stCtrl^[_nStation].Cmd       := E_STATION_CTRL.STATION_MOVER_ENTER;
+            END_IF
+          END_IF
+        END_IF
       END_IF
 
+    //-------------------------------------------------------------------------------------------------------------
     E_STATION_STATE.STATION_PROCESS_START:
-      _wEnter                               := DelBitWord(_wEnter, (_nStation-_nFirstStation));
-      _wStart                               := SetBitWord(_wStart, (_nStation-_nFirstStation));
+      _wEnter                               := DelBit(_wEnter, (_nStation-_nFirstStation));
+      _wStart                               := SetBit(_wStart, (_nStation-_nFirstStation));
   
       // check if ALL XtsStations have mover in place to work
-      IF (_wStart = TO_WORD(EXPT(2,_nStationCount))-1)
+      IF (_wStart = _wEnableProcess)
       THEN
         _tonProcess(IN                      := TRUE, 
                     PT                      := _tProcess);
@@ -203,24 +296,25 @@ DO
         END_IF
       END_IF
 
+    //-------------------------------------------------------------------------------------------------------------
     E_STATION_STATE.STATION_CHECK_NEST:
-      _wEnter                               := SetBitWord(_wEnter, (_nStation-_nFirstStation));
-      _wStart                               := DelBitWord(_wStart, (_nStation-_nFirstStation));
+      _wEnter                               := SetBit(_wEnter, (_nStation-_nFirstStation));
+      _wStart                               := DelBit(_wStart, (_nStation-_nFirstStation));
       _tonProcess(IN                        := FALSE, 
                   PT                        := _tProcess);
 
       IF (_bNext)
       THEN
         // check if ALL XtsStations have nest to work
-        IF (_wEnter = TO_WORD(EXPT(2,_nStationCount))-1)
+        IF (_wEnter = _wEnableProcess)
         THEN
           _stCtrl^[_nStation].Cmd           := E_STATION_CTRL.STATION_MOVER_ENTER;
         END_IF
       END_IF
 
-
+    //-------------------------------------------------------------------------------------------------------------
     E_STATION_STATE.STATION_MOVER_OUT:
-      _wOut                                 := SetBitWord(_wOut, (_nStation-_nFirstStation));
+      _wOut                                 := SetBit(_wOut, (_nStation-_nFirstStation));
       _tonProcess(IN                        := FALSE, 
                   PT                        := _tProcess);
 
@@ -230,14 +324,15 @@ DO
         _stCtrl^[_nStation].nMask           := _TargetMask;
 
         // check if ALL XtsStations have mover to send
-        IF (_wOut = TO_WORD(EXPT(2,_nStationCount))-1)
+        IF (_wOut = _wEnableProcess)
         THEN
           _nProcessState                    := 10;
         END_IF
       END_IF
   END_CASE
 END_FOR
-
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
 CASE _nProcessState
 OF
 10:
@@ -262,14 +357,25 @@ OF
     CASE _stState^[_nStation].State
     OF
       E_STATION_STATE.STATION_MOVER_GONE:
+        _wStart   := _wEnter                := 0;
         // whO is gone?
-        _wGone                              := SetBitWord(_wGone, (_nStation-_nFirstStation));
+        _wGone                              := SetBit(_wGone, (_nStation-_nFirstStation));
     END_CASE
   END_FOR
   // check if ALL XtsStations are empty
-  IF (_wGone = TO_WORD(EXPT(2,_nStationCount))-1)
+  IF (_wGone = _wEnableProcess)
   THEN
     _nProcessState                          := 40;
+    IF (_MessageLevel > E_MessageType.eMessageVerbose)
+    THEN
+      _stMsg.eType                          := E_MessageType.eMessageSentient;
+      _stMsg.eDevice                        := e_Device.MetricsXts + TO_UINT(_nProcessId);
+      _stMsg.eSubdevice                     := e_Subdevice.Process_StationCollector;
+      _stMsg.iErrorNumber                   := _nProcessId;
+      _stMsg.sText                          := concat('ALL MOVER: ', TO_STRING(E_STATION_STATE.STATION_MOVER_GONE));
+
+      f_MessageSet(_stMsg);
+    END_IF
   END_IF
 END_CASE
 CASE _nProcessState
@@ -282,60 +388,143 @@ OF
     _stCtrl^[_nStation].Cmd                 := E_STATION_CTRL.STATION_MOVER_GONE;
   END_FOR
 END_CASE
-
-
-//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
 // Mover per Minute counter all XtsStations in range
-//-----------------------------------------------------------------------------
-_AllStationMoverPerMinute   := 0; 
-//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+_nMoverCountTotal                           :=
+_AllStationMoverPerMinute                   := 0; 
+//-----------------------------------------------------------------------------------------------------------------
 // mover counter
-//-----------------------------------------------------------------------------
-FOR _k := _nLastStation TO _nFirstStation BY(-1) 
+//-----------------------------------------------------------------------------------------------------------------
+FOR _k := _nLastStation TO _nFirstStation BY(-1)
 DO
-  _rtrigProcess[_k](CLK:= (_stCtrl^[_k].Cmd = E_STATION_CTRL.STATION_MOVER_OUT));
-
+  //---------------------------------------------------------------------------------------------------------------
+  _rtrigProcess[_k](CLK:= ( _stCtrl^[_k].Cmd = E_STATION_CTRL.STATION_MOVER_OUT));
+  //---------------------------------------------------------------------------------------------------------------
   IF _rtrigProcess[_k].Q
   THEN
-    _nMoverCount[_k]         := _nMoverCount[_k] + 1;
+    _nMoverCount[_k]                        := _nMoverCount[_k] + 1;
+
+    IF (_MessageLevel > E_MessageType.eMessageError)
+    THEN
+      _stMsg.eType                          := E_MessageType.eMessageInfo;
+      _stMsg.eDevice                        := e_Device.MetricsXts + TO_UINT(_nProcessId);
+      _stMsg.eSubdevice                     := e_Subdevice.Process_StationCollector;
+      _stMsg.iErrorNumber                   := _k;
+      _stMsg.sText                          := concat('MoverCountStation[ ]: ', TO_STRING(_nMoverCount[_k]));
+      _stMsg.sText                          := concat(_stMsg.sText, ': E_STATION_CTRL.');
+      _stMsg.sText                          := concat(_stMsg.sText, TO_STRING(_stCtrl^[_k].Cmd));
+      f_MessageSet(_stMsg);
+    END_IF
   END_IF
-  
+
+  //---------------------------------------------------------------------------------------------------------------
+  _rtrigProcessStart[_k](CLK:= ( _stState^[_k].State = E_STATION_STATE.STATION_PROCESS_START));
+  //---------------------------------------------------------------------------------------------------------------
+  IF _rtrigProcessStart[_k].Q
+  THEN
+    _nMoverCountStart[_k]                   := _nMoverCountStart[_k] + 1;
+
+    IF (_MessageLevel > E_MessageType.eMessageInfo)
+    THEN
+      _stMsg.eType                          := E_MessageType.eMessageVerbose;
+      _stMsg.eDevice                        := e_Device.MetricsXts + TO_UINT(_nProcessId);
+                            
+      _stMsg.eSubdevice                     := e_Subdevice.Process_StationCollector;
+      _stMsg.iErrorNumber                   := _k;
+      _stMsg.sText                          := concat('MoverCountStation[ ]: ', TO_STRING(_nMoverCountEnter[_k]));
+      _stMsg.sText                          := concat(_stMsg.sText, ': E_STATION_STATE.');
+      _stMsg.sText                          := concat(_stMsg.sText, TO_STRING(_stState^[_k].State));
+      f_MessageSet(_stMsg);
+    END_IF
+  END_IF
+
+  //---------------------------------------------------------------------------------------------------------------
+  _rtrigProcessEnter[_k](CLK:= ( _stCtrl^[_k].Cmd = E_STATION_CTRL.STATION_MOVER_ENTER));
+  //---------------------------------------------------------------------------------------------------------------
+  IF _rtrigProcessEnter[_k].Q
+  THEN
+    _nMoverCountEnter[_k]                   := _nMoverCountEnter[_k] + 1;
+
+    IF (_MessageLevel > E_MessageType.eMessageVerbose)
+    THEN
+      _stMsg.eType                          := E_MessageType.eMessageSentient;
+      _stMsg.eDevice                        := e_Device.MetricsXts + TO_UINT(_nProcessId);
+                            
+      _stMsg.eSubdevice                     := e_Subdevice.Process_StationCollector;
+      _stMsg.iErrorNumber                   := _k;
+      _stMsg.sText                          := concat('MoverCountStation[ ]: ', TO_STRING(_nMoverCountEnter[_k]));
+      _stMsg.sText                          := concat(_stMsg.sText, ': E_STATION_CTRL.');
+      _stMsg.sText                          := concat(_stMsg.sText, TO_STRING(_stCtrl^[_k].Cmd));
+      f_MessageSet(_stMsg);
+    END_IF
+  END_IF
+  //---------------------------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------------------------
   IF _tonPartsperMinute.Q
   THEN
     // count every XtsStation in range
-    _nMoverPerMinute[_k]    := _nMoverCount[_k] - _nMoverCountOld[_k];
-    _nMoverCountOld [_k]    := _nMoverCount[_k];
+    _nMoverPerMinute[_k]                    := _nMoverCount[_k] - _nMoverCountOld[_k];
+    _nMoverCountOld [_k]                    := _nMoverCount[_k];
+
+    _nMoverCountEnterOld [_k]               := _nMoverCountEnter[_k];
+    _nMoverCountStartOld [_k]               := _nMoverCountStart[_k];
   END_IF
   // sum up all XtsStations in range
-  _AllStationMoverPerMinute := _AllStationMoverPerMinute + _nMoverPerMinute[_k]; 
-END_FOR
+  _AllStationMoverPerMinute                 := _AllStationMoverPerMinute + _nMoverPerMinute[_k]; 
+  _interAllStationsCounter                  := _AllStationMoverPerMinute + _nMoverPerMinute[_k];
 
+  // sum up all mover counts in range
+  _nMoverCountTotal                         := _nMoverCountTotal + _nMoverCount[_k];
+END_FOR
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// total mover per minute message for all stations in this process
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
 IF _tonPartsperMinute.q
 THEN
   _tonPartsperMinute(IN:=FALSE);
+
+  IF (_MessageLevel > E_MessageType.eMessageError)
+  THEN
+    _stMsg.eType                          := E_MessageType.eMessageBatch;
+    _stMsg.eDevice                        := e_Device.MetricsXts + TO_UINT(_nProcessId);
+  
+    _stMsg.eSubdevice                     := e_Subdevice.Process_StationCollector;
+    _stMsg.iErrorNumber                   := _nMoverCountTotal;
+    _stMsg.sText                          := concat('MoverCountTotal: ', TO_STRING(_nMoverCountTotal));
+    _stMsg.sText                          := concat(_stMsg.sText, ': StationLast: ');
+    _stMsg.sText                          := concat(_stMsg.sText, TO_STRING(_nLastStation));
+    _stMsg.sText                          := concat(_stMsg.sText, ': StationFirst: ');
+    _stMsg.sText                          := concat(_stMsg.sText, TO_STRING(_nFirstStation));
+    f_MessageSet(_stMsg);
+  END_IF
 END_IF
-
-_tonPartsperMinute(IN:= TRUE, PT:= T#60S);
-
-
+//-----------------------------------------------------------------------------------------------------------------
+_tonPartsperMinute(IN:= TRUE,   PT:= T#60S);
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="DelBitWord" Id="{70924835-6ae4-4837-a61a-3abca9ac92bf}">
-      <Declaration><![CDATA[METHOD PUBLIC DelBitWord : WORD
+    <Method Name="DelBit" Id="{70924835-6ae4-4837-a61a-3abca9ac92bf}">
+      <Declaration><![CDATA[METHOD PUBLIC DelBit : DWORD
 VAR_INPUT
-  inVal   : WORD;
+  inVal   : DWORD;
   bitNo   : DINT;
 END_VAR
 VAR
-  wConst : WORD := 1;
+  wConst : dWORD := 1;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF ( inVal AND SHL( wConst,bitNo MOD 16 ) ) > 0 THEN
-  DelBitWord := inVal XOR (SHL( wConst,bitNo MOD 16 ));
+        <ST><![CDATA[IF ( inVal AND SHL( wConst,bitNo MOD 32 ) ) > 0 THEN
+  DelBit := inVal XOR (SHL( wConst,bitNo MOD 32 ));
 ELSE
-  DelBitWord := inVal;
+  DelBit := inVal;
 END_IF
 ]]></ST>
       </Implementation>
@@ -369,7 +558,7 @@ END_IF
       </Implementation>
     </Method>
     <Property Name="EnableProcess" Id="{846a0124-f641-416f-9a0f-1b1ff2f65344}" FolderPath="properties\">
-      <Declaration><![CDATA[PROPERTY EnableProcess : word]]></Declaration>
+      <Declaration><![CDATA[PROPERTY EnableProcess : dword]]></Declaration>
       <Get Name="Get" Id="{8c42be0c-10e8-4a71-bf4d-d8d7a5d1653e}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -389,22 +578,22 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Method Name="GetBitWord" Id="{698f4cd9-5aaa-4948-8330-4ed006eb5d2f}">
-      <Declaration><![CDATA[METHOD PUBLIC GetBitWord : BOOL
+    <Method Name="GetBit" Id="{698f4cd9-5aaa-4948-8330-4ed006eb5d2f}">
+      <Declaration><![CDATA[METHOD PUBLIC GetBit : BOOL
 VAR_INPUT
-  inVal   : WORD;
+  inVal   : DWORD;
   bitNo   : DINT;
 END_VAR
 VAR
-  wConst : WORD := 1;
+  wConst : DWORD := 1;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF ( inVal AND SHL( wConst,DINT_TO_SINT(bitNo) MOD 16 ) ) > 0
+        <ST><![CDATA[IF ( inVal AND SHL( wConst,DINT_TO_SINT(bitNo) MOD 32 ) ) > 0
 THEN
-  GetBitWord := TRUE;
+  GetBit := TRUE;
 ELSE
-  GetBitWord := FALSE;
+  GetBit := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -436,6 +625,29 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="MessageLevel" Id="{134b8feb-f67a-4abc-b532-4dfcccb0892b}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY MessageLevel : e_MessageType]]></Declaration>
+      <Get Name="Get" Id="{ab0c12ba-b9b9-45ba-a868-16025ccbb7ef}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MessageLevel := _MessageLevel;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{3d68a2f7-d905-4ed9-9b7f-54a3c4a4b55f}">
+        <Declaration><![CDATA[VAR
+  _ix : uint;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_MessageLevel := MessageLevel;
+
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="MoverEnter" Id="{087bf083-ec8b-4a8f-b291-4c74557b6372}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY MoverEnter : bool]]></Declaration>
       <Get Name="Get" Id="{0376b55b-a13f-4460-92e6-2a9ddb0f017e}">
@@ -547,6 +759,27 @@ END_CASE
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="ProcessId" Id="{83b59b13-5d68-4056-98ce-eb1251c55487}" FolderPath="properties\">
+      <Declaration><![CDATA[PROPERTY ProcessId : uint]]></Declaration>
+      <Get Name="Get" Id="{6c24ac61-9f69-47bb-9c4f-1b32a54bf528}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ProcessId := _nProcessId;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{7cf4cf10-6758-4db5-8a99-e95d5450b526}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_nProcessId := ProcessId;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="ProcessTime" Id="{d00419a7-db49-4dbe-aa31-acf19a0e2936}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY ProcessTime : time]]></Declaration>
       <Get Name="Get" Id="{24facd13-d414-4bb6-b76f-a98920ebcd7f}">
@@ -568,18 +801,18 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Method Name="SetBitWord" Id="{50b45556-4117-4424-8e04-99a7a8ddf300}">
-      <Declaration><![CDATA[METHOD PUBLIC SetBitWord : WORD
+    <Method Name="SetBit" Id="{50b45556-4117-4424-8e04-99a7a8ddf300}">
+      <Declaration><![CDATA[METHOD PUBLIC SetBit : DWORD
 VAR_INPUT
-  inVal   : WORD;
+  inVal   : DWORD;
   bitNo   : DINT;
 END_VAR
 VAR
-  wConst  : WORD := 1;
+  wConst  : dWORD := 1;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SetBitWord := inVal OR SHL( wConst,bitNo MOD 16 );]]></ST>
+        <ST><![CDATA[SetBit := inVal OR SHL( wConst,bitNo MOD 32 );]]></ST>
       </Implementation>
     </Method>
     <Property Name="StationCount" Id="{8a13de11-7010-44c9-8b19-d9b9a32e8375}" FolderPath="properties\">
@@ -724,21 +957,28 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_Simulation">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="fb_Simulation.Check">
       <LineId Id="1" Count="44" />
     </LineIds>
-    <LineIds Name="fb_Simulation.Cycle">
-      <LineId Id="1" Count="22" />
-      <LineId Id="181" Count="0" />
-      <LineId Id="25" Count="11" />
-      <LineId Id="183" Count="5" />
-      <LineId Id="182" Count="0" />
-      <LineId Id="37" Count="3" />
-      <LineId Id="42" Count="134" />
+    <LineIds Name="fb_Simulation.CheckRangeHigh.Get">
+      <LineId Id="1" Count="1" />
     </LineIds>
-    <LineIds Name="fb_Simulation.DelBitWord">
+    <LineIds Name="fb_Simulation.CheckRangeHigh.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.CheckRangeLow.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.CheckRangeLow.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.Cycle">
+      <LineId Id="976" Count="307" />
+      <LineId Id="190" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.DelBit">
       <LineId Id="1" Count="5" />
     </LineIds>
     <LineIds Name="fb_Simulation.Disable">
@@ -750,11 +990,17 @@ END_VAR
     <LineIds Name="fb_Simulation.EnableProcess.Set">
       <LineId Id="1" Count="1" />
     </LineIds>
-    <LineIds Name="fb_Simulation.GetBitWord">
+    <LineIds Name="fb_Simulation.GetBit">
       <LineId Id="1" Count="5" />
     </LineIds>
     <LineIds Name="fb_Simulation.Init">
       <LineId Id="1" Count="19" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.MessageLevel.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.MessageLevel.Set">
+      <LineId Id="1" Count="2" />
     </LineIds>
     <LineIds Name="fb_Simulation.MoverEnter.Get">
       <LineId Id="1" Count="1" />
@@ -774,13 +1020,19 @@ END_VAR
     <LineIds Name="fb_Simulation.PrepareTargets">
       <LineId Id="1" Count="43" />
     </LineIds>
+    <LineIds Name="fb_Simulation.ProcessId.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_Simulation.ProcessId.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
     <LineIds Name="fb_Simulation.ProcessTime.Get">
       <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Simulation.ProcessTime.Set">
       <LineId Id="1" Count="1" />
     </LineIds>
-    <LineIds Name="fb_Simulation.SetBitWord">
+    <LineIds Name="fb_Simulation.SetBit">
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="fb_Simulation.StationCount.Get">
