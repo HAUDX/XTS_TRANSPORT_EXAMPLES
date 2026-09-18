@@ -63,7 +63,7 @@ DO
   GVL_APPLICATION.Simulation[nProcess].StationState         := ADR(GVL_XTS.StationState);
 
   GVL_APPLICATION.Simulation[nProcess].ProcessTime          := tProcess[nProcess];
-  GVL_APPLICATION.Simulation[nProcess].MessageLevel         := GVL_MSG.MessageLevel;
+  GVL_APPLICATION.Simulation[nProcess].MessageLevel         := GVL_MSG_XTS.MessageLevel;
 END_FOR
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
@@ -132,21 +132,21 @@ END_CASE
 //#################################################################################################################
 // /logging
 //#################################################################################################################
-GVL_MSG.ApplicationMessageData.Ctrl                         REF= GVL_MSG.ApplicationMessageCtrl;
-GVL_MSG.ApplicationMessageData.State                        REF= GVL_MSG.ApplicationMessageState;
+GVL_MSG_XTS.ApplicationMessageData.Ctrl                     REF= GVL_MSG_XTS.ApplicationMessageCtrl;
+GVL_MSG_XTS.ApplicationMessageData.State                    REF= GVL_MSG_XTS.ApplicationMessageState;
 
-GVL_MSG.ApplicationMessageData.MessageIndex                 REF= GVL_MSG.MessageApplicationIndex;
-GVL_MSG.ApplicationMessageData.ErrorIndex                   REF= GVL_MSG.MessageApplicationError;
+GVL_MSG_XTS.ApplicationMessageData.MessageIndex             REF= GVL_MSG_XTS.MessageApplicationIndex;
+GVL_MSG_XTS.ApplicationMessageData.ErrorIndex               REF= GVL_MSG_XTS.MessageApplicationError;
 
-GVL_MSG.ApplicationMessageData.DirRoot                      :=   ADR(GVL_MSG.LOG_DIR);
-GVL_MSG.ApplicationMessageData.FileRoot                     :=   ADR(GVL_MSG.LOG_FILE_APP);
-GVL_MSG.ApplicationMessageData.MsgList                      :=   ADR(GVL_MSG.ApplicationMessages);
-GVL_MSG.ApplicationMessageData.LocalTime                    :=   ADR(GVL_MSG.dtLocalTime);
+GVL_MSG_XTS.ApplicationMessageData.DirRoot                  :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.ApplicationMessageData.FileRoot                 :=   ADR(GVL_MSG_XTS.LOG_FILE_APP);
+GVL_MSG_XTS.ApplicationMessageData.MsgList                  :=   ADR(GVL_MSG_XTS.ApplicationMessages);
+GVL_MSG_XTS.ApplicationMessageData.LocalTime                :=   ADR(GVL_MSG_XTS.dtLocalTime);
 
-GVL_MSG.ApplicationMessageData();
+GVL_MSG_XTS.ApplicationMessageData();
 
-eMsgState                                   := f_GetState   (GVL_MSG.ApplicationMessageState.State);
-eMsgProgress                                := f_GetProgress(GVL_MSG.ApplicationMessageState.State);
+eMsgState                                   := f_GetState   (GVL_MSG_XTS.ApplicationMessageState.State);
+eMsgProgress                                := f_GetProgress(GVL_MSG_XTS.ApplicationMessageState.State);
 
 
 CASE eMsgState
@@ -158,12 +158,12 @@ OF
         IF (GVL_MSG_XTS.MessageApplicationIndex > GVL_MSG_XTS.MAX_MESSAGE/100) OR
            (GVL_MSG_XTS.MessageApplicationError > 0)
         THEN
-          GVL_MSG_XTS.ApplicationMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          GVL_MSG_XTS.ApplicationMessageCtrl.Cmd            := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
         ELSE
           tonIdleWriteApplication(IN := TRUE, PT:= tIdleWriteApplication);
           IF (tonIdleWriteApplication.Q)
           THEN
-            GVL_MSG_XTS.TransportMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+            GVL_MSG_XTS.TransportMessageCtrl.Cmd            := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
           END_IF
         END_IF
     END_CASE
@@ -174,14 +174,14 @@ OF
       E_PROGRESS.PROGRESS_ERROR,
       E_PROGRESS.PROGRESS_DONE:
         tonIdleWriteApplication(IN := FALSE, PT:= tIdleWriteApplication);
-        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd              := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 
 ELSE
     CASE eMsgProgress
     OF
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd              := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 END_CASE
 //#################################################################################################################
@@ -190,21 +190,21 @@ END_CASE
 //#################################################################################################################
 //  /Transport Metrics
 //#################################################################################################################
-GVL_MSG.MetricsMessageData.Ctrl                             REF= GVL_MSG.MetricsMessageCtrl;
-GVL_MSG.MetricsMessageData.State                            REF= GVL_MSG.MetricsMessageState;
+GVL_MSG_XTS.MetricsMessageData.Ctrl                         REF= GVL_MSG_XTS.MetricsMessageCtrl;
+GVL_MSG_XTS.MetricsMessageData.State                        REF= GVL_MSG_XTS.MetricsMessageState;
 
-GVL_MSG.MetricsMessageData.MessageIndex                     REF= GVL_MSG.MessageMetricsIndex;
-GVL_MSG.MetricsMessageData.ErrorIndex                       REF= GVL_MSG.MessageMetricsError;
+GVL_MSG_XTS.MetricsMessageData.MessageIndex                 REF= GVL_MSG_XTS.MessageMetricsIndex;
+GVL_MSG_XTS.MetricsMessageData.ErrorIndex                   REF= GVL_MSG_XTS.MessageMetricsError;
 
-GVL_MSG.MetricsMessageData.DirRoot                          :=   ADR(GVL_MSG.LOG_DIR);
-GVL_MSG.MetricsMessageData.FileRoot                         :=   ADR(GVL_MSG.LOG_FILE_METRIC);
-GVL_MSG.MetricsMessageData.MsgList                          :=   ADR(GVL_MSG.MetricsMessages);
-GVL_MSG.MetricsMessageData.LocalTime                        :=   ADR(GVL_MSG.dtLocalTime);
+GVL_MSG_XTS.MetricsMessageData.DirRoot                      :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.MetricsMessageData.FileRoot                     :=   ADR(GVL_MSG_XTS.LOG_FILE_METRIC);
+GVL_MSG_XTS.MetricsMessageData.MsgList                      :=   ADR(GVL_MSG_XTS.MetricsMessages);
+GVL_MSG_XTS.MetricsMessageData.LocalTime                    :=   ADR(GVL_MSG_XTS.dtLocalTime);
 
-GVL_MSG.MetricsMessageData();
+GVL_MSG_XTS.MetricsMessageData();
 
-eMtrState                                   := f_GetState   (GVL_MSG.MetricsMessageState.State);
-eMtrProgress                                := f_GetProgress(GVL_MSG.MetricsMessageState.State);
+eMtrState                                   := f_GetState   (GVL_MSG_XTS.MetricsMessageState.State);
+eMtrProgress                                := f_GetProgress(GVL_MSG_XTS.MetricsMessageState.State);
 
 CASE eMtrState
 OF
@@ -215,12 +215,12 @@ OF
         IF (GVL_MSG_XTS.MessageMetricsIndex > GVL_MSG_XTS.MAX_MESSAGE/100) OR
            (GVL_MSG_XTS.MessageMetricsError > 0)
         THEN
-          GVL_MSG_XTS.MetricsMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          GVL_MSG_XTS.MetricsMessageCtrl.Cmd                := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
         ELSE
           tonIdleWriteMetric(IN := TRUE, PT:= tIdleWriteMetric);
           IF (tonIdleWriteMetric.Q)
           THEN
-            GVL_MSG_XTS.TransportMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+            GVL_MSG_XTS.TransportMessageCtrl.Cmd            := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
           END_IF
         END_IF
     END_CASE
@@ -231,13 +231,13 @@ OF
       E_PROGRESS.PROGRESS_ERROR,
       E_PROGRESS.PROGRESS_DONE:
         tonIdleWriteMetric(IN := FALSE, PT:= tIdleWriteMetric);
-        GVL_MSG_XTS.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 ELSE
     CASE eMtrProgress
     OF
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG_XTS.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 END_CASE
 //#################################################################################################################

@@ -728,8 +728,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PlaceholderResolution Include="Tc3_McCollisionAvoidance">
+      <Resolution>Tc3_McCollisionAvoidance, 3.4.60.0 (Beckhoff Automation GmbH)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="Tc3_McCoordinatedMotion">
+      <Resolution>Tc3_McCoordinatedMotion, 3.4.60.0 (Beckhoff Automation GmbH)</Resolution>
+    </PlaceholderResolution>
     <PlaceholderResolution Include="Tc3_XTS_Utility">
-      <Resolution>Tc3_XTS_Utility, * (Beckhoff Automation GmbH)</Resolution>
+      <Resolution>Tc3_XTS_Utility, 4.3.31.0 (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>

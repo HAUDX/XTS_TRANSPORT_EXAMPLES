@@ -41,29 +41,29 @@
 //---------------------------------------------------------------------------------------------------------------
 PROGRAM MAIN_APP
 VAR
-  eInitXts  at %I*  : E_PROGRESS;
-  eInit         : E_PROGRESS;
-  bStart        : BOOL;   // XtsTransport is initialized, CAGroup is built, All movers are enabled, XtsStations are cleared, XtsTransport base position for all movers is commanded, XtsStations are handshaked with timer
-  bReset        : BOOL;   // All Xts Stations are cleared, requires new start
+  eInitXts  AT %I*    : E_PROGRESS;
+  eInit               : E_PROGRESS;
+  bStart              : BOOL;   // XtsTransport is initialized, CAGroup is built, All movers are enabled, XtsStations are cleared, XtsTransport base position for all movers is commanded, XtsStations are handshaked with timer
+  bReset              : BOOL;   // All Xts Stations are cleared, requires new start
 
-  nState        : UINT;   // state var for application
+  nState              : UINT;   // state var for application
 
   tonProcess          : ARRAY[1..MAX_STATION] OF Tc2_Standard.TON;
   tProcess            : ARRAY[1..MAX_STATION] OF TIME;
 
   // work vars
-  nStation      : UINT;
-  nTarget       : ARRAY[1..MAX_STATION] OF UINT;  // contains target the station is sending the mover to, after process handshake was done
+  nStation            : UINT;
+  nTarget             : ARRAY[1..MAX_STATION] OF UINT;  // contains target the station is sending the mover to, after process handshake was done
 
-  JobResult     : E_PROGRESS;
+  JobResult           : E_PROGRESS;
 
   // example work vars
   eTransportState,
-  eTransportStateOld    : E_XTS_TRANSPORT_STATE;
+  eTransportStateOld  : E_XTS_TRANSPORT_STATE;
 
-  eExecState            : E_XTS_TRANSPORT_STATE;
-  eExecResult           : e_progress;
-  stMsg                 : ST_Message;
+  eExecState          : E_XTS_TRANSPORT_STATE;
+  eExecResult         : e_progress;
+  stMsg               : ST_Message;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -306,7 +306,8 @@ END_CASE
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN_APP">
-      <LineId Id="1" Count="236" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="2" Count="235" />
     </LineIds>
   </POU>
 </TcPlcObject>

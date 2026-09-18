@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <DUT Name="ST_MOVER_OFFSETS" Id="{c7cde426-a6c1-447f-aed7-b3c881333fc8}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="ST_MOVER_OFFSETS" Id="{54474cd7-ae93-442f-b15d-5f6a7a65c69f}">
     <Declaration><![CDATA[TYPE ST_MOVER_OFFSETS :
 STRUCT
   // static position offsets in stations

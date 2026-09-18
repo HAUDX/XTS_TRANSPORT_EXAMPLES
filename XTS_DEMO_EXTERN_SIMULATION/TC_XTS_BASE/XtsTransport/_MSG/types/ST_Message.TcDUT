@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <DUT Name="ST_Message" Id="{1fa3be1d-c2f0-4df5-9477-bda858956dd0}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="ST_Message" Id="{f54787e6-2667-4a9f-8900-dc2f7d9c227b}">
     <Declaration><![CDATA[TYPE ST_Message :
 STRUCT
   eType         : e_MessageType;

@@ -4282,7 +4282,7 @@ GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=      0.0; /
 GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=    -10.0; // relative to Mover.ActPos
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=    76.0;
 
-GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1500.0;
+GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1750.0;
 GVL_XTS.StationParameter[nStationParameter].rJerk                 := 600000.0;]]></ST>
       </Implementation>
     </Action>

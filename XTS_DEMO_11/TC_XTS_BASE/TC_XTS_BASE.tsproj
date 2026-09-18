@@ -87978,14 +87978,13 @@ and will return to Group State Standby when the situation permits.
 		</Motion>
 		<Plc>
 			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="TEST, WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9ED3D69C-CD65-2A12-5CA8-799953BC4B8C}" TmcPath="XtsTransport\XtsTransport.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{2E2B9CB4-9060-EA71-6649-9C971EF89BA0}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
 							<Name>GVL_XTS.CaGroupRef.PlcToNc</Name>
-							<Comment><![CDATA[ Data from PLC to MC. ]]></Comment>
 							<Type GUID="{0E2E3852-A98C-4AF3-81E2-209EE128940C}" Namespace="MC">CDT_PLCTOMC_GROUP</Type>
 						</Var>
 						<Var>
@@ -88033,7 +88032,6 @@ and will return to Group State Standby when the situation permits.
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>GVL_XTS.CaGroupRef.NcToPlc</Name>
-							<Comment><![CDATA[ Data from MC to PLC. ]]></Comment>
 							<Type GUID="{467F4325-10DF-4BC1-88DD-E8240EB4F8E3}" Namespace="MC">CDT_MCTOPLC_GROUP</Type>
 						</Var>
 						<Var>

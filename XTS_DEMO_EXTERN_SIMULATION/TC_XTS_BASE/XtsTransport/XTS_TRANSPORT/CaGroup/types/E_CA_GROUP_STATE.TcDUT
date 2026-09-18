@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <DUT Name="E_CA_GROUP_STATE" Id="{07389b2b-e79e-4dfd-9079-0a65fb224a2f}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="E_CA_GROUP_STATE" Id="{9f051cf0-374f-4762-8cee-b900116e3702}">
     <Declaration><![CDATA[// {attribute 'qualified_only'}
 // {attribute 'strict'}
 {attribute 'to_string'}

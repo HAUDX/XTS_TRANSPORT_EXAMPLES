@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <POU Name="Initialization_Robot" Id="{ff9ff3b3-88bc-4545-80e4-f6aae486889a}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Initialization_Robot : BOOL
 VAR_INPUT
@@ -199,7 +199,7 @@ ItfProcessCollector[SenderFast.ProcessId].StationFirst  := 51;
 ItfProcessCollector[SenderFast.ProcessId].StationLast   := 51;
 
 _nStnFrst                                 := ProcessCollector[SenderFast.ProcessId].StationFirst;
-SenderFast.CheckPosition                  := GVL_XTS.StationParameter[_nStnFrst].rPosWait - 500.0;
+SenderFast.CheckPosition                  := GVL_XTS.StationParameter[_nStnFrst].rPosWait - 1500.0;
 //-------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------
 //*************************************************************************************************************
@@ -227,13 +227,14 @@ ItfProcessCollector[SenderBufferInfeed.ProcessId].StationFirst  := 52;
 ItfProcessCollector[SenderBufferInfeed.ProcessId].StationLast   := 52;
 
 _nStnFrst                                 := ProcessCollector[SenderBufferInfeed.ProcessId].StationFirst;
-SenderBufferInfeed.CheckPosition          := GVL_XTS.StationParameter[_nStnFrst].rPosWait - 1250.0;
+SenderBufferInfeed.CheckPosition          := GVL_XTS.StationParameter[_nStnFrst].rPosWait - 1500.0;
 //-------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------
 //*************************************************************************************************************]]></ST>
     </Implementation>
     <LineIds Name="Initialization_Robot">
-      <LineId Id="1" Count="220" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="2" Count="219" />
     </LineIds>
   </POU>
 </TcPlcObject>
