@@ -126962,11 +126962,16 @@ and will return to Group State Standby when the situation permits.
 				</Instance>
 			</Project>
 			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, TEST, WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{753C1762-55BD-623E-4032-6105978EE404}" TmcPath="XtsTransport\XtsTransport.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{7EBE5252-9A28-745C-B24F-AFE6DD2A0989}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>MAIN_APP.eInit</Name>
+							<Comment><![CDATA[ startup state machine after MAIN is initialized]]></Comment>
+							<Type GUID="{E5B4B710-2AC3-1039-86D5-33777854E02B}">E_PROGRESS</Type>
+						</Var>
 						<Var>
 							<Name>MAPPING_XTS_out.StationState.byState</Name>
 							<Type GUID="{4C1B89DB-3EE8-A739-ECA0-46497B0744D2}">ARRAY [1..37] OF ARRAY [1..14] OF BYTE</Type>
@@ -127779,11 +127784,6 @@ and will return to Group State Standby when the situation permits.
 						<Var>
 							<Name>GVL_XTS.AxisRefMover[200].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN_APP.eInit</Name>
-							<Comment><![CDATA[ startup state machine after MAIN is initialized]]></Comment>
-							<Type GUID="{E5B4B710-2AC3-1039-86D5-33777854E02B}">E_PROGRESS</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="1">

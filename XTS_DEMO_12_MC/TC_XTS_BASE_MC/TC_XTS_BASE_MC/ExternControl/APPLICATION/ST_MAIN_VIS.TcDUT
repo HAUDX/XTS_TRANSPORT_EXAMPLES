@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_MAIN_VIS" Id="{863e53a0-0be7-4ab3-b120-ada52aee8a57}">
+    <Declaration><![CDATA[TYPE ST_MAIN_VIS :
+STRUCT
+  eInitXts          : E_PROGRESS;
+  sInitXts          : STRING(20);
+
+  eInitApplication  : E_PROGRESS;
+  sInitApplication  : STRING(20);
+
+  nStateApplication : UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

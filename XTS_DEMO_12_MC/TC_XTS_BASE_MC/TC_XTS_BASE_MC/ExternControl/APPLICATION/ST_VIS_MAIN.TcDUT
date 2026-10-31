@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_VIS_MAIN" Id="{4fd405b5-f784-42b0-8cb3-6c293936c6a5}">
+    <Declaration><![CDATA[TYPE ST_VIS_MAIN :
+STRUCT
+  Init        : BOOL; // triggers init sequence
+  Start       : BOOL; // triggers example sequence
+  Reset       : BOOL; // hard reset sequence
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="ST_XTS_TRANSPORT_CTRL" Id="{0c76637f-3be7-4447-80e6-fbb9d2918db8}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_XTS_TRANSPORT_CTRL :
+STRUCT
+  Cmd       : E_XTS_TRANSPORT_CTRL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

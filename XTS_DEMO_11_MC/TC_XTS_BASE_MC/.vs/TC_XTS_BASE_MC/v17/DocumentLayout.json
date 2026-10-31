@@ -1,0 +1,87 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_11_MC\\TC_XTS_BASE_MC\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6D569018-A503-40F6-AB32-DE4D6AD91487}|TC_XTS_BASE_MC\\XtsTransport\\XtsTransport.plcproj|Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_11_MC\\TC_XTS_BASE_MC\\TC_XTS_BASE_MC\\XtsTransport\\APPLICATION\\MAIN_APP.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}",
+      "RelativeMoniker": "D:0:0:{6D569018-A503-40F6-AB32-DE4D6AD91487}|TC_XTS_BASE_MC\\XtsTransport\\XtsTransport.plcproj|solutionrelative:TC_XTS_BASE_MC\\XtsTransport\\APPLICATION\\MAIN_APP.TcPOU||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6D569018-A503-40F6-AB32-DE4D6AD91487}|TC_XTS_BASE_MC\\XtsTransport\\XtsTransport.plcproj|Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_11_MC\\TC_XTS_BASE_MC\\TC_XTS_BASE_MC\\XtsTransport\\APPLICATION\\VIS_APPLICATION_EXAMPLE.TcVIS||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}",
+      "RelativeMoniker": "D:0:0:{6D569018-A503-40F6-AB32-DE4D6AD91487}|TC_XTS_BASE_MC\\XtsTransport\\XtsTransport.plcproj|solutionrelative:TC_XTS_BASE_MC\\XtsTransport\\APPLICATION\\VIS_APPLICATION_EXAMPLE.TcVIS||{CFF47BB1-5559-4BDE-A2AF-06B30BC64F6C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 481,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "VIS_APPLICATION_EXAMPLE",
+              "DocumentMoniker": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_11_MC\\TC_XTS_BASE_MC\\TC_XTS_BASE_MC\\XtsTransport\\APPLICATION\\VIS_APPLICATION_EXAMPLE.TcVIS",
+              "RelativeDocumentMoniker": "TC_XTS_BASE_MC\\XtsTransport\\APPLICATION\\VIS_APPLICATION_EXAMPLE.TcVIS",
+              "ToolTip": "VIS_APPLICATION_EXAMPLE [TC_XTS_BASE_MC.XtsTransport]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-10-22T08:59:03.118Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{94c070b9-db0b-4415-9311-bac4eef266f5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:7:0:{94c070b9-db0b-4415-9311-bac4eef266f5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2:0:{94c070b9-db0b-4415-9311-bac4eef266f5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:3:0:{94c070b9-db0b-4415-9311-bac4eef266f5}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 585,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MAIN_APP",
+              "DocumentMoniker": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_11_MC\\TC_XTS_BASE_MC\\TC_XTS_BASE_MC\\XtsTransport\\APPLICATION\\MAIN_APP.TcPOU",
+              "RelativeDocumentMoniker": "TC_XTS_BASE_MC\\XtsTransport\\APPLICATION\\MAIN_APP.TcPOU",
+              "ToolTip": "MAIN_APP [TC_XTS_BASE_MC.XtsTransport]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-10-26T04:08:59.595Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 312,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3f61aebf-0260-4afc-86d9-ad36d38a7bdc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:4:0:{94c070b9-db0b-4415-9311-bac4eef266f5}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

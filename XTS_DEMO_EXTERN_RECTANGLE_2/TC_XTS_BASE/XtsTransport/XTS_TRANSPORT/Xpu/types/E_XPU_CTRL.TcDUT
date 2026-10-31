@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <DUT Name="E_XPU_CTRL" Id="{7de323b5-074d-435f-b153-16c1a466f1ea}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="E_XPU_CTRL" Id="{c0d8b736-c739-480c-b1ed-d8eea6111ee3}">
     <Declaration><![CDATA[{attribute 'strict'}
 TYPE E_XPU_CTRL :
 (

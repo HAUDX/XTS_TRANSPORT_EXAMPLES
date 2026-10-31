@@ -1,0 +1,1360 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.26" ClassName="CTComObjDef">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{C8A3EBBF-E67F-491F-AAC6-16D5D5E9699B}" Namespace="XTS">TcVersion</Name>
+			<BitSize>128</BitSize>
+			<SubItem>
+				<Name>Major</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Minor</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Build</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Revision</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+		</DataType>
+	</DataTypes>
+	<ImageDatas>
+		<ImageData Id="1000">424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000000000000000000ababab00a6a6a600000000000000000000000000000000000000000000000000000000000000000000000000000000006a6a6a00646464000000000000000000b4b4b400afafaf0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d20000000000737373006e6e6e000000000000000000bdbdbd00b8b8b80000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200000000007c7c7c00777777000000000000000000c6c6c600c1c1c10000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000808080000000000000000000d0d0d000cacaca0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000898989000000000000000000d9d9d900d3d3d3000000000069696900696969006969690069696900696969006969690069696900696969000000000000000000929292000000000000000000e2e2e2000000000000000000000000002424240049494900494949004949490049494900494949004949490049494900000000009b9b9b000000000000000000ebebeb00000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000a5a5a5000000000000000000f4f4f400000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000aeaeae000000000000000000fbfbfb00000000006d6d6d0036363600000000000000000000000000000000000000000000000000000000000000000000000000b7b7b7000000000000000000fbfbfb00000000006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d0000000000d0d0d000cbcbcb00c5c5c500c0c0c0000000000000000000fbfbfb00000000000101010001010100010101000101010001010100010101000101010000000000d9d9d900d4d4d400cfcfcf00c9c9c9000000000000000000fbfbfb00f9f9f900f9f9f900f9f9f900f9f9f900f9f9f900f6f6f600f1f1f100ebebeb00e6e6e600e3e3e300dddddd00d8d8d800d2d2d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</ImageData>
+	</ImageDatas>
+	<Module Id="#x010107c0" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+		<Name>__FILENAME__</Name>
+		<ImageId>1000</ImageId>
+		<TmcDesc GUID="{716F398D-36EF-4311-96DC-4AB35D3E7C42}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+			<Name>XtsInfoServer</Name>
+			<CLSID ClassFactory="TcIoXts">{C64A5C27-E3C9-4F5F-B4A3-F021EBB8F7B8}</CLSID>
+			<Info>
+				<ImageData>424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000000000000000000ababab00a6a6a600000000000000000000000000000000000000000000000000000000000000000000000000000000006a6a6a00646464000000000000000000b4b4b400afafaf0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d20000000000737373006e6e6e000000000000000000bdbdbd00b8b8b80000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200000000007c7c7c00777777000000000000000000c6c6c600c1c1c10000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000808080000000000000000000d0d0d000cacaca0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000898989000000000000000000d9d9d900d3d3d3000000000069696900696969006969690069696900696969006969690069696900696969000000000000000000929292000000000000000000e2e2e2000000000000000000000000002424240049494900494949004949490049494900494949004949490049494900000000009b9b9b000000000000000000ebebeb00000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000a5a5a5000000000000000000f4f4f400000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000aeaeae000000000000000000fbfbfb00000000006d6d6d0036363600000000000000000000000000000000000000000000000000000000000000000000000000b7b7b7000000000000000000fbfbfb00000000006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d0000000000d0d0d000cbcbcb00c5c5c500c0c0c0000000000000000000fbfbfb00000000000101010001010100010101000101010001010100010101000101010000000000d9d9d900d4d4d400cfcfcf00c9c9c9000000000000000000fbfbfb00f9f9f900f9f9f900f9f9f900f9f9f900f9f9f900f6f6f600f1f1f100ebebeb00e6e6e600e3e3e300dddddd00d8d8d800d2d2d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</ImageData>
+			</Info>
+			<InitSequence>PSO</InitSequence>
+			<Contexts>
+				<Context>
+					<Id>1</Id>
+				</Context>
+			</Contexts>
+			<Interfaces>
+				<Interface>
+					<Type GUID="{00000012-0000-0000-E000-000000000064}">ITComObject</Type>
+				</Interface>
+			</Interfaces>
+			<Parameters>
+				<Group><![CDATA[General]]></Group>
+				<Group Collapsed="true"><![CDATA[Structure]]></Group>
+				<Group><![CDATA[Info]]></Group>
+				<Parameter HideParameter="true" Group="General">
+					<Name>AdsPort</Name>
+					<Comment><![CDATA[Gets/sets the ads port. The port should be used to read/write parameters via ADS.]]></Comment>
+					<BitSize>16</BitSize>
+					<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+					<Default>
+						<Value>0</Value>
+					</Default>
+					<PTCID>#x03002090</PTCID>
+					<ContextId>1</ContextId>
+				</Parameter>
+				<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+					<Name>StationInfoCount</Name>
+					<Comment><![CDATA[Returns the number of station info.]]></Comment>
+					<BitSize>32</BitSize>
+					<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+					<PTCID>#x03080275</PTCID>
+					<ContextId>1</ContextId>
+				</Parameter>
+				<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+					<Name>StationInfoObjectIds</Name>
+					<Comment><![CDATA[Returns an array containing the object IDs of all station infos.]]></Comment>
+					<BitSize>160</BitSize>
+					<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+					<ArrayInfo>
+						<LBound>0</LBound>
+						<Elements Min="1" Max="100">5</Elements>
+					</ArrayInfo>
+					<PTCID>#x03080276</PTCID>
+					<ContextId>1</ContextId>
+				</Parameter>
+				<Parameter OnlineParameter="true" HideParameter="true" ReadOnly="true" Group="Info">
+					<Name>VersionString</Name>
+					<Comment><![CDATA[Returns the version string of the driver.]]></Comment>
+					<BitSize>384</BitSize>
+					<BaseType GUID="{18071995-0000-0000-0000-00010000002F}">STRING(47)</BaseType>
+					<PTCID>#x03080287</PTCID>
+					<ContextId>1</ContextId>
+				</Parameter>
+				<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
+					<Name>Version</Name>
+					<Comment><![CDATA[Returns the version of the driver.]]></Comment>
+					<BitSize>128</BitSize>
+					<BaseType GUID="{C8A3EBBF-E67F-491F-AAC6-16D5D5E9699B}" Namespace="XTS">TcVersion</BaseType>
+					<PTCID>#x03080510</PTCID>
+					<ContextId>1</ContextId>
+				</Parameter>
+				<Parameter OnlineParameter="true" CreateSymbol="true" ReadOnly="true" Group="Structure">
+					<Name>Stations</Name>
+					<Comment><![CDATA[Returns an array containing the object IDs of all process stations.]]></Comment>
+					<BitSize>0</BitSize>
+					<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+					<ArrayInfo>
+						<LBound>0</LBound>
+						<Elements Min="0" MaxUnbounded="true">0</Elements>
+					</ArrayInfo>
+					<PTCID>#x03080617</PTCID>
+				</Parameter>
+			</Parameters>
+			<Properties>
+				<Property>
+					<Name>Category</Name>
+					<Value>XTS</Value>
+				</Property>
+				<Property>
+					<Name>Category</Name>
+					<Value>TcIoXts</Value>
+				</Property>
+				<Property>
+					<Name>Category</Name>
+					<Value>XtsInfoServer</Value>
+				</Property>
+				<Property>
+					<Name>ChildCategory</Name>
+					<Value>XtsInfoServerChild</Value>
+				</Property>
+			</Properties>
+			<ParameterValues>
+				<Value>
+					<Name>AdsPort</Name>
+					<Value>0</Value>
+				</Value>
+			</ParameterValues>
+		</TmcDesc>
+		<Module Id="#x010107d0" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+			<Name>Station 1</Name>
+			<ImageId>1000</ImageId>
+			<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+				<Name>XtsStationInfo</Name>
+				<CLSID ClassFactory="TcIoXts">{21393816-31C8-4469-A831-2CFE338CA04E}</CLSID>
+				<Info>
+					<ImageData>424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000000000000000000ababab00a6a6a600000000000000000000000000000000000000000000000000000000000000000000000000000000006a6a6a00646464000000000000000000b4b4b400afafaf0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d20000000000737373006e6e6e000000000000000000bdbdbd00b8b8b80000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200000000007c7c7c00777777000000000000000000c6c6c600c1c1c10000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000808080000000000000000000d0d0d000cacaca0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000898989000000000000000000d9d9d900d3d3d3000000000069696900696969006969690069696900696969006969690069696900696969000000000000000000929292000000000000000000e2e2e2000000000000000000000000002424240049494900494949004949490049494900494949004949490049494900000000009b9b9b000000000000000000ebebeb00000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000a5a5a5000000000000000000f4f4f400000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000aeaeae000000000000000000fbfbfb00000000006d6d6d0036363600000000000000000000000000000000000000000000000000000000000000000000000000b7b7b7000000000000000000fbfbfb00000000006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d0000000000d0d0d000cbcbcb00c5c5c500c0c0c0000000000000000000fbfbfb00000000000101010001010100010101000101010001010100010101000101010000000000d9d9d900d4d4d400cfcfcf00c9c9c9000000000000000000fbfbfb00f9f9f900f9f9f900f9f9f900f9f9f900f9f9f900f6f6f600f1f1f100ebebeb00e6e6e600e3e3e300dddddd00d8d8d800d2d2d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</ImageData>
+				</Info>
+				<InitSequence>PSO</InitSequence>
+				<Contexts>
+					<Context>
+						<Id>1</Id>
+					</Context>
+				</Contexts>
+				<Interfaces>
+					<Interface>
+						<Type GUID="{00000012-0000-0000-E000-000000000064}">ITComObject</Type>
+					</Interface>
+				</Interfaces>
+				<Parameters>
+					<Group><![CDATA[General]]></Group>
+					<Group Collapsed="true"><![CDATA[Structure]]></Group>
+					<Group><![CDATA[Info]]></Group>
+					<Parameter HideParameter="true" Group="General">
+						<Name>AdsPort</Name>
+						<Comment><![CDATA[Gets/sets the ads port. The port should be used to read/write parameters via ADS.]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03002090</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StationId</Name>
+						<Comment><![CDATA[Gets/sets the station ID.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03080271</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StationColor</Name>
+						<Comment><![CDATA[Gets/sets the station color in ARGB.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>4278190080</Value>
+						</Default>
+						<PTCID>#x03080277</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StartPositionOnPart</Name>
+						<Comment><![CDATA[Gets/sets the start position on the first part.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>10.0</Value>
+						</Default>
+						<PTCID>#x03080272</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>EndPositionOnPart</Name>
+						<Comment><![CDATA[Gets/sets the end position on the last part.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>200.0</Value>
+						</Default>
+						<PTCID>#x03080273</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter HideParameter="true" Group="General">
+						<Name>StopPosition</Name>
+						<Comment><![CDATA[Gets/sets the stop position. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>100.0</Value>
+						</Default>
+						<PTCID>#x03080274</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter ShowSubItems="true" Group="General">
+						<Name>StopPositions</Name>
+						<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements Min="0" MaxUnbounded="true">1</Elements>
+						</ArrayInfo>
+						<Unit><![CDATA[mm]]></Unit>
+						<PTCID>#x0308028d</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter ShowSubItems="true" Group="General">
+						<Name>PartObjectIds</Name>
+						<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements Min="1" MaxUnbounded="true">1</Elements>
+						</ArrayInfo>
+						<PTCID>#x03080224</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>IsEnabled</Name>
+						<Comment><![CDATA[Gets/sets whether the station is enabled or not.]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Default>
+							<EnumText>TRUE</EnumText>
+						</Default>
+						<PTCID>#x0308023c</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>Description</Name>
+						<Comment><![CDATA[Description of the station (Optional).]]></Comment>
+						<BitSize>8192</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-0001000003FF}" Namespace="STR">NG(1023)</BaseType>
+						<PTCID>#x0308023a</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+						<Name>PartCount</Name>
+						<Comment><![CDATA[Returns the number of parts.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<PTCID>#x03080203</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+						<Name>StopPositionsCount</Name>
+						<Comment><![CDATA[Returns the number of stop positions.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<PTCID>#x0308028e</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" HideParameter="true" ReadOnly="true" Group="Info">
+						<Name>VersionString</Name>
+						<Comment><![CDATA[Returns the version string of the driver.]]></Comment>
+						<BitSize>384</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00010000002F}">STRING(47)</BaseType>
+						<PTCID>#x03080287</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
+						<Name>Version</Name>
+						<Comment><![CDATA[Returns the version of the driver.]]></Comment>
+						<BitSize>128</BitSize>
+						<BaseType GUID="{C8A3EBBF-E67F-491F-AAC6-16D5D5E9699B}" Namespace="XTS">TcVersion</BaseType>
+						<PTCID>#x03080510</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+				</Parameters>
+				<EventMessages>
+					<EventMessage>
+						<Id>9029</Id>
+						<Message><![CDATA[Could not register by {0}.]]></Message>
+					</EventMessage>
+				</EventMessages>
+				<Properties>
+					<Property>
+						<Name>Category</Name>
+						<Value>XTS</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>TcIoXts</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsStationInfo</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsInfoServerChild</Value>
+					</Property>
+					<Property>
+						<Name>ChildCategory</Name>
+						<Value>XtsStationInfoChild</Value>
+					</Property>
+				</Properties>
+				<ParentOTCID>#x010107c0</ParentOTCID>
+				<ParameterValues>
+					<Value>
+						<Name>AdsPort</Name>
+						<Value>0</Value>
+					</Value>
+					<Value>
+						<Name>StationId</Name>
+						<Value>1</Value>
+					</Value>
+					<Value>
+						<Name>StationColor</Name>
+						<Value>4294901760</Value>
+					</Value>
+					<Value>
+						<Name>StartPositionOnPart</Name>
+						<Value>250</Value>
+					</Value>
+					<Value>
+						<Name>EndPositionOnPart</Name>
+						<Value>500</Value>
+					</Value>
+					<Value>
+						<Name>StopPosition</Name>
+						<Value>100</Value>
+					</Value>
+					<Value>
+						<Name>StopPositions[0]</Name>
+						<Value>125</Value>
+					</Value>
+					<Value>
+						<Name>PartObjectIds[0]</Name>
+						<Value>16842992</Value>
+					</Value>
+					<Value>
+						<Name>IsEnabled</Name>
+						<EnumText>TRUE</EnumText>
+					</Value>
+					<Value>
+						<Name>Description</Name>
+						<String></String>
+					</Value>
+				</ParameterValues>
+			</TmcDesc>
+		</Module>
+		<Module Id="#x010107e0" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+			<Name>Station 2</Name>
+			<ImageId>1000</ImageId>
+			<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+				<Name>XtsStationInfo</Name>
+				<CLSID ClassFactory="TcIoXts">{21393816-31C8-4469-A831-2CFE338CA04E}</CLSID>
+				<Info>
+					<ImageData>424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000000000000000000ababab00a6a6a600000000000000000000000000000000000000000000000000000000000000000000000000000000006a6a6a00646464000000000000000000b4b4b400afafaf0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d20000000000737373006e6e6e000000000000000000bdbdbd00b8b8b80000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200000000007c7c7c00777777000000000000000000c6c6c600c1c1c10000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000808080000000000000000000d0d0d000cacaca0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000898989000000000000000000d9d9d900d3d3d3000000000069696900696969006969690069696900696969006969690069696900696969000000000000000000929292000000000000000000e2e2e2000000000000000000000000002424240049494900494949004949490049494900494949004949490049494900000000009b9b9b000000000000000000ebebeb00000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000a5a5a5000000000000000000f4f4f400000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000aeaeae000000000000000000fbfbfb00000000006d6d6d0036363600000000000000000000000000000000000000000000000000000000000000000000000000b7b7b7000000000000000000fbfbfb00000000006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d0000000000d0d0d000cbcbcb00c5c5c500c0c0c0000000000000000000fbfbfb00000000000101010001010100010101000101010001010100010101000101010000000000d9d9d900d4d4d400cfcfcf00c9c9c9000000000000000000fbfbfb00f9f9f900f9f9f900f9f9f900f9f9f900f9f9f900f6f6f600f1f1f100ebebeb00e6e6e600e3e3e300dddddd00d8d8d800d2d2d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</ImageData>
+				</Info>
+				<InitSequence>PSO</InitSequence>
+				<Contexts>
+					<Context>
+						<Id>1</Id>
+					</Context>
+				</Contexts>
+				<Interfaces>
+					<Interface>
+						<Type GUID="{00000012-0000-0000-E000-000000000064}">ITComObject</Type>
+					</Interface>
+				</Interfaces>
+				<Parameters>
+					<Group><![CDATA[General]]></Group>
+					<Group Collapsed="true"><![CDATA[Structure]]></Group>
+					<Group><![CDATA[Info]]></Group>
+					<Parameter HideParameter="true" Group="General">
+						<Name>AdsPort</Name>
+						<Comment><![CDATA[Gets/sets the ads port. The port should be used to read/write parameters via ADS.]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03002090</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StationId</Name>
+						<Comment><![CDATA[Gets/sets the station ID.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03080271</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StationColor</Name>
+						<Comment><![CDATA[Gets/sets the station color in ARGB.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>4278190080</Value>
+						</Default>
+						<PTCID>#x03080277</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StartPositionOnPart</Name>
+						<Comment><![CDATA[Gets/sets the start position on the first part.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>10.0</Value>
+						</Default>
+						<PTCID>#x03080272</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>EndPositionOnPart</Name>
+						<Comment><![CDATA[Gets/sets the end position on the last part.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>200.0</Value>
+						</Default>
+						<PTCID>#x03080273</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter HideParameter="true" Group="General">
+						<Name>StopPosition</Name>
+						<Comment><![CDATA[Gets/sets the stop position. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>100.0</Value>
+						</Default>
+						<PTCID>#x03080274</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StopPositions</Name>
+						<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements Min="0" MaxUnbounded="true">1</Elements>
+						</ArrayInfo>
+						<Unit><![CDATA[mm]]></Unit>
+						<PTCID>#x0308028d</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter ShowSubItems="true" Group="General">
+						<Name>PartObjectIds</Name>
+						<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements Min="1" MaxUnbounded="true">1</Elements>
+						</ArrayInfo>
+						<PTCID>#x03080224</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>IsEnabled</Name>
+						<Comment><![CDATA[Gets/sets whether the station is enabled or not.]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Default>
+							<EnumText>TRUE</EnumText>
+						</Default>
+						<PTCID>#x0308023c</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>Description</Name>
+						<Comment><![CDATA[Description of the station (Optional).]]></Comment>
+						<BitSize>8192</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-0001000003FF}" Namespace="STR">NG(1023)</BaseType>
+						<PTCID>#x0308023a</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+						<Name>PartCount</Name>
+						<Comment><![CDATA[Returns the number of parts.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<PTCID>#x03080203</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+						<Name>StopPositionsCount</Name>
+						<Comment><![CDATA[Returns the number of stop positions.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<PTCID>#x0308028e</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" HideParameter="true" ReadOnly="true" Group="Info">
+						<Name>VersionString</Name>
+						<Comment><![CDATA[Returns the version string of the driver.]]></Comment>
+						<BitSize>384</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00010000002F}">STRING(47)</BaseType>
+						<PTCID>#x03080287</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
+						<Name>Version</Name>
+						<Comment><![CDATA[Returns the version of the driver.]]></Comment>
+						<BitSize>128</BitSize>
+						<BaseType GUID="{C8A3EBBF-E67F-491F-AAC6-16D5D5E9699B}" Namespace="XTS">TcVersion</BaseType>
+						<PTCID>#x03080510</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+				</Parameters>
+				<EventMessages>
+					<EventMessage>
+						<Id>9029</Id>
+						<Message><![CDATA[Could not register by {0}.]]></Message>
+					</EventMessage>
+				</EventMessages>
+				<Properties>
+					<Property>
+						<Name>Category</Name>
+						<Value>XTS</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>TcIoXts</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsStationInfo</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsInfoServerChild</Value>
+					</Property>
+					<Property>
+						<Name>ChildCategory</Name>
+						<Value>XtsStationInfoChild</Value>
+					</Property>
+				</Properties>
+				<ParentOTCID>#x010107c0</ParentOTCID>
+				<ParameterValues>
+					<Value>
+						<Name>AdsPort</Name>
+						<Value>0</Value>
+					</Value>
+					<Value>
+						<Name>StationId</Name>
+						<Value>2</Value>
+					</Value>
+					<Value>
+						<Name>StationColor</Name>
+						<Value>4294901760</Value>
+					</Value>
+					<Value>
+						<Name>StartPositionOnPart</Name>
+						<Value>2000</Value>
+					</Value>
+					<Value>
+						<Name>EndPositionOnPart</Name>
+						<Value>2250</Value>
+					</Value>
+					<Value>
+						<Name>StopPosition</Name>
+						<Value>100</Value>
+					</Value>
+					<Value>
+						<Name>StopPositions[0]</Name>
+						<Value>125</Value>
+					</Value>
+					<Value>
+						<Name>PartObjectIds[0]</Name>
+						<Value>16842992</Value>
+					</Value>
+					<Value>
+						<Name>IsEnabled</Name>
+						<EnumText>TRUE</EnumText>
+					</Value>
+					<Value>
+						<Name>Description</Name>
+						<String></String>
+					</Value>
+				</ParameterValues>
+			</TmcDesc>
+		</Module>
+		<Module Id="#x010107f0" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+			<Name>Station 3</Name>
+			<ImageId>1000</ImageId>
+			<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+				<Name>XtsStationInfo</Name>
+				<CLSID ClassFactory="TcIoXts">{21393816-31C8-4469-A831-2CFE338CA04E}</CLSID>
+				<Info>
+					<ImageData>424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000000000000000000ababab00a6a6a600000000000000000000000000000000000000000000000000000000000000000000000000000000006a6a6a00646464000000000000000000b4b4b400afafaf0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d20000000000737373006e6e6e000000000000000000bdbdbd00b8b8b80000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200000000007c7c7c00777777000000000000000000c6c6c600c1c1c10000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000808080000000000000000000d0d0d000cacaca0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000898989000000000000000000d9d9d900d3d3d3000000000069696900696969006969690069696900696969006969690069696900696969000000000000000000929292000000000000000000e2e2e2000000000000000000000000002424240049494900494949004949490049494900494949004949490049494900000000009b9b9b000000000000000000ebebeb00000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000a5a5a5000000000000000000f4f4f400000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000aeaeae000000000000000000fbfbfb00000000006d6d6d0036363600000000000000000000000000000000000000000000000000000000000000000000000000b7b7b7000000000000000000fbfbfb00000000006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d0000000000d0d0d000cbcbcb00c5c5c500c0c0c0000000000000000000fbfbfb00000000000101010001010100010101000101010001010100010101000101010000000000d9d9d900d4d4d400cfcfcf00c9c9c9000000000000000000fbfbfb00f9f9f900f9f9f900f9f9f900f9f9f900f9f9f900f6f6f600f1f1f100ebebeb00e6e6e600e3e3e300dddddd00d8d8d800d2d2d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</ImageData>
+				</Info>
+				<InitSequence>PSO</InitSequence>
+				<Contexts>
+					<Context>
+						<Id>1</Id>
+					</Context>
+				</Contexts>
+				<Interfaces>
+					<Interface>
+						<Type GUID="{00000012-0000-0000-E000-000000000064}">ITComObject</Type>
+					</Interface>
+				</Interfaces>
+				<Parameters>
+					<Group><![CDATA[General]]></Group>
+					<Group Collapsed="true"><![CDATA[Structure]]></Group>
+					<Group><![CDATA[Info]]></Group>
+					<Parameter HideParameter="true" Group="General">
+						<Name>AdsPort</Name>
+						<Comment><![CDATA[Gets/sets the ads port. The port should be used to read/write parameters via ADS.]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03002090</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StationId</Name>
+						<Comment><![CDATA[Gets/sets the station ID.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03080271</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StationColor</Name>
+						<Comment><![CDATA[Gets/sets the station color in ARGB.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>4278190080</Value>
+						</Default>
+						<PTCID>#x03080277</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StartPositionOnPart</Name>
+						<Comment><![CDATA[Gets/sets the start position on the first part.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>10.0</Value>
+						</Default>
+						<PTCID>#x03080272</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>EndPositionOnPart</Name>
+						<Comment><![CDATA[Gets/sets the end position on the last part.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>200.0</Value>
+						</Default>
+						<PTCID>#x03080273</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter HideParameter="true" Group="General">
+						<Name>StopPosition</Name>
+						<Comment><![CDATA[Gets/sets the stop position. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>100.0</Value>
+						</Default>
+						<PTCID>#x03080274</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StopPositions</Name>
+						<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements Min="0" MaxUnbounded="true">1</Elements>
+						</ArrayInfo>
+						<Unit><![CDATA[mm]]></Unit>
+						<PTCID>#x0308028d</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter ShowSubItems="true" Group="General">
+						<Name>PartObjectIds</Name>
+						<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements Min="1" MaxUnbounded="true">1</Elements>
+						</ArrayInfo>
+						<PTCID>#x03080224</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>IsEnabled</Name>
+						<Comment><![CDATA[Gets/sets whether the station is enabled or not.]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Default>
+							<EnumText>TRUE</EnumText>
+						</Default>
+						<PTCID>#x0308023c</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>Description</Name>
+						<Comment><![CDATA[Description of the station (Optional).]]></Comment>
+						<BitSize>8192</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-0001000003FF}" Namespace="STR">NG(1023)</BaseType>
+						<PTCID>#x0308023a</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+						<Name>PartCount</Name>
+						<Comment><![CDATA[Returns the number of parts.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<PTCID>#x03080203</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+						<Name>StopPositionsCount</Name>
+						<Comment><![CDATA[Returns the number of stop positions.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<PTCID>#x0308028e</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" HideParameter="true" ReadOnly="true" Group="Info">
+						<Name>VersionString</Name>
+						<Comment><![CDATA[Returns the version string of the driver.]]></Comment>
+						<BitSize>384</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00010000002F}">STRING(47)</BaseType>
+						<PTCID>#x03080287</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
+						<Name>Version</Name>
+						<Comment><![CDATA[Returns the version of the driver.]]></Comment>
+						<BitSize>128</BitSize>
+						<BaseType GUID="{C8A3EBBF-E67F-491F-AAC6-16D5D5E9699B}" Namespace="XTS">TcVersion</BaseType>
+						<PTCID>#x03080510</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+				</Parameters>
+				<EventMessages>
+					<EventMessage>
+						<Id>9029</Id>
+						<Message><![CDATA[Could not register by {0}.]]></Message>
+					</EventMessage>
+				</EventMessages>
+				<Properties>
+					<Property>
+						<Name>Category</Name>
+						<Value>XTS</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>TcIoXts</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsStationInfo</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsInfoServerChild</Value>
+					</Property>
+					<Property>
+						<Name>ChildCategory</Name>
+						<Value>XtsStationInfoChild</Value>
+					</Property>
+				</Properties>
+				<ParentOTCID>#x010107c0</ParentOTCID>
+				<ParameterValues>
+					<Value>
+						<Name>AdsPort</Name>
+						<Value>0</Value>
+					</Value>
+					<Value>
+						<Name>StationId</Name>
+						<Value>3</Value>
+					</Value>
+					<Value>
+						<Name>StationColor</Name>
+						<Value>4294901760</Value>
+					</Value>
+					<Value>
+						<Name>StartPositionOnPart</Name>
+						<Value>2750</Value>
+					</Value>
+					<Value>
+						<Name>EndPositionOnPart</Name>
+						<Value>3000</Value>
+					</Value>
+					<Value>
+						<Name>StopPosition</Name>
+						<Value>100</Value>
+					</Value>
+					<Value>
+						<Name>StopPositions[0]</Name>
+						<Value>125</Value>
+					</Value>
+					<Value>
+						<Name>PartObjectIds[0]</Name>
+						<Value>16842992</Value>
+					</Value>
+					<Value>
+						<Name>IsEnabled</Name>
+						<EnumText>TRUE</EnumText>
+					</Value>
+					<Value>
+						<Name>Description</Name>
+						<String>3 parallel XTS stations</String>
+					</Value>
+				</ParameterValues>
+			</TmcDesc>
+		</Module>
+		<Module Id="#x01010800" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+			<Name>Station 4</Name>
+			<ImageId>1000</ImageId>
+			<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+				<Name>XtsStationInfo</Name>
+				<CLSID ClassFactory="TcIoXts">{21393816-31C8-4469-A831-2CFE338CA04E}</CLSID>
+				<Info>
+					<ImageData>424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000000000000000000ababab00a6a6a600000000000000000000000000000000000000000000000000000000000000000000000000000000006a6a6a00646464000000000000000000b4b4b400afafaf0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d20000000000737373006e6e6e000000000000000000bdbdbd00b8b8b80000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200000000007c7c7c00777777000000000000000000c6c6c600c1c1c10000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000808080000000000000000000d0d0d000cacaca0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000898989000000000000000000d9d9d900d3d3d3000000000069696900696969006969690069696900696969006969690069696900696969000000000000000000929292000000000000000000e2e2e2000000000000000000000000002424240049494900494949004949490049494900494949004949490049494900000000009b9b9b000000000000000000ebebeb00000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000a5a5a5000000000000000000f4f4f400000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000aeaeae000000000000000000fbfbfb00000000006d6d6d0036363600000000000000000000000000000000000000000000000000000000000000000000000000b7b7b7000000000000000000fbfbfb00000000006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d0000000000d0d0d000cbcbcb00c5c5c500c0c0c0000000000000000000fbfbfb00000000000101010001010100010101000101010001010100010101000101010000000000d9d9d900d4d4d400cfcfcf00c9c9c9000000000000000000fbfbfb00f9f9f900f9f9f900f9f9f900f9f9f900f9f9f900f6f6f600f1f1f100ebebeb00e6e6e600e3e3e300dddddd00d8d8d800d2d2d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</ImageData>
+				</Info>
+				<InitSequence>PSO</InitSequence>
+				<Contexts>
+					<Context>
+						<Id>1</Id>
+					</Context>
+				</Contexts>
+				<Interfaces>
+					<Interface>
+						<Type GUID="{00000012-0000-0000-E000-000000000064}">ITComObject</Type>
+					</Interface>
+				</Interfaces>
+				<Parameters>
+					<Group><![CDATA[General]]></Group>
+					<Group Collapsed="true"><![CDATA[Structure]]></Group>
+					<Group><![CDATA[Info]]></Group>
+					<Parameter HideParameter="true" Group="General">
+						<Name>AdsPort</Name>
+						<Comment><![CDATA[Gets/sets the ads port. The port should be used to read/write parameters via ADS.]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03002090</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StationId</Name>
+						<Comment><![CDATA[Gets/sets the station ID.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03080271</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StationColor</Name>
+						<Comment><![CDATA[Gets/sets the station color in ARGB.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>4278190080</Value>
+						</Default>
+						<PTCID>#x03080277</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StartPositionOnPart</Name>
+						<Comment><![CDATA[Gets/sets the start position on the first part.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>10.0</Value>
+						</Default>
+						<PTCID>#x03080272</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>EndPositionOnPart</Name>
+						<Comment><![CDATA[Gets/sets the end position on the last part.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>200.0</Value>
+						</Default>
+						<PTCID>#x03080273</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter HideParameter="true" Group="General">
+						<Name>StopPosition</Name>
+						<Comment><![CDATA[Gets/sets the stop position. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>100.0</Value>
+						</Default>
+						<PTCID>#x03080274</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StopPositions</Name>
+						<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements Min="0" MaxUnbounded="true">1</Elements>
+						</ArrayInfo>
+						<Unit><![CDATA[mm]]></Unit>
+						<PTCID>#x0308028d</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter ShowSubItems="true" Group="General">
+						<Name>PartObjectIds</Name>
+						<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements Min="1" MaxUnbounded="true">1</Elements>
+						</ArrayInfo>
+						<PTCID>#x03080224</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>IsEnabled</Name>
+						<Comment><![CDATA[Gets/sets whether the station is enabled or not.]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Default>
+							<EnumText>TRUE</EnumText>
+						</Default>
+						<PTCID>#x0308023c</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>Description</Name>
+						<Comment><![CDATA[Description of the station (Optional).]]></Comment>
+						<BitSize>8192</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-0001000003FF}" Namespace="STR">NG(1023)</BaseType>
+						<PTCID>#x0308023a</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+						<Name>PartCount</Name>
+						<Comment><![CDATA[Returns the number of parts.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<PTCID>#x03080203</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+						<Name>StopPositionsCount</Name>
+						<Comment><![CDATA[Returns the number of stop positions.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<PTCID>#x0308028e</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" HideParameter="true" ReadOnly="true" Group="Info">
+						<Name>VersionString</Name>
+						<Comment><![CDATA[Returns the version string of the driver.]]></Comment>
+						<BitSize>384</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00010000002F}">STRING(47)</BaseType>
+						<PTCID>#x03080287</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
+						<Name>Version</Name>
+						<Comment><![CDATA[Returns the version of the driver.]]></Comment>
+						<BitSize>128</BitSize>
+						<BaseType GUID="{C8A3EBBF-E67F-491F-AAC6-16D5D5E9699B}" Namespace="XTS">TcVersion</BaseType>
+						<PTCID>#x03080510</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+				</Parameters>
+				<EventMessages>
+					<EventMessage>
+						<Id>9029</Id>
+						<Message><![CDATA[Could not register by {0}.]]></Message>
+					</EventMessage>
+				</EventMessages>
+				<Properties>
+					<Property>
+						<Name>Category</Name>
+						<Value>XTS</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>TcIoXts</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsStationInfo</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsInfoServerChild</Value>
+					</Property>
+					<Property>
+						<Name>ChildCategory</Name>
+						<Value>XtsStationInfoChild</Value>
+					</Property>
+				</Properties>
+				<ParentOTCID>#x010107c0</ParentOTCID>
+				<ParameterValues>
+					<Value>
+						<Name>AdsPort</Name>
+						<Value>0</Value>
+					</Value>
+					<Value>
+						<Name>StationId</Name>
+						<Value>4</Value>
+					</Value>
+					<Value>
+						<Name>StationColor</Name>
+						<Value>4294901760</Value>
+					</Value>
+					<Value>
+						<Name>StartPositionOnPart</Name>
+						<Value>3750</Value>
+					</Value>
+					<Value>
+						<Name>EndPositionOnPart</Name>
+						<Value>4000</Value>
+					</Value>
+					<Value>
+						<Name>StopPosition</Name>
+						<Value>100</Value>
+					</Value>
+					<Value>
+						<Name>StopPositions[0]</Name>
+						<Value>125</Value>
+					</Value>
+					<Value>
+						<Name>PartObjectIds[0]</Name>
+						<Value>16842992</Value>
+					</Value>
+					<Value>
+						<Name>IsEnabled</Name>
+						<EnumText>TRUE</EnumText>
+					</Value>
+					<Value>
+						<Name>Description</Name>
+						<String></String>
+					</Value>
+				</ParameterValues>
+			</TmcDesc>
+		</Module>
+		<Module Id="#x01010810" KeepUnrestoredLinks="2" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+			<Name>Station 5</Name>
+			<ImageId>1000</ImageId>
+			<TmcDesc GUID="{6165818D-C92D-4BA0-B959-7EC24A330E18}" ClassFactoryId="Beckhoff Automation GmbH|TcIoXts|4.2.44.0">
+				<Name>XtsStationInfo</Name>
+				<CLSID ClassFactory="TcIoXts">{21393816-31C8-4469-A831-2CFE338CA04E}</CLSID>
+				<Info>
+					<ImageData>424d360400000000000036000000280000001000000010000000010020000000000000000000c30e0000c30e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a2a2a2009c9c9c0097979700929292008c8c8c0087878700818181007c7c7c0076767600717171006c6c6c0066666600616161005b5b5b000000000000000000ababab00a6a6a600000000000000000000000000000000000000000000000000000000000000000000000000000000006a6a6a00646464000000000000000000b4b4b400afafaf0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d20000000000737373006e6e6e000000000000000000bdbdbd00b8b8b80000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200000000007c7c7c00777777000000000000000000c6c6c600c1c1c10000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000808080000000000000000000d0d0d000cacaca0000000000d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d200d2d2d2000000000000000000898989000000000000000000d9d9d900d3d3d3000000000069696900696969006969690069696900696969006969690069696900696969000000000000000000929292000000000000000000e2e2e2000000000000000000000000002424240049494900494949004949490049494900494949004949490049494900000000009b9b9b000000000000000000ebebeb00000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000a5a5a5000000000000000000f4f4f400000000006d6d6d0036363600494949009292920092929200929292009292920092929200929292009292920000000000aeaeae000000000000000000fbfbfb00000000006d6d6d0036363600000000000000000000000000000000000000000000000000000000000000000000000000b7b7b7000000000000000000fbfbfb00000000006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d006d6d6d0000000000d0d0d000cbcbcb00c5c5c500c0c0c0000000000000000000fbfbfb00000000000101010001010100010101000101010001010100010101000101010000000000d9d9d900d4d4d400cfcfcf00c9c9c9000000000000000000fbfbfb00f9f9f900f9f9f900f9f9f900f9f9f900f9f9f900f6f6f600f1f1f100ebebeb00e6e6e600e3e3e300dddddd00d8d8d800d2d2d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</ImageData>
+				</Info>
+				<InitSequence>PSO</InitSequence>
+				<Contexts>
+					<Context>
+						<Id>1</Id>
+					</Context>
+				</Contexts>
+				<Interfaces>
+					<Interface>
+						<Type GUID="{00000012-0000-0000-E000-000000000064}">ITComObject</Type>
+					</Interface>
+				</Interfaces>
+				<Parameters>
+					<Group><![CDATA[General]]></Group>
+					<Group Collapsed="true"><![CDATA[Structure]]></Group>
+					<Group><![CDATA[Info]]></Group>
+					<Parameter HideParameter="true" Group="General">
+						<Name>AdsPort</Name>
+						<Comment><![CDATA[Gets/sets the ads port. The port should be used to read/write parameters via ADS.]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03002090</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StationId</Name>
+						<Comment><![CDATA[Gets/sets the station ID.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>0</Value>
+						</Default>
+						<PTCID>#x03080271</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StationColor</Name>
+						<Comment><![CDATA[Gets/sets the station color in ARGB.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<Default>
+							<Value>4278190080</Value>
+						</Default>
+						<PTCID>#x03080277</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StartPositionOnPart</Name>
+						<Comment><![CDATA[Gets/sets the start position on the first part.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>10.0</Value>
+						</Default>
+						<PTCID>#x03080272</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>EndPositionOnPart</Name>
+						<Comment><![CDATA[Gets/sets the end position on the last part.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>200.0</Value>
+						</Default>
+						<PTCID>#x03080273</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter HideParameter="true" Group="General">
+						<Name>StopPosition</Name>
+						<Comment><![CDATA[Gets/sets the stop position. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<Unit><![CDATA[mm]]></Unit>
+						<Default>
+							<Value>100.0</Value>
+						</Default>
+						<PTCID>#x03080274</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>StopPositions</Name>
+						<Comment><![CDATA[Gets/sets the stop positions. The valid range starts from 0 mm to the total length of all configured parts.]]></Comment>
+						<BitSize>64</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements Min="0" MaxUnbounded="true">1</Elements>
+						</ArrayInfo>
+						<Unit><![CDATA[mm]]></Unit>
+						<PTCID>#x0308028d</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter ShowSubItems="true" Group="General">
+						<Name>PartObjectIds</Name>
+						<Comment><![CDATA[Gets/sets the parts which belong to the station.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements Min="1" MaxUnbounded="true">1</Elements>
+						</ArrayInfo>
+						<PTCID>#x03080224</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>IsEnabled</Name>
+						<Comment><![CDATA[Gets/sets whether the station is enabled or not.]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Default>
+							<EnumText>TRUE</EnumText>
+						</Default>
+						<PTCID>#x0308023c</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter Group="General">
+						<Name>Description</Name>
+						<Comment><![CDATA[Description of the station (Optional).]]></Comment>
+						<BitSize>8192</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-0001000003FF}" Namespace="STR">NG(1023)</BaseType>
+						<PTCID>#x0308023a</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+						<Name>PartCount</Name>
+						<Comment><![CDATA[Returns the number of parts.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<PTCID>#x03080203</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Structure">
+						<Name>StopPositionsCount</Name>
+						<Comment><![CDATA[Returns the number of stop positions.]]></Comment>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+						<PTCID>#x0308028e</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" HideParameter="true" ReadOnly="true" Group="Info">
+						<Name>VersionString</Name>
+						<Comment><![CDATA[Returns the version string of the driver.]]></Comment>
+						<BitSize>384</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00010000002F}">STRING(47)</BaseType>
+						<PTCID>#x03080287</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+					<Parameter OnlineParameter="true" ReadOnly="true" Group="Info">
+						<Name>Version</Name>
+						<Comment><![CDATA[Returns the version of the driver.]]></Comment>
+						<BitSize>128</BitSize>
+						<BaseType GUID="{C8A3EBBF-E67F-491F-AAC6-16D5D5E9699B}" Namespace="XTS">TcVersion</BaseType>
+						<PTCID>#x03080510</PTCID>
+						<ContextId>1</ContextId>
+					</Parameter>
+				</Parameters>
+				<EventMessages>
+					<EventMessage>
+						<Id>9029</Id>
+						<Message><![CDATA[Could not register by {0}.]]></Message>
+					</EventMessage>
+				</EventMessages>
+				<Properties>
+					<Property>
+						<Name>Category</Name>
+						<Value>XTS</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>TcIoXts</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsStationInfo</Value>
+					</Property>
+					<Property>
+						<Name>Category</Name>
+						<Value>XtsInfoServerChild</Value>
+					</Property>
+					<Property>
+						<Name>ChildCategory</Name>
+						<Value>XtsStationInfoChild</Value>
+					</Property>
+				</Properties>
+				<ParentOTCID>#x010107c0</ParentOTCID>
+				<ParameterValues>
+					<Value>
+						<Name>AdsPort</Name>
+						<Value>0</Value>
+					</Value>
+					<Value>
+						<Name>StationId</Name>
+						<Value>5</Value>
+					</Value>
+					<Value>
+						<Name>StationColor</Name>
+						<Value>4294901760</Value>
+					</Value>
+					<Value>
+						<Name>StartPositionOnPart</Name>
+						<Value>5000</Value>
+					</Value>
+					<Value>
+						<Name>EndPositionOnPart</Name>
+						<Value>5250</Value>
+					</Value>
+					<Value>
+						<Name>StopPosition</Name>
+						<Value>100</Value>
+					</Value>
+					<Value>
+						<Name>StopPositions[0]</Name>
+						<Value>125</Value>
+					</Value>
+					<Value>
+						<Name>PartObjectIds[0]</Name>
+						<Value>16842992</Value>
+					</Value>
+					<Value>
+						<Name>IsEnabled</Name>
+						<EnumText>TRUE</EnumText>
+					</Value>
+					<Value>
+						<Name>Description</Name>
+						<String></String>
+					</Value>
+				</ParameterValues>
+			</TmcDesc>
+		</Module>
+	</Module>
+</TcSmItem>

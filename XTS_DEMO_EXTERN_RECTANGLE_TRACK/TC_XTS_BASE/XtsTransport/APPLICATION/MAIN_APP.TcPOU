@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <POU Name="MAIN_APP" Id="{589cd8b7-b619-4bed-ad7a-c17614b60e90}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.03.21
+//
+//  - MAIN_APPLICATION helper
+//    - example PRG for setting up your application startup
+//
+//---------------------------------------------------------------------------------------------------------------
+// This SOFTWARE is provided as an Example by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no 
+// representations or warranties of any kind concerning the safety, suitability, lack of viruses, inaccuracies, 
+// typographical errors, or other harmful components of this SOFTWARE. There are inherent dangers in the use of 
+// any software, and you are solely responsible for determining whether this SOFTWARE is compatible with your 
+// equipment and other software installed on your equipment. You are also solely responsible for the protection 
+// of your equipment and backup of your data, and THE PROVIDER will not be liable for any damages you may suffer 
+// in connection with using, modifying, or distributing this SOFTWARE.
+//---------------------------------------------------------------------------------------------------------------
+PROGRAM MAIN_APP
+VAR
+  eInit       AT %Q*    : E_PROGRESS;       // startup state machine after MAIN is initialized
+  bXmlStartup           : BOOL;             // optional example switch for using xml configuration
+
+  eInitForce  AT %I*    : E_INSTANCE_CMD;   // manual trigger for reinitialisation OnChange of E_INSTANCE_CMD.INIT
+  eInitForceOld         : E_INSTANCE_CMD;
+
+  rDefaultGap,
+  rDefaultVeloMin,
+  rDefaultAccDec,
+  rDefaultJerk          : REAL;            // hardcoded dyn constraints for this example!
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//-----------------------------------------------------------------------------
+// wait for initialization to be complete before work may start
+//-----------------------------------------------------------------------------
+IF NOT (MAIN_XTS.eInit = E_PROGRESS.PROGRESS_DONE)
+THEN
+  eInit                                       := E_PROGRESS.PROGRESS_INVALID;
+  RETURN;
+END_IF
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// OnChange detection for application initialisation
+//
+//  - mid level stuff, like reading the station config 
+//      (xts initialisation is done via ST_TRANSPORT_CTRL)
+//
+//  - in case you'd like to implement station configuration variation
+//    - this is the place to do it!
+//-----------------------------------------------------------------------------
+IF (eInitForce <> eInitForceOld)
+THEN
+  CASE eInitForce
+  OF
+    E_INSTANCE_CMD.INIT:
+      eInit                                   := E_PROGRESS.PROGRESS_INIT;
+  END_CASE
+
+  eInitForceOld                               := eInitForce;
+END_IF
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// start your application init from here (example)
+//-----------------------------------------------------------------------------
+CASE eInit
+OF
+  //---------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_INVALID,
+  E_PROGRESS.PROGRESS_INIT:
+    GVL_APPLICATION.ConfigCtrl.Cmd            := E_DATA_CTRL.NULL;
+    eInit                                     := E_PROGRESS.PROGRESS_BUSY;
+
+  //---------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_BUSY:
+    IF NOT bXmlStartup
+    THEN
+      rDefaultGap                             :=      78.0;
+      rDefaultVeloMin                         :=   1_500.0;
+      rDefaultAccDec                          :=  12_500.0;
+      rDefaultJerk                            := 100_000.0;
+
+      //StationParameterExample();
+      StationParameter_28000_1();
+      eInit                                   := E_PROGRESS.PROGRESS_CHECK;
+    ELSE
+      GVL_APPLICATION.ConfigCtrl.Cmd          := E_DATA_CTRL.INIT;
+      eInit                                   := E_PROGRESS.PROGRESS_PREPARE;
+    END_IF
+
+  //---------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_PREPARE:
+    IF (GVL_APPLICATION.ConfigState.State = E_DATA_STATE.INIT + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.ConfigCtrl.Cmd          := E_DATA_CTRL.READ;
+      eInit                                   := E_PROGRESS.PROGRESS_STARTUP;
+    END_IF
+
+  E_PROGRESS.PROGRESS_STARTUP:
+    IF (GVL_APPLICATION.ConfigState.State = E_DATA_STATE.READ + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.ConfigCtrl.Cmd          := E_DATA_CTRL.NULL;
+      eInit                                   := E_PROGRESS.PROGRESS_CHECK;
+    END_IF
+
+  E_PROGRESS.PROGRESS_CHECK:
+    eInit                                     := E_PROGRESS.PROGRESS_OCCUPIED;
+
+  E_PROGRESS.PROGRESS_OCCUPIED:
+    eInit                                     := E_PROGRESS.PROGRESS_WORKING;
+
+  E_PROGRESS.PROGRESS_WORKING:
+    eInit                                     := E_PROGRESS.PROGRESS_DONE;
+END_CASE
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// connect data and control to xml configuration
+GVL_APPLICATION.StationConfig.Identity        :=   GVL_XTS.Xpu.XpuOtcid;
+GVL_APPLICATION.StationConfig.Ctrl            REF= GVL_APPLICATION.ConfigCtrl;
+GVL_APPLICATION.StationConfig.State           REF= GVL_APPLICATION.ConfigState;
+
+GVL_APPLICATION.StationConfig.MessageDevice   := e_Device.Device_Configuration;
+GVL_APPLICATION.StationConfig.MessageLevel    := GVL_MSG_XTS.MessageLevel;
+GVL_APPLICATION.StationConfig.FolderPath      := GVL_MSG_XTS.CON_DIR;
+GVL_APPLICATION.StationConfig.StationParameter:= ADR(GVL_XTS.StationParameter);
+
+GVL_APPLICATION.StationConfig();        // call xml configuration
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN_APP">
+      <LineId Id="528" Count="7" />
+      <LineId Id="612" Count="2" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="622" Count="1" />
+      <LineId Id="625" Count="2" />
+      <LineId Id="615" Count="2" />
+      <LineId Id="628" Count="2" />
+      <LineId Id="618" Count="0" />
+      <LineId Id="631" Count="1" />
+      <LineId Id="620" Count="1" />
+      <LineId Id="608" Count="3" />
+      <LineId Id="540" Count="1" />
+      <LineId Id="546" Count="0" />
+      <LineId Id="643" Count="0" />
+      <LineId Id="547" Count="7" />
+      <LineId Id="639" Count="3" />
+      <LineId Id="638" Count="0" />
+      <LineId Id="555" Count="0" />
+      <LineId Id="637" Count="0" />
+      <LineId Id="556" Count="2" />
+      <LineId Id="593" Count="0" />
+      <LineId Id="559" Count="3" />
+      <LineId Id="594" Count="2" />
+      <LineId Id="563" Count="1" />
+      <LineId Id="597" Count="0" />
+      <LineId Id="565" Count="0" />
+      <LineId Id="598" Count="4" />
+      <LineId Id="567" Count="25" />
+      <LineId Id="506" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

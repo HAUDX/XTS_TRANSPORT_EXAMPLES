@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="E_PROCESS_CHECK" Id="{b1b6ce0b-b251-49ca-afca-f7add1a2b088}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_PROCESS_CHECK :
+(
+  NULL,
+  REFERENCE_CTRL_INVALID,
+  REFERENCE_STATE_INVALID,
+  REFERENCE_MOVER_INFO_INVALID,
+	STATION_FIRST_ZERO,
+  STATION_LAST_ZERO,
+  STATION_FIRST_MAX,
+  STATION_LAST_MAX,
+  STATION_COUNT_NEGATIVE, // last station must have higher index than first station, range must also be closed
+  STATION_COUNT_TOO_HIGH, // process can only be max (SIZEOF(T_PROCESS)*8)
+
+  CHECK_DONE    := 10000
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,1116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN_APP" Id="{aed82ec5-7c0f-4ed8-9d95-00008ab7747f}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.10.25
+//
+//  - ExternControl
+//
+//    - this is the main switchboard
+//
+//    - Transport abstractions are called here:
+//    --------------------------------------------
+//    - top level transport abstractions
+//      - Instances contain the required transport logic
+//      - Instances control their assigned ProcessCollector
+//      - Instances are controlled in timer based application
+//
+//    - mid level transport abstractions
+//      - StationCollectors and by extension ProcessCollectors
+//      - Collectors are for gathering states and routing commands to ST_STATION_CTRL/STATE
+//      - Collectors are configured during startup
+//
+//---------------------------------------------------------------------------------------------------------------
+PROGRAM MAIN_APP
+VAR
+  eInitXtsTransport   AT %I*    : E_PROGRESS;   // initialization from XtsTransport PLC
+  eInit                         : E_PROGRESS;   // local startup
+
+  idx                           : UINT;
+  nProcess                      : E_INSTANCE;
+
+  // this is still a subsystem for transport --> dwell time
+  tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
+
+  // message pipeline(s) handling
+  eMtrState,
+  eMsgState                     : E_MESSAGE_STATE;
+  eMtrProgress,
+  eMsgProgress                  : E_PROGRESS;
+
+  stMsg                         : ST_Message;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//#################################################################################################################
+// Local time; used for timestamps
+//#################################################################################################################
+GVL_MSG_XTS.fbLocalTime();
+GVL_MSG_XTS.sLocalTime                                            := GVL_MSG_XTS.fbLocalTime.LocalTimeString;
+GVL_MSG_XTS.dtLocalTime                                           := GVL_MSG_XTS.fbLocalTime.LocalTime;
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// check for Initialisation from XtsTransport first
+//  - wait for XtsTransport to be fully started up
+//-----------------------------------------------------------------------------------------------------------------
+IF NOT (eInitXtsTransport = E_PROGRESS.PROGRESS_DONE) THEN eInit  := E_PROGRESS.PROGRESS_INVALID; RETURN; END_IF
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// initialization for:
+//  - configuring processes
+//  - starting up of processes
+//  - cross checking with the rest of your application
+//-----------------------------------------------------------------------------------------------------------------
+CASE eInit
+OF
+  E_PROGRESS.PROGRESS_INVALID:
+    eInit                                         := E_PROGRESS.PROGRESS_INIT;
+
+  E_PROGRESS.PROGRESS_INIT:
+    // init processes
+    eInit                                         := E_PROGRESS.PROGRESS_BUSY;
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_INFEED].ProcessId            := DISTRIBUTOR_INFEED;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_INFEED].StationFirst         :=   142;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_INFEED].StationLast          :=   142;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorInfeed.ProcessId                       := DISTRIBUTOR_INFEED;
+    GVL_APPLICATION.InstanceDistributorInfeed.ProcessTarget                   := PROCESS_INFEED;
+    GVL_APPLICATION.InstanceDistributorInfeed.CheckPositionStart              :=  4500.0;
+    GVL_APPLICATION.InstanceDistributorInfeed.CheckPositionEnd                :=  5600.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorInfeed.CollectorInterface              :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceDistributorInfeed.ProcessLinkedLists              :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceDistributorInfeed.InstanceCtrl                    REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceDistributorInfeed.InstanceState                   REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[PROCESS_INFEED].ProcessId                := PROCESS_INFEED;
+    GVL_APPLICATION.ProcessCollector[PROCESS_INFEED].StationFirst             :=    20;
+    GVL_APPLICATION.ProcessCollector[PROCESS_INFEED].StationLast              :=    35;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceInfeed.ProcessId                                  := PROCESS_INFEED;
+    GVL_APPLICATION.InstanceInfeed.ProcessTarget                              := CONTINUOUS_CLEAN;
+    GVL_APPLICATION.InstanceInfeed.CheckPositionStart                         :=  9000.0;
+    GVL_APPLICATION.InstanceInfeed.CheckPositionEnd                           := 12100.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceInfeed.CollectorInterface                         :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceInfeed.ProcessLinkedLists                         :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceInfeed.InstanceCtrl                               REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceInfeed.InstanceState                              REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_CLEAN].ProcessId              := CONTINUOUS_CLEAN;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_CLEAN].StationFirst           :=    37;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_CLEAN].StationLast            :=    37;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceCleaner.ProcessId                                 := CONTINUOUS_CLEAN;
+    GVL_APPLICATION.InstanceCleaner.ProcessTarget                             := CONTINUOUS_SCAN;
+    GVL_APPLICATION.InstanceCleaner.CheckPositionStart                        := 12850.0;
+    GVL_APPLICATION.InstanceCleaner.CheckPositionEnd                          := 13000.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceCleaner.CollectorInterface                        :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceCleaner.ProcessLinkedLists                        :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceCleaner.InstanceCtrl                              REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceCleaner.InstanceState                             REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_SCAN].ProcessId               := CONTINUOUS_SCAN;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_SCAN].StationFirst            :=    38;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_SCAN].StationLast             :=    38;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceScanner.ProcessId                                 := CONTINUOUS_SCAN;
+    GVL_APPLICATION.InstanceScanner.ProcessTarget                             := CONTINUOUS_CAMERA;
+    GVL_APPLICATION.InstanceScanner.CheckPositionStart                        := 13900.0;
+    GVL_APPLICATION.InstanceScanner.CheckPositionEnd                          := 14100.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceScanner.CollectorInterface                        :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceScanner.ProcessLinkedLists                        :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceScanner.InstanceCtrl                              REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceScanner.InstanceState                             REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_CAMERA].ProcessId             := CONTINUOUS_CAMERA;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_CAMERA].StationFirst          :=    39;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_CAMERA].StationLast           :=    39;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceCamera.ProcessId                                  := CONTINUOUS_CAMERA;
+    GVL_APPLICATION.InstanceCamera.ProcessTarget                              := DISTRIBUTOR_ASSEMBLY_01;
+    GVL_APPLICATION.InstanceCamera.CheckPositionStart                         := 14200.0;
+    GVL_APPLICATION.InstanceCamera.CheckPositionEnd                           := 14400.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceCamera.CollectorInterface                         :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceCamera.ProcessLinkedLists                         :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceCamera.InstanceCtrl                               REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceCamera.InstanceState                              REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_ASSEMBLY_01].ProcessId       := DISTRIBUTOR_ASSEMBLY_01;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_ASSEMBLY_01].StationFirst    :=    40;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_ASSEMBLY_01].StationLast     :=    40;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorAssembly_01.ProcessId                  := DISTRIBUTOR_ASSEMBLY_01;
+    GVL_APPLICATION.InstanceDistributorAssembly_01.ProcessTarget              := PROCESS_ASSEMBLY_01;
+    GVL_APPLICATION.InstanceDistributorAssembly_01.CheckPositionStart         := 14400.0;
+    GVL_APPLICATION.InstanceDistributorAssembly_01.CheckPositionEnd           := 17000.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorAssembly_01.CollectorInterface         :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceDistributorAssembly_01.ProcessLinkedLists         :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceDistributorAssembly_01.InstanceCtrl               REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceDistributorAssembly_01.InstanceState              REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[PROCESS_ASSEMBLY_01].ProcessId           := PROCESS_ASSEMBLY_01;
+    GVL_APPLICATION.ProcessCollector[PROCESS_ASSEMBLY_01].StationFirst        :=    41;
+    GVL_APPLICATION.ProcessCollector[PROCESS_ASSEMBLY_01].StationLast         :=    52;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceAssembly_01.ProcessId                             := PROCESS_ASSEMBLY_01;
+    GVL_APPLICATION.InstanceAssembly_01.ProcessTarget                         := DISTRIBUTOR_ASSEMBLY_02;
+    GVL_APPLICATION.InstanceAssembly_01.CheckPositionStart                    := 14400.0;
+    GVL_APPLICATION.InstanceAssembly_01.CheckPositionEnd                      := 17000.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceAssembly_01.CollectorInterface                    :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceAssembly_01.ProcessLinkedLists                    :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceAssembly_01.InstanceCtrl                          REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceAssembly_01.InstanceState                         REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_ASSEMBLY_02].ProcessId       := DISTRIBUTOR_ASSEMBLY_02;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_ASSEMBLY_02].StationFirst    :=    57;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_ASSEMBLY_02].StationLast     :=    57;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorAssembly_02.ProcessId                  := DISTRIBUTOR_ASSEMBLY_02;
+    GVL_APPLICATION.InstanceDistributorAssembly_02.ProcessTarget              := PROCESS_ASSEMBLY_02;
+    GVL_APPLICATION.InstanceDistributorAssembly_02.CheckPositionStart         := 17500.0;
+    GVL_APPLICATION.InstanceDistributorAssembly_02.CheckPositionEnd           := 18100.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorAssembly_02.CollectorInterface         :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceDistributorAssembly_02.ProcessLinkedLists         :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceDistributorAssembly_02.InstanceCtrl               REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceDistributorAssembly_02.InstanceState              REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[PROCESS_ASSEMBLY_02].ProcessId           := PROCESS_ASSEMBLY_02;
+    GVL_APPLICATION.ProcessCollector[PROCESS_ASSEMBLY_02].StationFirst        :=    58;
+    GVL_APPLICATION.ProcessCollector[PROCESS_ASSEMBLY_02].StationLast         :=    65;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceAssembly_02.ProcessId                             := PROCESS_ASSEMBLY_02;
+    GVL_APPLICATION.InstanceAssembly_02.ProcessTarget                         := DISTRIBUTOR_ASSEMBLY_TEST;
+    GVL_APPLICATION.InstanceAssembly_02.CheckPositionStart                    := 19400.0;
+    GVL_APPLICATION.InstanceAssembly_02.CheckPositionEnd                      := 20500.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceAssembly_02.CollectorInterface                    :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceAssembly_02.ProcessLinkedLists                    :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceAssembly_02.InstanceCtrl                          REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceAssembly_02.InstanceState                         REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_ASSEMBLY_TEST].ProcessId     := DISTRIBUTOR_ASSEMBLY_TEST;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_ASSEMBLY_TEST].StationFirst  :=    70;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_ASSEMBLY_TEST].StationLast   :=    70;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorAssemblyTest.ProcessId                 := DISTRIBUTOR_ASSEMBLY_TEST;
+    GVL_APPLICATION.InstanceDistributorAssemblyTest.ProcessTarget             := PROCESS_ASSEMBLY_TEST;
+    GVL_APPLICATION.InstanceDistributorAssemblyTest.CheckPositionStart        := 20600.0;
+    GVL_APPLICATION.InstanceDistributorAssemblyTest.CheckPositionEnd          := 21400.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorAssemblyTest.CollectorInterface        :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceDistributorAssemblyTest.ProcessLinkedLists        :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceDistributorAssemblyTest.InstanceCtrl              REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceDistributorAssemblyTest.InstanceState             REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[PROCESS_ASSEMBLY_TEST].ProcessId         := PROCESS_ASSEMBLY_TEST;
+    GVL_APPLICATION.ProcessCollector[PROCESS_ASSEMBLY_TEST].StationFirst      :=    71;
+    GVL_APPLICATION.ProcessCollector[PROCESS_ASSEMBLY_TEST].StationLast       :=    82;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceAssemblyTest.ProcessId                            := PROCESS_ASSEMBLY_TEST;
+    GVL_APPLICATION.InstanceAssemblyTest.ProcessTarget                        := DISTRIBUTOR_CAMERA;
+    GVL_APPLICATION.InstanceAssemblyTest.CheckPositionStart                   := 21400.0;
+    GVL_APPLICATION.InstanceAssemblyTest.CheckPositionEnd                     := 22800.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceAssemblyTest.CollectorInterface                   :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceAssemblyTest.ProcessLinkedLists                   :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceAssemblyTest.InstanceCtrl                         REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceAssemblyTest.InstanceState                        REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_CAMERA].ProcessId            := DISTRIBUTOR_CAMERA;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_CAMERA].StationFirst         :=    91;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_CAMERA].StationLast          :=    91;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceAssemblyCameraInfeed.ProcessId                    := DISTRIBUTOR_CAMERA;
+    GVL_APPLICATION.InstanceAssemblyCameraInfeed.ProcessTarget                := CONTINUOUS_ASSEMBLY_CAMERA;
+    GVL_APPLICATION.InstanceAssemblyCameraInfeed.CheckPositionStart           := 22800.0;
+    GVL_APPLICATION.InstanceAssemblyCameraInfeed.CheckPositionEnd             := 23500.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceAssemblyCameraInfeed.CollectorInterface           :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceAssemblyCameraInfeed.ProcessLinkedLists           :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceAssemblyCameraInfeed.InstanceCtrl                 REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceAssemblyCameraInfeed.InstanceState                REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_ASSEMBLY_CAMERA].ProcessId    := CONTINUOUS_ASSEMBLY_CAMERA;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_ASSEMBLY_CAMERA].StationFirst :=    95;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_ASSEMBLY_CAMERA].StationLast  :=    95;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceAssemblyCameraOutfeed.ProcessId                   := CONTINUOUS_ASSEMBLY_CAMERA;
+    GVL_APPLICATION.InstanceAssemblyCameraOutfeed.ProcessTarget               := DISTRIBUTOR_OUTFEED;
+    GVL_APPLICATION.InstanceAssemblyCameraOutfeed.CheckPositionStart          := 24000.0;
+    GVL_APPLICATION.InstanceAssemblyCameraOutfeed.CheckPositionEnd            := 24100.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceAssemblyCameraOutfeed.CollectorInterface          :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceAssemblyCameraOutfeed.ProcessLinkedLists          :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceAssemblyCameraOutfeed.InstanceCtrl                REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceAssemblyCameraOutfeed.InstanceState               REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_OUTFEED].ProcessId           := DISTRIBUTOR_OUTFEED;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_OUTFEED].StationFirst        :=   119;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_OUTFEED].StationLast         :=   119;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorOutfeed.ProcessId                      := DISTRIBUTOR_OUTFEED;
+    GVL_APPLICATION.InstanceDistributorOutfeed.ProcessTarget                  := PROCESS_OUTFEED;
+    GVL_APPLICATION.InstanceDistributorOutfeed.CheckPositionStart             := 24000.0;
+    GVL_APPLICATION.InstanceDistributorOutfeed.CheckPositionEnd               := 27500.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorOutfeed.CollectorInterface             :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceDistributorOutfeed.ProcessLinkedLists             :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceDistributorOutfeed.InstanceCtrl                   REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceDistributorOutfeed.InstanceState                  REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[PROCESS_OUTFEED].ProcessId               := PROCESS_OUTFEED;
+    GVL_APPLICATION.ProcessCollector[PROCESS_OUTFEED].StationFirst            :=   120;
+    GVL_APPLICATION.ProcessCollector[PROCESS_OUTFEED].StationLast             :=   133;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceOutfeed.ProcessId                                 := PROCESS_OUTFEED;
+    GVL_APPLICATION.InstanceOutfeed.ProcessTarget                             := DISTRIBUTOR_WPC_CLEAN;
+    GVL_APPLICATION.InstanceOutfeed.CheckPositionStart                        := 24500.0;
+    GVL_APPLICATION.InstanceOutfeed.CheckPositionEnd                          := 27500.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceOutfeed.CollectorInterface                        :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceOutfeed.ProcessLinkedLists                        :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceOutfeed.InstanceCtrl                              REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceOutfeed.InstanceState                             REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_WPC_CLEAN].ProcessId         := DISTRIBUTOR_WPC_CLEAN;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_WPC_CLEAN].StationFirst      :=   140;
+    GVL_APPLICATION.ProcessCollector[DISTRIBUTOR_WPC_CLEAN].StationLast       :=   140;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorWpcClean.ProcessId                     := DISTRIBUTOR_WPC_CLEAN;
+    GVL_APPLICATION.InstanceDistributorWpcClean.ProcessTarget                 := CONTINUOUS_WPC_CLEAN;
+    GVL_APPLICATION.InstanceDistributorWpcClean.CheckPositionStart            := 27970.0;
+    GVL_APPLICATION.InstanceDistributorWpcClean.CheckPositionEnd              :=  1250.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceDistributorWpcClean.CollectorInterface            :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceDistributorWpcClean.ProcessLinkedLists            :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceDistributorWpcClean.InstanceCtrl                  REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceDistributorWpcClean.InstanceState                 REF= GVL_APPLICATION.InstanceState;
+
+    //-----------------------------------------------------------------------------
+    //#############################################################################
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_WPC_CLEAN].ProcessId          := CONTINUOUS_WPC_CLEAN;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_WPC_CLEAN].StationFirst       :=    141;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_WPC_CLEAN].StationLast        :=    141;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceWpcClean.ProcessId                                := CONTINUOUS_WPC_CLEAN;
+    GVL_APPLICATION.InstanceWpcClean.ProcessTarget                            := DISTRIBUTOR_INFEED;
+    GVL_APPLICATION.InstanceWpcClean.CheckPositionStart                       :=  3950.0;
+    GVL_APPLICATION.InstanceWpcClean.CheckPositionEnd                         :=  4100.0;
+    //-----------------------------------------------------------------------------
+    GVL_APPLICATION.InstanceWpcClean.CollectorInterface                       :=   GVL_APPLICATION.ItfProcessCollector;
+    GVL_APPLICATION.InstanceWpcClean.ProcessLinkedLists                       :=   GVL_APPLICATION.ItfProcessList;
+    GVL_APPLICATION.InstanceWpcClean.InstanceCtrl                             REF= GVL_APPLICATION.InstanceCtrl;
+    GVL_APPLICATION.InstanceWpcClean.InstanceState                            REF= GVL_APPLICATION.InstanceState;
+
+
+  E_PROGRESS.PROGRESS_BUSY:
+    // init the conductor
+    GVL_APPLICATION.ConductorCtrl.Cmd             := E_INSTANCE_CMD.INIT;
+    // init the instances
+    idx                                           := 1;
+    memset(ADR(GVL_APPLICATION.InstanceCtrl), 0, SIZEOF(GVL_APPLICATION.InstanceCtrl));
+    eInit                                         := E_PROGRESS.PROGRESS_PREPARE;
+
+  E_PROGRESS.PROGRESS_PREPARE:
+    GVL_APPLICATION.InstanceCtrl[idx].Cmd         := E_INSTANCE_CMD.INIT;
+
+    IF (GVL_APPLICATION.InstanceState[idx].State   = E_INSTANCE_STATE.DISABLED)
+    THEN
+      IF (GVL_APPLICATION.InstanceState[idx].Progress = E_PROGRESS.PROGRESS_BUSY)
+      THEN
+        GVL_APPLICATION.InstanceCtrl[idx].Cmd     := E_INSTANCE_CMD.DISABLE;
+        eInit                                     := E_PROGRESS.PROGRESS_STARTUP;
+      END_IF
+    END_IF
+
+
+  E_PROGRESS.PROGRESS_STARTUP:
+    IF NOT (idx < GVL_APPLICATION.MAX_PROCESS)
+    THEN
+      eInit                                       := E_PROGRESS.PROGRESS_CHECK;
+    ELSE
+      idx                                         := idx + 1;
+      eInit                                       := E_PROGRESS.PROGRESS_PREPARE;
+    END_IF
+
+  E_PROGRESS.PROGRESS_CHECK:
+    GVL_APPLICATION.ConductorCtrl.Cmd             := E_INSTANCE_CMD.ENABLE;
+    eInit                                         := E_PROGRESS.PROGRESS_OCCUPIED;
+
+  E_PROGRESS.PROGRESS_OCCUPIED:
+    eInit                             := E_PROGRESS.PROGRESS_WORKING;
+
+  E_PROGRESS.PROGRESS_WORKING:
+    eInit                             := E_PROGRESS.PROGRESS_DONE;
+END_CASE
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// /assign dataflow
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//  - ProcessCollectors
+//-----------------------------------------------------------------------------------------------------------------
+FOR nProcess := 1 TO MAX_PROCESS
+DO
+  GVL_APPLICATION.ItfProcessList[nProcess]                    :=   GVL_APPLICATION.ProcessList[nProcess];
+  GVL_APPLICATION.ItfProcessCollector[nProcess]               :=   GVL_APPLICATION.ProcessCollector[nProcess];
+
+  GVL_APPLICATION.ProcessCollector[nProcess].MessageLevel     :=   GVL_MSG_XTS.MessageLevelProcess[nProcess];
+  GVL_APPLICATION.ProcessCollector[nProcess].MoverInfo        REF= GVL_XTS.MoverInfo;
+  GVL_APPLICATION.ProcessCollector[nProcess].StationCtrl      REF= GVL_XTS.StationCtrl;
+  GVL_APPLICATION.ProcessCollector[nProcess].StationState     REF= GVL_XTS.StationState;
+  GVL_APPLICATION.ProcessCollector[nProcess].Cycle();
+END_FOR
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// cyclic TicketList as inbox
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+GVL_APPLICATION.TicketControl.ItfList                         :=   GVL_APPLICATION.TicketList;
+GVL_APPLICATION.TicketControl.Ctrl                            REF= GVL_APPLICATION.TicketListControl;
+GVL_APPLICATION.TicketControl.State                           REF= GVL_APPLICATION.TicketListState;
+GVL_APPLICATION.TicketControl.NodeDataInput                   REF= GVL_APPLICATION.TicketListDataInput;
+GVL_APPLICATION.TicketControl.NodeDataOutput                  REF= GVL_APPLICATION.TicketListDataOutput;
+GVL_APPLICATION.TicketControl();
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// Conductor
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+GVL_APPLICATION.ProcessConductor.ProcessLinkedLists           :=   GVL_APPLICATION.ItfProcessList;
+GVL_APPLICATION.ProcessConductor.TicketLinkedList             :=   GVL_APPLICATION.TicketList;
+GVL_APPLICATION.ProcessConductor.Ctrl                         REF= GVL_APPLICATION.ConductorCtrl;
+GVL_APPLICATION.ProcessConductor.State                        REF= GVL_APPLICATION.ConductorState;
+GVL_APPLICATION.ProcessConductor();
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// Instance calls
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+GVL_APPLICATION.InstanceWpcClean();
+GVL_APPLICATION.InstanceDistributorWpcClean();
+GVL_APPLICATION.InstanceOutfeed();
+GVL_APPLICATION.InstanceDistributorOutfeed();
+GVL_APPLICATION.InstanceAssemblyCameraOutfeed();
+GVL_APPLICATION.InstanceAssemblyCameraInfeed();
+GVL_APPLICATION.InstanceAssemblyTest();
+GVL_APPLICATION.InstanceDistributorAssemblyTest();
+GVL_APPLICATION.InstanceAssembly_02();
+GVL_APPLICATION.InstanceDistributorAssembly_02();
+GVL_APPLICATION.InstanceAssembly_01();
+GVL_APPLICATION.InstanceDistributorAssembly_01();
+GVL_APPLICATION.InstanceCamera();
+GVL_APPLICATION.InstanceScanner();
+GVL_APPLICATION.InstanceCleaner();
+GVL_APPLICATION.InstanceInfeed();
+GVL_APPLICATION.InstanceDistributorInfeed();
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//#################################################################################################################
+// /logging
+//#################################################################################################################
+GVL_MSG_XTS.ApplicationMessageData.Ctrl                         REF= GVL_MSG_XTS.ApplicationMessageCtrl;
+GVL_MSG_XTS.ApplicationMessageData.State                        REF= GVL_MSG_XTS.ApplicationMessageState;
+
+GVL_MSG_XTS.ApplicationMessageData.MessageIndex                 REF= GVL_MSG_XTS.MessageApplicationIndex;
+GVL_MSG_XTS.ApplicationMessageData.ErrorIndex                   REF= GVL_MSG_XTS.MessageApplicationError;
+
+GVL_MSG_XTS.ApplicationMessageData.DirRoot                      :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.ApplicationMessageData.FileRoot                     :=   ADR(GVL_MSG_XTS.LOG_FILE_APP);
+GVL_MSG_XTS.ApplicationMessageData.MsgList                      :=   ADR(GVL_MSG_XTS.ApplicationMessages);
+GVL_MSG_XTS.ApplicationMessageData.LocalTime                    :=   ADR(GVL_MSG_XTS.dtLocalTime);
+
+GVL_MSG_XTS.ApplicationMessageData();
+
+eMsgState                                       := f_GetState   (GVL_MSG_XTS.ApplicationMessageState.State);
+eMsgProgress                                    := f_GetProgress(GVL_MSG_XTS.ApplicationMessageState.State);
+
+
+CASE eMsgState
+OF
+  E_MESSAGE_STATE.MSG_STATE_NULL:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_INVALID:
+        IF (GVL_MSG_XTS.MessageApplicationIndex > GVL_MSG_XTS.MAX_MESSAGE/100) OR
+           (GVL_MSG_XTS.MessageApplicationError > 0)
+        THEN
+          GVL_MSG_XTS.ApplicationMessageCtrl.Cmd                := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        END_IF
+    END_CASE
+
+  E_MESSAGE_STATE.MSG_STATE_WRITE:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_ERROR,
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+
+ELSE
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+END_CASE
+//#################################################################################################################
+// logging/
+//#################################################################################################################
+//#################################################################################################################
+//  /Transport Metrics
+//#################################################################################################################
+GVL_MSG_XTS.MetricsMessageData.Ctrl                             REF= GVL_MSG_XTS.MetricsMessageCtrl;
+GVL_MSG_XTS.MetricsMessageData.State                            REF= GVL_MSG_XTS.MetricsMessageState;
+
+GVL_MSG_XTS.MetricsMessageData.MessageIndex                     REF= GVL_MSG_XTS.MessageMetricsIndex;
+GVL_MSG_XTS.MetricsMessageData.ErrorIndex                       REF= GVL_MSG_XTS.MessageMetricsError;
+
+GVL_MSG_XTS.MetricsMessageData.DirRoot                          :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.MetricsMessageData.FileRoot                         :=   ADR(GVL_MSG_XTS.LOG_FILE_METRIC);
+GVL_MSG_XTS.MetricsMessageData.MsgList                          :=   ADR(GVL_MSG_XTS.MetricsMessages);
+GVL_MSG_XTS.MetricsMessageData.LocalTime                        :=   ADR(GVL_MSG_XTS.dtLocalTime);
+
+GVL_MSG_XTS.MetricsMessageData();
+
+eMtrState                                   := f_GetState   (GVL_MSG_XTS.MetricsMessageState.State);
+eMtrProgress                                := f_GetProgress(GVL_MSG_XTS.MetricsMessageState.State);
+
+CASE eMtrState
+OF
+  E_MESSAGE_STATE.MSG_STATE_NULL:
+    CASE eMtrProgress
+    OF
+      E_PROGRESS.PROGRESS_INVALID:
+        IF (GVL_MSG_XTS.MessageMetricsIndex > GVL_MSG_XTS.MAX_MESSAGE/100) OR
+           (GVL_MSG_XTS.MessageMetricsError > 0)
+        THEN
+          GVL_MSG_XTS.MetricsMessageCtrl.Cmd                    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        END_IF
+    END_CASE
+
+  E_MESSAGE_STATE.MSG_STATE_WRITE:
+    CASE eMtrProgress
+    OF
+      E_PROGRESS.PROGRESS_ERROR,
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd                      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+ELSE
+    CASE eMtrProgress
+    OF
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd                      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+END_CASE
+//#################################################################################################################
+//  Transport Metrics/
+//#################################################################################################################
+//#################################################################################################################
+//#################################################################################################################
+]]></ST>
+    </Implementation>
+    <Action Name="Init" Id="{69838e0d-19cf-48fe-8b42-ee1af1eba2b6}">
+      <Implementation>
+        <ST><![CDATA[CASE eInit
+OF
+  E_PROGRESS.PROGRESS_INVALID:          // startup procedure for your application
+    eInit                               := E_PROGRESS.PROGRESS_INIT;
+
+  E_PROGRESS.PROGRESS_INIT:
+      nProcess                                        := 1;
+      tProcess[nProcess]                              := T#750MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 1;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 16;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 20;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 35;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow :=   10.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 1600.0;
+
+      //---------------------------------------------------------
+
+      // 2
+
+      //---------------------------------------------------------
+      nProcess                                        := 3;
+      tProcess[nProcess]                              := T#2400MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 20;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 35;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 37;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 37;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 9000.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 12100.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 4;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 37;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 37;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 38;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 38;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 12850.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 13000.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 5;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 38;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 38;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 39;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 39;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 13900.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 14100.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 6;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 39;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 39;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 41;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 52;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 14200.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 14400.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 7;
+      tProcess[nProcess]                              := T#3200MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_FAST;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 41;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 52;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 57;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 57;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 14400.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 17000.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 8;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 57;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 57;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 58;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 65;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 17500.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 18100.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 9;
+      tProcess[nProcess]                              := T#3200MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SINGLE;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 58;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 65;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 70;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 70;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 19400.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 20500.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 10;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 70;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 70;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 71;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 82;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 20600.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 21400.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 12;
+      tProcess[nProcess]                              := T#4600MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 71;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 82;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 91;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 91;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 21400.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 22800.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 13;
+      tProcess[nProcess]                              := T#00MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 91;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 91;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 95;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 95;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 22800.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 23500.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 14;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 95;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 95;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 120;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 133;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 24000.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 24100.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 15;
+      tProcess[nProcess]                              := T#2500MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 120;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 133;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 140;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 140;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 24200.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 27500.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 16;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 140;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 140;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 141;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 141;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 27970.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 1250.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 17;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 141;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 141;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 142;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 142;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 3950.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 4100.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 18;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 142;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 142;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 20;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 35;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 4500.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 5600.0;
+
+
+    eInit                                                 := E_PROGRESS.PROGRESS_BUSY;
+
+  E_PROGRESS.PROGRESS_BUSY:
+    GVL_MSG_XTS.TransportMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_INIT;
+    GVL_MSG_XTS.MetricsMessageCtrl.Cmd                    := E_MESSAGE_CTRL.MSG_CTRL_INIT;
+    eInit                                                 := E_PROGRESS.PROGRESS_PREPARE;
+
+  E_PROGRESS.PROGRESS_PREPARE:
+    eInit                                                 := E_PROGRESS.PROGRESS_STARTUP;
+
+  E_PROGRESS.PROGRESS_STARTUP:
+    eInit                                                 := E_PROGRESS.PROGRESS_DONE;
+    FOR nProcess := 1 TO MAX_PROCESS
+    DO
+      IF (GVL_APPLICATION.Simulation[nProcess].StationCount > 0)
+      THEN
+        GVL_APPLICATION.Simulation[nProcess].EnableProcess := TO_DWORD(EXPT(2,GVL_APPLICATION.Simulation[nProcess].StationCount))-1;
+        GVL_APPLICATION.Simulation[nProcess].MoverEnter    := TRUE;
+        GVL_APPLICATION.Simulation[nProcess].MoverOut      := TRUE;
+
+      END_IF
+    END_FOR
+END_CASE
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="MAIN_APP">
+      <LineId Id="311" Count="5" />
+      <LineId Id="81" Count="6" />
+      <LineId Id="319" Count="2" />
+      <LineId Id="366" Count="0" />
+      <LineId Id="322" Count="5" />
+      <LineId Id="336" Count="3" />
+      <LineId Id="383" Count="0" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="455" Count="0" />
+      <LineId Id="379" Count="0" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="380" Count="0" />
+      <LineId Id="454" Count="0" />
+      <LineId Id="506" Count="0" />
+      <LineId Id="539" Count="0" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="453" Count="0" />
+      <LineId Id="507" Count="0" />
+      <LineId Id="505" Count="0" />
+      <LineId Id="511" Count="0" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="508" Count="0" />
+      <LineId Id="832" Count="0" />
+      <LineId Id="457" Count="2" />
+      <LineId Id="385" Count="2" />
+      <LineId Id="381" Count="0" />
+      <LineId Id="520" Count="0" />
+      <LineId Id="540" Count="0" />
+      <LineId Id="522" Count="6" />
+      <LineId Id="519" Count="0" />
+      <LineId Id="460" Count="2" />
+      <LineId Id="388" Count="2" />
+      <LineId Id="530" Count="1" />
+      <LineId Id="542" Count="0" />
+      <LineId Id="532" Count="6" />
+      <LineId Id="800" Count="0" />
+      <LineId Id="463" Count="2" />
+      <LineId Id="392" Count="2" />
+      <LineId Id="543" Count="9" />
+      <LineId Id="785" Count="0" />
+      <LineId Id="466" Count="2" />
+      <LineId Id="396" Count="2" />
+      <LineId Id="553" Count="9" />
+      <LineId Id="771" Count="0" />
+      <LineId Id="469" Count="2" />
+      <LineId Id="400" Count="2" />
+      <LineId Id="563" Count="9" />
+      <LineId Id="758" Count="0" />
+      <LineId Id="472" Count="2" />
+      <LineId Id="404" Count="2" />
+      <LineId Id="573" Count="9" />
+      <LineId Id="746" Count="0" />
+      <LineId Id="475" Count="2" />
+      <LineId Id="408" Count="2" />
+      <LineId Id="583" Count="9" />
+      <LineId Id="735" Count="0" />
+      <LineId Id="478" Count="2" />
+      <LineId Id="412" Count="2" />
+      <LineId Id="593" Count="9" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="481" Count="2" />
+      <LineId Id="416" Count="2" />
+      <LineId Id="603" Count="9" />
+      <LineId Id="716" Count="0" />
+      <LineId Id="484" Count="2" />
+      <LineId Id="419" Count="2" />
+      <LineId Id="613" Count="9" />
+      <LineId Id="424" Count="0" />
+      <LineId Id="487" Count="2" />
+      <LineId Id="425" Count="2" />
+      <LineId Id="623" Count="9" />
+      <LineId Id="701" Count="0" />
+      <LineId Id="490" Count="2" />
+      <LineId Id="433" Count="2" />
+      <LineId Id="633" Count="9" />
+      <LineId Id="695" Count="0" />
+      <LineId Id="493" Count="2" />
+      <LineId Id="437" Count="2" />
+      <LineId Id="643" Count="9" />
+      <LineId Id="689" Count="0" />
+      <LineId Id="496" Count="2" />
+      <LineId Id="440" Count="2" />
+      <LineId Id="653" Count="9" />
+      <LineId Id="422" Count="0" />
+      <LineId Id="683" Count="0" />
+      <LineId Id="500" Count="1" />
+      <LineId Id="443" Count="2" />
+      <LineId Id="663" Count="9" />
+      <LineId Id="446" Count="0" />
+      <LineId Id="502" Count="2" />
+      <LineId Id="447" Count="2" />
+      <LineId Id="673" Count="9" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="340" Count="1" />
+      <LineId Id="895" Count="1" />
+      <LineId Id="342" Count="0" />
+      <LineId Id="854" Count="0" />
+      <LineId Id="857" Count="0" />
+      <LineId Id="343" Count="2" />
+      <LineId Id="855" Count="0" />
+      <LineId Id="864" Count="0" />
+      <LineId Id="856" Count="0" />
+      <LineId Id="858" Count="0" />
+      <LineId Id="860" Count="1" />
+      <LineId Id="865" Count="0" />
+      <LineId Id="863" Count="0" />
+      <LineId Id="862" Count="0" />
+      <LineId Id="859" Count="0" />
+      <LineId Id="346" Count="2" />
+      <LineId Id="866" Count="4" />
+      <LineId Id="349" Count="1" />
+      <LineId Id="871" Count="0" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="894" Count="0" />
+      <LineId Id="352" Count="6" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="364" Count="1" />
+      <LineId Id="88" Count="3" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="371" Count="0" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="92" Count="1" />
+      <LineId Id="514" Count="0" />
+      <LineId Id="517" Count="0" />
+      <LineId Id="515" Count="0" />
+      <LineId Id="372" Count="4" />
+      <LineId Id="367" Count="0" />
+      <LineId Id="881" Count="4" />
+      <LineId Id="888" Count="0" />
+      <LineId Id="886" Count="1" />
+      <LineId Id="889" Count="0" />
+      <LineId Id="891" Count="0" />
+      <LineId Id="893" Count="0" />
+      <LineId Id="890" Count="0" />
+      <LineId Id="873" Count="7" />
+      <LineId Id="892" Count="0" />
+      <LineId Id="100" Count="1" />
+      <LineId Id="833" Count="0" />
+      <LineId Id="529" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="835" Count="18" />
+      <LineId Id="150" Count="4" />
+      <LineId Id="309" Count="0" />
+      <LineId Id="156" Count="1" />
+      <LineId Id="310" Count="0" />
+      <LineId Id="159" Count="1" />
+      <LineId Id="162" Count="1" />
+      <LineId Id="306" Count="0" />
+      <LineId Id="165" Count="41" />
+      <LineId Id="307" Count="0" />
+      <LineId Id="208" Count="1" />
+      <LineId Id="308" Count="0" />
+      <LineId Id="211" Count="1" />
+      <LineId Id="214" Count="38" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="71" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN_APP.Init">
+      <LineId Id="1" Count="3" />
+      <LineId Id="6" Count="3" />
+      <LineId Id="379" Count="0" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="10" Count="6" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="249" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="377" Count="0" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="21" Count="7" />
+      <LineId Id="216" Count="2" />
+      <LineId Id="29" Count="2" />
+      <LineId Id="375" Count="0" />
+      <LineId Id="374" Count="0" />
+      <LineId Id="32" Count="6" />
+      <LineId Id="219" Count="2" />
+      <LineId Id="39" Count="3" />
+      <LineId Id="373" Count="0" />
+      <LineId Id="372" Count="0" />
+      <LineId Id="43" Count="6" />
+      <LineId Id="222" Count="2" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="306" Count="2" />
+      <LineId Id="371" Count="0" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="309" Count="10" />
+      <LineId Id="51" Count="2" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="54" Count="6" />
+      <LineId Id="225" Count="2" />
+      <LineId Id="61" Count="3" />
+      <LineId Id="367" Count="0" />
+      <LineId Id="366" Count="0" />
+      <LineId Id="65" Count="6" />
+      <LineId Id="228" Count="2" />
+      <LineId Id="72" Count="3" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="76" Count="6" />
+      <LineId Id="231" Count="2" />
+      <LineId Id="83" Count="3" />
+      <LineId Id="363" Count="0" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="87" Count="6" />
+      <LineId Id="234" Count="2" />
+      <LineId Id="94" Count="3" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="98" Count="6" />
+      <LineId Id="237" Count="2" />
+      <LineId Id="105" Count="3" />
+      <LineId Id="359" Count="0" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="109" Count="6" />
+      <LineId Id="240" Count="2" />
+      <LineId Id="116" Count="4" />
+      <LineId Id="356" Count="1" />
+      <LineId Id="121" Count="5" />
+      <LineId Id="243" Count="2" />
+      <LineId Id="127" Count="3" />
+      <LineId Id="354" Count="1" />
+      <LineId Id="131" Count="6" />
+      <LineId Id="246" Count="2" />
+      <LineId Id="199" Count="4" />
+      <LineId Id="352" Count="1" />
+      <LineId Id="204" Count="5" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="254" Count="4" />
+      <LineId Id="350" Count="1" />
+      <LineId Id="259" Count="12" />
+      <LineId Id="348" Count="1" />
+      <LineId Id="272" Count="10" />
+      <LineId Id="380" Count="0" />
+      <LineId Id="296" Count="8" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="384" Count="9" />
+      <LineId Id="197" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

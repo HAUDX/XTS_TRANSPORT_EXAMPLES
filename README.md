@@ -16,8 +16,8 @@
 This repository serves as the blueprint for translating the XTS_TRANSPORT_LAYER into physical mechatronic reality. 
 - Architectural Philosophy: **The Diplomat Pattern**
   - All examples enforce a strict division between **[APPLICATION]** and **[XTS]** environments/folders.
-  - **[XTS_DEMO_11]** is the entry level example, ready to run, showcasing the base implementation all other examples use.
-  - **[XTS_DEMO_12]** is the entry level example that showcases the 2-PLC approach. This might be helpful if you intend to use the transport layer via a network or fieldbus.
+  - **[XTS_DEMO_11_MC]** based on MoverController; this is the entry level example, ready to run, showcasing the base implementation all other examples use.
+  - **[XTS_DEMO_12_MC]** based on MoverController; this is the entry level example that showcases the 2-PLC approach. This might be helpful if you intend to use the transport layer via a network or fieldbus.
   
 - The architecture operates on the principle of strict namespace encapsulation. 
   - The core TcGVL (Global Variable List) files are treated as sovereign territory. 
@@ -56,6 +56,8 @@ These examples illustrate how to command the physical track from an abstracted, 
 - **[XTS_DEMO_EXTERN_RECTANGLE_2]:** A dual-PLC simulation of distributed clusters of stations. This example shall illustrate flexibility towards station design. 
   The ExternControl PLC carries the process definitions. XtsTransport PLC carries the station definitions. 
   Parameter driiven approach for flexible transport solutions. The stations you design for a process must be in closed range, AND the modulo turn must NOT intersect the range of clusters. Those are the only prerequisites you have to follow.
+
+- **[XTS_DEMO_EXTERN_RECTANGLE_TRACK]:** This demo features inverted direction and track-based positioning. It serves as a feasibility study for flexible, station-based transport. The demo consists of standstill and continuous processes based on the different handshake routes a StationProcess offers. The continuous processes do not require synchronisation, hence this hybrid, station-based approach for continuous work (e.g., scanners, cameras, cleaners). The project uses a dual-PLC approach, with higher levels of abstraction for grouping stations, which is implemented in the ExternControl PLC.
 
 ## II. High-Throughput Mechatronics
 These examples contain the blueprints for building high throughput kinetic environments and managing multi-station handshakes.

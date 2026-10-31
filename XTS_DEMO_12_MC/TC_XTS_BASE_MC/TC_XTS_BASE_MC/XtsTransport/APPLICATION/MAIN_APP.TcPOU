@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <POU Name="MAIN_APP" Id="{a42cfa77-97a5-4ec9-b576-fd1e63c4d66c}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.10.25
+//
+//  - MAIN_APP
+//    - example startup:  for use with ExternControl
+//
+//  - intended to be deconstructed
+//    - this is the basic mapping example:
+//      - startup requires init of station parameters
+//
+//    - make this fit your way of doing things
+//      - procedures in here show the datafields involved, so you may build around them
+//
+//  - Application initializes:
+//    - station parameters (hardcoded in this example)
+//    - static station targets (1 to 1 in this example)
+//
+//
+//  - Application
+//    - 5 single XtsStations
+//      - automated handshakes 
+//      - process with TON
+//      - static targets
+//
+//---------------------------------------------------------------------------------------------------------------
+// This SOFTWARE is provided as an Example by THE PROVIDER "as is" and "with all faults." THE PROVIDER makes no 
+// representations or warranties of any kind concerning the safety, suitability, lack of viruses, inaccuracies, 
+// typographical errors, or other harmful components of this SOFTWARE. There are inherent dangers in the use of 
+// any software, and you are solely responsible for determining whether this SOFTWARE is compatible with your 
+// equipment and other software installed on your equipment. You are also solely responsible for the protection 
+// of your equipment and backup of your data, and THE PROVIDER will not be liable for any damages you may suffer 
+// in connection with using, modifying, or distributing this SOFTWARE.
+//---------------------------------------------------------------------------------------------------------------
+PROGRAM MAIN_APP
+VAR
+  // init
+  eInit     AT %Q*    : E_PROGRESS; // this is the init to follow!
+  JobResult           : E_PROGRESS;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//-----------------------------------------------------------------------------
+// wait for initialization to be complete before work may start
+//-----------------------------------------------------------------------------
+IF NOT (MAIN_XTS.eInit = E_PROGRESS.PROGRESS_DONE)
+THEN
+  eInit                               := E_PROGRESS.PROGRESS_INVALID;
+  RETURN;
+END_IF
+//-----------------------------------------------------------------------------
+// initialization for:
+//  - setting a station config
+//  - cross checking with the rest of your application
+//-----------------------------------------------------------------------------
+CASE eInit
+OF
+  E_PROGRESS.PROGRESS_INVALID:
+    eInit                             := E_PROGRESS.PROGRESS_INIT;
+
+  E_PROGRESS.PROGRESS_INIT:
+    JobResult                         := StationParameterExample(); // this is the hardcoded example
+
+    IF (JobResult = E_PROGRESS.PROGRESS_DONE)
+    THEN
+      eInit                           := E_PROGRESS.PROGRESS_BUSY;
+    END_IF
+
+
+  E_PROGRESS.PROGRESS_BUSY:
+    // add inits for your application
+    eInit                             := E_PROGRESS.PROGRESS_PREPARE;
+
+  E_PROGRESS.PROGRESS_PREPARE:
+    eInit                             := E_PROGRESS.PROGRESS_STARTUP;
+
+  E_PROGRESS.PROGRESS_STARTUP:
+    eInit                             := E_PROGRESS.PROGRESS_CHECK;
+
+  E_PROGRESS.PROGRESS_CHECK:
+    eInit                             := E_PROGRESS.PROGRESS_OCCUPIED;
+
+  E_PROGRESS.PROGRESS_OCCUPIED:
+    eInit                             := E_PROGRESS.PROGRESS_WORKING;
+
+  E_PROGRESS.PROGRESS_WORKING:
+    eInit                             := E_PROGRESS.PROGRESS_DONE;
+END_CASE
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN_APP">
+      <LineId Id="1060" Count="5" />
+      <LineId Id="1069" Count="1" />
+      <LineId Id="1333" Count="1" />
+      <LineId Id="1336" Count="1" />
+      <LineId Id="1335" Count="0" />
+      <LineId Id="1332" Count="0" />
+      <LineId Id="1338" Count="0" />
+      <LineId Id="1340" Count="0" />
+      <LineId Id="1345" Count="0" />
+      <LineId Id="1358" Count="0" />
+      <LineId Id="1344" Count="0" />
+      <LineId Id="1384" Count="0" />
+      <LineId Id="1389" Count="0" />
+      <LineId Id="1385" Count="3" />
+      <LineId Id="1359" Count="0" />
+      <LineId Id="1346" Count="0" />
+      <LineId Id="1343" Count="0" />
+      <LineId Id="1469" Count="0" />
+      <LineId Id="1360" Count="0" />
+      <LineId Id="1348" Count="0" />
+      <LineId Id="1347" Count="0" />
+      <LineId Id="1361" Count="0" />
+      <LineId Id="1350" Count="0" />
+      <LineId Id="1349" Count="0" />
+      <LineId Id="1362" Count="0" />
+      <LineId Id="1352" Count="0" />
+      <LineId Id="1351" Count="0" />
+      <LineId Id="1363" Count="0" />
+      <LineId Id="1354" Count="0" />
+      <LineId Id="1353" Count="0" />
+      <LineId Id="1364" Count="0" />
+      <LineId Id="1355" Count="0" />
+      <LineId Id="1341" Count="0" />
+      <LineId Id="1365" Count="0" />
+      <LineId Id="1339" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="1471" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

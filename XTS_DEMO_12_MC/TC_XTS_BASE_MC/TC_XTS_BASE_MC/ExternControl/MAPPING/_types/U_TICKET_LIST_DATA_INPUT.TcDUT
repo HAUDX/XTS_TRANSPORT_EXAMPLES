@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="U_TICKET_LIST_DATA_INPUT" Id="{d0418c0a-e47c-4c41-b658-4bd3a5118454}">
+    <Declaration><![CDATA[TYPE U_TICKET_LIST_DATA_INPUT :
+UNION
+  stData              : ST_LIST_NODE_DATA;
+  byData   AT %Q*     : ARRAY[1..SIZEOF(ST_LIST_NODE_DATA)] OF BYTE;
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

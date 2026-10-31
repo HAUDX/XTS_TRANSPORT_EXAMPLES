@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="U_APP_STATE" Id="{5e086c55-e8bc-4e24-a022-f3816f246538}">
+    <Declaration><![CDATA[TYPE U_APP_STATE :
+UNION
+  stState             : ST_APP_STATE;
+  byState   AT %Q*    : ARRAY[1..SIZEOF(ST_APP_STATE)] OF BYTE;
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

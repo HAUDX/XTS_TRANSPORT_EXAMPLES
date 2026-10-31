@@ -1,41 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <Itf Name="I_MessageData" Id="{2db9b6a6-428d-4711-b7d7-1c3cb7282175}">
+  <Itf Name="I_MessageData" Id="{f6a96240-99ae-4618-b2ce-2104a304fee0}">
     <Declaration><![CDATA[INTERFACE I_MessageData
 ]]></Declaration>
-    <Property Name="DirRoot" Id="{7a7660f6-8dd0-4241-8cdf-d9a8471bf5da}">
+    <Property Name="DirRoot" Id="{caa07dbc-04ed-4392-a650-b335ab3d5005}">
       <Declaration><![CDATA[PROPERTY DirRoot : POINTER to string(255)]]></Declaration>
-      <Set Name="Set" Id="{fc7b1e2c-2722-4569-ad96-6e083b12db94}">
+      <Set Name="Set" Id="{fd0f934c-7d3d-4e0f-aecc-db828ecd61bd}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
-    <Property Name="ErrorIndex" Id="{ca44583b-b425-476e-a5cd-c6caf82fddd4}">
+    <Property Name="ErrorIndex" Id="{87d8f92c-f432-4c2d-b856-904c14d00dd3}">
       <Declaration><![CDATA[PROPERTY ErrorIndex : reference to uint]]></Declaration>
-      <Set Name="Set" Id="{360c4630-de54-4e72-badc-523252289b1e}">
+      <Set Name="Set" Id="{18121a8a-40ab-41a6-b72d-61490f470a4a}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
-    <Property Name="FileRoot" Id="{93a7f7ac-a718-4a99-bedf-784f478e8139}">
+    <Property Name="FileRoot" Id="{53c974bd-d010-4f69-a899-a1aaf707c45d}">
       <Declaration><![CDATA[PROPERTY FileRoot : pointer to string(255)]]></Declaration>
-      <Set Name="Set" Id="{d51caa8b-cda6-4e15-90b5-1f3b095e2d34}">
+      <Set Name="Set" Id="{6ac54f9d-8006-4b91-9b1f-f40bcb34bbd2}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
-    <Property Name="LocalTime" Id="{4a8c6cf9-bb8f-4430-90ec-72c237df6821}">
+    <Property Name="LocalTime" Id="{0ed9cddb-a9d3-4c4f-937d-34752c417a65}">
       <Declaration><![CDATA[PROPERTY LocalTime : pointer to DT]]></Declaration>
-      <Set Name="Set" Id="{59454843-3397-4267-94b3-a2f46589d066}">
+      <Set Name="Set" Id="{6a30d4b9-5ac5-49e6-828d-19fdd852b953}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
-    <Property Name="MessageIndex" Id="{72b1ed0c-73fa-4f83-bf7d-cdb62d320b0c}">
+    <Property Name="MessageIndex" Id="{6bf976f6-99ce-4dda-b969-414b02b37e4d}">
       <Declaration><![CDATA[PROPERTY MessageIndex : reference to uint]]></Declaration>
-      <Set Name="Set" Id="{a121c52d-964c-49e6-96ee-8c1438957c98}">
+      <Set Name="Set" Id="{06f307b0-f4e8-4091-b2ac-2535deb14a55}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
-    <Property Name="MsgList" Id="{bb7a9b1f-c91a-4135-9e66-93d6c1f1c5d5}">
+    <Property Name="MsgList" Id="{94d597a9-7a4f-47c6-8dfa-65040c34b4b7}">
       <Declaration><![CDATA[PROPERTY MsgList : pointer to ARRAY[1..GVL_MSG_XTS.MAX_MESSAGE] OF st_message]]></Declaration>
-      <Set Name="Set" Id="{bc0efa70-3e08-4c72-8462-c70d3560f13c}">
+      <Set Name="Set" Id="{2ea0ab99-0302-4fbc-b3e6-7665575ce24b}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>

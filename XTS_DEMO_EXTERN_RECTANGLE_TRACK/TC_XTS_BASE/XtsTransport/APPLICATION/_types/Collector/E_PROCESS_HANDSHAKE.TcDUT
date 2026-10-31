@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="E_PROCESS_HANDSHAKE" Id="{3641e0f5-9af1-4dc8-aec9-268800883fc5}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_PROCESS_HANDSHAKE :
+(
+  E_SHAKE_DOUBLE,
+  E_SHAKE_SINGLE,
+  E_SHAKE_FAST,
+  E_SHAKE_SEND
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

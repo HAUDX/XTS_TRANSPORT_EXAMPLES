@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <DUT Name="E_MESSAGE_FLOW" Id="{0bd02ae9-66bf-4a18-ba5e-a86f3075b50e}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="E_MESSAGE_FLOW" Id="{cad81e16-1165-45f5-9586-4dbf57d48cc3}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 {attribute 'to_string'}

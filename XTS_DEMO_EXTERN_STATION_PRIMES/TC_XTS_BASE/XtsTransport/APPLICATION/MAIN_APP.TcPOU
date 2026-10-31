@@ -67,7 +67,7 @@ OF
       GVL_XTS.StationStartIndex                     := 37; // TRANSPORT_START enters all movers to GVL_XTS.StationList[index]
       GVL_XTS.StationStart.rPosWait                 :=    7_500.0;  // modulo position after TRANSPORT_START
       GVL_XTS.StationStart.rGap                     :=      105.0;  // gap for moving during TRANSPORT_START
-      GVL_XTS.StationStart.rVelo                    :=    2_000.0;
+      GVL_XTS.StationStart.rVelo                    :=    1_000.0;
       GVL_XTS.StationStart.rAccDec                  :=   17_500.0;  // it might be a good idea to move all movers a bit less stiff.
       GVL_XTS.StationStart.rJerk                    :=  300_000.0;  // I TRY to keep the Jerk the same, you may chose differently
       //---------------------------------------------------------------------------------------

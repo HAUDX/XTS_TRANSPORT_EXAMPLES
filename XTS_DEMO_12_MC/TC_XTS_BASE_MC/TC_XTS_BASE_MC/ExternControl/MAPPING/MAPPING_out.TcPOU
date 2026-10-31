@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAPPING_out" Id="{c77b863a-5ad6-42f4-9e7b-dacbb22fccc7}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAPPING_out
+VAR
+  sMapping          : STRING;
+
+  bFirstCycle       : BOOL := TRUE;
+
+//  TicketListInput   : U_TICKET_LIST_DATA_INPUT;
+//  TicketListControl : U_TICKET_LIST_CTRL;
+//  InstanceCtrl      : U_INSTANCE_CTRL;
+//  AppControl        : U_APP_CTRL;
+  TransportControl  : U_XTS_TRANSPORT_CTRL;
+  StationControl    : U_XTS_STATION_CTRL;
+
+
+
+  szTransportCtrl   : ARRAY[1..2] OF UDINT;
+  szStationControl  : ARRAY[1..2] OF UDINT;
+
+  szAppCtrl         : ARRAY[1..2] OF UDINT;
+  szInstanceCtrl    : ARRAY[1..2] OF UDINT;
+  szTicketCtrl      : ARRAY[1..2] OF UDINT;
+  szTicketData      : ARRAY[1..2] OF UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF (bFirstCycle)
+THEN
+  bFirstCycle             := FALSE;
+
+  szTransportCtrl[1]      := SIZEOF(TransportControl);
+  szTransportCtrl[2]      := SIZEOF(GVL_XTS.XtsTransportCtrl);
+
+  szStationControl[1]     := SIZEOF(StationControl);
+  szStationControl[2]     := SIZEOF(GVL_XTS.StationCtrl);
+
+(*
+  szAppCtrl  [1]          := SIZEOF(AppControl);
+  szAppCtrl  [2]          := SIZEOF(GVL_APPLICATION.AppControl);
+
+  szInstanceCtrl [1]      := SIZEOF(MAPPING_out.InstanceCtrl);
+  szInstanceCtrl [2]      := SIZEOF(MAPPING_out.InstanceCtrl);
+
+  szTicketCtrl[1]         := SIZEOF(TicketListControl);
+  szTicketCtrl[2]         := SIZEOF(GVL_APPLICATION.TicketListControl);
+
+  szTicketData[1]         := SIZEOF(TicketListInput);
+  szTicketData[2]         := SIZEOF(GVL_APPLICATION.TicketListDataInput);
+*)
+END_IF
+(*
+//---------------------------------------------------------------------
+IF (SIZEOF(TicketListInput) <> SIZEOF(GVL_APPLICATION.TicketListDataInput))
+THEN
+  sMapping  := 'TicketListInput sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TicketListControl) <> SIZEOF(GVL_APPLICATION.TicketListControl))
+THEN
+  sMapping  := 'TicketListControl sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(InstanceCtrl) <> SIZEOF(GVL_APPLICATION.InstanceCtrl))
+THEN
+  sMapping  := 'InstanceCtrl sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(AppControl) <> SIZEOF(GVL_APPLICATION.AppControl))
+THEN
+  sMapping  := 'AppControl sizes DO NOT match';
+  RETURN;
+END_IF
+*)
+//---------------------------------------------------------------------
+IF (SIZEOF(TransportControl) <> SIZEOF(GVL_XTS.XtsTransportCtrl))
+THEN
+  sMapping  := 'TransportControl sizes DO NOT match';
+  RETURN;
+END_IF
+IF (SIZEOF(StationControl) <> SIZEOF(GVL_XTS.StationCtrl))
+THEN
+  sMapping  := 'StationControl sizes DO NOT match';
+  RETURN;
+END_IF
+sMapping    := 'MAPPING_OUTPUT_ACTIVE';
+//---------------------------------------------------------------------
+//       destination,                       source,                size
+//---------------------------------------------------------------------
+  memcpy(ADR(TransportControl), ADR(GVL_XTS.XtsTransportCtrl),       SIZEOF(TransportControl));
+  memcpy(ADR(StationControl),   ADR(GVL_XTS.StationCtrl),            SIZEOF(StationControl));
+
+//  memcpy(ADR(AppControl),       ADR(GVL_APPLICATION.AppControl),          SIZEOF(AppControl));
+//  memcpy(ADR(InstanceCtrl),     ADR(GVL_APPLICATION.InstanceCtrl),        SIZEOF(InstanceCtrl));
+//  memcpy(ADR(TicketListControl),ADR(GVL_APPLICATION.TicketListControl),   SIZEOF(TicketListControl));
+//  memcpy(ADR(TicketListInput),  ADR(GVL_APPLICATION.TicketListDataInput), SIZEOF(TicketListInput));
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAPPING_out">
+      <LineId Id="1" Count="76" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

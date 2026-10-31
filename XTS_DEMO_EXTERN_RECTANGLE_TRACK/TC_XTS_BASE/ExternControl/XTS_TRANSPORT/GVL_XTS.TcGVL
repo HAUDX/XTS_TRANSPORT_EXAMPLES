@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_XTS" Id="{3f0b7f85-7294-4b3d-90b1-61fdb4ee7485}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+  //---------------------------------------------------------------------------
+  // XTS Station
+  //  - handshakes mover in station with extern control
+  //  - station parameters (positions, gap, dyn. constraints, description...)
+  StationStart        : ST_STATION_PARAMETER;   // Xts transport is sending all mover to this position (CMD_TRANSPORT_START)
+  StationStartIndex   : UINT := 1;              // index of XtsStation where all movers are entered into linked list.
+
+  // station handshaking with mover and extern process
+  // station sends mover to target station/WaitPos
+  // station adds mover data to LinkedList.AddTail() of target station
+
+  // ctrl / state datafields for extern control
+  StationCtrl         : ARRAY[1..MAX_STATION] OF ST_STATION_CTRL;   // control for extern to write, you can do whatever you want as long as you do as I say
+  StationState        : ARRAY[1..MAX_STATION] OF ST_STATION_STATE;  // state for extern to read, this is what I tell you to do
+
+
+  //---------------------------------------------------------------------------
+  // XTS
+  // XTS TransportUnit
+  //  - This is ground control
+  //  - handles request for XPU, Group, Mover, StartUp, ReStart
+
+  XtsTransportCtrl    : ST_XTS_TRANSPORT_CTRL;    // control of XTS transport for extern to write
+  XtsTransportState   : ST_XTS_TRANSPORT_STATE;   // state   of XTS transport for extern to read
+
+
+  //---------------------------------------------------------------------------
+  // XPU
+  // XTS-Utility checks
+  // XTS-Utility interfaces for you to use
+  XpuCtrl         : ST_XPU_CTRL;
+  XpuState        : ST_XPU_STATE;
+  XpuInfo         : ST_XPU_INFO;
+
+
+  //---------------------------------------------------------------------------
+  // Collision avoidance group CA
+  //
+  // - add mover to group
+  // - build group
+  // - clear group
+  // - whereever you may roam, no on will tread on you
+
+  // Info data from CaGroup FB
+  CaGroupInfo     : ST_GROUP_INFO;                // cyclic info about CaGroup for fb_TransportUnit to read
+  //---------------------------------------------------------------------------
+
+  //---------------------------------------------------------------------------
+  // MC2 encapsulation, CA movement
+  MoverCtrl             : ARRAY[1..MAX_MOVER] OF ST_MOVER_CTRL;   // control of individual mover for extern to write
+  MoverState            : ARRAY[1..MAX_MOVER] OF ST_MOVER_STATE;  // state   of individual mover for extern to read
+
+  MoverSelectorCtrl     : ST_MOVER_SELECTOR_CTRL;
+  MoverSelectorState    : ST_MOVER_SELECTOR_STATE;
+
+  MoverInfo       : ARRAY[1..MAX_MOVER] OF ST_MOVER_INFO;   // cyclic info about mover for extern to read
+
+  MoveData        : ARRAY[1..MAX_MOVER] OF ST_MOVE_DATA;    // dynamic constraints for move commands
+  GearData        : ARRAY[1..MAX_MOVER] OF ST_GEAR_DATA;    // dynamic constraints and positions for GearIn/GearInPosCa
+  //---------------------------------------------------------------------------
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
