@@ -38,20 +38,20 @@
     <Compile Include="APPLICATION\MAIN_APP.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="APPLICATION\MAIN_APPLICATION.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
     <Compile Include="APPLICATION\StationParameter_28000_1.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APPLICATION\XTS_TRANSPORT_1.TcVIS">
+    <Compile Include="APPLICATION\VISU_POOL.TcPOU">
       <SubType>Code</SubType>
-      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
     <Compile Include="APPLICATION\_types\Collector\E_PROCESS_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\Collector\E_PROCESS_CTRL.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="APPLICATION\_types\Collector\E_PROCESS_HANDSHAKE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\Collector\E_PROCESS_STATE.TcDUT">
@@ -138,16 +138,35 @@
     <Compile Include="APPLICATION\_types\ST_PROCESS_PARAMETER.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="APPLICATION\_types\ST_VISU_POOL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_Visualization\MOVER_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\_Visualization\SELECTOR_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\_Visualization\STATION_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\_Visualization\TRANSPORT_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MAPPING\MAPPING_in.TcPOU">
+    <Compile Include="MAPPING\MAPPING_XTS_in.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MAPPING\MAPPING_out.TcPOU">
+    <Compile Include="MAPPING\MAPPING_XTS_out.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_APP_CTRL.TcDUT">
@@ -160,6 +179,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_INSTANCE_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_TICKET_LIST_CTRL.TcDUT">
@@ -186,7 +211,7 @@
     <Compile Include="MAPPING\_types\U_XTS_TRANSPORT_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PlcTask.TcTTO">
+    <Compile Include="PlcTask_1.TcTTO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PLC_MOTION\_GVL\PLC_CONSTANT.TcGVL">
@@ -323,18 +348,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS_TRANSPORT\_Visualization\GROUP_VISU.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
-    </Compile>
-    <Compile Include="XTS_TRANSPORT\_Visualization\MOVER_VISU.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
-    </Compile>
-    <Compile Include="XTS_TRANSPORT\_Visualization\SELECTOR_VISU.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
-    </Compile>
-    <Compile Include="XTS_TRANSPORT\_Visualization\STATION_VISU.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
@@ -505,6 +518,7 @@
   <ItemGroup>
     <Folder Include="APPLICATION" />
     <Folder Include="APPLICATION\Instances" />
+    <Folder Include="APPLICATION\_Visualization" />
     <Folder Include="APPLICATION\_types" />
     <Folder Include="APPLICATION\_types\Collector" />
     <Folder Include="APPLICATION\_types\Instance" />

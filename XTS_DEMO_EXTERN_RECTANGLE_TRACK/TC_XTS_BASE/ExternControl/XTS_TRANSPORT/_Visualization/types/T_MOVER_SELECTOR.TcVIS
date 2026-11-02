@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1">
   <Visu Name="T_MOVER_SELECTOR" Id="{ee295cf1-2eec-4bf4-b0de-cc94b5b6e13d}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"60"</v>
+          <v n="UniqueIdGenerator">"90"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -186,6 +186,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -339,7 +340,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">" %d"</v>
+                      <v n="Value">"SelectBy:  %d"</v>
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
@@ -354,8 +355,12 @@
                       <v n="Value">"'TL_E_MOVER_SELECTOR'"</v>
                     </o>
                     <o>
+                      <v n="Id">4168582468L</v>
+                      <v n="Value">""0 = SelectBy Index""</v>
+                    </o>
+                    <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"230"</v>
+                      <v n="Value">"642"</v>
                     </o>
                   </l>
                 </o>
@@ -371,9 +376,9 @@
                     <o>
                       <v n="InputBoxVariable">""</v>
                       <v n="InputType">"VisuDialogs.Numpad"</v>
-                      <v n="InputBoxMin">"1"</v>
-                      <v n="InputBoxMax">"MAX_MOVER"</v>
-                      <v n="InputBoxDialogTitle">"'Selected Mover'"</v>
+                      <v n="InputBoxMin">"0"</v>
+                      <v n="InputBoxMax">"1"</v>
+                      <v n="InputBoxDialogTitle">"'SelectBy'"</v>
                       <v n="Password">false</v>
                       <v n="UseTextOutputVariable">true</v>
                       <v n="TextOutputVariableInitialized">true</v>
@@ -382,6 +387,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -2671,6 +2677,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -2863,6 +2870,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3055,6 +3063,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3247,6 +3256,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3439,6 +3449,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3631,6 +3642,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -3823,6 +3835,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -4015,6 +4028,7 @@
                       <v n="DialogPosition" t="DialogPositionSetting">UseGlobalSetting</v>
                       <v n="DialogXPos">""</v>
                       <v n="DialogYPos">""</v>
+                      <v n="InputType_4_9_0_0">""</v>
                     </o>
                   </a>
                 </d>
@@ -5037,7 +5051,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rAbsActPos"</v>
+                      <v n="Value">"State.Info.rAbsActPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5210,7 +5224,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rModuloActPos"</v>
+                      <v n="Value">"State.Info.rModuloActPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5383,7 +5397,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rAbsTargetPos"</v>
+                      <v n="Value">"State.Info.rAbsTargetPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5556,7 +5570,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].rModuloTargetPos"</v>
+                      <v n="Value">"State.Info.rModuloTargetPos"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5729,7 +5743,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].nErrorId"</v>
+                      <v n="Value">"State.Info.nErrorId"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5839,7 +5853,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverEnabled"</v>
+                      <v n="Value">"State.Info.bMoverEnabled"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6012,7 +6026,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverError"</v>
+                      <v n="Value">"State.Info.bMoverError"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6185,7 +6199,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverCoupled"</v>
+                      <v n="Value">"State.Info.bMoverCoupled"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6358,7 +6372,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverStandstill"</v>
+                      <v n="Value">"State.Info.bMoverStandstill"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6531,7 +6545,7 @@
                     </o>
                     <o>
                       <v n="Id">1999528970L</v>
-                      <v n="Value">"GVL_XTS.MoverInfo[MAIN.nMoverSelected].bMoverAvoidingCollision"</v>
+                      <v n="Value">"State.Info.bMoverAvoidingCollision"</v>
                     </o>
                     <o>
                       <v n="Id">3719097617L</v>
@@ -6618,6 +6632,179 @@
                 <a n="LMGuids" et="Guid" />
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">73</v>
+                <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
+              </o>
+              <o>
+                <a n="ConfiguredComplexInputs" et="ComplexInput" />
+                <l n="Elements" t="ArrayList" />
+                <n n="VisualElementDescription" />
+                <o n="VisualElemMemberList" t="VisualElemMemberList">
+                  <l n="VisualElemMemberList" t="VisualElemMemberCollection" cet="VisualElemMember">
+                    <o>
+                      <v n="Id">571893170L</v>
+                      <v n="Value">""</v>
+                    </o>
+                    <o>
+                      <v n="Id">494569607L</v>
+                      <l n="Value" t="ArrayList" cet="NamedStyleColor">
+                        <o>
+                          <v n="Color">-16777216</v>
+                          <v n="CanonicalName">"BasicElement-Frame-Color"</v>
+                        </o>
+                      </l>
+                    </o>
+                    <o>
+                      <v n="Id">2812299069L</v>
+                      <l n="Value" t="ArrayList" cet="NamedStyleColor">
+                        <o>
+                          <v n="Color">-1</v>
+                          <v n="CanonicalName">"BasicElement-Fill-Color"</v>
+                        </o>
+                      </l>
+                    </o>
+                    <o>
+                      <v n="Id">135947015L</v>
+                      <l n="Value" t="ArrayList" cet="NamedStyleColor">
+                        <o>
+                          <v n="Color">-16777216</v>
+                          <v n="CanonicalName">"BasicElement-Frame-Color"</v>
+                        </o>
+                      </l>
+                    </o>
+                    <o>
+                      <v n="Id">493260384L</v>
+                      <l n="Value" t="ArrayList" cet="NamedStyleColor">
+                        <o>
+                          <v n="Color">-8323200</v>
+                          <v n="CanonicalName">"Lightgreen"</v>
+                        </o>
+                      </l>
+                    </o>
+                    <o>
+                      <v n="Id">2340015797L</v>
+                      <v n="Value">"LEFT"</v>
+                    </o>
+                    <o>
+                      <v n="Id">2565699834L</v>
+                      <v n="Value">"VCENTER"</v>
+                    </o>
+                    <o>
+                      <v n="Id">4134387352L</v>
+                      <v n="Value">"NONE"</v>
+                    </o>
+                    <o>
+                      <v n="Id">1603690730L</v>
+                      <v n="Value">"Arial"</v>
+                    </o>
+                    <o>
+                      <v n="Id">4253639993L</v>
+                      <v n="Value" t="Int16">12</v>
+                    </o>
+                    <o>
+                      <v n="Id">2729990903L</v>
+                      <v n="Value">0U</v>
+                    </o>
+                    <o>
+                      <v n="Id">1213979116L</v>
+                      <v n="Value">0U</v>
+                    </o>
+                    <o>
+                      <v n="Id">3488306084L</v>
+                      <v n="Value">4278190080U</v>
+                    </o>
+                    <o>
+                      <v n="Id">1999528970L</v>
+                      <v n="Value">"State.Info.bMoverInTarget"</v>
+                    </o>
+                    <o>
+                      <v n="Id">3719097617L</v>
+                      <v n="Value">0</v>
+                    </o>
+                    <o>
+                      <v n="Id">1649127785L</v>
+                      <v n="Value">430</v>
+                    </o>
+                    <o>
+                      <v n="Id">357335551L</v>
+                      <v n="Value">502</v>
+                    </o>
+                    <o>
+                      <v n="Id">2422045748L</v>
+                      <v n="Value">100</v>
+                    </o>
+                    <o>
+                      <v n="Id">2134141914L</v>
+                      <v n="Value">28</v>
+                    </o>
+                    <o>
+                      <v n="Id">3729828405L</v>
+                      <l n="Value" t="ArrayList" cet="FontDescription">
+                        <o>
+                          <v n="FontStyle">0</v>
+                          <v n="AdditionalFontStyle" t="UInt16">0</v>
+                          <v n="ExplicitColor">-16777216</v>
+                          <v n="FontName">"Consolas"</v>
+                          <v n="DisplayName">"Consolas"</v>
+                          <v n="FontSize">11</v>
+                          <v n="ScriptIdentification">0</v>
+                          <v n="DoubleFontSize" t="Double">0</v>
+                          <o n="NamedColor" t="NamedStyleColor">
+                            <v n="Color">-16777216</v>
+                            <v n="CanonicalName">"Font-Default-Color"</v>
+                          </o>
+                        </o>
+                      </l>
+                    </o>
+                    <o>
+                      <v n="Id">550940142L</v>
+                      <v n="Value">479</v>
+                    </o>
+                    <o>
+                      <v n="Id">1473355128L</v>
+                      <v n="Value">516</v>
+                    </o>
+                    <o>
+                      <v n="Id">2678395525L</v>
+                      <v n="Value">1U</v>
+                    </o>
+                    <o>
+                      <v n="Id">564465120L</v>
+                      <v n="Value">"VISU_ST_RECTANGLE"</v>
+                    </o>
+                    <o>
+                      <v n="Id">390574330L</v>
+                      <v n="Value">" In Target"</v>
+                    </o>
+                    <o>
+                      <v n="Id">2477733581L</v>
+                      <v n="Value">""</v>
+                    </o>
+                    <o>
+                      <v n="Id">2597686782L</v>
+                      <v n="Value">false</v>
+                    </o>
+                    <o>
+                      <v n="Id">823443203L</v>
+                      <v n="Value">"733"</v>
+                    </o>
+                  </l>
+                </o>
+                <v n="VisualElementName">"Rectangle"</v>
+                <v n="VisualElementTypeName">"VisuFbElemSimple"</v>
+                <v n="VisualElementIsRectangle">true</v>
+                <v n="VisualElementIdentifier">"GenElemInst_39"</v>
+                <n n="VisualElementOfflinePaintCommands" />
+                <n n="VisualElementFrameInformation" />
+                <d n="VisualElementInputActions" t="Hashtable" />
+                <v n="VisualElementIdentification">{2e0360cb-cd11-419a-9390-33a3c0645a16}</v>
+                <v n="VisualElementOwningObjectGuid">{ee295cf1-2eec-4bf4-b0de-cc94b5b6e13d}</v>
+                <a n="LMGuids" et="Guid" />
+                <d n="SubElements" t="Hashtable" />
+                <v n="VisualElementId">76</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
                 <v n="AnimationDuration">"0"</v>
                 <v n="BringToForeground">""</v>
@@ -6794,7 +6981,7 @@
             </o>
             <v n="DialogDut">{60085421-2f37-43f0-a359-edbcf913054a}</v>
           </o>
-          <v n="LastUsedIdForIdentifier">38</v>
+          <v n="LastUsedIdForIdentifier">39</v>
           <o n="TextDocument" t="TextDocument">
             <v n="TextBlobForSerialisation">"VAR_IN_OUT
 	Control     : ST_MOVER_SELECTOR_CTRL;
@@ -6826,12 +7013,12 @@ END_VAR"</v>
               </o>
               <v>1</v>
               <o>
-                <v n="Width">532</v>
+                <v n="Width">531</v>
                 <v n="Height">532</v>
               </o>
               <v>2</v>
               <o>
-                <v n="Width">532</v>
+                <v n="Width">531</v>
                 <v n="Height">532</v>
               </o>
             </d2>
@@ -6857,7 +7044,7 @@ END_VAR"</v>
         <Type n="Hashtable">System.Collections.Hashtable</Type>
         <Type n="HotkeyConfiguration">{6b108d46-58af-4e41-a3f4-174d8f160cc4}</Type>
         <Type n="InputBoxInputAction">{e8e7e747-f76f-4dee-ab1c-b9637e41ac26}</Type>
-        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.8.0.0, Culture=neutral, PublicKeyToken=null</Type>
+        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.10.0.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="Int16">System.Int16</Type>
         <Type n="Int32">System.Int32</Type>
         <Type n="Int64">System.Int64</Type>

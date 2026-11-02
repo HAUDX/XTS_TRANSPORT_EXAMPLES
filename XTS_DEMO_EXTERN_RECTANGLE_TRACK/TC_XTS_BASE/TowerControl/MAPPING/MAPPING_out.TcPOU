@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAPPING_out" Id="{1d03bcdd-fb2c-4ea8-9836-723dd2cd0b6f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAPPING_out
+VAR
+  sMapping          : STRING;
+  bFirstCycle       : BOOL := TRUE;
+
+  TicketListInput   : U_TICKET_LIST_DATA_INPUT;
+  TicketListControl : U_TICKET_LIST_CTRL;
+  InstanceCtrl      : U_INSTANCE_CTRL;
+
+  szInstanceCtrl    : ARRAY[1..2] OF UDINT;
+  szTicketCtrl      : ARRAY[1..2] OF UDINT;
+  szTicketData      : ARRAY[1..2] OF UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF (bFirstCycle)
+THEN
+  bFirstCycle             := FALSE;
+
+  szInstanceCtrl [1]      := SIZEOF(MAPPING_out.InstanceCtrl);
+  szInstanceCtrl [2]      := SIZEOF(MAPPING_out.InstanceCtrl);
+
+  szTicketCtrl[1]         := SIZEOF(TicketListControl);
+  szTicketCtrl[2]         := SIZEOF(GVL_APPLICATION.TicketListControl);
+
+  szTicketData[1]         := SIZEOF(TicketListInput);
+  szTicketData[2]         := SIZEOF(GVL_APPLICATION.TicketListDataInput);
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TicketListInput) <> SIZEOF(GVL_APPLICATION.TicketListDataInput))
+THEN
+  sMapping  := 'TicketListInput sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TicketListControl) <> SIZEOF(GVL_APPLICATION.TicketListControl))
+THEN
+  sMapping  := 'TicketListControl sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(InstanceCtrl) <> SIZEOF(GVL_APPLICATION.InstanceCtrl))
+THEN
+  sMapping  := 'InstanceCtrl sizes DO NOT match';
+  RETURN;
+END_IF
+sMapping    := 'MAPPING_OUTPUT_ACTIVE';
+//---------------------------------------------------------------------------------------------------
+//        destination,            source,                                   size
+//---------------------------------------------------------------------------------------------------
+  memcpy(ADR(InstanceCtrl),       ADR(GVL_APPLICATION.InstanceCtrl),        SIZEOF(InstanceCtrl));
+  memcpy(ADR(TicketListControl),  ADR(GVL_APPLICATION.TicketListControl),   SIZEOF(TicketListControl));
+  memcpy(ADR(TicketListInput),    ADR(GVL_APPLICATION.TicketListDataInput), SIZEOF(TicketListInput));
+//---------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAPPING_out">
+      <LineId Id="54" Count="0" />
+      <LineId Id="2" Count="3" />
+      <LineId Id="9" Count="26" />
+      <LineId Id="42" Count="3" />
+      <LineId Id="47" Count="6" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

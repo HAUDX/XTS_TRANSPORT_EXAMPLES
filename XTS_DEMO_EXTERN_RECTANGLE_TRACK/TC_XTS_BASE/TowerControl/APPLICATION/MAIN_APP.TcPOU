@@ -1,0 +1,484 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN_APP" Id="{88c725a4-6c17-4e49-9688-89157c201df6}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.11.02
+//
+//  - MasterControl
+//
+//    - this is the main switchboard
+//
+//    - top level transport abstractions are handshaked here:
+//    --------------------------------------------
+//    - top level transport abstractions
+//      - Instances contain the required transport logic
+//      - Instances control their assigned ProcessCollector
+//      - Instances are controlled in timer based application
+//
+//
+//---------------------------------------------------------------------------------------------------------------
+PROGRAM MAIN_APP
+VAR
+  eInitExternControl  AT %I*    : E_PROGRESS;   // initialization from ExternControl PLC
+  eInitXtsTransport   AT %I*    : E_PROGRESS;   // initialization from XtsTransport PLC
+  eInit                         : E_PROGRESS;   // local startup
+
+  // this is still a subsystem for transport --> dwell time
+  tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
+
+  // message pipeline(s) handling
+  eMtrState,
+  eMsgState                     : E_MESSAGE_STATE;
+  eMtrProgress,
+  eMsgProgress                  : E_PROGRESS;
+  stMsg                         : ST_Message;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//#################################################################################################################
+// Local time; used for timestamps
+//#################################################################################################################
+GVL_MSG_XTS.fbLocalTime();
+GVL_MSG_XTS.sLocalTime                                            := GVL_MSG_XTS.fbLocalTime.LocalTimeString;
+GVL_MSG_XTS.dtLocalTime                                           := GVL_MSG_XTS.fbLocalTime.LocalTime;
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// check for Initialisation from ExternControl
+//  - wait for transport layers to be fully started up
+//-----------------------------------------------------------------------------------------------------------------
+IF NOT (eInitExternControl = E_PROGRESS.PROGRESS_DONE) THEN eInit  := E_PROGRESS.PROGRESS_INVALID; RETURN; END_IF
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+CASE eInit
+OF
+  E_PROGRESS.PROGRESS_INVALID:
+    eInit                                         := E_PROGRESS.PROGRESS_INIT;
+
+  E_PROGRESS.PROGRESS_INIT:
+    // init processes
+    eInit                                         := E_PROGRESS.PROGRESS_BUSY;
+
+  E_PROGRESS.PROGRESS_OCCUPIED:
+    eInit                                         := E_PROGRESS.PROGRESS_WORKING;
+
+  E_PROGRESS.PROGRESS_WORKING:
+    eInit                                         := E_PROGRESS.PROGRESS_DONE;
+END_CASE
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// /assign dataflow
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//#################################################################################################################
+// /logging
+//#################################################################################################################
+GVL_MSG_XTS.ApplicationMessageData.Ctrl                         REF= GVL_MSG_XTS.ApplicationMessageCtrl;
+GVL_MSG_XTS.ApplicationMessageData.State                        REF= GVL_MSG_XTS.ApplicationMessageState;
+
+GVL_MSG_XTS.ApplicationMessageData.MessageIndex                 REF= GVL_MSG_XTS.MessageApplicationIndex;
+GVL_MSG_XTS.ApplicationMessageData.ErrorIndex                   REF= GVL_MSG_XTS.MessageApplicationError;
+
+GVL_MSG_XTS.ApplicationMessageData.DirRoot                      :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.ApplicationMessageData.FileRoot                     :=   ADR(GVL_MSG_XTS.LOG_FILE_APP);
+GVL_MSG_XTS.ApplicationMessageData.MsgList                      :=   ADR(GVL_MSG_XTS.ApplicationMessages);
+GVL_MSG_XTS.ApplicationMessageData.LocalTime                    :=   ADR(GVL_MSG_XTS.dtLocalTime);
+
+GVL_MSG_XTS.ApplicationMessageData();
+
+eMsgState                                       := f_GetState   (GVL_MSG_XTS.ApplicationMessageState.State);
+eMsgProgress                                    := f_GetProgress(GVL_MSG_XTS.ApplicationMessageState.State);
+
+
+CASE eMsgState
+OF
+  E_MESSAGE_STATE.MSG_STATE_NULL:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_INVALID:
+        IF (GVL_MSG_XTS.MessageApplicationIndex > GVL_MSG_XTS.MAX_MESSAGE/100) OR
+           (GVL_MSG_XTS.MessageApplicationError > 0)
+        THEN
+          GVL_MSG_XTS.ApplicationMessageCtrl.Cmd                := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        END_IF
+    END_CASE
+
+  E_MESSAGE_STATE.MSG_STATE_WRITE:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_ERROR,
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+
+ELSE
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+END_CASE
+//#################################################################################################################
+// logging/
+//#################################################################################################################
+//#################################################################################################################
+//  /Transport Metrics
+//#################################################################################################################
+GVL_MSG_XTS.MetricsMessageData.Ctrl                             REF= GVL_MSG_XTS.MetricsMessageCtrl;
+GVL_MSG_XTS.MetricsMessageData.State                            REF= GVL_MSG_XTS.MetricsMessageState;
+
+GVL_MSG_XTS.MetricsMessageData.MessageIndex                     REF= GVL_MSG_XTS.MessageMetricsIndex;
+GVL_MSG_XTS.MetricsMessageData.ErrorIndex                       REF= GVL_MSG_XTS.MessageMetricsError;
+
+GVL_MSG_XTS.MetricsMessageData.DirRoot                          :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.MetricsMessageData.FileRoot                         :=   ADR(GVL_MSG_XTS.LOG_FILE_METRIC);
+GVL_MSG_XTS.MetricsMessageData.MsgList                          :=   ADR(GVL_MSG_XTS.MetricsMessages);
+GVL_MSG_XTS.MetricsMessageData.LocalTime                        :=   ADR(GVL_MSG_XTS.dtLocalTime);
+
+GVL_MSG_XTS.MetricsMessageData();
+
+eMtrState                                   := f_GetState   (GVL_MSG_XTS.MetricsMessageState.State);
+eMtrProgress                                := f_GetProgress(GVL_MSG_XTS.MetricsMessageState.State);
+
+CASE eMtrState
+OF
+  E_MESSAGE_STATE.MSG_STATE_NULL:
+    CASE eMtrProgress
+    OF
+      E_PROGRESS.PROGRESS_INVALID:
+        IF (GVL_MSG_XTS.MessageMetricsIndex > GVL_MSG_XTS.MAX_MESSAGE/100) OR
+           (GVL_MSG_XTS.MessageMetricsError > 0)
+        THEN
+          GVL_MSG_XTS.MetricsMessageCtrl.Cmd                    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        END_IF
+    END_CASE
+
+  E_MESSAGE_STATE.MSG_STATE_WRITE:
+    CASE eMtrProgress
+    OF
+      E_PROGRESS.PROGRESS_ERROR,
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd                      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+ELSE
+    CASE eMtrProgress
+    OF
+      E_PROGRESS.PROGRESS_DONE:
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd                      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+END_CASE
+//#################################################################################################################
+//  Transport Metrics/
+//#################################################################################################################
+//#################################################################################################################
+//#################################################################################################################
+]]></ST>
+    </Implementation>
+    <Action Name="Init" Id="{c71dcf97-86ad-47bc-b87f-421acd498c57}">
+      <Implementation>
+        <ST><![CDATA[CASE eInit
+OF
+  E_PROGRESS.PROGRESS_INVALID:          // startup procedure for your application
+    eInit                               := E_PROGRESS.PROGRESS_INIT;
+
+  E_PROGRESS.PROGRESS_INIT:
+      nProcess                                        := 1;
+      tProcess[nProcess]                              := T#750MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 1;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 16;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 20;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 35;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow :=   10.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 1600.0;
+
+      //---------------------------------------------------------
+
+      // 2
+
+      //---------------------------------------------------------
+      nProcess                                        := 3;
+      tProcess[nProcess]                              := T#2400MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 20;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 35;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 37;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 37;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 9000.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 12100.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 4;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 37;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 37;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 38;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 38;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 12850.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 13000.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 5;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 38;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 38;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 39;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 39;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 13900.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 14100.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 6;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 39;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 39;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 41;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 52;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 14200.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 14400.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 7;
+      tProcess[nProcess]                              := T#3200MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_FAST;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 41;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 52;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 57;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 57;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 14400.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 17000.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 8;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 57;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 57;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 58;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 65;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 17500.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 18100.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 9;
+      tProcess[nProcess]                              := T#3200MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SINGLE;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 58;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 65;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 70;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 70;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 19400.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 20500.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 10;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 70;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 70;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 71;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 82;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 20600.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 21400.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 12;
+      tProcess[nProcess]                              := T#4600MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 71;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 82;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 91;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 91;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 21400.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 22800.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 13;
+      tProcess[nProcess]                              := T#00MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 91;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 91;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 95;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 95;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 22800.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 23500.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 14;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 95;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 95;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 120;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 133;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 24000.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 24100.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 15;
+      tProcess[nProcess]                              := T#2500MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 120;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 133;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 140;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 140;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 24200.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 27500.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 16;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 140;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 140;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 141;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 141;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 27970.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 1250.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 17;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 141;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 141;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 142;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 142;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 3950.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 4100.0;
+
+      //---------------------------------------------------------
+      nProcess                                        := 18;
+      tProcess[nProcess]                              := T#0MS;
+
+      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
+
+      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 142;
+      GVL_APPLICATION.Simulation[nProcess].StationLast   := 142;
+
+      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 20;
+      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 35;
+      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
+
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 4500.0;
+      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 5600.0;
+
+
+    eInit                                                 := E_PROGRESS.PROGRESS_BUSY;
+
+  E_PROGRESS.PROGRESS_BUSY:
+    GVL_MSG_XTS.TransportMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_INIT;
+    GVL_MSG_XTS.MetricsMessageCtrl.Cmd                    := E_MESSAGE_CTRL.MSG_CTRL_INIT;
+    eInit                                                 := E_PROGRESS.PROGRESS_PREPARE;
+
+  E_PROGRESS.PROGRESS_PREPARE:
+    eInit                                                 := E_PROGRESS.PROGRESS_STARTUP;
+
+  E_PROGRESS.PROGRESS_STARTUP:
+    eInit                                                 := E_PROGRESS.PROGRESS_DONE;
+    FOR nProcess := 1 TO MAX_PROCESS
+    DO
+      IF (GVL_APPLICATION.Simulation[nProcess].StationCount > 0)
+      THEN
+        GVL_APPLICATION.Simulation[nProcess].EnableProcess := TO_DWORD(EXPT(2,GVL_APPLICATION.Simulation[nProcess].StationCount))-1;
+        GVL_APPLICATION.Simulation[nProcess].MoverEnter    := TRUE;
+        GVL_APPLICATION.Simulation[nProcess].MoverOut      := TRUE;
+
+      END_IF
+    END_FOR
+END_CASE
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="MAIN_APP">
+      <LineId Id="1" Count="142" />
+    </LineIds>
+    <LineIds Name="MAIN_APP.Init">
+      <LineId Id="1" Count="289" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -30,15 +30,11 @@ VAR
   idx                           : UINT;
   nProcess                      : E_INSTANCE;
 
-  // this is still a subsystem for transport --> dwell time
-  tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
-
   // message pipeline(s) handling
   eMtrState,
   eMsgState                     : E_MESSAGE_STATE;
   eMtrProgress,
   eMsgProgress                  : E_PROGRESS;
-
   stMsg                         : ST_Message;
 END_VAR
 ]]></Declaration>
@@ -346,8 +342,8 @@ OF
     //#############################################################################
     //-----------------------------------------------------------------------------
     GVL_APPLICATION.ProcessCollector[CONTINUOUS_WPC_CLEAN].ProcessId          := CONTINUOUS_WPC_CLEAN;
-    GVL_APPLICATION.ProcessCollector[CONTINUOUS_WPC_CLEAN].StationFirst       :=    141;
-    GVL_APPLICATION.ProcessCollector[CONTINUOUS_WPC_CLEAN].StationLast        :=    141;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_WPC_CLEAN].StationFirst       :=   141;
+    GVL_APPLICATION.ProcessCollector[CONTINUOUS_WPC_CLEAN].StationLast        :=   141;
     //-----------------------------------------------------------------------------
     GVL_APPLICATION.InstanceWpcClean.ProcessId                                := CONTINUOUS_WPC_CLEAN;
     GVL_APPLICATION.InstanceWpcClean.ProcessTarget                            := DISTRIBUTOR_INFEED;

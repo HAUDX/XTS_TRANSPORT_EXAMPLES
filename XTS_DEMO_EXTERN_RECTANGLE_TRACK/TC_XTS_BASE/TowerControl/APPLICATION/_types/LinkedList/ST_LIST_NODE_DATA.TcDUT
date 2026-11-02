@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_LIST_NODE_DATA" Id="{27d044bd-3627-4b69-a271-1715e29fbfdc}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_LIST_NODE_DATA :
+STRUCT
+  ProcessData     : ST_PROCESS_DATA;  // target data
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

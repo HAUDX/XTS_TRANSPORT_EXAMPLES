@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_INSTANCE_STATE" Id="{7108ed74-ad9f-421c-8515-268b082913f8}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_INSTANCE_STATE :
+STRUCT
+  ProcessIdentity   : E_INSTANCE;
+  State             : E_INSTANCE_STATE;
+  Progress          : E_PROGRESS;
+
+  QueueProcessCount : UINT; // sum of all queues in process
+  StationCount      : UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

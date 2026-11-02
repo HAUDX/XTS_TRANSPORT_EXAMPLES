@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAPPING_XTS_out" Id="{c77b863a-5ad6-42f4-9e7b-dacbb22fccc7}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAPPING_XTS_out
+VAR
+  sMapping              : STRING;
+  bFirstCycle           : BOOL := TRUE;
+
+  TransportControl      : U_XTS_TRANSPORT_CTRL;
+  StationControl        : U_XTS_STATION_CTRL;
+  MoverSelectorControl  : U_MOVER_SELECTOR_CTRL;
+
+  szTransportCtrl       : ARRAY[1..2] OF UDINT;
+  szStationControl      : ARRAY[1..2] OF UDINT;
+  szMoverSelector       : ARRAY[1..2] OF UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF (bFirstCycle)
+THEN
+  bFirstCycle             := FALSE;
+
+  szTransportCtrl[1]      := SIZEOF(TransportControl);
+  szTransportCtrl[2]      := SIZEOF(GVL_XTS.XtsTransportCtrl);
+
+  szStationControl[1]     := SIZEOF(StationControl);
+  szStationControl[2]     := SIZEOF(GVL_XTS.StationCtrl);
+
+  szMoverSelector  [1]:= SIZEOF(MoverSelectorControl);
+  szMoverSelector  [1]:= SIZEOF(GVL_XTS.MoverSelectorCtrl);
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TransportControl) <> SIZEOF(GVL_XTS.XtsTransportCtrl))
+THEN
+  sMapping  := 'TransportControl sizes DO NOT match';
+  RETURN;
+END_IF
+IF (SIZEOF(StationControl) <> SIZEOF(GVL_XTS.StationCtrl))
+THEN
+  sMapping  := 'StationControl sizes DO NOT match';
+  RETURN;
+END_IF
+IF (SIZEOF(MoverSelectorControl) <> SIZEOF(GVL_XTS.MoverSelectorCtrl))
+THEN
+  sMapping  := 'MoverSelectorControl sizes DO NOT match';
+  RETURN;
+END_IF
+sMapping    := 'MAPPING_XTS_OUTPUT ACTIVE';
+//---------------------------------------------------------------------
+//       destination,                       source,                size
+//---------------------------------------------------------------------
+  memcpy(ADR(TransportControl),     ADR(GVL_XTS.XtsTransportCtrl),   SIZEOF(TransportControl));
+  memcpy(ADR(StationControl),       ADR(GVL_XTS.StationCtrl),        SIZEOF(StationControl));
+  memcpy(ADR(MoverSelectorControl), ADR(GVL_XTS.MoverSelectorCtrl),  SIZEOF(MoverSelectorControl));
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAPPING_XTS_out">
+      <LineId Id="78" Count="0" />
+      <LineId Id="2" Count="8" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="52" Count="10" />
+      <LineId Id="84" Count="4" />
+      <LineId Id="63" Count="6" />
+      <LineId Id="74" Count="3" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

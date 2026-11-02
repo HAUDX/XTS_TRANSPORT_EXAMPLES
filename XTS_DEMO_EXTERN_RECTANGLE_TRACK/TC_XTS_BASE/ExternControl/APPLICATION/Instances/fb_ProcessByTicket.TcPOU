@@ -46,10 +46,10 @@ VAR
   // INFEED TARGET:  MAY BE UPDATED/CHANGED BEFORE SWITCHING TO E_INSTANCE_CMD.ENABLE
   //----------------------------------------------------------------------------------
   //  - sending a copy of the incoming ticket is done/tested
-  //     the instance the ticket is detected
+  //     the moment the ticket is detected
   //
-  //    --> deciding whether to let the ticket 
-  //        be sent or not is best done during E_INSTANCE_STATE.DISABLED
+  //    --> to be sent or not to be sent
+  //        - that is best answered during E_INSTANCE_STATE.DISABLED
   //
   //  - (_nProcessTargetInfeed = INSTANCE_NULL) --> targeting deactivated
   //----------------------------------------------------------------------------------
@@ -740,6 +740,7 @@ OF
 END_CASE
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+_stInstanceState[_nProcess].ProcessIdentity   := _nProcess;
 _stInstanceState[_nProcess].State             := _eStateInstance;
 _stInstanceState[_nProcess].Progress          := _eStateProgress;
 //-----------------------------------------------------------------------------
@@ -831,7 +832,10 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_ProcessByTicket">
-      <LineId Id="1" Count="662" />
+      <LineId Id="664" Count="0" />
+      <LineId Id="2" Count="652" />
+      <LineId Id="665" Count="0" />
+      <LineId Id="655" Count="8" />
     </LineIds>
     <LineIds Name="fb_ProcessByTicket.Clear">
       <LineId Id="1" Count="6" />

@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAPPING_XTS_in" Id="{cab2eef4-b243-4d10-adf5-ec5dc533ff13}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAPPING_XTS_in
+VAR
+  sMapping              : STRING;
+  bFirstCycle           : BOOL := TRUE;
+
+  TransportState        : U_XTS_TRANSPORT_STATE;
+  StationState          : U_XTS_STATION_STATE;
+  MoverSelectorState    : U_MOVER_SELECTOR_STATE;
+
+  szTransportState      : ARRAY[1..2] OF UDINT;
+  szStationState        : ARRAY[1..2] OF UDINT;
+  szMoverSelector       : ARRAY[1..2] OF UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF (bFirstCycle)
+THEN
+  bFirstCycle         := FALSE;
+  
+  szTransportState [1]:= SIZEOF(TransportState);
+  szTransportState [2]:= SIZEOF(GVL_XTS.XtsTransportState);
+
+  szStationState   [1]:= SIZEOF(StationState);
+  szStationState   [2]:= SIZEOF(GVL_XTS.StationState);
+
+  szMoverSelector  [1]:= SIZEOF(MoverSelectorState);
+  szMoverSelector  [1]:= SIZEOF(GVL_XTS.MoverSelectorState);
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TransportState) <> SIZEOF(GVL_XTS.XtsTransportState))
+THEN
+  sMapping  := 'TransportState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(StationState) <> SIZEOF(GVL_XTS.StationState))
+THEN
+  sMapping  := 'StationState sizes DO NOT match';
+  RETURN;
+END_IF
+IF (SIZEOF(MoverSelectorState) <> SIZEOF(GVL_XTS.MoverSelectorState))
+THEN
+  sMapping  := 'MoverSelectorState sizes DO NOT match';
+  RETURN;
+END_IF
+sMapping    := 'MAPPING_XTS_IN ACTIVE';
+//-----------------------------------------------------------------------------------------
+//       destination,                               source,                size
+//-----------------------------------------------------------------------------------------
+  memcpy(ADR(GVL_XTS.XtsTransportState),      ADR(TransportState),       SIZEOF(TransportState));
+  memcpy(ADR(GVL_XTS.StationState),           ADR(StationState),         SIZEOF(StationState));
+  memcpy(ADR(GVL_XTS.MoverSelectorState),     ADR(MoverSelectorState),   SIZEOF(MoverSelectorState));
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAPPING_XTS_in">
+      <LineId Id="78" Count="0" />
+      <LineId Id="2" Count="5" />
+      <LineId Id="90" Count="2" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="48" Count="11" />
+      <LineId Id="84" Count="4" />
+      <LineId Id="60" Count="5" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="73" Count="4" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

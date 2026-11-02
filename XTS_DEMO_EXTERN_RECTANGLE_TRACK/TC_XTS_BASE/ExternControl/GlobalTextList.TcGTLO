@@ -41,6 +41,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"733"</v>
+              <v n="TextDefault">" In Target"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"144"</v>
               <v n="TextDefault">" MOVER command"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -281,6 +286,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"563"</v>
+              <v n="TextDefault">"In Target"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"211"</v>
               <v n="TextDefault">"Info Act Pos Absolute"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -411,6 +421,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"642"</v>
+              <v n="TextDefault">"SelectBy:  %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"91"</v>
               <v n="TextDefault">"Set Acceleration"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -483,6 +498,11 @@
             <o>
               <v n="TextID">"500"</v>
               <v n="TextDefault">"XTS Transport Command"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"805"</v>
+              <v n="TextDefault">"XTS Transport Initialisation:  %s"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

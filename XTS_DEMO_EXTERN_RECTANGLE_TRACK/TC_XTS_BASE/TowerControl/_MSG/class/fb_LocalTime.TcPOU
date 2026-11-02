@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fb_LocalTime" Id="{a99e23a0-d2f6-4f38-b408-5aefcb08e47b}" SpecialFunc="None">
+    <Declaration><![CDATA[//-----------------------------------------------------------------------------------------------
+//
+//  As time goes by...
+//
+//  HAUD 2026 07 23
+//  - timezone to match UTC device time.
+//-----------------------------------------------------------------------------------------------
+FUNCTION_BLOCK fb_LocalTime
+VAR
+  _eState                 : e_progress;   // self startup state, reaches WORKING when done.
+  _stSystemtime           : Tc2_Utilities.TIMESTRUCT;
+
+  _stUtcTime              : Tc2_Utilities.T_FILETIME64; // CPU time as 64bit ULINT, meant to be used for measurement
+  _sUtcTime               : STRING;
+  _dtUtcTime              : DT;
+
+  _stLocalTime            : Tc2_Utilities.T_FILETIME64; // In every wood, in every spring,there is a different green.
+  _sLocalTime             : STRING;
+  _dtLocalTime            : DT;
+
+  _eTimeZoneId            : Tc2_Utilities.E_TimeZoneID;
+  _stTimeZoneInfo         : Tc2_Utilities.ST_TimeZoneInformation;
+  _fbGetTimeZoneInfo      : Tc2_Utilities.FB_GetTimeZoneInformation;
+  _fbFileTimeToLocalTime  : Tc2_Utilities.FB_FileTime64ToTzSpecificLocalTime;
+  _nErrorId               : UDINT;
+  _bError                 : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//-----------------------------------------------------------------------------------------------
+// infosys: https://infosys.beckhoff.com/english.php?content=../content/1033/tcplclib_tc2_system/3622991755.html&id=6591934602709167291
+//-----------------------------------------------------------------------------------------------
+// This function can be used to read the operating system timestamp. 
+// The timestamp is a 64-bit integer value, with an accuracy of 100 ns, 
+// which is updated with every call of the PLC. 
+// Among other things, it can be used for timing tasks or time measurements. 
+// One unit corresponds to 100 ns. 
+// The time represents the number of 100 ns intervals since January 1, 1601 (UTC).
+//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+_stUtcTime                      := F_GetSystemTime(); // UTC time, no delay --> CPU time direct
+//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+// build UTC time
+_sUtcTime                       := SYSTEMTIME_TO_STRING( FILETIME64_TO_SYSTEMTIME( _stUtcTime ));
+_dtUtcTime                      := systemtime_to_dt    ( FILETIME64_TO_SYSTEMTIME( _stUtcTime ));
+//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+// state machine for getting timezone information and add the offset to UTC time
+//-----------------------------------------------------------------------------------------------
+CASE _eState
+OF
+  E_PROGRESS.PROGRESS_INVALID:
+    _eState                     := E_PROGRESS.PROGRESS_INIT;
+    _fbGetTimeZoneInfo(
+                      sNetID    := '', 
+                      bExecute  := FALSE,
+                      bError    => _bError,
+                      nErrID    => _nErrorId, 
+                      tzID      => _eTimeZoneId, 
+                      tzInfo    => _stTimeZoneInfo);
+END_CASE
+//---------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+CASE _eState
+OF
+  E_PROGRESS.PROGRESS_INIT:
+    _fbGetTimeZoneInfo(
+                      sNetID    := '', 
+                      bExecute  := TRUE,
+                      bError    => _bError,
+                      nErrID    => _nErrorId, 
+                      tzID      => _eTimeZoneId, 
+                      tzInfo    => _stTimeZoneInfo);
+
+    IF (_fbGetTimeZoneInfo.bBusy)
+    THEN
+      _eState                   := E_PROGRESS.PROGRESS_PREPARE;
+    END_IF
+END_CASE
+//---------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+CASE _eState
+OF
+  E_PROGRESS.PROGRESS_PREPARE:
+    _fbGetTimeZoneInfo(
+                      sNetID    := '', 
+                      bExecute  := TRUE,
+                      bError    => _bError,
+                      nErrID    => _nErrorId, 
+                      tzID      => _eTimeZoneId, 
+                      tzInfo    => _stTimeZoneInfo);
+
+    IF NOT (_fbGetTimeZoneInfo.bBusy)
+    THEN
+      _fbGetTimeZoneInfo(
+                      sNetID    := '', 
+                      bExecute  := FALSE);
+
+      _eState                   := E_PROGRESS.PROGRESS_WORKING;
+    END_IF
+END_CASE
+//---------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+CASE _eState
+OF
+  E_PROGRESS.PROGRESS_WORKING:
+    _fbFileTimeToLocalTime(
+                      in        := _stUtcTime, 
+                      tzInfo    := _stTimeZoneInfo, 
+                      out       => _stLocalTime, 
+                      eTzID     => _eTimeZoneId);
+
+  // build local time
+  _stSystemtime                 := FILETIME64_TO_SYSTEMTIME( _stLocalTime );
+  _sLocalTime                   := SYSTEMTIME_TO_STRING    ( _stSystemtime );
+  _dtLocalTime                  := systemtime_to_dt        ( _stSystemtime );
+
+
+  IF (_stSystemtime.wHour   = 0) AND
+     (_stSystemtime.wMinute = 0) AND
+     (_stSystemtime.wSecond = 0)
+  THEN
+    //  The passing seasons are but ripples ever repeated in the long long stream.
+    _eState                     := E_PROGRESS.PROGRESS_INIT;
+  END_IF
+END_CASE
+//---------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+
+]]></ST>
+    </Implementation>
+    <Method Name="FolderDate" Id="{844dfe57-ddd0-4aa3-882d-b64f2823cedf}">
+      <Declaration><![CDATA[METHOD FolderDate : STRING
+VAR_INPUT
+	LocalTime   : POINTER TO DT;
+END_VAR
+VAR
+	sTmp        : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT (LocalTime <> 0)
+THEN
+	FolderDate := 'NULL';
+	RETURN;
+END_IF
+
+sTmp := DT_TO_STRING(LocalTime^);
+
+// cut off #dt literal
+sTmp := right(sTmp, len(sTmp)-3);
+
+sTmp := replace(sTmp, '_', 1, 5);
+sTmp := replace(sTmp, '_', 1, 8);
+
+sTmp := left(sTmp,10);	// year_month_day
+
+FolderDate := sTmp;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="LocalTime" Id="{b3d1f6b3-0fb4-42c1-ba93-385642d4e99e}">
+      <Declaration><![CDATA[PROPERTY LocalTime : DT]]></Declaration>
+      <Get Name="Get" Id="{2e2c5349-d33a-491a-a1b1-2c68777468b6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[LocalTime := _dtLocalTime;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="LocalTimeString" Id="{e9d3a7a0-d717-4348-9968-ed6d5d7488ed}">
+      <Declaration><![CDATA[PROPERTY LocalTimeString : string]]></Declaration>
+      <Get Name="Get" Id="{d045be46-76fa-42aa-bbc3-05997c0e68f0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF (len(_sLocalTime) >1)
+THEN
+  LocalTimeString := _sLocalTime;
+ELSE
+  LocalTimeString := _sUtcTime;
+END_IF
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="State" Id="{91ec6a45-f43d-4ffd-ac8e-4498c9b9c556}">
+      <Declaration><![CDATA[PROPERTY State : e_progress]]></Declaration>
+      <Get Name="Get" Id="{8ab94725-a95e-44a3-97be-175de5b65c1d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[State := _eState;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="UtcTime" Id="{706d8a98-a1a2-4aa6-a389-27e6d5940cb1}">
+      <Declaration><![CDATA[PROPERTY UtcTime : DT]]></Declaration>
+      <Get Name="Get" Id="{2f8f93d7-2df5-437e-9130-2df29964e405}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[UtcTime := _dtUtcTime;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="UtcTimeString" Id="{deaf0a15-e7f4-4a03-acc1-8b9969847a38}">
+      <Declaration><![CDATA[PROPERTY UtcTimeString : string]]></Declaration>
+      <Get Name="Get" Id="{9aa846b7-fb27-4db8-949e-47c6c5b6f23c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[UtcTimeString := _sUtcTime;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="fb_LocalTime">
+      <LineId Id="1" Count="101" />
+    </LineIds>
+    <LineIds Name="fb_LocalTime.FolderDate">
+      <LineId Id="1" Count="17" />
+    </LineIds>
+    <LineIds Name="fb_LocalTime.LocalTime.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_LocalTime.LocalTimeString.Get">
+      <LineId Id="1" Count="6" />
+    </LineIds>
+    <LineIds Name="fb_LocalTime.State.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_LocalTime.UtcTime.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_LocalTime.UtcTimeString.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

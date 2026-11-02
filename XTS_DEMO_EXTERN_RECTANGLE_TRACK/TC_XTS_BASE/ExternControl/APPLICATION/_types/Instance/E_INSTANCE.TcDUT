@@ -29,7 +29,11 @@ TYPE E_INSTANCE : // placeholder for process identification
   DISTRIBUTOR_WPC_CLEAN,      // (1 to 1) - to next
   // RECTANGLE_TRACK example processes.
   //-----------------------------------
-  INSTANCE_MAX
+  INSTANCE_MAX,
+  //-----------------------------------
+  //  off sequence but in the book
+  //-----------------------------------
+  INSTANCE_CONDUCTOR          := 707   // The normalization root 1\sqrt{2}
 )UINT;
 END_TYPE
 ]]></Declaration>

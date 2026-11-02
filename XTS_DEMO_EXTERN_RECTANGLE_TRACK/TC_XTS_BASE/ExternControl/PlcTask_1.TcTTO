@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Task Name="PlcTask_1" Id="{e0d83650-6e19-45dc-9aad-716d26ac4f8e}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>2000</CycleTime>
+    <Priority>13</Priority>
+    <PouCall>
+      <Name>MAPPING_XTS_in</Name>
+    </PouCall>
+    <PouCall>
+      <Name>MAIN</Name>
+    </PouCall>
+    <PouCall>
+      <Name>MAIN_APP</Name>
+    </PouCall>
+    <PouCall>
+      <Name>MAPPING_XTS_out</Name>
+    </PouCall>
+    <TaskFBGuid>{7d64e294-41f3-4daf-bcfe-6860cbb33c88}</TaskFBGuid>
+    <Fb_init>{24ddf946-2572-4629-958e-66afc2aee261}</Fb_init>
+    <Fb_exit>{8675dfa7-872e-4acd-9fc8-75ffdbe71731}</Fb_exit>
+    <CycleUpdate>{b8593c0d-61c1-4f6e-9b46-171e0d8e00a2}</CycleUpdate>
+    <PostCycleUpdate>{08f81bf3-f5f2-48c6-8afc-c46e93d013b8}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

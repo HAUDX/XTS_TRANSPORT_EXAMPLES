@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_INSTANCE_CTRL" Id="{d486b896-ea29-4728-96cc-6b9950eebed8}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
+TYPE ST_INSTANCE_CTRL :
+STRUCT
+  Cmd     : E_INSTANCE_CMD;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

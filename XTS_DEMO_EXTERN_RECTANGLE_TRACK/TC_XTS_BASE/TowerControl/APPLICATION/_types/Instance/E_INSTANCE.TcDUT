@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_INSTANCE" Id="{92ddd8a8-330e-48b3-ad66-59d0e0284b5e}">
+    <Declaration><![CDATA[//{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+{info 'E_INSTANCE placeholder for process identification; RECTANGLE_TRACK example'}
+TYPE E_INSTANCE : // placeholder for process identification
+(
+	INSTANCE_NULL,
+  //-----------------------------------
+  // RECTANGLE_TRACK example processes:
+  CONTINUOUS_WPC_CLEAN,       // (1 to 1) - clean WPC with slower speed
+  DISTRIBUTOR_INFEED,         // (1 to m) - incomming ticket data ST_PROCESS_DATA.wTarget sets target for mover
+  PROCESS_INFEED,             // (m to 1) - place workpiece
+  CONTINUOUS_CLEAN,           // (1 to 1) - clean workpiece
+  CONTINUOUS_SCAN,            // (1 to 1) - scan  workpiece
+  CONTINUOUS_CAMERA,          // (1 to 1) - take a picture
+  DISTRIBUTOR_ASSEMBLY_01,    // (1 to m) - distributor to next
+  PROCESS_ASSEMBLY_01,        // (m to 1) - standstill process, writes ticket to next distributor
+  DISTRIBUTOR_ASSEMBLY_02,    // (1 to m) - distributor to next
+  PROCESS_ASSEMBLY_02,        // (m to 1) - standstill process, writes ticket to next distributor
+  DISTRIBUTOR_ASSEMBLY_TEST,  // (1 to m) - distributor to next
+  PROCESS_ASSEMBLY_TEST,      // (m to 1) - standstill process, writes ticket to next distributor
+  DISTRIBUTOR_CAMERA,         // (1 to 1) - change dyn constraint of mover on the fly
+  CONTINUOUS_ASSEMBLY_CAMERA, // (1 to 1) - move through camera inspection
+  DISTRIBUTOR_OUTFEED,        // (1 to m) - distributor to next
+  PROCESS_OUTFEED,            // (m to 1) - unload workpiece
+  DISTRIBUTOR_WPC_CLEAN,      // (1 to 1) - to next
+  // RECTANGLE_TRACK example processes.
+  //-----------------------------------
+  INSTANCE_MAX,
+  //-----------------------------------
+  //  off sequence but in the book
+  //-----------------------------------
+  INSTANCE_CONDUCTOR          := 707   // The normalization root 1\sqrt{2}
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

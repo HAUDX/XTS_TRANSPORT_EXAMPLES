@@ -645,6 +645,7 @@ OF
 END_CASE
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+_stInstanceState[_nProcess].ProcessIdentity   := _nProcess;
 _stInstanceState[_nProcess].State             := _eStateInstance;
 _stInstanceState[_nProcess].Progress          := _eStateProgress;
 //-----------------------------------------------------------------------------
@@ -692,7 +693,10 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_DistributorByTicket">
-      <LineId Id="1" Count="596" />
+      <LineId Id="598" Count="0" />
+      <LineId Id="2" Count="586" />
+      <LineId Id="599" Count="0" />
+      <LineId Id="589" Count="8" />
     </LineIds>
     <LineIds Name="fb_DistributorByTicket.Clear">
       <LineId Id="1" Count="6" />

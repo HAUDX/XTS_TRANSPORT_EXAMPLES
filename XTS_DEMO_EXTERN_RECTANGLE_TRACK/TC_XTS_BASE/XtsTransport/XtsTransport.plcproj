@@ -221,6 +221,9 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
     <Compile Include="MAPPING\_types\U_XTS_TRANSPORT_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PlcTask_1.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Visualization Manager.TcVMO">
       <SubType>Code</SubType>
     </Compile>
@@ -281,9 +284,6 @@ XTS_TRANSPORT_LAYER by Daniel Hauer</Description>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="_MSG\types\TL_E_MESSAGETYPE.TcTLO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PLC_MOTION\_GVL\PLC_CONSTANT.TcGVL">

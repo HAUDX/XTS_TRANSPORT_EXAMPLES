@@ -188918,7 +188918,7 @@ and will return to Group State Standby when the situation permits.
 		</System>
 		<Motion>
 			<NC>
-				<SafTask Priority="4" CycleTime="10000" AmsPort="501" Affinity="#x00000010" IoAtBegin="true" AmsNetId="192.168.1.73.1.1" SafTaskInfo="256">
+				<SafTask Priority="4" CycleTime="10000" AmsPort="501" Affinity="#x00000010" IoAtBegin="true" SafTaskInfo="256">
 					<Name>NC-Task 1</Name>
 					<Vars VarGrpType="1" InsertType="1">
 						<Name>Inputs</Name>
@@ -286055,7 +286055,7 @@ and will return to Group State Standby when the situation permits.
 		</Motion>
 		<Plc>
 			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="TEST, WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{8A245CF4-8021-6568-1881-B231E4152FAE}" TmcPath="XtsTransport\XtsTransport.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{AE324157-CBCB-B340-70FC-6D0EEB2EE297}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -287021,7 +287021,7 @@ and will return to Group State Standby when the situation permits.
 				</Instance>
 			</Project>
 			<Project GUID="{D083EE86-F0E4-4E86-B9F5-5606BF356788}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="TEST, WIN" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{E0ECD56A-B004-DB93-3935-4C8DCB1E5932}" TmcPath="ExternControl\ExternControl.tmc">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{0F49B596-9564-4339-45F7-E0831B1F67A5}" TmcPath="ExternControl\ExternControl.tmc">
 					<Name>ExternControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
