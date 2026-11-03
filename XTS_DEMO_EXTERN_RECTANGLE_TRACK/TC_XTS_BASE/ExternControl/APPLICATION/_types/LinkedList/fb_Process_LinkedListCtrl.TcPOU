@@ -144,6 +144,12 @@ THEN
   RETURN;
 END_IF
 
+IF NOT (_ItfList <> 0)
+THEN
+  _eCheck                     := E_LIST_CHECK.LIST_ITF_INVALID;
+  RETURN;
+END_IF
+
 
 _eCheck                       := E_LIST_CHECK.CHECK_DONE;
 Check                         := TRUE;
@@ -896,10 +902,13 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_Process_LinkedListCtrl">
-      <LineId Id="1" Count="75" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="2" Count="74" />
     </LineIds>
     <LineIds Name="fb_Process_LinkedListCtrl.Check">
-      <LineId Id="1" Count="28" />
+      <LineId Id="1" Count="23" />
+      <LineId Id="30" Count="5" />
+      <LineId Id="25" Count="4" />
     </LineIds>
     <LineIds Name="fb_Process_LinkedListCtrl.Cmd">
       <LineId Id="1" Count="77" />

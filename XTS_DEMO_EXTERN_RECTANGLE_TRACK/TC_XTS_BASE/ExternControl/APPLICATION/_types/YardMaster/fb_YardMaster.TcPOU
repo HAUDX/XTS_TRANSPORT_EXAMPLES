@@ -694,12 +694,12 @@ OF
   //-----------------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_STARTUP:
-    IF NOT (_nInstance < E_INSTANCE.INSTANCE_MAX)
+    IF (_nInstance < E_INSTANCE.INSTANCE_MAX-1)
     THEN
-      _eState                             := E_PROGRESS.PROGRESS_CHECK;
-    ELSE
       _nInstance                          := _nInstance + 1;
       _eState                             := E_PROGRESS.PROGRESS_PREPARE;
+    ELSE
+      _eState                             := E_PROGRESS.PROGRESS_CHECK;
     END_IF
   //-----------------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------
@@ -725,7 +725,8 @@ OF
         f_MessageSet(_stMsg);
 
       ELSE
-        IF (_XtsTransportState.XpuInfo.IdDetectionValid)
+        IF (_XtsTransportState.XpuInfo.IdDetectionValid) OR
+           (_XtsTransportState.XpuInfo.IdDetectionMode = 0)
         THEN
           _eState                         := E_PROGRESS.PROGRESS_WORKING;
         END_IF
@@ -950,7 +951,7 @@ END_VAR
       <LineId Id="1" Count="112" />
     </LineIds>
     <LineIds Name="fb_YardMaster.Init">
-      <LineId Id="1" Count="130" />
+      <LineId Id="1" Count="131" />
     </LineIds>
     <LineIds Name="fb_YardMaster.MessageLevel.Get">
       <LineId Id="1" Count="1" />
