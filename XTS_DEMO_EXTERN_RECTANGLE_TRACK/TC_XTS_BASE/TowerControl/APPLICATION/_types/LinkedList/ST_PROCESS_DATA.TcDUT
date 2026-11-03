@@ -3,7 +3,9 @@
   <DUT Name="ST_PROCESS_DATA" Id="{8d73a72a-7b24-449d-bf76-4f4a77f81ba5}">
     <Declaration><![CDATA[TYPE ST_PROCESS_DATA :
 STRUCT
-  nProcessId          : e_instance; // target process
+  nProcessId          : e_instance; // Conductor to nProcessId
+  nTargetId           : e_instance; // nProcessId to nTargetId
+
   {attribute 'displaymode':='bin'}
   wTarget             : T_PROCESS;  // where and how many stations are to be used in process
 END_STRUCT
