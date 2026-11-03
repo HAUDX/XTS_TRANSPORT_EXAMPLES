@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <POU Name="fb_TransportUnit" Id="{0ce87c95-a3e8-4212-b1c2-ee9df67705ee}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -509,10 +509,11 @@ OF
 
     IF (_eJobReslt = E_PROGRESS.PROGRESS_ERROR)
     THEN
-      _eState                   := E_PROGRESS.PROGRESS_ERROR;
+      _eState                   := E_PROGRESS.PROGRESS_CHECK;
 
       _nErrorId                 := _GroupInfo.GroupErrorId;
       _eJobReslt                := _GroupItf.AddAll(FALSE);
+      _eJobReslt                := GroupClear(FALSE);
 
     ELSIF (_eJobReslt = E_PROGRESS.PROGRESS_DONE)
     THEN
@@ -535,6 +536,16 @@ OF
       _nErrorId                 := _GroupInfo.GroupErrorId;
 	    _eJobReslt				        := _GroupItf.Reset(FALSE);
 
+      IF (_eMessageLevel > E_MessageType.eMessageError)
+      THEN
+        _stMsg.eType            := E_MessageType.eMessageInfo;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_GroupBuild;
+        _stMsg.iErrorNumber     := _nErrorId;
+        _stMsg.sText            := concat( 'ClearGroup Start: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
+      END_IF
     ELSIF (_eJobReslt = E_PROGRESS.PROGRESS_DONE)
     THEN
       _eState                   := E_PROGRESS.PROGRESS_DONE;
@@ -543,9 +554,43 @@ OF
       IF (_eMessageLevel > E_MessageType.eMessageError)
       THEN
         _stMsg.eType            := E_MessageType.eMessageInfo;
-        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_General;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_GroupBuild;
         _stMsg.iErrorNumber     := 0;
         _stMsg.sText            := concat( 'State: ', TO_STRING(THIS^._eState));
+        _stMsg.sText            := concat(_stMsg.sText, ': ');
+        _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
+        f_MessageSet(_stMsg);
+      END_IF
+    END_IF
+END_CASE
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+CASE _eState
+OF
+  E_PROGRESS.PROGRESS_CHECK:
+    _eJobReslt                  := GroupClear(TRUE);
+
+    IF (_eJobReslt = E_PROGRESS.PROGRESS_ERROR)
+    THEN
+      _eState                   := E_PROGRESS.PROGRESS_ERROR;
+
+      _nErrorId                 := _GroupInfo.GroupErrorId;
+      _eJobReslt                := _GroupItf.AddAll(FALSE);
+      _eJobReslt                := GroupClear(FALSE);
+
+    ELSIF (_eJobReslt = E_PROGRESS.PROGRESS_DONE)
+    THEN
+      _eState                   := E_PROGRESS.PROGRESS_BUSY;
+      _eJobReslt                := _GroupItf.AddAll(FALSE);
+	    _eJobReslt				        := _GroupItf.Reset(FALSE);
+      _eJobReslt                := GroupClear(FALSE);
+
+      IF (_eMessageLevel > E_MessageType.eMessageError)
+      THEN
+        _stMsg.eType            := E_MessageType.eMessageInfo;
+        _stMsg.eSubdevice       := e_Subdevice.TransportUnit_GroupBuild;
+        _stMsg.iErrorNumber     := 0;
+        _stMsg.sText            := concat( 'ClearGroup End: ', TO_STRING(THIS^._eState));
         _stMsg.sText            := concat(_stMsg.sText, ': ');
         _stMsg.sText            := concat(_stMsg.sText, TO_STRING(_eState));
         f_MessageSet(_stMsg);
@@ -2575,15 +2620,25 @@ END_VAR
       <LineId Id="578" Count="4" />
       <LineId Id="596" Count="0" />
       <LineId Id="595" Count="0" />
-      <LineId Id="583" Count="5" />
+      <LineId Id="583" Count="1" />
+      <LineId Id="700" Count="0" />
+      <LineId Id="585" Count="3" />
       <LineId Id="637" Count="0" />
       <LineId Id="590" Count="0" />
       <LineId Id="422" Count="2" />
-      <LineId Id="617" Count="15" />
+      <LineId Id="617" Count="10" />
+      <LineId Id="718" Count="10" />
+      <LineId Id="629" Count="3" />
       <LineId Id="657" Count="6" />
       <LineId Id="668" Count="0" />
       <LineId Id="664" Count="2" />
-      <LineId Id="633" Count="3" />
+      <LineId Id="633" Count="0" />
+      <LineId Id="692" Count="6" />
+      <LineId Id="701" Count="13" />
+      <LineId Id="716" Count="0" />
+      <LineId Id="730" Count="10" />
+      <LineId Id="715" Count="0" />
+      <LineId Id="634" Count="2" />
       <LineId Id="425" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>

@@ -3,16 +3,18 @@
   <POU Name="MAPPING_in" Id="{ebd5c56c-9a35-4de5-bef9-9829dd0bb032}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAPPING_in
 VAR
-  sMapping          : STRING;
-  bFirstCycle       : BOOL := TRUE;
+  sMapping              : STRING;
+  bFirstCycle           : BOOL := TRUE;
 
-  TicketListOutput  : U_TICKET_LIST_DATA_OUTPUT;
-  TicketListState   : U_TICKET_LIST_STATE;
-  InstanceState     : U_INSTANCE_STATE;
+  YardState             : U_YARD_STATE;
+  TicketListOutput      : U_TICKET_LIST_DATA_OUTPUT;
+  TicketListState       : U_TICKET_LIST_STATE;
+  InstanceState         : U_INSTANCE_STATE;
+  MoverSelectorState    : U_MOVER_SELECTOR_STATE;
 
-  szInstanceState   : ARRAY[1..2] OF UDINT;
-  szTicketState     : ARRAY[1..2] OF UDINT;
-  szTicketData      : ARRAY[1..2] OF UDINT;
+  szInstanceState       : ARRAY[1..2] OF UDINT;
+  szTicketState         : ARRAY[1..2] OF UDINT;
+  szTicketData          : ARRAY[1..2] OF UDINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -49,20 +51,27 @@ THEN
   RETURN;
 END_IF
 //---------------------------------------------------------------------
-IF (SIZEOF(AppState) <> SIZEOF(GVL_APPLICATION.AppState))
+IF (SIZEOF(YardState) <> SIZEOF(GVL_APPLICATION.YardState))
 THEN
-  sMapping  := 'AppState sizes DO NOT match';
+  sMapping  := 'YardState sizes DO NOT match';
   RETURN;
 END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(MoverSelectorState) <> SIZEOF(GVL_XTS.MoverSelectorState))
+THEN
+  sMapping  := 'MoverSelectorState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
 sMapping    := 'MAPPING ACTIVE';
 //-----------------------------------------------------------------------------------------
-//       destination,                               source,                size
+//       destination,                               source,                   size
 //-----------------------------------------------------------------------------------------
-  memcpy(ADR(GVL_APPLICATION.AppState),             ADR(AppState),         SIZEOF(AppState));
-
-  memcpy(ADR(GVL_APPLICATION.InstanceState),        ADR(InstanceState),    SIZEOF(InstanceState));
-  memcpy(ADR(GVL_APPLICATION.TicketListState),      ADR(TicketListState),  SIZEOF(TicketListState));
-  memcpy(ADR(GVL_APPLICATION.TicketListDataOutput), ADR(TicketListOutput), SIZEOF(TicketListOutput));
+  memcpy(ADR(GVL_APPLICATION.YardState),            ADR(YardState),           SIZEOF(YardState));
+  memcpy(ADR(GVL_APPLICATION.InstanceState),        ADR(InstanceState),       SIZEOF(InstanceState));
+  memcpy(ADR(GVL_APPLICATION.TicketListState),      ADR(TicketListState),     SIZEOF(TicketListState));
+  memcpy(ADR(GVL_APPLICATION.TicketListDataOutput), ADR(TicketListOutput),    SIZEOF(TicketListOutput));
+  memcpy(ADR(GVL_XTS.MoverSelectorState),           ADR(MoverSelectorState),  SIZEOF(MoverSelectorState));
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 
@@ -72,7 +81,16 @@ sMapping    := 'MAPPING ACTIVE';
     <LineIds Name="MAPPING_in">
       <LineId Id="56" Count="0" />
       <LineId Id="2" Count="3" />
-      <LineId Id="9" Count="46" />
+      <LineId Id="9" Count="27" />
+      <LineId Id="58" Count="4" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="66" Count="4" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="42" Count="3" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="48" Count="2" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="51" Count="4" />
     </LineIds>
   </POU>
 </TcPlcObject>

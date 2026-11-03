@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="ST_TOWER_STATE" Id="{e6a4a473-bab8-43ed-a8fd-cc1becccd0a5}">
-    <Declaration><![CDATA[TYPE ST_TOWER_STATE :
+  <DUT Name="ST_YARD_STATE" Id="{90030547-ba86-4188-a663-9cb0f198cbab}">
+    <Declaration><![CDATA[TYPE ST_YARD_STATE :
 STRUCT
   State           : E_INSTANCE_STATE;
+  TransportState  : ST_XTS_TRANSPORT_STATE;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

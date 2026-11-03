@@ -45,6 +45,7 @@ TYPE e_Device :
   ProcessListCtrl   := 21000,
   TicketListCtrl    := 22000,
   Conductor         := 23000,
+  YardMaster        := 24000,
 
   Application       := 30000,   // entries from application are written into dedicated txt file.
 

@@ -362,8 +362,8 @@ END_CASE
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 _stState.ProcessIdentity                      := _nConductor;
-_stState.State                                := _eStateInstance;
-_stState.Progress                             := _eStateProgress;
+_stState.ProcessState                         := _eStateInstance;
+_stState.ProcessProgress                      := _eStateProgress;
 _stState.QueueProcessCount                    := TO_UINT(_ItfTicketList.Count);
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

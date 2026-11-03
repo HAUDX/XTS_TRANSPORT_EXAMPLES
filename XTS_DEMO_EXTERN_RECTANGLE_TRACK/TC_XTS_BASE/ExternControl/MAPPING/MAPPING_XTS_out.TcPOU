@@ -6,13 +6,17 @@ VAR
   sMapping              : STRING;
   bFirstCycle           : BOOL := TRUE;
 
+  YardState             : U_YARD_STATE;
+  InstanceState         : U_INSTANCE_STATE;
+  TicketListOutput      : U_TICKET_LIST_DATA_OUTPUT;
+  TicketListState       : U_TICKET_LIST_STATE;
+
   TransportControl      : U_XTS_TRANSPORT_CTRL;
   StationControl        : U_XTS_STATION_CTRL;
-  MoverSelectorControl  : U_MOVER_SELECTOR_CTRL;
+
 
   szTransportCtrl       : ARRAY[1..2] OF UDINT;
   szStationControl      : ARRAY[1..2] OF UDINT;
-  szMoverSelector       : ARRAY[1..2] OF UDINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -26,9 +30,6 @@ THEN
 
   szStationControl[1]     := SIZEOF(StationControl);
   szStationControl[2]     := SIZEOF(GVL_XTS.StationCtrl);
-
-  szMoverSelector  [1]:= SIZEOF(MoverSelectorControl);
-  szMoverSelector  [1]:= SIZEOF(GVL_XTS.MoverSelectorCtrl);
 END_IF
 //---------------------------------------------------------------------
 IF (SIZEOF(TransportControl) <> SIZEOF(GVL_XTS.XtsTransportCtrl))
@@ -36,38 +37,60 @@ THEN
   sMapping  := 'TransportControl sizes DO NOT match';
   RETURN;
 END_IF
+//---------------------------------------------------------------------
 IF (SIZEOF(StationControl) <> SIZEOF(GVL_XTS.StationCtrl))
 THEN
   sMapping  := 'StationControl sizes DO NOT match';
   RETURN;
 END_IF
-IF (SIZEOF(MoverSelectorControl) <> SIZEOF(GVL_XTS.MoverSelectorCtrl))
+//---------------------------------------------------------------------
+IF (SIZEOF(YardState) <> SIZEOF(GVL_APPLICATION.YardState))
 THEN
-  sMapping  := 'MoverSelectorControl sizes DO NOT match';
+  sMapping  := 'YardState sizes DO NOT match';
   RETURN;
 END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(InstanceState) <> SIZEOF(GVL_APPLICATION.InstanceState))
+THEN
+  sMapping  := 'InstanceState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
 sMapping    := 'MAPPING_XTS_OUTPUT ACTIVE';
-//---------------------------------------------------------------------
-//       destination,                       source,                size
-//---------------------------------------------------------------------
-  memcpy(ADR(TransportControl),     ADR(GVL_XTS.XtsTransportCtrl),   SIZEOF(TransportControl));
-  memcpy(ADR(StationControl),       ADR(GVL_XTS.StationCtrl),        SIZEOF(StationControl));
-  memcpy(ADR(MoverSelectorControl), ADR(GVL_XTS.MoverSelectorCtrl),  SIZEOF(MoverSelectorControl));
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
-
-]]></ST>
+//-----------------------------------------------------------------------------------------------------
+//       destination,           source,                             size
+//-----------------------------------------------------------------------------------------------------
+  memcpy(ADR(TransportControl), ADR(GVL_XTS.XtsTransportCtrl),      SIZEOF(TransportControl));
+  memcpy(ADR(StationControl),   ADR(GVL_XTS.StationCtrl),           SIZEOF(StationControl));
+//-----------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------
+//       destination,           source,                                     size
+//-----------------------------------------------------------------------------------------------------
+  memcpy(ADR(YardState),        ADR(GVL_APPLICATION.YardState),             SIZEOF(YardState));
+  memcpy(ADR(InstanceState),    ADR(GVL_APPLICATION.InstanceState),         SIZEOF(InstanceState));
+  memcpy(ADR(TicketListState),  ADR(GVL_APPLICATION.TicketListState),       SIZEOF(TicketListState));
+  memcpy(ADR(TicketListOutput), ADR(GVL_APPLICATION.TicketListDataOutput),  SIZEOF(TicketListOutput));
+//-----------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------]]></ST>
     </Implementation>
     <LineIds Name="MAPPING_XTS_out">
       <LineId Id="78" Count="0" />
       <LineId Id="2" Count="8" />
-      <LineId Id="83" Count="0" />
-      <LineId Id="81" Count="1" />
       <LineId Id="25" Count="0" />
-      <LineId Id="52" Count="10" />
-      <LineId Id="84" Count="4" />
-      <LineId Id="63" Count="6" />
-      <LineId Id="74" Count="3" />
+      <LineId Id="52" Count="5" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="58" Count="4" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="94" Count="4" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="99" Count="4" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="63" Count="5" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="89" Count="4" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="111" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

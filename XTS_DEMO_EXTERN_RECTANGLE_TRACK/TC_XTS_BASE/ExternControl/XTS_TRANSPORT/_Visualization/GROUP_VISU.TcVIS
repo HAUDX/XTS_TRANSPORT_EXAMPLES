@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <Visu Name="GROUP_VISU" Id="{864c1ac3-b029-48d2-8c94-08aeb02e7cfc}">
+  <Visu Name="GROUP_VISU" Id="{36f5cbb9-5e4d-479c-ab4a-b6a142a40bbf}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
@@ -2694,7 +2694,7 @@
                 <v>0035062b-6033-492a-83d3-612b48a722d4</v>
               </d>
               <v n="FbName">"NotImportant"</v>
-              <v n="FbGuid">{864c1ac3-b029-48d2-8c94-08aeb02e7cfc}</v>
+              <v n="FbGuid">{36f5cbb9-5e4d-479c-ab4a-b6a142a40bbf}</v>
             </o>
             <v n="GeneratedGlobalVisuVarsGuid">{08fc455d-8d77-4355-9cc9-d76a24437cae}</v>
             <v n="GeneratedGlobalTheVisuVarlistGuid">{6887d54d-d286-44b4-a1c6-fa1c15c9ebe9}</v>

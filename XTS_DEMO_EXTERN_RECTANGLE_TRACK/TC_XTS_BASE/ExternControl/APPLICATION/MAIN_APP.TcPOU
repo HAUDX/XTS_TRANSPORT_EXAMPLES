@@ -367,9 +367,9 @@ OF
   E_PROGRESS.PROGRESS_PREPARE:
     GVL_APPLICATION.InstanceCtrl[idx].Cmd         := E_INSTANCE_CMD.INIT;
 
-    IF (GVL_APPLICATION.InstanceState[idx].State   = E_INSTANCE_STATE.DISABLED)
+    IF (GVL_APPLICATION.InstanceState[idx].ProcessState   = E_INSTANCE_STATE.DISABLED)
     THEN
-      IF (GVL_APPLICATION.InstanceState[idx].Progress = E_PROGRESS.PROGRESS_BUSY)
+      IF (GVL_APPLICATION.InstanceState[idx].ProcessProgress = E_PROGRESS.PROGRESS_BUSY)
       THEN
         GVL_APPLICATION.InstanceCtrl[idx].Cmd     := E_INSTANCE_CMD.DISABLE;
         eInit                                     := E_PROGRESS.PROGRESS_STARTUP;
@@ -391,10 +391,10 @@ OF
     eInit                                         := E_PROGRESS.PROGRESS_OCCUPIED;
 
   E_PROGRESS.PROGRESS_OCCUPIED:
-    eInit                             := E_PROGRESS.PROGRESS_WORKING;
+    eInit                                         := E_PROGRESS.PROGRESS_WORKING;
 
   E_PROGRESS.PROGRESS_WORKING:
-    eInit                             := E_PROGRESS.PROGRESS_DONE;
+    eInit                                         := E_PROGRESS.PROGRESS_DONE;
 END_CASE
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
@@ -402,6 +402,18 @@ END_CASE
 //-----------------------------------------------------------------------------------------------------------------
 // /assign dataflow
 //-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//  - The YardMaster
+//-----------------------------------------------------------------------------------------------------------------
+GVL_APPLICATION.YardMaster.Ctrl                               REF= GVL_APPLICATION.YardControl;
+GVL_APPLICATION.YardMaster.State                              REF= GVL_APPLICATION.YardState;
+
+GVL_APPLICATION.YardMaster.XtsTransportCtrl                   REF= GVL_XTS.XtsTransportCtrl;
+GVL_APPLICATION.YardMaster.XtsTransportState                  REF= GVL_XTS.XtsTransportState;
+
+GVL_APPLICATION.YardMaster.CollectorInterfaces                :=   GVL_APPLICATION.ItfProcessCollector;
+GVL_APPLICATION.YardMaster.TicketList                         :=   GVL_APPLICATION.TicketList;
+GVL_APPLICATION.YardMaster();
 //-----------------------------------------------------------------------------------------------------------------
 //  - ProcessCollectors
 //-----------------------------------------------------------------------------------------------------------------
@@ -978,6 +990,13 @@ END_CASE
       <LineId Id="361" Count="0" />
       <LineId Id="364" Count="1" />
       <LineId Id="88" Count="3" />
+      <LineId Id="898" Count="2" />
+      <LineId Id="897" Count="0" />
+      <LineId Id="901" Count="0" />
+      <LineId Id="908" Count="0" />
+      <LineId Id="905" Count="2" />
+      <LineId Id="902" Count="1" />
+      <LineId Id="909" Count="0" />
       <LineId Id="369" Count="0" />
       <LineId Id="371" Count="0" />
       <LineId Id="370" Count="0" />

@@ -10,9 +10,9 @@ END_VAR
       <ST><![CDATA[//-----------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------
 //
-//  HAUD 2026.07.06
+//  HAUD 2026.11.02
 //
-//  - hard coded station parameters as example
+//  - hard coded station parameters
 //  - TODO: xml DataServer implementation for station parameter read/write
 //
 //  - reminder: (this you HAVE to check manually when setting up the transport)
@@ -831,7 +831,7 @@ GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     240.0; 
 
 nStationParameter := 84;
 GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
-GVL_XTS.StationParameter[nStationParameter].sText                 := 'PRC_08_1_14_HV_TEST';
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'PROCESS_ASSEMBLY_TEST_14';
 GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
 
 GVL_XTS.StationParameter[nStationParameter].rPosWait              :=    21500.0+1120.0; // absolute modulo position
@@ -840,7 +840,7 @@ GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     160.0; 
 
 nStationParameter := 85;
 GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
-GVL_XTS.StationParameter[nStationParameter].sText                 := 'PRC_08_1_15_HV_TEST';
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'PROCESS_ASSEMBLY_TEST_15';
 GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
 
 GVL_XTS.StationParameter[nStationParameter].rPosWait              :=    21500.0+1200.0; // absolute modulo position
@@ -849,7 +849,7 @@ GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=      80.0; 
 
 nStationParameter := 86;
 GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
-GVL_XTS.StationParameter[nStationParameter].sText                 := 'PRC_08_1_16_HV_TEST';
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'PROCESS_ASSEMBLY_TEST_16';
 GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
 
 GVL_XTS.StationParameter[nStationParameter].rPosWait              :=    21500.0+1280.0; // absolute modulo position
@@ -865,7 +865,7 @@ DO
 END_FOR
 nStationParameter := 91;
 GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
-GVL_XTS.StationParameter[nStationParameter].sText                 := 'PRC_09_NOK';
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'DISTRIBUTOR_CAMERA';
 GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
 
 GVL_XTS.StationParameter[nStationParameter].rPosWait              :=   23250.0; // absolute modulo position
@@ -873,7 +873,7 @@ GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; 
 GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=      -5.0; // relative to Mover.ActPos
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
-// PRC 09 CELL CLEANING 
+// camera inspection 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 FOR nStationParameter := 95 TO 95
 DO
@@ -881,7 +881,7 @@ DO
 END_FOR
 nStationParameter := 95;
 GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
-GVL_XTS.StationParameter[nStationParameter].sText                 := 'PRC_09_CELL_CLEANING';
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'CONTINUOUS_ASSEMBLY_CAMERA';
 GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
 
 GVL_XTS.StationParameter[nStationParameter].rPosWait              :=   24000.0+80.0; // absolute modulo position
@@ -891,11 +891,11 @@ GVL_XTS.StationParameter[nStationParameter].rVelo                 :=     750.0;
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=      78.0;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
-// DISTRIBUTOR - cell unloading
+// DISTRIBUTOR - unloading
 //-----------------------------------------------------------------------------------------------------------------------------------------
 nStationParameter := 119;
 GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
-GVL_XTS.StationParameter[nStationParameter].sText                 := 'DIST_12_CELL_UNLOAD';
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'DISTRIBUTOR_OUTFEED';
 GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
 
 GVL_XTS.StationParameter[nStationParameter].rPosWait              :=   26000.0; // absolute modulo position
@@ -1082,7 +1082,7 @@ GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=      0.0; /
 GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     -5.0; // relative to Mover.ActPos
 
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=     78.0;
-GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   2000.0;
+GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   1500.0;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -1091,7 +1091,8 @@ GVL_XTS.StationParameter[nStationParameter].rVelo                 :=   2000.0;
 //-----------------------------------------------------------------------------------------------------------------------------------------]]></ST>
     </Implementation>
     <LineIds Name="StationParameter_28000_1">
-      <LineId Id="1" Count="1081" />
+      <LineId Id="1083" Count="0" />
+      <LineId Id="2" Count="1080" />
     </LineIds>
   </POU>
 </TcPlcObject>

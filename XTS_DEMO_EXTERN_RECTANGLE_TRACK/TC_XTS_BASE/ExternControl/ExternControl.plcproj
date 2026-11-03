@@ -72,9 +72,6 @@
     <Compile Include="APPLICATION\_types\Collector\ST_PROCESS_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APPLICATION\_types\E_APP_CHECK.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="APPLICATION\_types\Instance\E_INSTANCE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -129,16 +126,19 @@
     <Compile Include="APPLICATION\_types\LinkedList\ST_PROCESS_LIST_RESULT.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APPLICATION\_types\ST_APP_CTRL.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="APPLICATION\_types\ST_APP_STATE.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="APPLICATION\_types\ST_PROCESS_PARAMETER.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APPLICATION\_types\ST_VISU_POOL.TcDUT">
+    <Compile Include="APPLICATION\_types\YardMaster\E_YARD_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\YardMaster\fb_YardMaster.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\YardMaster\ST_YARD_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\YardMaster\ST_YARD_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_Visualization\MOVER_VISU.TcVIS">
@@ -157,6 +157,9 @@
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
+    <Compile Include="APPLICATION\_Visualization\_types\ST_VISU_POOL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
@@ -169,16 +172,16 @@
     <Compile Include="MAPPING\MAPPING_XTS_out.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MAPPING\_types\U_APP_CTRL.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MAPPING\_types\U_APP_STATE.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MAPPING\_types\U_INSTANCE_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAPPING\_types\U_YARD_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MAPPING\_types\U_INSTANCE_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_YARD_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_CTRL.TcDUT">
@@ -518,11 +521,13 @@
   <ItemGroup>
     <Folder Include="APPLICATION" />
     <Folder Include="APPLICATION\Instances" />
+    <Folder Include="APPLICATION\_types\YardMaster" />
     <Folder Include="APPLICATION\_Visualization" />
     <Folder Include="APPLICATION\_types" />
     <Folder Include="APPLICATION\_types\Collector" />
     <Folder Include="APPLICATION\_types\Instance" />
     <Folder Include="APPLICATION\_types\LinkedList" />
+    <Folder Include="APPLICATION\_Visualization\_types" />
     <Folder Include="MAPPING" />
     <Folder Include="MAPPING\_types" />
     <Folder Include="PLC_MOTION" />

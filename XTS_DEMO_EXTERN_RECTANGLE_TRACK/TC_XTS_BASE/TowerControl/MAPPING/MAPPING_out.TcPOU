@@ -3,16 +3,18 @@
   <POU Name="MAPPING_out" Id="{1d03bcdd-fb2c-4ea8-9836-723dd2cd0b6f}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAPPING_out
 VAR
-  sMapping          : STRING;
-  bFirstCycle       : BOOL := TRUE;
+  sMapping              : STRING;
+  bFirstCycle           : BOOL := TRUE;
 
-  TicketListInput   : U_TICKET_LIST_DATA_INPUT;
-  TicketListControl : U_TICKET_LIST_CTRL;
-  InstanceCtrl      : U_INSTANCE_CTRL;
+  YardControl           : U_YARD_CTRL;
+  TicketListInput       : U_TICKET_LIST_DATA_INPUT;
+  TicketListControl     : U_TICKET_LIST_CTRL;
+  InstanceCtrl          : U_INSTANCE_CTRL;
+  MoverSelectorControl  : U_MOVER_SELECTOR_CTRL;
 
-  szInstanceCtrl    : ARRAY[1..2] OF UDINT;
-  szTicketCtrl      : ARRAY[1..2] OF UDINT;
-  szTicketData      : ARRAY[1..2] OF UDINT;
+  szInstanceCtrl        : ARRAY[1..2] OF UDINT;
+  szTicketCtrl          : ARRAY[1..2] OF UDINT;
+  szTicketData          : ARRAY[1..2] OF UDINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -48,13 +50,28 @@ THEN
   sMapping  := 'InstanceCtrl sizes DO NOT match';
   RETURN;
 END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(YardControl) <> SIZEOF(GVL_APPLICATION.YardControl))
+THEN
+  sMapping  := 'YardControl sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(MoverSelectorControl) <> SIZEOF(GVL_XTS.MoverSelectorCtrl))
+THEN
+  sMapping  := 'MoverSelectorControl sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
 sMapping    := 'MAPPING_OUTPUT_ACTIVE';
 //---------------------------------------------------------------------------------------------------
-//        destination,            source,                                   size
+//        destination,              source,                                   size
 //---------------------------------------------------------------------------------------------------
-  memcpy(ADR(InstanceCtrl),       ADR(GVL_APPLICATION.InstanceCtrl),        SIZEOF(InstanceCtrl));
-  memcpy(ADR(TicketListControl),  ADR(GVL_APPLICATION.TicketListControl),   SIZEOF(TicketListControl));
-  memcpy(ADR(TicketListInput),    ADR(GVL_APPLICATION.TicketListDataInput), SIZEOF(TicketListInput));
+  memcpy(ADR(YardControl),          ADR(GVL_APPLICATION.YardControl),         SIZEOF(YardControl));
+  memcpy(ADR(InstanceCtrl),         ADR(GVL_APPLICATION.InstanceCtrl),        SIZEOF(InstanceCtrl));
+  memcpy(ADR(TicketListControl),    ADR(GVL_APPLICATION.TicketListControl),   SIZEOF(TicketListControl));
+  memcpy(ADR(TicketListInput),      ADR(GVL_APPLICATION.TicketListDataInput), SIZEOF(TicketListInput));
+  memcpy(ADR(MoverSelectorControl), ADR(GVL_XTS.MoverSelectorCtrl),           SIZEOF(MoverSelectorControl));
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
 
@@ -64,8 +81,16 @@ sMapping    := 'MAPPING_OUTPUT_ACTIVE';
       <LineId Id="54" Count="0" />
       <LineId Id="2" Count="3" />
       <LineId Id="9" Count="26" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="55" Count="4" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="64" Count="4" />
+      <LineId Id="63" Count="0" />
       <LineId Id="42" Count="3" />
-      <LineId Id="47" Count="6" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="47" Count="2" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="50" Count="3" />
     </LineIds>
   </POU>
 </TcPlcObject>

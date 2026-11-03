@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="ST_TOWER_CTRL" Id="{487e83af-37ef-453a-96b9-0d3fb72bee8b}">
-    <Declaration><![CDATA[TYPE ST_TOWER_CTRL :
+  <DUT Name="ST_YARD_CTRL" Id="{7c8a60dc-30c4-4cb2-aef7-b7d664aeb03a}">
+    <Declaration><![CDATA[TYPE ST_YARD_CTRL :
 STRUCT
   Cmd                     : E_INSTANCE_CMD;
 END_STRUCT

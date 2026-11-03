@@ -28,6 +28,21 @@
     <Compile Include="APPLICATION\MAIN_APP.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="APPLICATION\_types\Collector\E_PROCESS_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\E_PROCESS_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\E_PROCESS_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\ST_PROCESS_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\Collector\ST_PROCESS_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="APPLICATION\_types\Instance\E_INSTANCE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -79,10 +94,13 @@
     <Compile Include="APPLICATION\_types\LinkedList\ST_PROCESS_LIST_RESULT.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APPLICATION\_types\ST_TOWER_CTRL.TcDUT">
+    <Compile Include="APPLICATION\_types\YardMaster\E_YARD_CHECK.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APPLICATION\_types\ST_TOWER_STATE.TcDUT">
+    <Compile Include="APPLICATION\_types\YardMaster\ST_YARD_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\YardMaster\ST_YARD_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
@@ -109,6 +127,12 @@
     <Compile Include="MAPPING\_types\U_INSTANCE_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MAPPING\_types\U_TICKET_LIST_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -121,11 +145,130 @@
     <Compile Include="MAPPING\_types\U_TICKET_LIST_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAPPING\_types\U_YARD_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_YARD_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PlcTask_2.TcTTO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PLC_MOTION\_GVL\PLC_CONSTANT.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="Visualization Manager.TcVMO">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\CaGroup\types\E_CA_GROUP_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\CaGroup\types\E_GROUP_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\CaGroup\types\ST_GROUP_INFO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\GVL_XTS.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\E_MOVER_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\E_MOVER_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\E_MOVER_SELECTOR.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\E_MOVER_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\ST_GEAR_DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\ST_MOVER_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\ST_MOVER_INFO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\ST_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\ST_MOVER_SELECTOR_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\ST_MOVER_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Mover\types\ST_MOVE_DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Xpu\types\E_XPU_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Xpu\types\E_XPU_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Xpu\types\E_XPU_INIT.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Xpu\types\E_XPU_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Xpu\types\ST_XPU_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Xpu\types\ST_XPU_INFO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\Xpu\types\ST_XPU_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\XtsTransportUnit\types\E_XTS_TRANSPORT_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\XtsTransportUnit\types\E_XTS_TRANSPORT_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\XtsTransportUnit\types\E_XTS_TRANSPORT_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\XtsTransportUnit\types\ST_XTS_TRANSPORT_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\XtsTransportUnit\types\ST_XTS_TRANSPORT_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\_Visualization\GROUP_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\_Visualization\textlists\TL_E_CTRL_MOVER.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\_Visualization\textlists\TL_E_CTRL_STATION.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\_Visualization\textlists\TL_E_CTRL_TRANSPORT.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\_Visualization\textlists\TL_E_CTRL_XPU.TcTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\_Visualization\types\ST_XPU_STRINGS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\_Visualization\types\T_MOVER_SELECTOR.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\_Visualization\XPU_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
     <Compile Include="_MSG\class\fb_LocalTime.TcPOU">
       <SubType>Code</SubType>
@@ -262,14 +405,31 @@
       <Namespace>Tc3_Module</Namespace>
       <SystemLibrary>true</SystemLibrary>
     </PlaceholderReference>
+    <PlaceholderReference Include="VisuDialogs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APPLICATION" />
     <Folder Include="APPLICATION\_types" />
+    <Folder Include="APPLICATION\_types\Collector" />
     <Folder Include="APPLICATION\_types\Instance" />
     <Folder Include="APPLICATION\_types\LinkedList" />
+    <Folder Include="APPLICATION\_types\YardMaster" />
     <Folder Include="MAPPING" />
     <Folder Include="MAPPING\_types" />
+    <Folder Include="PLC_MOTION" />
+    <Folder Include="PLC_MOTION\_GVL" />
+    <Folder Include="XTS_TRANSPORT" />
+    <Folder Include="XTS_TRANSPORT\CaGroup" />
+    <Folder Include="XTS_TRANSPORT\CaGroup\types" />
+    <Folder Include="XTS_TRANSPORT\Mover" />
+    <Folder Include="XTS_TRANSPORT\Mover\types" />
+    <Folder Include="XTS_TRANSPORT\Xpu" />
+    <Folder Include="XTS_TRANSPORT\Xpu\types" />
+    <Folder Include="XTS_TRANSPORT\XtsTransportUnit" />
+    <Folder Include="XTS_TRANSPORT\XtsTransportUnit\types" />
+    <Folder Include="XTS_TRANSPORT\_Visualization" />
+    <Folder Include="XTS_TRANSPORT\_Visualization\textlists" />
+    <Folder Include="XTS_TRANSPORT\_Visualization\types" />
     <Folder Include="_MSG" />
     <Folder Include="_MSG\class" />
     <Folder Include="_MSG\types" />
@@ -280,11 +440,16 @@
       <ExcludeFromBuild>true</ExcludeFromBuild>
     </SubObject>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="TowerControl.tmc">
+      <SubType>Content</SubType>
+    </None>
+  </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -368,15 +533,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="Int32">System.Int32</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="Int32">System.Int32</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

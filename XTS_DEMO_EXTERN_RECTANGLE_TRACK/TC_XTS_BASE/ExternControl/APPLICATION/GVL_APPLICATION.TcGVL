@@ -8,6 +8,9 @@ END_VAR
 VAR_GLOBAL
   //-----------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------
+  YardMaster                        : fb_YardMaster;
+  YardControl                       : ST_YARD_CTRL;
+  YardState                         : ST_YARD_STATE;
 
   // visualisation data helper
   // collects data from all over the GVL_XTS and GVL_APPLICATION

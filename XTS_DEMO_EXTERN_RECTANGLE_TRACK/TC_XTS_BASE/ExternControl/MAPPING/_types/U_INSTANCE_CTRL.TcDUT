@@ -4,7 +4,7 @@
     <Declaration><![CDATA[TYPE U_INSTANCE_CTRL :
 UNION
   stCtrl              : ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_CTRL;
-  byCtrl    AT %q*    : ARRAY[1..MAX_PROCESS] OF
+  byCtrl    AT %I*    : ARRAY[1..MAX_PROCESS] OF
                         ARRAY[1..SIZEOF(ST_INSTANCE_CTRL)] OF BYTE;
 END_UNION
 END_TYPE

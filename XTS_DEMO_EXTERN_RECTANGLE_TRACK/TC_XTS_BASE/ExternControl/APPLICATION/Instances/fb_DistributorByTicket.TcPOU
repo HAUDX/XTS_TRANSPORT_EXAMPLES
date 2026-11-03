@@ -645,11 +645,13 @@ OF
 END_CASE
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-_stInstanceState[_nProcess].ProcessIdentity   := _nProcess;
-_stInstanceState[_nProcess].State             := _eStateInstance;
-_stInstanceState[_nProcess].Progress          := _eStateProgress;
+_stInstanceState[_nProcess].ProcessState      := _eStateInstance;
+_stInstanceState[_nProcess].ProcessProgress   := _eStateProgress;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+_stInstanceState[_nProcess].CollectorState    := _stCollectorState.State;
+_stInstanceState[_nProcess].CollectorProgress := _stCollectorState.Result;
+_stInstanceState[_nProcess].CollectorCheck    := _stCollectorState.Check;
 _stInstanceState[_nProcess].StationCount      := _ItfProcessCollector[_nProcess].StationCount;
 _stInstanceState[_nProcess].QueueProcessCount := _ItfProcessCollector[_nProcess].QueueProcessCount;
 //-----------------------------------------------------------------------------
@@ -695,8 +697,8 @@ END_VAR
     <LineIds Name="fb_DistributorByTicket">
       <LineId Id="598" Count="0" />
       <LineId Id="2" Count="586" />
-      <LineId Id="599" Count="0" />
-      <LineId Id="589" Count="8" />
+      <LineId Id="600" Count="6" />
+      <LineId Id="593" Count="4" />
     </LineIds>
     <LineIds Name="fb_DistributorByTicket.Clear">
       <LineId Id="1" Count="6" />

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="U_YARD_STATE" Id="{69fbf6c0-0e9b-4117-accd-d507d5f45fca}">
+    <Declaration><![CDATA[TYPE U_YARD_STATE :
+UNION
+  stState             : ST_YARD_STATE;
+  byState   AT %I*    : ARRAY[1..SIZEOF(ST_YARD_STATE)] OF BYTE;
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

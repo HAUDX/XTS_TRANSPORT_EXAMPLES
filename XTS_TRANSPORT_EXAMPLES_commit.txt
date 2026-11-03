@@ -1,3 +1,11 @@
+commit 1287b9ec2758023e9842708d1a508af8540fea4e
+Author: HAUDX <227747041+HAUDX@users.noreply.github.com>
+Date:   Mon Nov 2 14:29:42 2026 +0100
+
+    RECTANGLE_TRACK MasterControl PLC added
+    
+    3rd PLC added as case study on encapsulation
+
 commit 983dd5c4afbec277e8191e96c52ac70379f90eeb
 Author: HAUDX <227747041+HAUDX@users.noreply.github.com>
 Date:   Sat Oct 31 10:49:07 2026 +0100

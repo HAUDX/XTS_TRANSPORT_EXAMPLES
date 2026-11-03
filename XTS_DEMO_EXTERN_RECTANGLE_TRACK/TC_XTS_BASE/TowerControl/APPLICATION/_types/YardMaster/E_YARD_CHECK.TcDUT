@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="E_APP_CHECK" Id="{133628a9-edd6-478b-89b2-3c6005d26235}">
+  <DUT Name="E_YARD_CHECK" Id="{e4f72ce2-cbca-4100-97a8-c27bc4a3ee28}">
     <Declaration><![CDATA[{attribute 'strict'}
 {attribute 'to_string'}
-TYPE E_APP_CHECK :
+TYPE E_YARD_CHECK :
 (
   NULL,
 
