@@ -309,8 +309,13 @@ END_CASE
 CASE _eState
 OF
   E_PROGRESS.PROGRESS_BUSY:
-    _eState                     := E_PROGRESS.PROGRESS_PREPARE;
-    _ListResult                 := _ItfList.AddHeadValue(_stNodeDataProcess.ProcessData);
+    IF (_ItfList.Free > 1)
+    THEN
+      _eState                   := E_PROGRESS.PROGRESS_PREPARE;
+      _ListResult               := _ItfList.AddHeadValue(_stNodeDataProcess.ProcessData);
+    ELSE
+      _eState                   := E_PROGRESS.PROGRESS_ERROR;
+    END_IF
 END_CASE
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -390,8 +395,14 @@ END_CASE
 CASE _eState
 OF
   E_PROGRESS.PROGRESS_BUSY:
-    _eState                     := E_PROGRESS.PROGRESS_PREPARE;
-    _ListResult                 := _ItfList.AddTailValue(_stNodeDataProcess.ProcessData);
+    IF (_ItfList.Free > 1)
+    THEN
+      _eState                   := E_PROGRESS.PROGRESS_PREPARE;
+      _ListResult               := _ItfList.AddTailValue(_stNodeDataProcess.ProcessData);
+    ELSE
+      _eState                   := E_PROGRESS.PROGRESS_ERROR;
+    END_IF
+
 END_CASE
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -920,10 +931,19 @@ END_VAR
       <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_Process_LinkedListCtrl.ListAddHead">
-      <LineId Id="1" Count="66" />
+      <LineId Id="1" Count="26" />
+      <LineId Id="68" Count="1" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="70" Count="2" />
+      <LineId Id="30" Count="37" />
     </LineIds>
     <LineIds Name="fb_Process_LinkedListCtrl.ListAddTail">
-      <LineId Id="1" Count="66" />
+      <LineId Id="1" Count="26" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="73" Count="2" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="30" Count="37" />
     </LineIds>
     <LineIds Name="fb_Process_LinkedListCtrl.ListDelHead">
       <LineId Id="1" Count="66" />
