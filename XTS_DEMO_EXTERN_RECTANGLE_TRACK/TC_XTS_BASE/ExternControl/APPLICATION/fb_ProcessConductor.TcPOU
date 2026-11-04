@@ -291,6 +291,13 @@ OF
           END_IF
         END_IF
     END_CASE
+    CASE _eStateProgress
+    OF
+      E_PROGRESS.PROGRESS_CHECK:
+
+
+
+    END_CASE
 END_CASE
 //-----------------------------------------------------------------------------
 // WORKING
@@ -584,7 +591,11 @@ END_VAR
       <LineId Id="321" Count="5" />
       <LineId Id="366" Count="0" />
       <LineId Id="365" Count="0" />
-      <LineId Id="204" Count="23" />
+      <LineId Id="204" Count="1" />
+      <LineId Id="378" Count="3" />
+      <LineId Id="383" Count="1" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="206" Count="21" />
       <LineId Id="367" Count="7" />
       <LineId Id="228" Count="33" />
       <LineId Id="265" Count="6" />

@@ -16,6 +16,7 @@
     <Implicit_KindOfTask>{4c3d0d14-b9aa-4370-b7f1-f85d4da727ca}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{8e15fd87-e78d-44f8-a572-23536beebb79}</Implicit_Jitter_Distribution>
     <LibraryReferences>{63777de2-cb5d-4172-970a-d59a93909398}</LibraryReferences>
+    <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="APPLICATION\fb_ProcessConductor.TcPOU">
@@ -405,6 +406,10 @@
       <Namespace>Tc3_Module</Namespace>
       <SystemLibrary>true</SystemLibrary>
     </PlaceholderReference>
+    <PlaceholderReference Include="VisuDialogs">
+      <DefaultResolution>VisuDialogs, * (System)</DefaultResolution>
+      <Namespace>VisuDialogs</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="VisuDialogs" />
   </ItemGroup>
   <ItemGroup>
@@ -434,11 +439,6 @@
     <Folder Include="_MSG\class" />
     <Folder Include="_MSG\types" />
     <Folder Include="_types" />
-  </ItemGroup>
-  <ItemGroup>
-    <SubObject Include="MAIN_APP.Init">
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </SubObject>
   </ItemGroup>
   <ItemGroup>
     <None Include="TowerControl.tmc">

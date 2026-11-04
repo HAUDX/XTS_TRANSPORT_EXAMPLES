@@ -735,6 +735,7 @@ _stInstanceState[_nProcess].CollectorProgress := _stCollectorState.Result;
 _stInstanceState[_nProcess].CollectorCheck    := _stCollectorState.Check;
 _stInstanceState[_nProcess].StationCount      := _ItfProcessCollector[_nProcess].StationCount;
 _stInstanceState[_nProcess].QueueProcessCount := _ItfProcessCollector[_nProcess].QueueProcessCount;
+_stInstanceState[_nProcess].ListCount         := to_uint(_ItfProcessList[_nProcess].Count);
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 ]]></ST>
@@ -808,7 +809,9 @@ END_VAR
       <LineId Id="607" Count="0" />
       <LineId Id="630" Count="24" />
       <LineId Id="665" Count="7" />
-      <LineId Id="659" Count="4" />
+      <LineId Id="659" Count="1" />
+      <LineId Id="708" Count="0" />
+      <LineId Id="661" Count="2" />
     </LineIds>
     <LineIds Name="fb_ProcessByTicket.Clear">
       <LineId Id="1" Count="6" />

@@ -5,9 +5,9 @@
 //
 //  HAUD 2026.11.02
 //
-//  - MasterControl
+//  - TowerControl
 //
-//    - this is the main switchboard
+//    - this is the main application switchboard
 //
 //    - top level transport abstractions are handshaked here:
 //    --------------------------------------------
@@ -26,6 +26,7 @@ VAR
 
   // this is still a subsystem for transport --> dwell time
   tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
+  tonProcess                    : ARRAY[1..MAX_PROCESS] OF Tc2_Standard.TON;
 
   // message pipeline(s) handling
   eMtrState,
@@ -33,6 +34,23 @@ VAR
   eMtrProgress,
   eMsgProgress                  : E_PROGRESS;
   stMsg                         : ST_Message;
+  //-------------------------------------------------------------------------------------------------------------
+  tIdleWriteMotion              : TIME := T#5S;
+  tIdleWriteApplication         : TIME := T#5S;
+  tIdleWriteMetric              : TIME := T#5S;
+  tonIdleWriteMotion            : Tc2_Standard.TON;
+  tonIdleWriteApplication       : Tc2_Standard.TON;
+  tonIdleWriteMetric            : Tc2_Standard.TON;
+  //-------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------
+  // testing stuff
+  //-------------------------------------------------------------------------------------------------------------
+  bStart                        : BOOL;
+
+  nIdx,
+  nState                        : UDINT;    // monolithic case with sequences to run this example
+  nTicketMax                    : UINT := 336;
+  nTicketCount                  : UINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -53,16 +71,50 @@ IF NOT (eInitExternControl = E_PROGRESS.PROGRESS_DONE) THEN eInit  := E_PROGRESS
 //-----------------------------------------------------------------------------------------------------------------
 CASE eInit
 OF
+  //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_INVALID:
+    GVL_APPLICATION.TicketListControl.Cmd         := E_LIST_CTRL.LIST_CTRL_INIT;
+    GVL_APPLICATION.YardControl.Cmd               := E_INSTANCE_CMD.NULL;
     eInit                                         := E_PROGRESS.PROGRESS_INIT;
-
+  //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_INIT:
-    // init processes
-    eInit                                         := E_PROGRESS.PROGRESS_BUSY;
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_INIT + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd       := E_LIST_CTRL.LIST_CTRL_NULL;
+      GVL_APPLICATION.YardControl.Cmd             := E_INSTANCE_CMD.INIT;
+      eInit                                       := E_PROGRESS.PROGRESS_BUSY;
+    END_IF
+  //---------------------------------------------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_BUSY:
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.INIT + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.YardControl.Cmd             := E_INSTANCE_CMD.ENABLE;
+      eInit                                       := E_PROGRESS.PROGRESS_PREPARE;
+    END_IF
+  //---------------------------------------------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_PREPARE:
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.ENABLED + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      eInit                                       := E_PROGRESS.PROGRESS_DONE;
+    END_IF
+  //---------------------------------------------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_STARTUP:
+    GVL_APPLICATION.YardControl.Cmd               := E_INSTANCE_CMD.WORK;
 
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.WORKING + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.YardControl.Cmd             := E_INSTANCE_CMD.WORK;
+      eInit                                       := E_PROGRESS.PROGRESS_DONE;
+    END_IF
+  //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_OCCUPIED:
-    eInit                                         := E_PROGRESS.PROGRESS_WORKING;
-
+    tProcess[PROCESS_INFEED]                      := T#2800MS;
+    tProcess[PROCESS_ASSEMBLY_01]                 := T#3200MS;
+    tProcess[PROCESS_ASSEMBLY_02]                 := T#2400MS;
+    tProcess[PROCESS_ASSEMBLY_TEST]               := T#4400MS;
+    tProcess[PROCESS_OUTFEED]                     := T#2800MS;
+    eInit                                         := E_PROGRESS.PROGRESS_DONE;
+  //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_WORKING:
     eInit                                         := E_PROGRESS.PROGRESS_DONE;
 END_CASE
@@ -73,27 +125,393 @@ END_CASE
 // /assign dataflow
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
+CASE nState OF
+  0:
+    IF (eInit = E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 10;
+    END_IF
 
+  10:
+    IF bStart
+    THEN
+      nState                                        := 20;
+    END_IF
+
+  20:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_INFEED;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_INFEED;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 30;
+    END_IF
+
+  30:
+    nState                                                        := 200;
+
+
+  200:
+    FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
+    DO
+      CASE GVL_APPLICATION.InstanceState[nIdx].ProcessState
+      OF
+        E_INSTANCE_STATE.DISABLED:
+          GVL_APPLICATION.InstanceCtrl[nIdx].Cmd                  := E_INSTANCE_CMD.ENABLE;
+
+        E_INSTANCE_STATE.ENABLED:
+          CASE GVL_APPLICATION.InstanceState[nIdx].ProcessProgress
+          OF
+            E_PROGRESS.PROGRESS_OCCUPIED:
+              GVL_APPLICATION.InstanceCtrl[nIdx].Cmd              := E_INSTANCE_CMD.PROCEED;
+          END_CASE
+
+        E_INSTANCE_STATE.WORKING:
+          CASE GVL_APPLICATION.InstanceState[nIdx].ProcessProgress
+          OF
+            E_PROGRESS.PROGRESS_BUSY:
+              tonProcess[nIdx](IN := FALSE, PT := tProcess[nIdx]);
+              GVL_APPLICATION.InstanceCtrl[nIdx].Cmd              := E_INSTANCE_CMD.WORK;
+
+            E_PROGRESS.PROGRESS_OCCUPIED:
+              tonProcess[nIdx](IN := TRUE, PT := tProcess[nIdx]);
+
+              IF (tonProcess[nIdx].Q)
+              THEN
+                GVL_APPLICATION.InstanceCtrl[nIdx].Cmd            := E_INSTANCE_CMD.FINISH;
+              END_IF
+          END_CASE
+
+        E_INSTANCE_STATE.FINISH:
+          CASE GVL_APPLICATION.InstanceState[nIdx].ProcessProgress
+          OF
+            E_PROGRESS.PROGRESS_DONE:
+              tonProcess[nIdx](IN := FALSE, PT := tProcess[nIdx]);
+              GVL_APPLICATION.InstanceCtrl[nIdx].Cmd              := E_INSTANCE_CMD.DISABLE;
+          END_CASE
+      END_CASE
+    END_FOR
+    nState                                                        := 210;
+END_CASE
+CASE nState OF
+
+  210:
+    IF GVL_APPLICATION.InstanceState[DISTRIBUTOR_INFEED].ListCount < 1
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 211;
+    ELSE
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 220;
+    END_IF
+
+  211:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_INFEED;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_INFEED;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+END_CASE
+CASE nState OF
+
+  220:
+    IF GVL_APPLICATION.InstanceState[PROCESS_INFEED].ListCount < 1
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 221;
+    ELSE
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 230;
+    END_IF
+
+  221:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_INFEED;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.CONTINUOUS_CLEAN;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+END_CASE
+CASE nState OF
+
+  230:
+    IF GVL_APPLICATION.InstanceState[DISTRIBUTOR_ASSEMBLY_01].ListCount < 1
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 231;
+    ELSE
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 240;
+    END_IF
+
+  231:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_ASSEMBLY_01;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+END_CASE
+CASE nState OF
+
+  240:
+    IF GVL_APPLICATION.InstanceState[PROCESS_ASSEMBLY_01].ListCount < 1
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 241;
+    ELSE
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 250;
+    END_IF
+
+  241:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_ASSEMBLY_01;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+END_CASE
+CASE nState OF
+
+  250:
+    IF GVL_APPLICATION.InstanceState[DISTRIBUTOR_ASSEMBLY_02].ListCount < 1
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 251;
+    ELSE
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 260;
+    END_IF
+
+  251:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_ASSEMBLY_02;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+END_CASE
+CASE nState OF
+
+  260:
+    IF GVL_APPLICATION.InstanceState[PROCESS_ASSEMBLY_02].ListCount < 1
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 261;
+    ELSE
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 270;
+    END_IF
+
+  261:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_ASSEMBLY_02;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+
+  270:
+    IF GVL_APPLICATION.InstanceState[DISTRIBUTOR_ASSEMBLY_TEST].ListCount < 1
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 271;
+    ELSE
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 280;
+    END_IF
+
+  271:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_ASSEMBLY_TEST;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+
+  280:
+    IF GVL_APPLICATION.InstanceState[PROCESS_ASSEMBLY_TEST].ListCount < 1
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 281;
+    ELSE
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 290;
+    END_IF
+
+  281:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_ASSEMBLY_TEST;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_CAMERA;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+
+  290:
+    IF GVL_APPLICATION.InstanceState[DISTRIBUTOR_OUTFEED].ListCount < 1
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 291;
+    ELSE
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 300;
+    END_IF
+
+  291:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_OUTFEED;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_OUTFEED;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_11_1111_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+
+  300:
+    IF GVL_APPLICATION.InstanceState[PROCESS_OUTFEED].ListCount < 1
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 301;
+    ELSE
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+
+  301:
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_OUTFEED;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_WPC_CLEAN;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_11_1111_1111_1111;
+
+    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
+      nState                                                      := 200;
+    END_IF
+END_CASE
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 //#################################################################################################################
-// /logging
+//  /logging
+//    - all life is problem solving
 //#################################################################################################################
-GVL_MSG_XTS.ApplicationMessageData.Ctrl                         REF= GVL_MSG_XTS.ApplicationMessageCtrl;
-GVL_MSG_XTS.ApplicationMessageData.State                        REF= GVL_MSG_XTS.ApplicationMessageState;
+GVL_MSG_XTS.TransportMessageData.Ctrl               REF= GVL_MSG_XTS.TransportMessageCtrl;
+GVL_MSG_XTS.TransportMessageData.State              REF= GVL_MSG_XTS.TransportMessageState;
+GVL_MSG_XTS.TransportMessageData.MessageIndex       REF= GVL_MSG_XTS.MessageTransportIndex;
+GVL_MSG_XTS.TransportMessageData.ErrorIndex         REF= GVL_MSG_XTS.MessageTransportError;
+GVL_MSG_XTS.TransportMessageData.DirRoot            :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.TransportMessageData.FileRoot           :=   ADR(GVL_MSG_XTS.LOG_FILE);
+GVL_MSG_XTS.TransportMessageData.MsgList            :=   ADR(GVL_MSG_XTS.TransportMessages);
+GVL_MSG_XTS.TransportMessageData.LocalTime          :=   ADR(GVL_MSG_XTS.dtLocalTime);
+GVL_MSG_XTS.TransportMessageData();
+eMsgState                                           :=   f_GetState   (GVL_MSG_XTS.TransportMessageState.State);
+eMsgProgress                                        :=   f_GetProgress(GVL_MSG_XTS.TransportMessageState.State);
 
-GVL_MSG_XTS.ApplicationMessageData.MessageIndex                 REF= GVL_MSG_XTS.MessageApplicationIndex;
-GVL_MSG_XTS.ApplicationMessageData.ErrorIndex                   REF= GVL_MSG_XTS.MessageApplicationError;
+CASE eMsgState
+OF
+  E_MESSAGE_STATE.MSG_STATE_NULL:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_INVALID,
+      E_PROGRESS.PROGRESS_DONE:
+        IF (GVL_MSG_XTS.MessageTransportIndex > GVL_MSG_XTS.MAX_MESSAGE/101) OR
+           (GVL_MSG_XTS.MessageTransportError > 0)
+        THEN
+          GVL_MSG_XTS.TransportMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        ELSE
+          tonIdleWriteMotion(IN := TRUE, PT:= tIdleWriteMotion);
+          IF (tonIdleWriteMotion.Q)
+          THEN
+            GVL_MSG_XTS.TransportMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          END_IF
+        END_IF
+    END_CASE
 
-GVL_MSG_XTS.ApplicationMessageData.DirRoot                      :=   ADR(GVL_MSG_XTS.LOG_DIR);
-GVL_MSG_XTS.ApplicationMessageData.FileRoot                     :=   ADR(GVL_MSG_XTS.LOG_FILE_APP);
-GVL_MSG_XTS.ApplicationMessageData.MsgList                      :=   ADR(GVL_MSG_XTS.ApplicationMessages);
-GVL_MSG_XTS.ApplicationMessageData.LocalTime                    :=   ADR(GVL_MSG_XTS.dtLocalTime);
+  E_MESSAGE_STATE.MSG_STATE_WRITE:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_ERROR,
+      E_PROGRESS.PROGRESS_DONE:
+          tonIdleWriteMotion(IN := FALSE, PT:= tIdleWriteMotion);
+        GVL_MSG_XTS.TransportMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+
+ELSE
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_DONE:
+          tonIdleWriteMotion(IN := FALSE, PT:= tIdleWriteMotion);
+        GVL_MSG_XTS.TransportMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+END_CASE
+//#################################################################################################################
+// /application logging
+//#################################################################################################################
+GVL_MSG_XTS.ApplicationMessageData.Ctrl             REF= GVL_MSG_XTS.ApplicationMessageCtrl;
+GVL_MSG_XTS.ApplicationMessageData.State            REF= GVL_MSG_XTS.ApplicationMessageState;
+
+GVL_MSG_XTS.ApplicationMessageData.MessageIndex     REF= GVL_MSG_XTS.MessageApplicationIndex;
+GVL_MSG_XTS.ApplicationMessageData.ErrorIndex       REF= GVL_MSG_XTS.MessageApplicationError;
+
+GVL_MSG_XTS.ApplicationMessageData.DirRoot          :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.ApplicationMessageData.FileRoot         :=   ADR(GVL_MSG_XTS.LOG_FILE_APP);
+GVL_MSG_XTS.ApplicationMessageData.MsgList          :=   ADR(GVL_MSG_XTS.ApplicationMessages);
+GVL_MSG_XTS.ApplicationMessageData.LocalTime        :=   ADR(GVL_MSG_XTS.dtLocalTime);
 
 GVL_MSG_XTS.ApplicationMessageData();
 
-eMsgState                                       := f_GetState   (GVL_MSG_XTS.ApplicationMessageState.State);
-eMsgProgress                                    := f_GetProgress(GVL_MSG_XTS.ApplicationMessageState.State);
+eMsgState                                           := f_GetState   (GVL_MSG_XTS.ApplicationMessageState.State);
+eMsgProgress                                        := f_GetProgress(GVL_MSG_XTS.ApplicationMessageState.State);
 
 
 CASE eMsgState
@@ -102,10 +520,16 @@ OF
     CASE eMsgProgress
     OF
       E_PROGRESS.PROGRESS_INVALID:
-        IF (GVL_MSG_XTS.MessageApplicationIndex > GVL_MSG_XTS.MAX_MESSAGE/100) OR
+        IF (GVL_MSG_XTS.MessageApplicationIndex > GVL_MSG_XTS.MAX_MESSAGE/13) OR
            (GVL_MSG_XTS.MessageApplicationError > 0)
         THEN
-          GVL_MSG_XTS.ApplicationMessageCtrl.Cmd                := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          GVL_MSG_XTS.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        ELSE
+          tonIdleWriteApplication(IN := TRUE, PT:= tIdleWriteApplication);
+          IF (tonIdleWriteApplication.Q)
+          THEN
+            GVL_MSG_XTS.ApplicationMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          END_IF
         END_IF
     END_CASE
 
@@ -114,14 +538,16 @@ OF
     OF
       E_PROGRESS.PROGRESS_ERROR,
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        tonIdleWriteApplication(IN := FALSE, PT:= tIdleWriteApplication);
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 
 ELSE
     CASE eMsgProgress
     OF
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        tonIdleWriteApplication(IN := FALSE, PT:= tIdleWriteApplication);
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 END_CASE
 //#################################################################################################################
@@ -130,21 +556,21 @@ END_CASE
 //#################################################################################################################
 //  /Transport Metrics
 //#################################################################################################################
-GVL_MSG_XTS.MetricsMessageData.Ctrl                             REF= GVL_MSG_XTS.MetricsMessageCtrl;
-GVL_MSG_XTS.MetricsMessageData.State                            REF= GVL_MSG_XTS.MetricsMessageState;
+GVL_MSG_XTS.MetricsMessageData.Ctrl                 REF= GVL_MSG_XTS.MetricsMessageCtrl;
+GVL_MSG_XTS.MetricsMessageData.State                REF= GVL_MSG_XTS.MetricsMessageState;
 
-GVL_MSG_XTS.MetricsMessageData.MessageIndex                     REF= GVL_MSG_XTS.MessageMetricsIndex;
-GVL_MSG_XTS.MetricsMessageData.ErrorIndex                       REF= GVL_MSG_XTS.MessageMetricsError;
+GVL_MSG_XTS.MetricsMessageData.MessageIndex         REF= GVL_MSG_XTS.MessageMetricsIndex;
+GVL_MSG_XTS.MetricsMessageData.ErrorIndex           REF= GVL_MSG_XTS.MessageMetricsError;
 
-GVL_MSG_XTS.MetricsMessageData.DirRoot                          :=   ADR(GVL_MSG_XTS.LOG_DIR);
-GVL_MSG_XTS.MetricsMessageData.FileRoot                         :=   ADR(GVL_MSG_XTS.LOG_FILE_METRIC);
-GVL_MSG_XTS.MetricsMessageData.MsgList                          :=   ADR(GVL_MSG_XTS.MetricsMessages);
-GVL_MSG_XTS.MetricsMessageData.LocalTime                        :=   ADR(GVL_MSG_XTS.dtLocalTime);
+GVL_MSG_XTS.MetricsMessageData.DirRoot              :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.MetricsMessageData.FileRoot             :=   ADR(GVL_MSG_XTS.LOG_FILE_METRIC);
+GVL_MSG_XTS.MetricsMessageData.MsgList              :=   ADR(GVL_MSG_XTS.MetricsMessages);
+GVL_MSG_XTS.MetricsMessageData.LocalTime            :=   ADR(GVL_MSG_XTS.dtLocalTime);
 
 GVL_MSG_XTS.MetricsMessageData();
 
-eMtrState                                   := f_GetState   (GVL_MSG_XTS.MetricsMessageState.State);
-eMtrProgress                                := f_GetProgress(GVL_MSG_XTS.MetricsMessageState.State);
+eMtrState                                           := f_GetState   (GVL_MSG_XTS.MetricsMessageState.State);
+eMtrProgress                                        := f_GetProgress(GVL_MSG_XTS.MetricsMessageState.State);
 
 CASE eMtrState
 OF
@@ -152,10 +578,16 @@ OF
     CASE eMtrProgress
     OF
       E_PROGRESS.PROGRESS_INVALID:
-        IF (GVL_MSG_XTS.MessageMetricsIndex > GVL_MSG_XTS.MAX_MESSAGE/100) OR
+        IF (GVL_MSG_XTS.MessageMetricsIndex > GVL_MSG_XTS.MAX_MESSAGE/5) OR
            (GVL_MSG_XTS.MessageMetricsError > 0)
         THEN
-          GVL_MSG_XTS.MetricsMessageCtrl.Cmd                    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          GVL_MSG_XTS.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        ELSE
+          tonIdleWriteMetric(IN := TRUE, PT:= tIdleWriteMetric);
+          IF (tonIdleWriteMetric.Q)
+          THEN
+            GVL_MSG_XTS.MetricsMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          END_IF
         END_IF
     END_CASE
 
@@ -164,13 +596,15 @@ OF
     OF
       E_PROGRESS.PROGRESS_ERROR,
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG_XTS.MetricsMessageCtrl.Cmd                      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        tonIdleWriteMetric(IN := FALSE, PT:= tIdleWriteMetric);
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd          := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 ELSE
     CASE eMtrProgress
     OF
       E_PROGRESS.PROGRESS_DONE:
-        GVL_MSG_XTS.MetricsMessageCtrl.Cmd                      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+        tonIdleWriteMetric(IN := FALSE, PT:= tIdleWriteMetric);
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd          := E_MESSAGE_CTRL.MSG_CTRL_NULL;
     END_CASE
 END_CASE
 //#################################################################################################################
@@ -180,305 +614,111 @@ END_CASE
 //#################################################################################################################
 ]]></ST>
     </Implementation>
-    <Action Name="Init" Id="{c71dcf97-86ad-47bc-b87f-421acd498c57}">
-      <Implementation>
-        <ST><![CDATA[CASE eInit
-OF
-  E_PROGRESS.PROGRESS_INVALID:          // startup procedure for your application
-    eInit                               := E_PROGRESS.PROGRESS_INIT;
-
-  E_PROGRESS.PROGRESS_INIT:
-      nProcess                                        := 1;
-      tProcess[nProcess]                              := T#750MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 1;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 16;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 20;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 35;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow :=   10.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 1600.0;
-
-      //---------------------------------------------------------
-
-      // 2
-
-      //---------------------------------------------------------
-      nProcess                                        := 3;
-      tProcess[nProcess]                              := T#2400MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 20;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 35;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 37;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 37;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 9000.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 12100.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 4;
-      tProcess[nProcess]                              := T#0MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 37;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 37;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 38;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 38;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 12850.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 13000.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 5;
-      tProcess[nProcess]                              := T#0MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 38;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 38;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 39;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 39;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 13900.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 14100.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 6;
-      tProcess[nProcess]                              := T#0MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 39;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 39;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 41;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 52;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 14200.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 14400.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 7;
-      tProcess[nProcess]                              := T#3200MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_FAST;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 41;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 52;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 57;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 57;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 14400.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 17000.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 8;
-      tProcess[nProcess]                              := T#0MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 57;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 57;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 58;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 65;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 17500.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 18100.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 9;
-      tProcess[nProcess]                              := T#3200MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SINGLE;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 58;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 65;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 70;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 70;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 19400.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 20500.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 10;
-      tProcess[nProcess]                              := T#0MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 70;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 70;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 71;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 82;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 20600.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 21400.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 12;
-      tProcess[nProcess]                              := T#4600MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 71;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 82;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 91;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 91;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 21400.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 22800.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 13;
-      tProcess[nProcess]                              := T#00MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 91;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 91;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 95;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 95;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 22800.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 23500.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 14;
-      tProcess[nProcess]                              := T#0MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 95;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 95;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 120;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 133;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 24000.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 24100.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 15;
-      tProcess[nProcess]                              := T#2500MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_DOUBLE;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 120;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 133;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 140;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 140;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 24200.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 27500.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 16;
-      tProcess[nProcess]                              := T#0MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 140;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 140;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 141;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 141;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 27970.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 1250.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 17;
-      tProcess[nProcess]                              := T#0MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 141;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 141;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 142;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 142;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 3950.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 4100.0;
-
-      //---------------------------------------------------------
-      nProcess                                        := 18;
-      tProcess[nProcess]                              := T#0MS;
-
-      GVL_APPLICATION.Simulation[nProcess].HandshakeRoute:= E_PROCESS_HANDSHAKE.E_SHAKE_SEND;
-
-      GVL_APPLICATION.Simulation[nProcess].StationFirst  := 142;
-      GVL_APPLICATION.Simulation[nProcess].StationLast   := 142;
-
-      GVL_APPLICATION.Simulation[nProcess].TargetFirst   := 20;
-      GVL_APPLICATION.Simulation[nProcess].TargetLast    := 35;
-      GVL_APPLICATION.Simulation[nProcess].TargetMask    := 2#0001; // mask for target station
-
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeLow := 4500.0;
-      GVL_APPLICATION.Simulation[nProcess].CheckRangeHigh:= 5600.0;
-
-
-    eInit                                                 := E_PROGRESS.PROGRESS_BUSY;
-
-  E_PROGRESS.PROGRESS_BUSY:
-    GVL_MSG_XTS.TransportMessageCtrl.Cmd                  := E_MESSAGE_CTRL.MSG_CTRL_INIT;
-    GVL_MSG_XTS.MetricsMessageCtrl.Cmd                    := E_MESSAGE_CTRL.MSG_CTRL_INIT;
-    eInit                                                 := E_PROGRESS.PROGRESS_PREPARE;
-
-  E_PROGRESS.PROGRESS_PREPARE:
-    eInit                                                 := E_PROGRESS.PROGRESS_STARTUP;
-
-  E_PROGRESS.PROGRESS_STARTUP:
-    eInit                                                 := E_PROGRESS.PROGRESS_DONE;
-    FOR nProcess := 1 TO MAX_PROCESS
-    DO
-      IF (GVL_APPLICATION.Simulation[nProcess].StationCount > 0)
-      THEN
-        GVL_APPLICATION.Simulation[nProcess].EnableProcess := TO_DWORD(EXPT(2,GVL_APPLICATION.Simulation[nProcess].StationCount))-1;
-        GVL_APPLICATION.Simulation[nProcess].MoverEnter    := TRUE;
-        GVL_APPLICATION.Simulation[nProcess].MoverOut      := TRUE;
-
-      END_IF
-    END_FOR
-END_CASE
-]]></ST>
-      </Implementation>
-    </Action>
     <LineIds Name="MAIN_APP">
-      <LineId Id="1" Count="142" />
-    </LineIds>
-    <LineIds Name="MAIN_APP.Init">
-      <LineId Id="1" Count="289" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="2" Count="15" />
+      <LineId Id="327" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="316" Count="0" />
+      <LineId Id="325" Count="0" />
+      <LineId Id="19" Count="3" />
+      <LineId Id="317" Count="1" />
+      <LineId Id="324" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="319" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="334" Count="0" />
+      <LineId Id="330" Count="0" />
+      <LineId Id="329" Count="0" />
+      <LineId Id="332" Count="1" />
+      <LineId Id="335" Count="1" />
+      <LineId Id="338" Count="3" />
+      <LineId Id="347" Count="1" />
+      <LineId Id="342" Count="4" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="686" Count="4" />
+      <LineId Id="26" Count="12" />
+      <LineId Id="350" Count="4" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="357" Count="3" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="363" Count="2" />
+      <LineId Id="367" Count="0" />
+      <LineId Id="366" Count="0" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="375" Count="0" />
+      <LineId Id="371" Count="1" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="374" Count="0" />
+      <LineId Id="377" Count="0" />
+      <LineId Id="390" Count="1" />
+      <LineId Id="389" Count="0" />
+      <LineId Id="392" Count="1" />
+      <LineId Id="395" Count="0" />
+      <LineId Id="397" Count="0" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="402" Count="1" />
+      <LineId Id="401" Count="0" />
+      <LineId Id="406" Count="1" />
+      <LineId Id="409" Count="0" />
+      <LineId Id="411" Count="0" />
+      <LineId Id="408" Count="0" />
+      <LineId Id="412" Count="1" />
+      <LineId Id="416" Count="1" />
+      <LineId Id="424" Count="0" />
+      <LineId Id="692" Count="0" />
+      <LineId Id="422" Count="1" />
+      <LineId Id="418" Count="0" />
+      <LineId Id="693" Count="0" />
+      <LineId Id="698" Count="0" />
+      <LineId Id="695" Count="1" />
+      <LineId Id="419" Count="0" />
+      <LineId Id="697" Count="0" />
+      <LineId Id="421" Count="0" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="404" Count="0" />
+      <LineId Id="425" Count="2" />
+      <LineId Id="694" Count="0" />
+      <LineId Id="428" Count="0" />
+      <LineId Id="400" Count="0" />
+      <LineId Id="398" Count="0" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="666" Count="1" />
+      <LineId Id="435" Count="0" />
+      <LineId Id="434" Count="0" />
+      <LineId Id="436" Count="1" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="439" Count="0" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="440" Count="0" />
+      <LineId Id="443" Count="0" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="445" Count="10" />
+      <LineId Id="668" Count="1" />
+      <LineId Id="458" Count="22" />
+      <LineId Id="670" Count="1" />
+      <LineId Id="481" Count="22" />
+      <LineId Id="672" Count="1" />
+      <LineId Id="504" Count="22" />
+      <LineId Id="674" Count="1" />
+      <LineId Id="444" Count="0" />
+      <LineId Id="527" Count="21" />
+      <LineId Id="676" Count="1" />
+      <LineId Id="549" Count="114" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="145" Count="170" />
+      <LineId Id="143" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

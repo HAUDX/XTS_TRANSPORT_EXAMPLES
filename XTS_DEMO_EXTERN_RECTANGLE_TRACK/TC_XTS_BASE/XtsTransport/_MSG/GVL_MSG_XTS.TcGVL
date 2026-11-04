@@ -17,9 +17,9 @@ VAR_GLOBAL CONSTANT
   CON_DIR               : STRING  := '/usr/local/etc/TwinCAT/#Configuration/';  // delimiter at the end is mandatory!!
 {END_IF}
 
-  LOG_FILE              : STRING  := 'MSG_XtsTransport_';
-  LOG_FILE_APP          : STRING  := 'MSG_Application_';
-  LOG_FILE_METRIC       : STRING  := 'MSG_XtsTransportMetrics_';
+  LOG_FILE              : STRING  := concat(TO_STRING(TwinCAT_SystemInfoVarList._AppInfo.AdsPort), '_MSG_Transport_');
+  LOG_FILE_APP          : STRING  := concat(TO_STRING(TwinCAT_SystemInfoVarList._AppInfo.AdsPort), '_MSG_Application_');
+  LOG_FILE_METRIC       : STRING  := concat(TO_STRING(TwinCAT_SystemInfoVarList._AppInfo.AdsPort), '_MSG_Metrics_');
 
   MAX_MESSAGE           : UINT    := 2000; // max entry in message list
 END_VAR

@@ -11,18 +11,28 @@ VAR_GLOBAL
   //
   //-----------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------
+  // YardMaster - the man in the middle
   //-----------------------------------------------------------------------------------------------
   YardControl                       : ST_YARD_CTRL;
   YardState                         : ST_YARD_STATE;
   //-----------------------------------------------------------------------------------------------
-  // fb_Instance control and state
-  //  - structs are used to command Instances during production 
+  // Instances - transport primitives abstract traffic
+  //  - structs are used to command Instances during production
+  //
+  //  - [1 to m] DistributorByTicket is the inbox for your process (wTargetMask)
+  //    - [m to 1] ProcessByTicket is reacting to the ticket
+  //
+  //  - [1 to m] DistributorByTicket is your place of decision 
+  //      if the station mask is acting or reacting
+  //
   //-----------------------------------------------------------------------------------------------
   InstanceCtrl                      : ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_CTRL;
   InstanceState                     : ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_STATE;
   //-----------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------
-  // cyclic linked lists
+  // cyclic linked lists - your outbox
+  //  - connected to ProcessConductor in ExternControl
+  //    - deploys tickets to Instances
   //
   //  - fb_LinkedListCtrl
   //    - is controlled via Ctrl/State pair
