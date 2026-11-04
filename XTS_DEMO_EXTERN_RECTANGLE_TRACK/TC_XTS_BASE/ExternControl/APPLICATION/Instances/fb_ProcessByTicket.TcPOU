@@ -89,6 +89,7 @@ VAR
   _nTargetInfeed,
   _nTargetOutfeed               : E_INSTANCE;
   _nTargetIndex                 : ARRAY[1..SIZEOF(T_PROCESS)*8] OF USINT; // helper var to copy to my process (_ItfProcessCollector[_nProcess].TargetIndex)
+  _StationState                 : ST_STATION_STATE;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -123,6 +124,10 @@ THEN
   CmdLog();
   _eCmdOld                                    := _eCmd;
 END_IF
+//-----------------------------------------------------------------------------
+// cyclic information of mover and station
+//-----------------------------------------------------------------------------
+_StationState                                 := _ItfProcessCollector[_nProcess].GetStationState  (_ItfProcessCollector[_nProcess].StationFirst);
 //-----------------------------------------------------------------------------
 // state machine for Infeed functionality
 //-----------------------------------------------------------------------------
@@ -431,19 +436,20 @@ OF
           CASE _stCollectorState.Result
           OF
             E_PROGRESS.PROGRESS_BUSY:
-              // now my process and all XtsStations within are switched on
-              // check infeed into my process
-              _stCollectorCtrl.Cmd            := E_PROCESS_CTRL.PROCESS_STATIONS_INFEED; // tells my process to go check the infeed
-              _eStateProgress                 := E_PROGRESS.PROGRESS_BUSY; // go check how the infeed into my process is doing
-
-              IF (_MessageLevel = E_MessageType.eMessageVerbose)
+              // check if the mover is in range
+              IF (_rCheckPositionEnd > _rCheckPositionStart)
               THEN
-                _stMsg.eType                  := E_MessageType.eMessageVerbose;
-                _stMsg.eSubdevice             := e_Subdevice.Instance_ProcessByTicket;
-                _stMsg.iErrorNumber           := _stCollectorCtrl.ActivateStation;
-                _stMsg.sText                  := concat(TO_STRING(_eStateInstance), ': ');
-                _stMsg.sText                  := concat(_stMsg.sText, TO_STRING(_eStateProgress));
-                f_MessageSet(_stMsg);
+                IF (_StationState.rMoverModPos > _rCheckPositionStart) AND
+                   (_StationState.rMoverModPos < _rCheckPositionEnd)
+                THEN
+                  _eStateProgress             := E_PROGRESS.PROGRESS_PREPARE;
+                END_IF
+              ELSE
+                IF (_StationState.rMoverModPos > _rCheckPositionStart) OR
+                   (_StationState.rMoverModPos < _rCheckPositionEnd)
+                THEN
+                  _eStateProgress             := E_PROGRESS.PROGRESS_PREPARE;
+                END_IF
               END_IF
           END_CASE
         END_CASE
@@ -452,6 +458,24 @@ OF
     //-------------------------------------------------------------------------
     CASE _eStateProgress
     OF
+
+      E_PROGRESS.PROGRESS_PREPARE:
+        // now my process and all XtsStations within are switched on
+        // check infeed into my process
+        _stCollectorCtrl.Cmd            := E_PROCESS_CTRL.PROCESS_STATIONS_INFEED; // tells my process to go check the infeed
+        _eStateProgress                 := E_PROGRESS.PROGRESS_BUSY; // go check how the infeed into my process is doing
+
+        IF (_MessageLevel = E_MessageType.eMessageVerbose)
+        THEN
+          _stMsg.eType                  := E_MessageType.eMessageVerbose;
+          _stMsg.eSubdevice             := e_Subdevice.Instance_ProcessByTicket;
+          _stMsg.iErrorNumber           := _stCollectorCtrl.ActivateStation;
+          _stMsg.sText                  := concat(TO_STRING(_eStateInstance), ': ');
+          _stMsg.sText                  := concat(_stMsg.sText, TO_STRING(_eStateProgress));
+          f_MessageSet(_stMsg);
+        END_IF
+
+
       E_PROGRESS.PROGRESS_BUSY:
         CASE _stCollectorState.State
         OF
@@ -801,11 +825,20 @@ END_VAR
     </Property>
     <LineIds Name="fb_ProcessByTicket">
       <LineId Id="664" Count="0" />
-      <LineId Id="2" Count="252" />
+      <LineId Id="2" Count="29" />
+      <LineId Id="710" Count="3" />
+      <LineId Id="32" Count="222" />
       <LineId Id="673" Count="0" />
       <LineId Id="255" Count="15" />
       <LineId Id="674" Count="1" />
-      <LineId Id="271" Count="333" />
+      <LineId Id="271" Count="65" />
+      <LineId Id="717" Count="14" />
+      <LineId Id="351" Count="6" />
+      <LineId Id="733" Count="0" />
+      <LineId Id="735" Count="14" />
+      <LineId Id="734" Count="0" />
+      <LineId Id="732" Count="0" />
+      <LineId Id="358" Count="246" />
       <LineId Id="607" Count="0" />
       <LineId Id="630" Count="24" />
       <LineId Id="665" Count="7" />

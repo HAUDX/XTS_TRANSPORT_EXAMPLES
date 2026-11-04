@@ -92,7 +92,6 @@ END_IF
 // cyclic information of mover and station
 //-----------------------------------------------------------------------------
 _StationState                                 := _ItfProcessCollector[_nProcess].GetStationState  (_ItfProcessCollector[_nProcess].StationLast);
-_MoverInfo                                    := _ItfProcessCollector[_nProcess].GetMoverInStation(_ItfProcessCollector[_nProcess].StationLast);
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // state machine for BufferInfeed work
@@ -699,7 +698,8 @@ END_VAR
     </Property>
     <LineIds Name="fb_DistributorByTicket">
       <LineId Id="598" Count="0" />
-      <LineId Id="2" Count="253" />
+      <LineId Id="2" Count="33" />
+      <LineId Id="37" Count="218" />
       <LineId Id="608" Count="0" />
       <LineId Id="256" Count="332" />
       <LineId Id="607" Count="0" />
