@@ -86,7 +86,11 @@ OF
     END_IF
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_BUSY:
-    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.INIT + E_PROGRESS.PROGRESS_DONE)
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.INIT + E_PROGRESS.PROGRESS_ERROR)
+    THEN
+      eInit                                       := E_PROGRESS.PROGRESS_ERROR;
+
+    ELSIF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.INIT + E_PROGRESS.PROGRESS_DONE)
     THEN
       GVL_APPLICATION.YardControl.Cmd             := E_INSTANCE_CMD.ENABLE;
       eInit                                       := E_PROGRESS.PROGRESS_PREPARE;
@@ -110,8 +114,8 @@ OF
   E_PROGRESS.PROGRESS_OCCUPIED:
     tProcess[PROCESS_INFEED]                      := T#3200MS;
     tProcess[PROCESS_ASSEMBLY_01]                 := T#3000MS;
-    tProcess[PROCESS_ASSEMBLY_02]                 := T#2400MS;
-    tProcess[PROCESS_ASSEMBLY_TEST]               := T#4400MS;
+    tProcess[PROCESS_ASSEMBLY_02]                 := T#3000MS;
+    tProcess[PROCESS_ASSEMBLY_TEST]               := T#4300MS;
     tProcess[PROCESS_OUTFEED]                     := T#2200MS;
     eInit                                         := E_PROGRESS.PROGRESS_DONE;
   //---------------------------------------------------------------------------------------------------------------
@@ -170,14 +174,14 @@ CASE nState OF
               GVL_APPLICATION.InstanceCtrl[nIdx].Cmd              := E_INSTANCE_CMD.PROCEED;
           END_CASE
 
-        E_INSTANCE_STATE.WORKING:
+        E_INSTANCE_STATE.WORKING:           // this is for the ProcessByTicket standstill handshake
           CASE GVL_APPLICATION.InstanceState[nIdx].ProcessProgress
           OF
-            E_PROGRESS.PROGRESS_BUSY:
+            E_PROGRESS.PROGRESS_BUSY:       // now every mover has arrived.
               tonProcess[nIdx](IN := FALSE, PT := tProcess[nIdx]);
               GVL_APPLICATION.InstanceCtrl[nIdx].Cmd              := E_INSTANCE_CMD.WORK;
 
-            E_PROGRESS.PROGRESS_OCCUPIED:
+            E_PROGRESS.PROGRESS_OCCUPIED:   // time is fleeting
               tonProcess[nIdx](IN := TRUE, PT := tProcess[nIdx]);
 
               IF (tonProcess[nIdx].Q)
@@ -186,7 +190,7 @@ CASE nState OF
               END_IF
           END_CASE
 
-        E_INSTANCE_STATE.FINISH:
+        E_INSTANCE_STATE.FINISH:            // madness takes its toll
           CASE GVL_APPLICATION.InstanceState[nIdx].ProcessProgress
           OF
             E_PROGRESS.PROGRESS_DONE:
@@ -627,6 +631,9 @@ END_CASE
       <LineId Id="23" Count="0" />
       <LineId Id="319" Count="1" />
       <LineId Id="24" Count="0" />
+      <LineId Id="700" Count="1" />
+      <LineId Id="699" Count="0" />
+      <LineId Id="702" Count="0" />
       <LineId Id="322" Count="0" />
       <LineId Id="328" Count="0" />
       <LineId Id="334" Count="0" />

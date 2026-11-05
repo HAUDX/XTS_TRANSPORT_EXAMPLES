@@ -224,15 +224,34 @@ OF
   //---------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_BUSY:
-    _eState                     := E_PROGRESS.PROGRESS_PREPARE;
+    _XtsTransportCtrl.Cmd                 := E_XTS_TRANSPORT_CTRL.CMD_GROUP_CLEAR;
+
+    IF (_XtsTransportState.State > E_PROGRESS.PROGRESS_ERROR)
+    THEN
+      _eState                             := E_PROGRESS.PROGRESS_PREPARE;
+    END_IF
   //---------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_PREPARE:
-    _eState                     := E_PROGRESS.PROGRESS_STARTUP;
+    _XtsTransportCtrl.Cmd                 := E_XTS_TRANSPORT_CTRL.CMD_MOVER_STOP;
+
+    IF (_XtsTransportState.State > E_PROGRESS.PROGRESS_ERROR)
+    THEN
+      _eState                             := E_PROGRESS.PROGRESS_STARTUP;
+    END_IF
   //---------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_STARTUP:
-    _eState                     := E_PROGRESS.PROGRESS_CHECK;
+    _XtsTransportCtrl.Cmd                 := E_XTS_TRANSPORT_CTRL.CMD_GROUP_CLEAR;
+
+    IF (_XtsTransportState.State = E_XTS_TRANSPORT_STATE.TRANSPORT_GROUP_CLEAR + E_PROGRESS.PROGRESS_ERROR)
+    THEN
+      _eState                             := E_PROGRESS.PROGRESS_ERROR;
+
+    ELSIF (_XtsTransportState.State = E_XTS_TRANSPORT_STATE.TRANSPORT_GROUP_CLEAR + E_PROGRESS.PROGRESS_DONE)
+    THEN 
+      _eState                             := E_PROGRESS.PROGRESS_CHECK;
+    END_IF
   //---------------------------------------------------------------------------------------------------------------
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_CHECK:
@@ -927,7 +946,7 @@ END_VAR
       <LineId Id="1" Count="49" />
     </LineIds>
     <LineIds Name="fb_YardMaster.Clear">
-      <LineId Id="1" Count="74" />
+      <LineId Id="1" Count="93" />
     </LineIds>
     <LineIds Name="fb_YardMaster.Cmd">
       <LineId Id="1" Count="65" />
