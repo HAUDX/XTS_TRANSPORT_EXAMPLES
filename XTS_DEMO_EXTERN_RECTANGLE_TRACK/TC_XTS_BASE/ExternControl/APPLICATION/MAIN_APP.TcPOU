@@ -100,7 +100,7 @@ OF
     //-----------------------------------------------------------------------------
     GVL_APPLICATION.InstanceInfeed.ProcessId                                  := PROCESS_INFEED;
     GVL_APPLICATION.InstanceInfeed.ProcessTarget                              := CONTINUOUS_CLEAN;
-    GVL_APPLICATION.InstanceInfeed.CheckPositionStart                         :=  9000.0;
+    GVL_APPLICATION.InstanceInfeed.CheckPositionStart                         :=  9750.0;
     GVL_APPLICATION.InstanceInfeed.CheckPositionEnd                           := 12100.0;
     //-----------------------------------------------------------------------------
     GVL_APPLICATION.InstanceInfeed.CollectorInterface                         :=   GVL_APPLICATION.ItfProcessCollector;
@@ -168,7 +168,7 @@ OF
     //-----------------------------------------------------------------------------
     GVL_APPLICATION.InstanceDistributorAssembly_01.ProcessId                  := DISTRIBUTOR_ASSEMBLY_01;
     GVL_APPLICATION.InstanceDistributorAssembly_01.ProcessTarget              := PROCESS_ASSEMBLY_01;
-    GVL_APPLICATION.InstanceDistributorAssembly_01.CheckPositionStart         := 14400.0;
+    GVL_APPLICATION.InstanceDistributorAssembly_01.CheckPositionStart         := 14500.0;
     GVL_APPLICATION.InstanceDistributorAssembly_01.CheckPositionEnd           := 17000.0;
     //-----------------------------------------------------------------------------
     GVL_APPLICATION.InstanceDistributorAssembly_01.CollectorInterface         :=   GVL_APPLICATION.ItfProcessCollector;

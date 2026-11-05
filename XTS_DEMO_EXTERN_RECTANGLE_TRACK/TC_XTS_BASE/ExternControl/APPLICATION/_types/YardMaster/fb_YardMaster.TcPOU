@@ -82,12 +82,6 @@ OF
   E_PROGRESS.PROGRESS_DONE:
     _State.State                := _eState + E_PROGRESS.PROGRESS_DONE;
 
-    IF (_XtsTransportState.GroupInfo.GroupErrorStop) OR
-       (_XtsTransportState.GroupInfo.GroupError)     OR
-       NOT (_XtsTransportState.XpuInfo.AllPositionsValid)
-    THEN
-      _eResult                  := E_PROGRESS.PROGRESS_ERROR;
-    END_IF
 ELSE
   _State.State                  := _eState + _eResult;
 
@@ -927,7 +921,7 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_YardMaster">
-      <LineId Id="1" Count="76" />
+      <LineId Id="1" Count="70" />
     </LineIds>
     <LineIds Name="fb_YardMaster.Check">
       <LineId Id="1" Count="49" />

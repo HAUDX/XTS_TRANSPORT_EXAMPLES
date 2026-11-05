@@ -214,7 +214,7 @@
     <Compile Include="MAPPING\_types\U_XTS_TRANSPORT_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PlcTask_1.TcTTO">
+    <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PLC_MOTION\_GVL\PLC_CONSTANT.TcGVL">

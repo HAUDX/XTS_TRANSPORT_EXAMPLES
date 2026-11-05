@@ -299,7 +299,7 @@ OF
               _stMsg.sText                    := concat(_stMsg.sText, _ItfProcessCollector[_nPrc].BitsToString(_stListResult.stData.wTarget));
               f_MessageSet(_stMsg);
             END_IF
-            IF (_MessageLevel > E_MessageType.eMessageEmpty)
+            IF (_MessageLevel = E_MessageType.eMessageBatch)
             THEN
               _stMsg.eType                    := E_MessageType.eMessageBatch;
               _stMsg.eSubdevice               := e_Subdevice.Instance_ProcessByTicket;

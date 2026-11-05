@@ -173,6 +173,20 @@ ELSE
  
     Device_to_String := concat(TO_STRING(e_Device.Application), sId);
 
+  ELSIF (eMsgDevice >= e_Device.YardMaster)
+  THEN
+    nId := eMsgDevice MOD e_Device.YardMaster;
+    sId := concat(sId, TO_STRING(nId));
+ 
+    Device_to_String := concat(TO_STRING(e_Device.YardMaster), sId);
+
+  ELSIF (eMsgDevice >= e_Device.Conductor)
+  THEN
+    nId := eMsgDevice MOD e_Device.Conductor;
+    sId := concat(sId, TO_STRING(nId));
+ 
+    Device_to_String := concat(TO_STRING(e_Device.Conductor), sId);
+
   ELSIF (eMsgDevice >= e_Device.TicketListCtrl)
   THEN
     nId := eMsgDevice MOD e_Device.TicketListCtrl;
@@ -592,7 +606,12 @@ WriteData                     := _eState;
       <LineId Id="1" Count="41" />
     </LineIds>
     <LineIds Name="fb_MessageData.Device_to_String">
-      <LineId Id="1" Count="168" />
+      <LineId Id="1" Count="22" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="181" Count="5" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="172" Count="5" />
+      <LineId Id="24" Count="145" />
     </LineIds>
     <LineIds Name="fb_MessageData.DirRoot.Set">
       <LineId Id="1" Count="1" />

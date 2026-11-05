@@ -249,7 +249,7 @@ OF
             f_MessageSet(_stMsg);
           END_IF
 
-          IF (_MessageLevel > E_MessageType.eMessageEmpty)
+          IF (_MessageLevel = E_MessageType.eMessageBatch)
           THEN
             _stMsg.eType                      := E_MessageType.eMessageBatch;
             _stMsg.eSubdevice                 := e_Subdevice.Instance_DistributorByQueue;
@@ -475,7 +475,7 @@ OF
                 _stCollectorCtrl.Cmd          := E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED; // release the kraken!
                 _eStateProgress               := E_PROGRESS.PROGRESS_DONE;                // mover is on its way
 
-                IF (_MessageLevel > E_MessageType.eMessageEmpty)
+                IF (_MessageLevel = E_MessageType.eMessageBatch)
                 THEN
                   _stMsg.eType                := E_MessageType.eMessageBatch;
                   _stMsg.eSubdevice           := e_Subdevice.Instance_DistributorByQueue;
@@ -508,7 +508,7 @@ OF
                 _stCollectorCtrl.Cmd          := E_PROCESS_CTRL.PROCESS_STATIONS_OUTFEED; // release the kraken!
                 _eStateProgress               := E_PROGRESS.PROGRESS_CHECK;                // mover is on its way
   
-                IF (_MessageLevel > E_MessageType.eMessageEmpty)
+                IF (_MessageLevel = E_MessageType.eMessageBatch)
                 THEN
                   _stMsg.eType                := E_MessageType.eMessageBatch;
                   _stMsg.eSubdevice           := e_Subdevice.Instance_DistributorByQueue;

@@ -95,7 +95,7 @@ OF
   E_PROGRESS.PROGRESS_PREPARE:
     IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.ENABLED + E_PROGRESS.PROGRESS_DONE)
     THEN
-      eInit                                       := E_PROGRESS.PROGRESS_DONE;
+      eInit                                       := E_PROGRESS.PROGRESS_OCCUPIED;
     END_IF
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_STARTUP:
@@ -108,11 +108,11 @@ OF
     END_IF
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_OCCUPIED:
-    tProcess[PROCESS_INFEED]                      := T#2800MS;
-    tProcess[PROCESS_ASSEMBLY_01]                 := T#3200MS;
+    tProcess[PROCESS_INFEED]                      := T#3200MS;
+    tProcess[PROCESS_ASSEMBLY_01]                 := T#3000MS;
     tProcess[PROCESS_ASSEMBLY_02]                 := T#2400MS;
     tProcess[PROCESS_ASSEMBLY_TEST]               := T#4400MS;
-    tProcess[PROCESS_OUTFEED]                     := T#2800MS;
+    tProcess[PROCESS_OUTFEED]                     := T#2200MS;
     eInit                                         := E_PROGRESS.PROGRESS_DONE;
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_WORKING:
