@@ -139,13 +139,14 @@ CASE nState OF
   10:
     IF bStart
     THEN
+      bStart                                        := FALSE;
       nState                                        := 20;
     END_IF
 
   20:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_INFEED;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_INFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1101_1110_0111_1111;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -199,7 +200,13 @@ CASE nState OF
           END_CASE
       END_CASE
     END_FOR
-    nState                                                        := 210;
+
+    IF (YardState.TransportState.State = E_XTS_TRANSPORT_STATE.TRANSPORT_START + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                                      := 210;
+    ELSE
+      nState                                                      :=   0;
+    END_IF
 END_CASE
 CASE nState OF
 
@@ -216,7 +223,7 @@ CASE nState OF
   211:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_INFEED;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_INFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1101_1110_0111_1111;;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -241,7 +248,7 @@ CASE nState OF
   221:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_INFEED;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.CONTINUOUS_CLEAN;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1101_1110_0111_1111;;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -266,7 +273,7 @@ CASE nState OF
   231:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_ASSEMBLY_01;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1101_1111_1111;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -291,7 +298,7 @@ CASE nState OF
   241:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_ASSEMBLY_01;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1101_1111_1111;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -316,7 +323,7 @@ CASE nState OF
   251:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_ASSEMBLY_02;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1011;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -341,7 +348,7 @@ CASE nState OF
   261:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_ASSEMBLY_02;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1011;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -364,7 +371,7 @@ CASE nState OF
   271:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_ASSEMBLY_TEST;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1011;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -387,7 +394,7 @@ CASE nState OF
   281:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_ASSEMBLY_TEST;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_CAMERA;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1011;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -410,7 +417,7 @@ CASE nState OF
   291:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_OUTFEED;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_OUTFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_11_1111_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_10_1111_1111_1111;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -433,7 +440,7 @@ CASE nState OF
   301:
     GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_OUTFEED;
     GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_WPC_CLEAN;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_11_1111_1111_1111;
+    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_10_1111_1111_1111;
 
     GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
 
@@ -651,7 +658,9 @@ END_CASE
       <LineId Id="350" Count="4" />
       <LineId Id="356" Count="0" />
       <LineId Id="355" Count="0" />
-      <LineId Id="357" Count="3" />
+      <LineId Id="357" Count="1" />
+      <LineId Id="711" Count="0" />
+      <LineId Id="359" Count="1" />
       <LineId Id="362" Count="0" />
       <LineId Id="361" Count="0" />
       <LineId Id="363" Count="2" />
@@ -697,7 +706,12 @@ END_CASE
       <LineId Id="400" Count="0" />
       <LineId Id="398" Count="0" />
       <LineId Id="394" Count="0" />
+      <LineId Id="706" Count="0" />
+      <LineId Id="705" Count="0" />
+      <LineId Id="707" Count="0" />
       <LineId Id="433" Count="0" />
+      <LineId Id="709" Count="1" />
+      <LineId Id="708" Count="0" />
       <LineId Id="666" Count="1" />
       <LineId Id="435" Count="0" />
       <LineId Id="434" Count="0" />
