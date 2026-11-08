@@ -24,10 +24,6 @@ VAR
   eInitXtsTransport   AT %I*    : E_PROGRESS;   // initialization from XtsTransport PLC
   eInit                         : E_PROGRESS;   // local startup
 
-  // this is still a subsystem for transport --> dwell time
-  tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
-  tonProcess                    : ARRAY[1..MAX_PROCESS] OF Tc2_Standard.TON;
-
   // message pipeline(s) handling
   eMtrState,
   eMsgState                     : E_MESSAGE_STATE;
@@ -46,11 +42,21 @@ VAR
   // testing stuff
   //-------------------------------------------------------------------------------------------------------------
   bStart                        : BOOL;
+  Puppets                       : ARRAY[1..MAX_PROCESS] OF fb_DisposableHeros;
 
-  nIdx,
+  // this is still a subsystem for transport --> dwell time
+  {attribute 'displaymode':='bin'}
+  wActivateStation              : ARRAY[1..MAX_PROCESS] OF T_PROCESS;
+  tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
+  tonProcess                    : ARRAY[1..MAX_PROCESS] OF Tc2_Standard.TON;
+
+
+  nIdx                          : E_INSTANCE;
+
   nState                        : UDINT;    // monolithic case with sequences to run this example
-  nTicketMax                    : UINT := 336;
-  nTicketCount                  : UINT;
+
+  stWriteTargetInit             : ST_PROCESS_LIST_RESULT;
+  stProcessData                 : ST_PROCESS_DATA;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -112,15 +118,40 @@ OF
     END_IF
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_OCCUPIED:
-    tProcess[PROCESS_INFEED]                      := T#3200MS;
-    tProcess[PROCESS_ASSEMBLY_01]                 := T#3000MS;
-    tProcess[PROCESS_ASSEMBLY_02]                 := T#3000MS;
-    tProcess[PROCESS_ASSEMBLY_TEST]               := T#4300MS;
-    tProcess[PROCESS_OUTFEED]                     := T#2200MS;
-    eInit                                         := E_PROGRESS.PROGRESS_DONE;
-  //---------------------------------------------------------------------------------------------------------------
-  E_PROGRESS.PROGRESS_WORKING:
-    eInit                                         := E_PROGRESS.PROGRESS_DONE;
+    tProcess[PROCESS_INFEED]                                := T#3200MS;
+    tProcess[PROCESS_ASSEMBLY_01]                           := T#3000MS;
+    tProcess[PROCESS_ASSEMBLY_02]                           := T#3000MS;
+    tProcess[PROCESS_ASSEMBLY_TEST]                         := T#4300MS;
+    tProcess[PROCESS_OUTFEED]                               := T#2200MS;
+
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_INFEED]         := 2#_1111_1111_1111_1111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01]    := 2#_1111_1111_1111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02]    := 2#_1111_1111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST]  := 2#_1111_1111_1111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_OUTFEED]        := 2#_11_1111_1111_1111;
+
+    // string up the puppets
+    Puppets[E_INSTANCE.DISTRIBUTOR_INFEED].ProcessId                        := DISTRIBUTOR_INFEED;
+    Puppets[E_INSTANCE.DISTRIBUTOR_INFEED].ProcessId_Connect                := PROCESS_INFEED;
+    Puppets[E_INSTANCE.DISTRIBUTOR_INFEED].ProcessId_ConnectTarget          := CONTINUOUS_CLEAN;
+
+    Puppets[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01].ProcessId                   := DISTRIBUTOR_ASSEMBLY_01;     
+    Puppets[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01].ProcessId_Connect           := PROCESS_ASSEMBLY_01;
+    Puppets[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01].ProcessId_ConnectTarget     := DISTRIBUTOR_ASSEMBLY_02;
+     
+    Puppets[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02].ProcessId                   := DISTRIBUTOR_ASSEMBLY_02;          
+    Puppets[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02].ProcessId_Connect           := PROCESS_ASSEMBLY_02;
+    Puppets[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02].ProcessId_ConnectTarget     := DISTRIBUTOR_ASSEMBLY_TEST;
+          
+    Puppets[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST].ProcessId                 := DISTRIBUTOR_ASSEMBLY_TEST;     
+    Puppets[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST].ProcessId_Connect         := PROCESS_ASSEMBLY_TEST;
+    Puppets[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST].ProcessId_ConnectTarget   := DISTRIBUTOR_CAMERA;
+     
+    Puppets[E_INSTANCE.DISTRIBUTOR_OUTFEED].ProcessId                       := DISTRIBUTOR_OUTFEED;  
+    Puppets[E_INSTANCE.DISTRIBUTOR_OUTFEED].ProcessId_Connect               := PROCESS_OUTFEED;
+    Puppets[E_INSTANCE.DISTRIBUTOR_OUTFEED].ProcessId_ConnectTarget         := DISTRIBUTOR_WPC_CLEAN;  
+
+    eInit                                           := E_PROGRESS.PROGRESS_DONE;
 END_CASE
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
@@ -133,323 +164,149 @@ CASE nState OF
   0:
     IF (eInit = E_PROGRESS.PROGRESS_DONE)
     THEN
+      nState                                        := 1;
+    END_IF
+
+  1:
+    // TicketConductor is self initializing after a power cycle
+    // DISABLED state is default after successful initialization
+    IF (GVL_APPLICATION.TicketConductorState.ProcessState = E_INSTANCE_STATE.DISABLED)
+    THEN
       nState                                        := 10;
     END_IF
 
   10:
     IF bStart
     THEN
-      bStart                                        := FALSE;
-      nState                                        := 20;
+      nState                                        := 100;
+      FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
+      DO
+        Puppets[nIdx](Start                         := FALSE, 
+                      DwellTime                     := tProcess[nIdx], 
+                      StationMask                   := wActivateStation[nIdx]);
+
+        GVL_APPLICATION.InstanceCtrl[nIdx].Cmd      := E_INSTANCE_CMD.ENABLE;
+      END_FOR
     END_IF
 
-  20:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_INFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_INFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1101_1110_0111_1111;
+  100:
+    // the first round of tickets I write here, because the puppets only write tickets AFTER a mover lifecycle
+    // why two tickets? --> Master of Puppets (you) can only pull for movers (wActivateStation) in a process,
+    //                       if he commands a distributor to send them to him
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_INFEED;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_INFEED;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_INFEED];
 
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
 
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 30;
-    END_IF
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_INFEED;
+    stProcessData.nTargetId                         := E_INSTANCE.CONTINUOUS_CLEAN;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_INFEED];
 
-  30:
-    nState                                                        := 200;
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_ASSEMBLY_01;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_ASSEMBLY_01;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_ASSEMBLY_02;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_ASSEMBLY_02;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_ASSEMBLY_TEST;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_ASSEMBLY_TEST;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_CAMERA;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_OUTFEED;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_OUTFEED;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_OUTFEED];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_OUTFEED;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_WPC_CLEAN;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_OUTFEED];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    nState                                          := 200;
 
 
   200:
     FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
     DO
-      CASE GVL_APPLICATION.InstanceState[nIdx].ProcessState
-      OF
-        E_INSTANCE_STATE.DISABLED:
-          GVL_APPLICATION.InstanceCtrl[nIdx].Cmd                  := E_INSTANCE_CMD.ENABLE;
-
-        E_INSTANCE_STATE.ENABLED:
-          CASE GVL_APPLICATION.InstanceState[nIdx].ProcessProgress
-          OF
-            E_PROGRESS.PROGRESS_OCCUPIED:
-              GVL_APPLICATION.InstanceCtrl[nIdx].Cmd              := E_INSTANCE_CMD.PROCEED;
-          END_CASE
-
-        E_INSTANCE_STATE.WORKING:           // this is for the ProcessByTicket standstill handshake
-          CASE GVL_APPLICATION.InstanceState[nIdx].ProcessProgress
-          OF
-            E_PROGRESS.PROGRESS_BUSY:       // now every mover has arrived.
-              tonProcess[nIdx](IN := FALSE, PT := tProcess[nIdx]);
-              GVL_APPLICATION.InstanceCtrl[nIdx].Cmd              := E_INSTANCE_CMD.WORK;
-
-            E_PROGRESS.PROGRESS_OCCUPIED:   // time is fleeting
-              tonProcess[nIdx](IN := TRUE, PT := tProcess[nIdx]);
-
-              IF (tonProcess[nIdx].Q)
-              THEN
-                GVL_APPLICATION.InstanceCtrl[nIdx].Cmd            := E_INSTANCE_CMD.FINISH;
-              END_IF
-          END_CASE
-
-        E_INSTANCE_STATE.FINISH:            // madness takes its toll
-          CASE GVL_APPLICATION.InstanceState[nIdx].ProcessProgress
-          OF
-            E_PROGRESS.PROGRESS_DONE:
-              tonProcess[nIdx](IN := FALSE, PT := tProcess[nIdx]);
-              GVL_APPLICATION.InstanceCtrl[nIdx].Cmd              := E_INSTANCE_CMD.DISABLE;
-          END_CASE
-      END_CASE
+      Puppets[nIdx](Start                           := bStart, 
+                    DwellTime                       := tProcess[nIdx], 
+                    StationMask                     := wActivateStation[nIdx]);
     END_FOR
 
-    IF (YardState.TransportState.State = E_XTS_TRANSPORT_STATE.TRANSPORT_START + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      nState                                                      := 210;
-    ELSE
-      nState                                                      :=   0;
-    END_IF
-END_CASE
-CASE nState OF
+    IF NOT bStart THEN nState := 200; END_IF
 
-  210:
-    IF GVL_APPLICATION.InstanceState[DISTRIBUTOR_INFEED].ListCount < 1
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 211;
-    ELSE
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 220;
-    END_IF
 
-  211:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_INFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_INFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1101_1110_0111_1111;;
-
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
-
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
-END_CASE
-CASE nState OF
-
-  220:
-    IF GVL_APPLICATION.InstanceState[PROCESS_INFEED].ListCount < 1
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 221;
-    ELSE
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 230;
-    END_IF
-
-  221:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_INFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.CONTINUOUS_CLEAN;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1101_1110_0111_1111;;
-
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
-
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
-END_CASE
-CASE nState OF
-
-  230:
-    IF GVL_APPLICATION.InstanceState[DISTRIBUTOR_ASSEMBLY_01].ListCount < 1
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 231;
-    ELSE
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 240;
-    END_IF
-
-  231:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_ASSEMBLY_01;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1101_1111_1111;
-
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
-
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
-END_CASE
-CASE nState OF
-
-  240:
-    IF GVL_APPLICATION.InstanceState[PROCESS_ASSEMBLY_01].ListCount < 1
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 241;
-    ELSE
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 250;
-    END_IF
-
-  241:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_ASSEMBLY_01;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1101_1111_1111;
-
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
-
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
-END_CASE
-CASE nState OF
-
-  250:
-    IF GVL_APPLICATION.InstanceState[DISTRIBUTOR_ASSEMBLY_02].ListCount < 1
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 251;
-    ELSE
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 260;
-    END_IF
-
-  251:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_02;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_ASSEMBLY_02;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1011;
-
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
-
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
-END_CASE
-CASE nState OF
-
-  260:
-    IF GVL_APPLICATION.InstanceState[PROCESS_ASSEMBLY_02].ListCount < 1
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 261;
-    ELSE
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 270;
-    END_IF
-
-  261:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_ASSEMBLY_02;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1011;
-
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
-
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
-
-  270:
-    IF GVL_APPLICATION.InstanceState[DISTRIBUTOR_ASSEMBLY_TEST].ListCount < 1
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 271;
-    ELSE
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 280;
-    END_IF
-
-  271:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_ASSEMBLY_TEST;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_ASSEMBLY_TEST;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1011;
-
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
-
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
-
-  280:
-    IF GVL_APPLICATION.InstanceState[PROCESS_ASSEMBLY_TEST].ListCount < 1
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 281;
-    ELSE
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 290;
-    END_IF
-
-  281:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_ASSEMBLY_TEST;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_CAMERA;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_1111_1111_1011;
-
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
-
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
-
-  290:
-    IF GVL_APPLICATION.InstanceState[DISTRIBUTOR_OUTFEED].ListCount < 1
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 291;
-    ELSE
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 300;
-    END_IF
-
-  291:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.DISTRIBUTOR_OUTFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.PROCESS_OUTFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_10_1111_1111_1111;
-
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
-
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
 
   300:
-    IF GVL_APPLICATION.InstanceState[PROCESS_OUTFEED].ListCount < 1
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 301;
-    ELSE
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
+    FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
+    DO
+      GVL_APPLICATION.InstanceCtrl[nIdx].Cmd        := E_INSTANCE_CMD.INIT; 
+    END_FOR
+    nState                                          := 400;
 
-  301:
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nProcessId    := E_INSTANCE.PROCESS_OUTFEED;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.nTargetId     := E_INSTANCE.DISTRIBUTOR_WPC_CLEAN;
-    GVL_APPLICATION.TicketListDataInput.ProcessData.wTarget       := 2#_10_1111_1111_1111;
+  400:
+    GVL_APPLICATION.TicketConductorCtrl.Cmd         := E_INSTANCE_CMD.DISABLE;
+    bStart                                          := FALSE;
+    nState                                          := 0;
 
-    GVL_APPLICATION.TicketListControl.Cmd                         := E_LIST_CTRL.LIST_CTRL_ADD_TAIL;
-
-    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_ADD_TAIL + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.TicketListControl.Cmd                       := E_LIST_CTRL.LIST_CTRL_NULL;
-      nState                                                      := 200;
-    END_IF
 END_CASE
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
+DO
+  Puppets[nIdx].ProcessId                           :=   nIdx;
+  Puppets[nIdx].InstanceCtrl                        REF= GVL_APPLICATION.InstanceCtrl;
+  Puppets[nIdx].InstanceState                       REF= GVL_APPLICATION.InstanceState;
+  Puppets[nIdx].TicketLinkedList                    :=   GVL_APPLICATION.TicketConductorList;
+END_FOR
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+GVL_APPLICATION.TicketConductor.TicketLinkedList    :=   GVL_APPLICATION.TicketConductorList;
+GVL_APPLICATION.TicketConductor.Ctrl                REF= GVL_APPLICATION.TicketConductorCtrl;
+GVL_APPLICATION.TicketConductor.State               REF= GVL_APPLICATION.TicketConductorState;
+
+GVL_APPLICATION.TicketConductor.CyclicListCtrl      REF= GVL_APPLICATION.TicketListControl;
+GVL_APPLICATION.TicketConductor.CyclicListState     REF= GVL_APPLICATION.TicketListState;
+GVL_APPLICATION.TicketConductor.CyclicListData      REF= GVL_APPLICATION.TicketListDataInput;
+GVL_APPLICATION.TicketConductor();
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+
+
+
+
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 //#################################################################################################################
@@ -626,119 +483,82 @@ END_CASE
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN_APP">
-      <LineId Id="144" Count="0" />
-      <LineId Id="2" Count="15" />
-      <LineId Id="327" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="316" Count="0" />
-      <LineId Id="325" Count="0" />
-      <LineId Id="19" Count="3" />
-      <LineId Id="317" Count="1" />
-      <LineId Id="324" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="319" Count="1" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="700" Count="1" />
-      <LineId Id="699" Count="0" />
-      <LineId Id="702" Count="0" />
-      <LineId Id="322" Count="0" />
-      <LineId Id="328" Count="0" />
-      <LineId Id="334" Count="0" />
-      <LineId Id="330" Count="0" />
-      <LineId Id="329" Count="0" />
-      <LineId Id="332" Count="1" />
-      <LineId Id="335" Count="1" />
-      <LineId Id="338" Count="3" />
-      <LineId Id="347" Count="1" />
-      <LineId Id="342" Count="4" />
-      <LineId Id="321" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="686" Count="4" />
-      <LineId Id="26" Count="12" />
-      <LineId Id="350" Count="4" />
-      <LineId Id="356" Count="0" />
-      <LineId Id="355" Count="0" />
-      <LineId Id="357" Count="1" />
-      <LineId Id="711" Count="0" />
-      <LineId Id="359" Count="1" />
-      <LineId Id="362" Count="0" />
-      <LineId Id="361" Count="0" />
-      <LineId Id="363" Count="2" />
-      <LineId Id="367" Count="0" />
-      <LineId Id="366" Count="0" />
-      <LineId Id="369" Count="0" />
-      <LineId Id="368" Count="0" />
-      <LineId Id="370" Count="0" />
-      <LineId Id="375" Count="0" />
-      <LineId Id="371" Count="1" />
-      <LineId Id="376" Count="0" />
-      <LineId Id="374" Count="0" />
-      <LineId Id="377" Count="0" />
-      <LineId Id="390" Count="1" />
-      <LineId Id="389" Count="0" />
-      <LineId Id="392" Count="1" />
-      <LineId Id="395" Count="0" />
-      <LineId Id="397" Count="0" />
-      <LineId Id="399" Count="0" />
-      <LineId Id="402" Count="1" />
-      <LineId Id="401" Count="0" />
-      <LineId Id="406" Count="1" />
-      <LineId Id="409" Count="0" />
-      <LineId Id="411" Count="0" />
-      <LineId Id="408" Count="0" />
-      <LineId Id="412" Count="1" />
-      <LineId Id="416" Count="1" />
-      <LineId Id="424" Count="0" />
-      <LineId Id="692" Count="0" />
-      <LineId Id="422" Count="1" />
-      <LineId Id="418" Count="0" />
-      <LineId Id="693" Count="0" />
-      <LineId Id="698" Count="0" />
-      <LineId Id="695" Count="1" />
-      <LineId Id="419" Count="0" />
-      <LineId Id="697" Count="0" />
-      <LineId Id="421" Count="0" />
-      <LineId Id="415" Count="0" />
-      <LineId Id="404" Count="0" />
-      <LineId Id="425" Count="2" />
-      <LineId Id="694" Count="0" />
-      <LineId Id="428" Count="0" />
-      <LineId Id="400" Count="0" />
-      <LineId Id="398" Count="0" />
-      <LineId Id="394" Count="0" />
-      <LineId Id="706" Count="0" />
-      <LineId Id="705" Count="0" />
-      <LineId Id="707" Count="0" />
-      <LineId Id="433" Count="0" />
-      <LineId Id="709" Count="1" />
-      <LineId Id="708" Count="0" />
-      <LineId Id="666" Count="1" />
-      <LineId Id="435" Count="0" />
-      <LineId Id="434" Count="0" />
-      <LineId Id="436" Count="1" />
-      <LineId Id="456" Count="0" />
-      <LineId Id="439" Count="0" />
-      <LineId Id="438" Count="0" />
-      <LineId Id="457" Count="0" />
-      <LineId Id="441" Count="0" />
-      <LineId Id="440" Count="0" />
-      <LineId Id="443" Count="0" />
-      <LineId Id="442" Count="0" />
-      <LineId Id="445" Count="10" />
-      <LineId Id="668" Count="1" />
-      <LineId Id="458" Count="22" />
-      <LineId Id="670" Count="1" />
-      <LineId Id="481" Count="22" />
-      <LineId Id="672" Count="1" />
-      <LineId Id="504" Count="22" />
-      <LineId Id="674" Count="1" />
-      <LineId Id="444" Count="0" />
-      <LineId Id="527" Count="21" />
-      <LineId Id="676" Count="1" />
-      <LineId Id="549" Count="114" />
-      <LineId Id="349" Count="0" />
-      <LineId Id="39" Count="1" />
-      <LineId Id="145" Count="170" />
+      <LineId Id="732" Count="62" />
+      <LineId Id="1059" Count="0" />
+      <LineId Id="1062" Count="0" />
+      <LineId Id="1065" Count="0" />
+      <LineId Id="1068" Count="0" />
+      <LineId Id="1071" Count="0" />
+      <LineId Id="1074" Count="0" />
+      <LineId Id="1102" Count="0" />
+      <LineId Id="1096" Count="0" />
+      <LineId Id="1078" Count="1" />
+      <LineId Id="1097" Count="0" />
+      <LineId Id="1092" Count="0" />
+      <LineId Id="1081" Count="1" />
+      <LineId Id="1098" Count="0" />
+      <LineId Id="1093" Count="0" />
+      <LineId Id="1084" Count="1" />
+      <LineId Id="1099" Count="0" />
+      <LineId Id="1094" Count="0" />
+      <LineId Id="1087" Count="1" />
+      <LineId Id="1100" Count="0" />
+      <LineId Id="1095" Count="0" />
+      <LineId Id="1061" Count="0" />
+      <LineId Id="795" Count="0" />
+      <LineId Id="1101" Count="0" />
+      <LineId Id="1091" Count="0" />
+      <LineId Id="1090" Count="0" />
+      <LineId Id="799" Count="13" />
+      <LineId Id="1157" Count="1" />
+      <LineId Id="1163" Count="1" />
+      <LineId Id="1159" Count="1" />
+      <LineId Id="1162" Count="0" />
+      <LineId Id="1161" Count="0" />
+      <LineId Id="1036" Count="0" />
+      <LineId Id="814" Count="3" />
+      <LineId Id="1185" Count="4" />
+      <LineId Id="1191" Count="1" />
+      <LineId Id="1190" Count="0" />
+      <LineId Id="818" Count="0" />
+      <LineId Id="1148" Count="1" />
+      <LineId Id="1126" Count="3" />
+      <LineId Id="1112" Count="2" />
+      <LineId Id="1116" Count="0" />
+      <LineId Id="1115" Count="0" />
+      <LineId Id="1118" Count="5" />
+      <LineId Id="1194" Count="47" />
+      <LineId Id="1117" Count="0" />
+      <LineId Id="836" Count="9" />
+      <LineId Id="1180" Count="1" />
+      <LineId Id="1166" Count="0" />
+      <LineId Id="1182" Count="1" />
+      <LineId Id="1165" Count="0" />
+      <LineId Id="1168" Count="2" />
+      <LineId Id="1173" Count="1" />
+      <LineId Id="1176" Count="0" />
+      <LineId Id="1175" Count="0" />
+      <LineId Id="1177" Count="0" />
+      <LineId Id="1179" Count="0" />
+      <LineId Id="1193" Count="0" />
+      <LineId Id="1178" Count="0" />
+      <LineId Id="846" Count="0" />
+      <LineId Id="1103" Count="1" />
+      <LineId Id="1106" Count="1" />
+      <LineId Id="1130" Count="0" />
+      <LineId Id="1110" Count="0" />
+      <LineId Id="1124" Count="1" />
+      <LineId Id="1111" Count="0" />
+      <LineId Id="1032" Count="1" />
+      <LineId Id="848" Count="0" />
+      <LineId Id="1024" Count="1" />
+      <LineId Id="1058" Count="0" />
+      <LineId Id="1026" Count="2" />
+      <LineId Id="1030" Count="0" />
+      <LineId Id="1034" Count="1" />
+      <LineId Id="1031" Count="0" />
+      <LineId Id="1029" Count="0" />
+      <LineId Id="849" Count="174" />
       <LineId Id="143" Count="0" />
     </LineIds>
   </POU>

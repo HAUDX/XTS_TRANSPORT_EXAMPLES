@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fb_DisposableHeros" Id="{57ff81e0-db35-4988-adb1-755f5d46de47}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.11.07
+//
+//  - TowerControl - fb_DisposableHeros
+//
+//    - this class is nothing more than the handshake sequence and a timer
+//
+//    - the station bitmask is written for each production cycle
+//      - ticketing involves a DistributorByTicket and its companion ProcessByTicket
+//      - this mock up takes care of both tickets.
+//        - Why do you need to send 2 tickets?
+//          - Distributor and Process instance do not know each other (and this is on purpose to keep things loose and avoid thight coupling by design)
+//            --> sending tickets should be done from one place only, so a Distributor sending a ticket internally to its Process would break that rule.
+//            --> The Ticket transports the information about where the movers were sent to
+//              --> The Process now needs to be told which stations to activate, the rest is ruled by the bitmask from the ticket. 
+//
+//    - top level transport abstractions are handshaked here:
+//    --------------------------------------------
+//    - top level transport abstractions
+//      - Instances contain the required transport logic
+//      - Instances control their assigned ProcessCollector
+//      - Instances are controlled in timer based application
+//
+//
+//---------------------------------------------------------------------------------------------------------------
+FUNCTION_BLOCK fb_DisposableHeros // Soldier boy, made of clay, now an empty shell
+VAR_INPUT
+  Start         : BOOL;           // Back to the front
+  DwellTime     : TIME;           // Sounding of the clock that ticks
+  StationMask   : T_PROCESS;      // molded day by day
+END_VAR
+VAR
+  // process index
+  _nProcess               : E_INSTANCE; // whoami
+  _nProcessConnect        : e_instance; // to whom am I connected? this is an idea to manage the two tickets for Distributor and Process
+  _nProcessConnectTarget  : e_instance; // what is the target of the process to whom I am connected
+
+  _stInstanceCtrl         : REFERENCE TO ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_CTRL;
+  _stInstanceState        : REFERENCE TO ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_STATE;
+
+
+  _stProcessData          : ST_PROCESS_DATA;
+
+  _ItfTicketList          : I_Process_LinkedList;
+  _WriteResult            : ST_PROCESS_LIST_RESULT;
+
+  _nState                 : UINT;
+  _tonProcess             : Tc2_Standard.TON;
+
+  _nTicketCount           : UDINT;  // since this is a mock up, there is no-one to clean this up
+  _nTicketCountLimit      : UDINT;  // if <> 0 --> limit is active
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+// CHECK() ??
+// !! this is mock up code, there is no check
+//
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+IF NOT Start THEN _nState   := 0; END_IF
+//---------------------------------------------------------------------------------------------------------------
+CASE _nState OF
+  0:
+    IF Start
+    THEN
+      _nState               := 10;
+    END_IF
+
+  10:
+    CASE _stInstanceState[_nProcess].ProcessState
+    OF
+      E_INSTANCE_STATE.DISABLED:
+        _stInstanceCtrl[_nProcess].Cmd        := E_INSTANCE_CMD.ENABLE;
+
+      E_INSTANCE_STATE.ENABLED:
+        CASE _stInstanceState[_nProcess].ProcessProgress
+        OF
+          E_PROGRESS.PROGRESS_OCCUPIED:       // allow infeed movement
+            _stInstanceCtrl[_nProcess].Cmd    := E_INSTANCE_CMD.PROCEED;
+        END_CASE
+
+      E_INSTANCE_STATE.WORKING:               // this is for the ProcessByTicket standstill handshake
+        CASE _stInstanceState[_nProcess].ProcessProgress
+        OF
+          E_PROGRESS.PROGRESS_BUSY:           // now every mover has arrived.
+            _tonProcess(IN := FALSE, 
+                        PT := DwellTime);
+
+            _stInstanceCtrl[_nProcess].Cmd    := E_INSTANCE_CMD.WORK;
+
+          E_PROGRESS.PROGRESS_OCCUPIED:       // time is fleeting
+            _tonProcess(IN := TRUE, 
+                        PT := DwellTime);
+
+            IF (_tonProcess.Q)
+            THEN
+              _stInstanceCtrl[_nProcess].Cmd  := E_INSTANCE_CMD.FINISH;
+            END_IF
+        END_CASE
+
+      E_INSTANCE_STATE.FINISH:                // madness takes its toll
+        CASE _stInstanceState[_nProcess].ProcessProgress
+        OF
+          E_PROGRESS.PROGRESS_DONE:
+            _tonProcess(IN := FALSE, 
+                        PT := DwellTime);
+
+            _stInstanceCtrl[_nProcess].Cmd    := E_INSTANCE_CMD.DISABLE;
+
+            IF (_nProcessConnect > e_instance.INSTANCE_NULL)
+            THEN
+              _nState                         := 100;
+
+              _stProcessData.nProcessId       := _nProcess;
+              _stProcessData.nTargetId        := _nProcessConnect;
+              _stProcessData.wTarget          := StationMask;
+            END_IF
+        END_CASE
+    END_CASE
+END_CASE
+CASE _nState OF
+
+  100:
+    //-----------------------------------------------------------------------------  
+    // the tickets
+    //-----------------------------------------------------------------------------
+    // first send the ticket to the Distributor
+    _WriteResult                          := _ItfTicketList.AddTailValue(_stProcessData);
+    // second write the ticket for the Process
+    _stProcessData.nProcessId             := _nProcessConnect;
+    _stProcessData.nTargetId              := _nProcessConnectTarget;
+    // third send the ticket to the Process
+    _WriteResult                          := _ItfTicketList.AddTailValue(_stProcessData);
+    //-----------------------------------------------------------------------------
+    _nTicketCount                         := _nTicketCount + 1;;
+    //-----------------------------------------------------------------------------
+    _nState                               := 1000;
+END_CASE
+CASE _nState OF
+
+  1000:
+    IF NOT (_nTicketCountLimit > 0)
+    THEN
+      _nState                             := 0;
+    ELSE
+      IF (_nTicketCount < _nTicketCountLimit)
+      THEN
+        _nState                           := 0;
+      END_IF
+    END_IF
+END_CASE
+]]></ST>
+    </Implementation>
+    <Property Name="InstanceCtrl" Id="{3363ce1e-638f-4a56-a7d9-502d7b3ac384}">
+      <Declaration><![CDATA[PROPERTY InstanceCtrl : REFERENCE TO ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_CTRL]]></Declaration>
+      <Set Name="Set" Id="{f01b16e3-e7c7-4d66-96b7-a5ce7482bb16}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_stInstanceCtrl ref= InstanceCtrl;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="InstanceState" Id="{4aad0611-ac13-4ac9-9913-e5032aa8988a}">
+      <Declaration><![CDATA[PROPERTY InstanceState : REFERENCE TO ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_STATE]]></Declaration>
+      <Set Name="Set" Id="{d6f80117-bb3a-400d-a886-057ce4f9cae4}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_stInstanceState ref= InstanceState;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ProcessId" Id="{b0d1a924-6241-4335-be39-966d3f9b0719}">
+      <Declaration><![CDATA[PROPERTY ProcessId : E_INSTANCE]]></Declaration>
+      <Get Name="Get" Id="{4b563e78-35ca-46fa-a429-91bad99e170e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ProcessId := _nProcess;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{566aa5ef-d2c9-4a5c-8d5d-3fca3942f3dd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_nProcess := ProcessId;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ProcessId_Connect" Id="{abcc06e1-efe7-4aa9-9516-be1588519f38}">
+      <Declaration><![CDATA[PROPERTY ProcessId_Connect : E_INSTANCE]]></Declaration>
+      <Get Name="Get" Id="{b63ddabd-1e94-4d54-b9cd-0e5cfc49b660}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ProcessId_Connect := _nProcessConnect;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{97104ab0-4bc8-47e4-aa6e-413c64ff8466}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_nProcessConnect := ProcessId_Connect;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ProcessId_ConnectTarget" Id="{da385cf2-47a3-4307-bcdb-9af574222ed1}">
+      <Declaration><![CDATA[PROPERTY ProcessId_ConnectTarget : E_INSTANCE]]></Declaration>
+      <Get Name="Get" Id="{e9f241da-b82b-4801-b1f0-50eb7bef7352}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ProcessId_ConnectTarget := _nProcessConnectTarget;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{95ea77ba-8c13-4f5b-b98e-17a763290a3b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_nProcessConnectTarget := ProcessId_ConnectTarget;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TicketLinkedList" Id="{47e1ba62-2d3b-414e-8705-080e812d120b}">
+      <Declaration><![CDATA[PROPERTY TicketLinkedList : I_Process_LinkedList]]></Declaration>
+      <Set Name="Set" Id="{567f8792-66d5-433e-904b-9d5e5e8f13f8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_ItfTicketList := TicketLinkedList;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="fb_DisposableHeros">
+      <LineId Id="1" Count="99" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.InstanceCtrl.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.InstanceState.Set">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.ProcessId.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.ProcessId.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.ProcessId_Connect.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.ProcessId_Connect.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.ProcessId_ConnectTarget.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.ProcessId_ConnectTarget.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.TicketLinkedList.Set">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

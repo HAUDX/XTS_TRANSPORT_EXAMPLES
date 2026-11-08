@@ -31,13 +31,19 @@ VAR_GLOBAL
   //-----------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------
   // cyclic linked lists - your outbox
-  //  - connected to ProcessConductor in ExternControl
+  //  - connected to ExternControl
   //    - deploys tickets to Instances
   //
   //  - fb_LinkedListCtrl
   //    - is controlled via Ctrl/State pair
   //    - provides I_Process_LinkedList for use in conected class
   //-----------------------------------------------------------------------------------------------
+  TicketConductorList           : fb_Process_LinkedList;
+  TicketConductor               : fb_TicketConductor;
+  TicketConductorCtrl           : ST_INSTANCE_CTRL;
+  TicketConductorState          : ST_INSTANCE_STATE;
+
+
   TicketListControl                 : ST_LIST_CTRL;
   TicketListState                   : ST_LIST_STATE;
   TicketListDataInput               : ST_LIST_NODE_DATA;   // datafield for you to write(add) your data

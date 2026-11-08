@@ -19,7 +19,10 @@
     <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="APPLICATION\fb_ProcessConductor.TcPOU">
+    <Compile Include="APPLICATION\fb_TicketConductor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\fb_DisposableHeros.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\GVL_APPLICATION.TcGVL">
@@ -172,6 +175,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS_TRANSPORT\GVL_XTS.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="XTS_TRANSPORT\GVL_XTS_CONSTANTS.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
