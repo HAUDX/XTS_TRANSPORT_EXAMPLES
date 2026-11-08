@@ -179,7 +179,7 @@ OF
         IF (_eCmd = E_INSTANCE_CMD.DISABLE)
         THEN
           _eStateInstance                     := E_INSTANCE_STATE.DISABLED;
-          _eStateProgress                     := E_PROGRESS.PROGRESS_INIT;
+          _eStateProgress                     := E_PROGRESS.PROGRESS_BUSY;
   
         ELSIF (_ItfTicketList.Count > 0)
         THEN

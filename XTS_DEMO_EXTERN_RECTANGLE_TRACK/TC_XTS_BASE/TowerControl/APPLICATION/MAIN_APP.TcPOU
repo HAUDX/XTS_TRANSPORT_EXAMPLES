@@ -178,7 +178,7 @@ CASE nState OF
   10:
     IF bStart
     THEN
-      nState                                        := 100;
+      nState                                        := 11;
       FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
       DO
         Puppets[nIdx](Start                         := FALSE, 
@@ -187,6 +187,19 @@ CASE nState OF
 
         GVL_APPLICATION.InstanceCtrl[nIdx].Cmd      := E_INSTANCE_CMD.ENABLE;
       END_FOR
+    END_IF
+
+  11:
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.ENABLED + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 20;
+    END_IF
+
+  20:
+    GVL_APPLICATION.YardControl.Cmd                 := E_INSTANCE_CMD.WORK;
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.ENABLED + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 100;
     END_IF
 
   100:
@@ -265,7 +278,7 @@ CASE nState OF
                     StationMask                     := wActivateStation[nIdx]);
     END_FOR
 
-    IF NOT bStart THEN nState := 200; END_IF
+    IF NOT bStart THEN nState := 300; END_IF
 
 
 
@@ -521,6 +534,10 @@ END_CASE
       <LineId Id="1191" Count="1" />
       <LineId Id="1190" Count="0" />
       <LineId Id="818" Count="0" />
+      <LineId Id="1242" Count="3" />
+      <LineId Id="1247" Count="0" />
+      <LineId Id="1246" Count="0" />
+      <LineId Id="1248" Count="6" />
       <LineId Id="1148" Count="1" />
       <LineId Id="1126" Count="3" />
       <LineId Id="1112" Count="2" />
