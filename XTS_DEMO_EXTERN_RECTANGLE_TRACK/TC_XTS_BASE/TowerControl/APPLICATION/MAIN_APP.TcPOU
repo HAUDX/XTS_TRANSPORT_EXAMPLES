@@ -267,6 +267,8 @@ CASE nState OF
 
     stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
 
+    GVL_APPLICATION.TicketConductorCtrl.Cmd         := E_INSTANCE_CMD.ENABLE;
+
     nState                                          := 200;
 
 
@@ -545,6 +547,7 @@ END_CASE
       <LineId Id="1115" Count="0" />
       <LineId Id="1118" Count="5" />
       <LineId Id="1194" Count="47" />
+      <LineId Id="1255" Count="1" />
       <LineId Id="1117" Count="0" />
       <LineId Id="836" Count="9" />
       <LineId Id="1180" Count="1" />

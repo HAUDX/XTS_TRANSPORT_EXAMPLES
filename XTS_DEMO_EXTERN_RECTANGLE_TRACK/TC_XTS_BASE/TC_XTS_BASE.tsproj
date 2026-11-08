@@ -290983,7 +290983,7 @@ and will return to Group State Standby when the situation permits.
 		</Motion>
 		<Plc>
 			<Project GUID="{C3B5B646-B91E-4061-A1AD-6B8809F76D51}" Name="TowerControl" PrjFilePath="TowerControl\TowerControl.plcproj" TmcFilePath="TowerControl\TowerControl.tmc" CompilerDefines="WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{3DF83B77-E830-0868-8B5B-1B78B88FD0CE}" TmcPath="TowerControl\TowerControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{22BB1782-C07A-2296-EF42-1B2362304E77}" TmcPath="TowerControl\TowerControl.tmc">
 					<Name>TowerControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">

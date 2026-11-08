@@ -53,6 +53,8 @@ VAR
 
   _nTicketCount           : UDINT;  // since this is a mock up, there is no-one to clean this up
   _nTicketCountLimit      : UDINT;  // if <> 0 --> limit is active
+
+  _tdx                    : uint;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -100,6 +102,7 @@ CASE _nState OF
 
             IF (_tonProcess.Q)
             THEN
+              memset(ADR(_stProcessData), 0, SIZEOF(_stProcessData));
               _stInstanceCtrl[_nProcess].Cmd  := E_INSTANCE_CMD.FINISH;
             END_IF
         END_CASE
@@ -257,7 +260,7 @@ END_VAR
       </Set>
     </Property>
     <LineIds Name="fb_DisposableHeros">
-      <LineId Id="1" Count="99" />
+      <LineId Id="1" Count="100" />
     </LineIds>
     <LineIds Name="fb_DisposableHeros.InstanceCtrl.Set">
       <LineId Id="1" Count="1" />
