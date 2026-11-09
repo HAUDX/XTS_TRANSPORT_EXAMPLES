@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{7ecc74c0-7a0c-48ff-ac99-55f119fe663d}</ProjectGuid>
+    <AssemblyName>TowerControl_InstanceHndshk</AssemblyName>
+    <Name>TowerControl_InstanceHndshk</Name>
+    <RootNamespace>TowerControl_InstanceHndshk</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Instances.svdx">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Instances.tcscopex">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+</Project>
