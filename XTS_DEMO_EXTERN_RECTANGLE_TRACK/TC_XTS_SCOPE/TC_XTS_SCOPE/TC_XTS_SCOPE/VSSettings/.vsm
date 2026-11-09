@@ -5,7 +5,7 @@
   <Children>
     <Node>
       <Title>InstanceScope</Title>
-      <Expanded>True</Expanded>
+      <Expanded>False</Expanded>
       <FileName>Z:\##HAUDX\XTS_TRANSPORT_EXAMPLES\XTS_DEMO_EXTERN_RECTANGLE_2\TC_XTS_SCOPE\TC_XTS_SCOPE\TC_XTS_SCOPE\InstanceScope.tcscopex</FileName>
       <Children>
         <Node>
@@ -107,7 +107,7 @@
         </Node>
         <Node>
           <Title>PROCESS_INFEED</Title>
-          <Expanded>True</Expanded>
+          <Expanded>False</Expanded>
           <FileName></FileName>
           <Children>
             <Node>
@@ -179,7 +179,7 @@
         </Node>
         <Node>
           <Title>DISTRIBUTOR_INFEED</Title>
-          <Expanded>True</Expanded>
+          <Expanded>False</Expanded>
           <FileName></FileName>
           <Children>
             <Node>
@@ -251,12 +251,12 @@
         </Node>
         <Node>
           <Title>CONTINUOUS_CLEAN</Title>
-          <Expanded>True</Expanded>
+          <Expanded>False</Expanded>
           <FileName></FileName>
           <Children>
             <Node>
               <Title>InstanceCtrl (2)</Title>
-              <Expanded>True</Expanded>
+              <Expanded>False</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -269,7 +269,7 @@
             </Node>
             <Node>
               <Title>InstanceState (2)</Title>
-              <Expanded>True</Expanded>
+              <Expanded>False</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -282,7 +282,7 @@
             </Node>
             <Node>
               <Title>InstanceState progress (2)</Title>
-              <Expanded>True</Expanded>
+              <Expanded>False</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -295,7 +295,7 @@
             </Node>
             <Node>
               <Title>CollectorState (2)</Title>
-              <Expanded>True</Expanded>
+              <Expanded>False</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -308,7 +308,7 @@
             </Node>
             <Node>
               <Title>CollectorState progress (2)</Title>
-              <Expanded>True</Expanded>
+              <Expanded>False</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
