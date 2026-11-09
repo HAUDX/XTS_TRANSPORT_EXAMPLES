@@ -193,11 +193,16 @@ CASE nState OF
     IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.ENABLED + E_PROGRESS.PROGRESS_DONE)
     THEN
       nState                                        := 20;
+    ELSIF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.WORKING + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 100;
+    ELSE
+      GVL_APPLICATION.YardControl.Cmd               := E_INSTANCE_CMD.ENABLE;
     END_IF
 
   20:
     GVL_APPLICATION.YardControl.Cmd                 := E_INSTANCE_CMD.WORK;
-    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.ENABLED + E_PROGRESS.PROGRESS_DONE)
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.WORKING + E_PROGRESS.PROGRESS_DONE)
     THEN
       nState                                        := 100;
     END_IF
@@ -294,7 +299,21 @@ CASE nState OF
   400:
     GVL_APPLICATION.TicketConductorCtrl.Cmd         := E_INSTANCE_CMD.DISABLE;
     bStart                                          := FALSE;
-    nState                                          := 0;
+    nState                                          := 500;
+
+  500:
+    GVL_APPLICATION.YardControl.Cmd                 := E_INSTANCE_CMD.CLEAR;
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.CLEARED + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 600;
+    END_IF
+
+  600:
+    GVL_APPLICATION.YardControl.Cmd                 := E_INSTANCE_CMD.DISABLE;
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.DISABLED + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 0;
+    END_IF
 
 END_CASE
 //-----------------------------------------------------------------------------------------------------------------
@@ -538,6 +557,7 @@ END_CASE
       <LineId Id="818" Count="0" />
       <LineId Id="1242" Count="3" />
       <LineId Id="1247" Count="0" />
+      <LineId Id="1257" Count="4" />
       <LineId Id="1246" Count="0" />
       <LineId Id="1248" Count="6" />
       <LineId Id="1148" Count="1" />
@@ -561,6 +581,9 @@ END_CASE
       <LineId Id="1177" Count="0" />
       <LineId Id="1179" Count="0" />
       <LineId Id="1193" Count="0" />
+      <LineId Id="1263" Count="0" />
+      <LineId Id="1262" Count="0" />
+      <LineId Id="1264" Count="11" />
       <LineId Id="1178" Count="0" />
       <LineId Id="846" Count="0" />
       <LineId Id="1103" Count="1" />

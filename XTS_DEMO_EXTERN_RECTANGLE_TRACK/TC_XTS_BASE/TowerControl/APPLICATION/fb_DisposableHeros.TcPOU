@@ -42,7 +42,7 @@ VAR
   _stInstanceCtrl         : REFERENCE TO ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_CTRL;
   _stInstanceState        : REFERENCE TO ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_STATE;
 
-
+  _wActivateStation       : T_PROCESS;
   _stProcessData          : ST_PROCESS_DATA;
 
   _ItfTicketList          : I_Process_LinkedList;
@@ -54,7 +54,7 @@ VAR
   _nTicketCount           : UDINT;  // since this is a mock up, there is no-one to clean this up
   _nTicketCountLimit      : UDINT;  // if <> 0 --> limit is active
 
-  _tdx                    : uint;
+  _tdx                    : UINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -79,6 +79,12 @@ CASE _nState OF
     OF
       E_INSTANCE_STATE.DISABLED:
         _stInstanceCtrl[_nProcess].Cmd        := E_INSTANCE_CMD.ENABLE;
+        IF (_nProcessConnect > e_instance.INSTANCE_NULL)
+        THEN
+          memset(ADR(_stProcessData), 0, SIZEOF(_stProcessData));
+          _nState                             := 20;
+          _wActivateStation                   := StationMask; // this one is important, must be double checked before sending
+        END_IF
 
       E_INSTANCE_STATE.ENABLED:
         CASE _stInstanceState[_nProcess].ProcessProgress
@@ -118,14 +124,21 @@ CASE _nState OF
 
             IF (_nProcessConnect > e_instance.INSTANCE_NULL)
             THEN
-              _nState                         := 100;
-
-              _stProcessData.nProcessId       := _nProcess;
-              _stProcessData.nTargetId        := _nProcessConnect;
-              _stProcessData.wTarget          := StationMask;
+              memset(ADR(_stProcessData), 0, SIZEOF(_stProcessData));
+              _nState                         := 30;
+              _wActivateStation               := StationMask; // this one is important, must be double checked before sending
             END_IF
         END_CASE
     END_CASE
+END_CASE
+CASE _nState OF
+  20:
+    _nState                                   :=  10;
+    TruncMask();
+
+  30:
+    _nState                                   := 100;
+    TruncMask();
 END_CASE
 CASE _nState OF
 
@@ -160,6 +173,40 @@ CASE _nState OF
 END_CASE
 ]]></ST>
     </Implementation>
+    <Method Name="BitGet" Id="{57c98de9-b3fd-4f7e-920b-502f6210a0a0}">
+      <Declaration><![CDATA[METHOD PUBLIC BitGet : BOOL
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
+END_VAR
+VAR
+  wConst : T_PROCESS := 1;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ( inVal AND SHL( wConst,TO_SINT(bitNo) MOD TO_INT(SIZEOF(T_PROCESS)*8) ) ) > 0
+THEN
+  BitGet := TRUE;
+ELSE
+  BitGet := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="BitSet" Id="{075d513b-2170-4aca-a2e9-2a16152dac6f}">
+      <Declaration><![CDATA[METHOD PUBLIC BitSet : T_PROCESS
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
+END_VAR
+VAR
+  wConst  : T_PROCESS := 1;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[BitSet := inVal OR SHL( wConst,TO_SINT(bitNo) MOD TO_INT(SIZEOF(T_PROCESS)*8) );
+]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="InstanceCtrl" Id="{3363ce1e-638f-4a56-a7d9-502d7b3ac384}">
       <Declaration><![CDATA[PROPERTY InstanceCtrl : REFERENCE TO ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_CTRL]]></Declaration>
       <Set Name="Set" Id="{f01b16e3-e7c7-4d66-96b7-a5ce7482bb16}">
@@ -259,8 +306,35 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
+    <Method Name="TruncMask" Id="{1e1b7bd6-e3e6-45f2-a35b-d0a434ac7ca6}">
+      <Declaration><![CDATA[METHOD TruncMask : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// transfer station mask only in the range possible to handle in connected process (StationCount)
+_stProcessData.nProcessId                 := _nProcess;
+_stProcessData.nTargetId                  := _nProcessConnect;
+
+FOR _tdx := 1 TO _stInstanceState[_nProcessConnect].StationCount
+DO
+  IF (BitGet(_wActivateStation, _tdx-1))
+  THEN
+    _stProcessData.wTarget                := BitSet(_stProcessData.wTarget, _tdx-1);
+  END_IF      
+END_FOR
+
+TruncMask := TRUE;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="fb_DisposableHeros">
-      <LineId Id="1" Count="100" />
+      <LineId Id="1" Count="113" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.BitGet">
+      <LineId Id="1" Count="5" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.BitSet">
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_DisposableHeros.InstanceCtrl.Set">
       <LineId Id="1" Count="1" />
@@ -288,6 +362,9 @@ END_VAR
     </LineIds>
     <LineIds Name="fb_DisposableHeros.TicketLinkedList.Set">
       <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.TruncMask">
+      <LineId Id="1" Count="12" />
     </LineIds>
   </POU>
 </TcPlcObject>

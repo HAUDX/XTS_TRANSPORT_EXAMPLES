@@ -1,0 +1,78 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_2\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A64BE845-70A1-47FC-99D2-F5902CFA7043}|TC_XTS_SCOPE\\TC_XTS_SCOPE.tcmproj|Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_2\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\InstanceScope.tcscopex||{F11FCA8C-C893-4F48-9045-99EE42AF6CA8}|Editor",
+      "RelativeMoniker": "D:0:0:{A64BE845-70A1-47FC-99D2-F5902CFA7043}|TC_XTS_SCOPE\\TC_XTS_SCOPE.tcmproj|solutionrelative:TC_XTS_SCOPE\\InstanceScope.tcscopex||{F11FCA8C-C893-4F48-9045-99EE42AF6CA8}|Editor"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 717,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:7:0:{94c070b9-db0b-4415-9311-bac4eef266f5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2:0:{94c070b9-db0b-4415-9311-bac4eef266f5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:4:0:{94c070b9-db0b-4415-9311-bac4eef266f5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{94c070b9-db0b-4415-9311-bac4eef266f5}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 479,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "InstanceScope",
+              "DocumentMoniker": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_2\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\InstanceScope.tcscopex",
+              "RelativeDocumentMoniker": "TC_XTS_SCOPE\\InstanceScope.tcscopex",
+              "ToolTip": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_2\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\InstanceScope.tcscopex",
+              "RelativeToolTip": "TC_XTS_SCOPE\\InstanceScope.tcscopex",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-11-09T06:37:25.796Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 359,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3f61aebf-0260-4afc-86d9-ad36d38a7bdc}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 277,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:3:0:{94c070b9-db0b-4415-9311-bac4eef266f5}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

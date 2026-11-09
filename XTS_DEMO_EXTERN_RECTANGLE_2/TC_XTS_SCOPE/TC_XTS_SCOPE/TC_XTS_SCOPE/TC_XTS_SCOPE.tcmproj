@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{a64be845-70a1-47fc-99d2-f5902cfa7043}</ProjectGuid>
+    <AssemblyName>TC_XTS_SCOPE</AssemblyName>
+    <Name>TC_XTS_SCOPE</Name>
+    <RootNamespace>TC_XTS_SCOPE</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="InstanceScope.tcscopex">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+</Project>
