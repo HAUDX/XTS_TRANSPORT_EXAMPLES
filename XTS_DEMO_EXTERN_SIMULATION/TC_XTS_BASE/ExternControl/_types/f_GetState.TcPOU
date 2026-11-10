@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="f_GetState" Id="{2412fa1c-ea36-4a26-ae27-1e9efbb38ec6}" SpecialFunc="None">
+  <POU Name="f_GetState" Id="{77f3834c-8ee7-4afe-9123-146edee4b324}" SpecialFunc="None">
     <Declaration><![CDATA[// global function to extract state identifier from combined value
 FUNCTION f_GetState : uint
 VAR_INPUT

@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_ProcessCollector" Id="{7589abee-4119-43f0-b081-d6343af23b47}">
+    <Declaration><![CDATA[INTERFACE I_ProcessCollector
+]]></Declaration>
+    <Folder Name="properties process" Id="{6155d1e3-cca7-4be7-a7c0-601d388b7f15}" />
+    <Folder Name="properties station" Id="{a641e729-e1f0-4b47-9964-ed1ac046aa78}" />
+    <Property Name="ActivateStation" Id="{8e13a03b-aa24-46be-8886-69448231718f}" FolderPath="properties process\">
+      <Declaration><![CDATA[PROPERTY ActivateStation : DWORD // bit mask for enabling XtsStations in Process]]></Declaration>
+      <Get Name="Get" Id="{e1dcc3e0-69d5-4b87-9ac4-3bb1a54c0af0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="BitDel" Id="{f66bd9b2-ca72-46c6-8668-332f317216ae}">
+      <Declaration><![CDATA[METHOD PUBLIC BitDel : T_PROCESS
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="BitGet" Id="{19b06bcb-f961-41e2-ac26-9424be59baeb}">
+      <Declaration><![CDATA[METHOD PUBLIC BitGet : BOOL
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="BitSet" Id="{ac11b654-e07b-4a2f-b496-0604e3bdbc45}">
+      <Declaration><![CDATA[METHOD PUBLIC BitSet : T_PROCESS
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="BitsToString" Id="{60248422-8215-473b-bc3f-6f524caccc42}">
+      <Declaration><![CDATA[METHOD BitsToString : STRING(SIZEOF(T_PROCESS)*8) // T_PROCESS to string
+VAR_INPUT
+  inVal       : T_PROCESS;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Cycle" Id="{3ed11261-da1a-46a8-9ae8-2223124a18c9}">
+      <Declaration><![CDATA[METHOD Cycle : e_progress // cyclic call for checking XtsStation state masks and command input from process
+]]></Declaration>
+    </Method>
+    <Method Name="GetMoverInStation" Id="{3350c3bf-f36d-4f29-991c-4c10f93be4db}">
+      <Declaration><![CDATA[METHOD GetMoverInStation : ST_MOVER_INFO // mover in station info
+VAR_INPUT
+  nStation            : UINT;   // index of GVL_XTS.StationState[nStation]
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="GetStationState" Id="{a9971f5d-35e2-48dc-b268-7b2d1190e1b8}">
+      <Declaration><![CDATA[METHOD GetStationState : ST_STATION_STATE
+VAR_INPUT
+  nStation            : UINT;   // index of GVL_XTS.StationState[nStation]
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Init" Id="{e88b8740-537e-4508-a76e-4155ebbcd511}">
+      <Declaration><![CDATA[METHOD PUBLIC Init : E_PROGRESS // clears all XtsSubstations, then disables all
+VAR_INPUT
+  Execute     : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="MessageLevel" Id="{94c7f744-8339-41e6-b4fd-1fb7710ef09c}" FolderPath="properties process\">
+      <Declaration><![CDATA[PROPERTY MessageLevel : e_MessageType]]></Declaration>
+      <Get Name="Get" Id="{ed55e9f4-4819-49cf-bfe2-03dd2c0b82e9}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{06ad557f-b5e2-485b-a318-c0d716768812}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="ProcessCtrl" Id="{96367627-ef03-4a6c-b934-1d90543ca09b}" FolderPath="properties process\">
+      <Declaration><![CDATA[PROPERTY ProcessCtrl : reference to st_process_ctrl]]></Declaration>
+      <Get Name="Get" Id="{023467b7-a424-4969-bef9-0ce971fe5dc6}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{296cfafe-2c07-46bf-8016-8b4330ecb521}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="ProcessId" Id="{e70fa4b6-5fb9-4adc-ae64-52a159e831b3}" FolderPath="properties process\">
+      <Declaration><![CDATA[PROPERTY ProcessId : E_INSTANCE]]></Declaration>
+      <Get Name="Get" Id="{4d7afc08-7b2e-4c40-b273-b744873d6cef}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{0a8e2888-d055-425e-9bdf-2929c061763a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="ProcessState" Id="{1dd6c6dd-8a48-4cc6-86a9-bb571a650b17}" FolderPath="properties process\">
+      <Declaration><![CDATA[PROPERTY ProcessState : reference to st_process_state]]></Declaration>
+      <Get Name="Get" Id="{62763208-9dc8-4674-811d-4affaf69d44e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{8a078914-9963-4155-9a5f-de7fc37b811b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="QueueMoverIDs" Id="{6c69ae7a-77d6-4fb0-abd5-213c0791df05}" FolderPath="properties station\">
+      <Declaration><![CDATA[PROPERTY QueueMoverIDs : ARRAY[1..SIZEOF(T_PROCESS)*8] OF UINT]]></Declaration>
+      <Get Name="Get" Id="{b0480264-26af-4f1b-9b2f-2a9ec4b6fd37}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="QueueProcessCount" Id="{383f3b67-6755-4bb5-8db1-f239fef7e530}" FolderPath="properties station\">
+      <Declaration><![CDATA[PROPERTY QueueProcessCount : UINT // sum of all station queues]]></Declaration>
+      <Get Name="Get" Id="{b27e9c95-a2df-4662-bc7f-b4bd88a2aebd}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="QueueStationCount" Id="{5434332f-8be9-4574-82e4-4078fca7e882}" FolderPath="properties station\">
+      <Declaration><![CDATA[PROPERTY QueueStationCount : ARRAY[1..SIZEOF(T_PROCESS)*8] OF UINT]]></Declaration>
+      <Get Name="Get" Id="{5f19f592-c328-4773-9a73-7729c777fc04}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="StationCount" Id="{23808d64-364d-4e23-9804-9da30652acef}" FolderPath="properties station\">
+      <Declaration><![CDATA[PROPERTY StationCount : UINT]]></Declaration>
+      <Get Name="Get" Id="{fd9786ec-776b-4017-88f2-94c7d3c2f1b3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="StationFirst" Id="{eefcb75f-bcdc-4b11-a2b5-3e59368180bc}" FolderPath="properties station\">
+      <Declaration><![CDATA[PROPERTY StationFirst : uint]]></Declaration>
+      <Get Name="Get" Id="{31986b47-89ef-4705-a6d6-7896860581e5}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{688916b2-1915-4be9-bf11-ecccf12a58ed}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="StationLast" Id="{772b519c-20ed-4039-ad7d-3c0bda9ba32f}" FolderPath="properties station\">
+      <Declaration><![CDATA[PROPERTY StationLast : uint]]></Declaration>
+      <Get Name="Get" Id="{1142db0c-7004-4954-b173-27153d7c6181}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{05c459f6-cd9f-46b0-afb5-fcfeeeb1b92a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="TargetIndex" Id="{858490f9-434f-4ed5-8fba-9103419fff5c}" FolderPath="properties process\">
+      <Declaration><![CDATA[PROPERTY TargetIndex : ARRAY[1..SIZEOF(T_PROCESS)*8] OF USINT]]></Declaration>
+      <Get Name="Get" Id="{56ad36d4-d21b-481a-9a0b-0a30cb0b3a8d}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{1516bc4a-5deb-4b5f-ad38-c7ad8b9c1d5e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="TargetMask" Id="{97c81684-a138-46a9-a7b0-4f9a1da37afc}" FolderPath="properties process\">
+      <Declaration><![CDATA[PROPERTY TargetMask : ARRAY[1..SIZEOF(T_PROCESS)*8] OF BYTE]]></Declaration>
+      <Get Name="Get" Id="{d2febaa4-4f7e-49f5-bc18-6cad66dd7b47}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{4c604133-b8f0-4095-a6b8-a44037be1e81}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="To_T_Process" Id="{0c9ec38b-df11-40ea-a54d-d926de0a25d5}">
+      <Declaration><![CDATA[METHOD To_T_Process : T_PROCESS // maps (2^nExp)-1 onto T_PROCESS datatype 
+VAR_INPUT
+  nExp              : BYTE;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

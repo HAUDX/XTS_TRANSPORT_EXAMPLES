@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <GVL Name="GVL_XTS_CONSTANTS" Id="{fc52c788-4f37-4232-92a3-2aedad069f33}">
+  <GVL Name="GVL_XTS_CONSTANTS" Id="{992237f8-f7a1-45b5-aa5d-588918908311}">
     <Declaration><![CDATA[//{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -22,29 +22,26 @@ VAR_GLOBAL CONSTANT
 //        --> I leave the details up to you
 //-----------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------
-  MAX_MOVER           : UINT    := 28;
-(*
-  MAX_MOVER           : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsMoversPerXpu);
-  MAX_MODULE          : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxModulesPerPart);
-  MAX_PART            : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsPartsPerXpu);
-  MAX_TRACK           : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsTracksPerXpu);
-  MAX_GROUP           : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsCaGroup);
-
-  MAX_INFO_SERVER     : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsInfoServer);
-  MAX_INFO_STATION    : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsInfoStation);
-  MAX_INFO_STOP_POS   : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsStopPositionsPerStation);
-
-  MAX_PARAMETER_SET   : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsParameterSet);
-
-  MAX_NCT_BASE_UNIT   : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsNctBaseUnitInterfaces);
-*)
+  MAX_MOVER           : UINT    := 10;
+//   MAX_MODULE          : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxModulesPerPart);
+//   MAX_PART            : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsPartsPerXpu);
+//   MAX_TRACK           : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsTracksPerXpu);
+//   MAX_GROUP           : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsCaGroup);
+// 
+//   MAX_INFO_SERVER     : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsInfoServer);
+//   MAX_INFO_STATION    : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsInfoStation);
+//   MAX_INFO_STOP_POS   : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsStopPositionsPerStation);
+// 
+//   MAX_PARAMETER_SET   : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsParameterSet);
+// 
+//   MAX_NCT_BASE_UNIT   : UINT    := TO_UINT(Tc3_XTS_Utility.TcIoXtsEnvironmentParameterList.MaxXtsNctBaseUnitInterfaces);
 //-----------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------
 //  XTS_TRANSPORT_LAYER
 //  - project constants you will have to adjust in order to build your transport logic
 //-----------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------
-  MAX_STATION         : UINT    := 21;
+  MAX_STATION         : UINT    := 16;
 
   MAX_STATION_NEST    : UINT    := TO_UINT(SIZEOF(ST_STATION_STATE.nMask)*8);
   MAX_LIST_NODES      : UINT    := MAX_MOVER;

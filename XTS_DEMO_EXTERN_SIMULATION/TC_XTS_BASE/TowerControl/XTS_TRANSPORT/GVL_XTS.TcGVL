@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_XTS" Id="{09dfa152-1bd2-48eb-b928-a4a532d8b37f}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+  //---------------------------------------------------------------------------
+  // MC2 encapsulation, CA movement
+  //---------------------------------------------------------------------------
+  MoverSelectorCtrl     : ST_MOVER_SELECTOR_CTRL;
+  MoverSelectorState    : ST_MOVER_SELECTOR_STATE;
+  //---------------------------------------------------------------------------
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

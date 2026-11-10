@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_PROCESS_CTRL" Id="{714800c4-f91e-47ea-86f9-ef8babdc2be5}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_PROCESS_CTRL :
+(
+  PROCESS_INIT              := 10,
+  PROCESS_DISABLE           := 20,
+  PROCESS_ENABLE            := 30,
+  PROCESS_STATIONS_INFEED,
+
+  PROCESS_STATIONS_ENTER    := 40,
+  PROCESS_STATIONS_SEND,
+
+  PROCESS_START             := 60,
+  PROCESS_DONE              := 70,
+  PROCESS_STATIONS_OUTFEED  := 80
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <POU Name="MAPPING_XTS_in" Id="{8dd0786d-fea2-4980-ab29-35b8e8f9591e}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAPPING_XTS_in
 //-----------------------------------------------------------------------------------------------------------------

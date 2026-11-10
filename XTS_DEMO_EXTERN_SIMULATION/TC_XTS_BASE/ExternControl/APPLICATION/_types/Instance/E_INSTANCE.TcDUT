@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_INSTANCE" Id="{20aaac2f-2c82-4fb9-b573-7c6071ff64cd}">
+    <Declaration><![CDATA[//{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+{info 'E_INSTANCE placeholder for process identification; ROCKER example'}
+TYPE E_INSTANCE : // placeholder for process identification
+(
+	INSTANCE_NULL,
+  //-----------------------------------
+  // ROCKER example processes:
+  DISTRIBUTOR_INFEED,         // (1 to m) - incomming ticket data ST_PROCESS_DATA.wTarget sets target for mover
+  PROCESS_INFEED,             // (m to 1) - place workpiece
+  DISTRIBUTOR_FREE,           // (1 to m) - distributor to next
+  PROCESS_FREE,               // (m to 1) - standstill process, writes ticket to next distributor
+  DISTRIBUTOR_HOUSING,        // (1 to m) - distributor to next
+  PROCESS_HOUSING,            // (m to 1) - standstill process, writes ticket to next distributor
+  DISTRIBUTOR_ROCKER,         // (1 to m) - distributor to next
+  PROCESS_ROCKER,             // (m to 1) - standstill process, writes ticket to next distributor
+  DISTRIBUTOR_ASSEMBLY_CHECK, // (1 to m) - distributor to next
+  PROCESS_ASSEMBLY_CHECK,     // (m to 1) - unload workpiece
+  // ROCKER example processes.
+  //-----------------------------------
+  INSTANCE_MAX,
+  //-----------------------------------
+  //  off sequence but in the book
+  //-----------------------------------
+  INSTANCE_CONDUCTOR          := 707   // The normalization root 1\sqrt{2}
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

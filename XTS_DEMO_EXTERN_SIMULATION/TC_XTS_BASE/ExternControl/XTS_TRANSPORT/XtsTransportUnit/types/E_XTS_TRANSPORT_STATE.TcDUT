@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
-  <DUT Name="E_XTS_TRANSPORT_STATE" Id="{feb23f87-5d91-44b0-901c-23bcfc444ff8}">
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_XTS_TRANSPORT_STATE" Id="{3a80178c-c7c4-44b0-82c9-a2738edbfd3c}">
     <Declaration><![CDATA[{attribute 'to_string'}
 TYPE E_XTS_TRANSPORT_STATE :
 (

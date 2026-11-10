@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="U_MOVER_SELECTOR_CTRL" Id="{85b49b2e-9bf0-4a6d-80bc-33748c0b4afc}">
+    <Declaration><![CDATA[TYPE U_MOVER_SELECTOR_CTRL :
+UNION
+  stCtrl              : ST_MOVER_SELECTOR_CTRL;
+
+  byCtrl    AT %Q*    : ARRAY[1..SIZEOF(ST_MOVER_SELECTOR_CTRL)] OF BYTE;
+
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

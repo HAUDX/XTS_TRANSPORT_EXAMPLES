@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
-  <DUT Name="ST_XPU_CTRL" Id="{919056f0-97af-494f-ae19-703b77c4c6a2}">
+  <DUT Name="ST_XPU_CTRL" Id="{b47016e1-c428-4ab6-9949-2ee29c36fc1b}">
     <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
 TYPE ST_XPU_CTRL :
 STRUCT

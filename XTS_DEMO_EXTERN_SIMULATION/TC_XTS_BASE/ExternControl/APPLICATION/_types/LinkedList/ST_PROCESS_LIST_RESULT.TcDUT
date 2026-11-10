@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="ST_PROCESS_LIST_RESULT" Id="{7a3f0ad8-7076-46b9-b446-1a9360c14ec2}">
+  <DUT Name="ST_PROCESS_LIST_RESULT" Id="{69d55bf6-386e-417d-b19c-6c43b0ff3b3e}">
     <Declaration><![CDATA[TYPE ST_PROCESS_LIST_RESULT :
 STRUCT
   wState    : WORD;   // wState == 0 --> all ok

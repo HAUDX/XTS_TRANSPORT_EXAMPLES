@@ -263,11 +263,11 @@ OF
 
     FOR nStation := 1 TO MAX_STATION
     DO
-      GVL_MSG_XTS.MessageLevelStations[nStation]    := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
+      GVL_MSG_XTS.MessageLevelStations[nStation]    := E_MessageType.eMessageInfo;  //GVL_MSG_XTS.MessageLevel;
     END_FOR
     FOR nMover := 1 TO MAX_MOVER
     DO
-      GVL_MSG_XTS.MessageLevelMovers[nMover]        := E_MessageType.eMessageVerbose; //GVL_MSG.MessageLevel;
+      GVL_MSG_XTS.MessageLevelMovers[nMover]        := GVL_MSG_XTS.MessageLevel;
     END_FOR
     
   //-----------------------------------------------------------------------------
@@ -776,8 +776,14 @@ tStationSelectedQueue                 := GVL_XTS.StationQueue[nStationSelected];
       </Implementation>
     </Action>
     <LineIds Name="MAIN_XTS">
-      <LineId Id="921" Count="461" />
-      <LineId Id="460" Count="0" />
+      <LineId Id="461" Count="0" />
+      <LineId Id="2" Count="64" />
+      <LineId Id="462" Count="0" />
+      <LineId Id="67" Count="320" />
+      <LineId Id="464" Count="0" />
+      <LineId Id="388" Count="57" />
+      <LineId Id="463" Count="0" />
+      <LineId Id="446" Count="14" />
     </LineIds>
     <LineIds Name="MAIN_XTS.DefaultStationParameters">
       <LineId Id="1" Count="23" />

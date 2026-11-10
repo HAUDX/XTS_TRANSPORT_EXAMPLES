@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <DUT Name="ST_MOVER_CTRL" Id="{a299673c-c2cc-439a-8430-207ccf2653ce}">
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_MOVER_CTRL" Id="{b80034d3-31de-45a0-bc57-804442a40fbd}">
     <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
 TYPE ST_MOVER_CTRL :
 STRUCT

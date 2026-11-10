@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <GVL Name="GVL_MSG_XTS" Id="{c453b071-06a2-4a5a-9959-2180f394ff85}">
+  <GVL Name="GVL_MSG_XTS" Id="{71e9425a-4ecd-4a53-b698-288a148515d0}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
   //-----------------------------------------------------------------------------
@@ -17,9 +17,9 @@ VAR_GLOBAL CONSTANT
   CON_DIR               : STRING  := '/usr/local/etc/TwinCAT/#Configuration/';  // delimiter at the end is mandatory!!
 {END_IF}
 
-  LOG_FILE              : STRING  := 'MSG_XtsTransport_';
-  LOG_FILE_APP          : STRING  := 'MSG_Application_';
-  LOG_FILE_METRIC       : STRING  := 'MSG_XtsTransportMetrics_';
+  LOG_FILE              : STRING  := concat(TO_STRING(TwinCAT_SystemInfoVarList._AppInfo.AdsPort), '_MSG_Transport_');
+  LOG_FILE_APP          : STRING  := concat(TO_STRING(TwinCAT_SystemInfoVarList._AppInfo.AdsPort), '_MSG_Application_');
+  LOG_FILE_METRIC       : STRING  := concat(TO_STRING(TwinCAT_SystemInfoVarList._AppInfo.AdsPort), '_MSG_Metrics_');
 
   MAX_MESSAGE           : UINT    := 2000; // max entry in message list
 END_VAR

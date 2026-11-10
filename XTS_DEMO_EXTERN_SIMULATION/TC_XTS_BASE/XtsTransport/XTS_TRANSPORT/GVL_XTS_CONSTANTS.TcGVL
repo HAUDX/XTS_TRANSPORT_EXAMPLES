@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <GVL Name="GVL_XTS_CONSTANTS" Id="{a44b4d76-f5e0-4b05-b455-fe21dcdcc41c}">
     <Declaration><![CDATA[//{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
@@ -41,7 +41,7 @@ VAR_GLOBAL CONSTANT
 //  - project constants you will have to adjust in order to build your transport logic
 //-----------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------------
-  MAX_STATION         : UINT    := 21;
+  MAX_STATION         : UINT    := 16;
 
   MAX_STATION_NEST    : UINT    := TO_UINT(SIZEOF(ST_STATION_STATE.nMask)*8);
   MAX_LIST_NODES      : UINT    := MAX_MOVER;

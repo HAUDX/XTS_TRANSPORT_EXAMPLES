@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
-  <DUT Name="e_Device" Id="{a876eb58-59b1-435f-b844-17029068e246}">
+  <DUT Name="e_Device" Id="{583b76f9-b8cb-46e5-9127-97f04e4201aa}">
     <Declaration><![CDATA[{attribute 'to_string'}
 TYPE e_Device :
 (

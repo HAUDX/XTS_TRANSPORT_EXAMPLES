@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
-  <DUT Name="E_XTS_TRANSPORT_CTRL" Id="{ecd15659-ddcf-45b9-80e5-aef46fc5218e}">
+  <DUT Name="E_XTS_TRANSPORT_CTRL" Id="{7d8f09ab-26a6-4882-93cd-2a619ceb5ac3}">
     <Declaration><![CDATA[{attribute 'strict'}
 {attribute 'to_string'}
 TYPE E_XTS_TRANSPORT_CTRL :

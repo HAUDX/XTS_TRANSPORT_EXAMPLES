@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <POU Name="StationParameter_ROCKER" Id="{2bed8116-3275-4792-bc24-003b408095fe}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION StationParameter_ROCKER  : BOOL
+VAR
+  nStationParameter                 : UINT; // THIS IS ONLY FOR EXAMPLE USE, CHECK MAX_STATION MANUALLY
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.11.10
+//
+//  - hard coded station parameters
+//  - TODO: xml DataServer implementation for station parameter read/write
+//
+//  - reminder: (this you HAVE to check manually when setting up the transport)
+//-----------------------------------------------------------------------------
+//    - DO NOT place the modulo turn within the range of a station
+//
+//    - in case the extern process requires multiple xts stations, 
+//      - the range must be closed and in strict order
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+GVL_XTS.StationStartIndex                                         := 1;
+GVL_XTS.StationStart.rPosWait                                     :=    1600.0; // for every TRANSPORT_START this physical position may differ from the rPosWait of StationStartIndex station
+
+GVL_XTS.StationStart.rGap                                         :=     125.0;
+GVL_XTS.StationStart.rVelo                                        :=   1_250.0;
+GVL_XTS.StationStart.rAccDec                                      :=   7_500.0;
+GVL_XTS.StationStart.rJerk                                        := 300_000.0;
+
+FOR nStationParameter := 1 TO GVL_XTS_CONSTANTS.MAX_STATION
+DO
+  GVL_XTS.StationParameter[nStationParameter].eType               := E_STATION_TYPE.STATION_PROCESS;
+  GVL_XTS.StationParameter[nStationParameter].rGap                := MAIN_APP.rDefaultGap;
+  GVL_XTS.StationParameter[nStationParameter].rVelo               := MAIN_APP.rDefaultVeloMin;
+  GVL_XTS.StationParameter[nStationParameter].rAccDec             := MAIN_APP.rDefaultAccDec;
+  GVL_XTS.StationParameter[nStationParameter].rJerk               := MAIN_APP.rDefaultJerk;
+END_FOR
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//  DEFAULT velo for system
+//-----------------------------------------------------------------------------------------------------------------------------------------
+FOR nStationParameter := 1 TO MAX_STATION
+DO
+  GVL_XTS.StationParameter[nStationParameter].rVelo               := MAIN_APP.rDefaultVeloMin;
+END_FOR
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+nStationParameter := 1;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'DISTRIBUTOR_INFEED';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=    1900.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     -10.0; // relative to Mover.ActPos
+
+nStationParameter := 2;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'PROCESS_INFEED';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=    2000.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=      75.0; // relative to Mover.ActPos
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+nStationParameter := 5;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'DISTRIBUTOR_FREE';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=    2500.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     -10.0; // relative to Mover.ActPos
+
+nStationParameter := 6;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'PROCESS_FREE';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=     150.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=      75.0; // relative to Mover.ActPos
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+nStationParameter := 7;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'DISTRIBUTOR_HOUSING';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=     250.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     -10.0; // relative to Mover.ActPos
+
+nStationParameter := 8;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'PROCESS_HOUSING';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=     325.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=      10.0; // relative to Mover.ActPos
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+nStationParameter := 9;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'DISTRIBUTOR_ROCKER';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=     400.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     -10.0; // relative to Mover.ActPos
+
+nStationParameter := 10;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'PROCESS_ROCKER_01';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       5;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=     500.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=     150.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]           :=     175.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[3]           :=     200.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[4]           :=     225.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[5]           :=     250.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     300.0; // relative to Mover.ActPos
+
+nStationParameter := 11;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'PROCESS_ROCKER_02';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       5;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=     500.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=     420.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]           :=     445.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[3]           :=     470.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[4]           :=     495.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[5]           :=     520.0; // relative to rPosWait
+
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=      25.0; // relative to Mover.ActPos
+
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+nStationParameter := 13;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'DISTRIBUTOR_ASSEMBLY_CHECK';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=    1500.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     -10.0; // relative to Mover.ActPos
+
+nStationParameter := 14;
+GVL_XTS.StationParameter[nStationParameter].eType                 := E_STATION_TYPE.STATION_PROCESS;
+GVL_XTS.StationParameter[nStationParameter].sText                 := 'PROCESS_ASSEMBLY_CHECK';
+GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       5;   // how many stops the mover has to make in this station
+
+GVL_XTS.StationParameter[nStationParameter].rPosWait              :=    1700.0; // absolute modulo position
+GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[2]           :=      25.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[3]           :=      50.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[4]           :=      75.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rPosStop[5]           :=     100.0; // relative to rPosWait
+GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=      50.0; // relative to Mover.ActPos
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+// EOF
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------]]></ST>
+    </Implementation>
+    <LineIds Name="StationParameter_ROCKER">
+      <LineId Id="166" Count="0" />
+      <LineId Id="2" Count="163" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
