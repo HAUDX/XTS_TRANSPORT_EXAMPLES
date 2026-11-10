@@ -5,8 +5,8 @@
   <Children>
     <Node>
       <Title>Instances</Title>
-      <Expanded>True</Expanded>
-      <FileName>C:\##HAUDX\XTS_TRANSPORT_EXAMPLES\drafts\TowerControl_InstanceHndshk\TowerControl_InstanceHndshk\Instances.tcscopex</FileName>
+      <Expanded>False</Expanded>
+      <FileName>C:\##HAUDX\XTS_TRANSPORT_EXAMPLES\XTS_DEMO_EXTERN_RECTANGLE_TRACK\TC_XTS_SCOPE\TowerControl_InstanceHndshk\TowerControl_InstanceHndshk\Instances.svdx</FileName>
       <Children>
         <Node>
           <Title>DataPool</Title>
@@ -112,7 +112,7 @@
           <Children>
             <Node>
               <Title>InstanceCtrl</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -125,7 +125,7 @@
             </Node>
             <Node>
               <Title>InstanceState</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -138,7 +138,7 @@
             </Node>
             <Node>
               <Title>InstanceProgress</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -151,7 +151,7 @@
             </Node>
             <Node>
               <Title>CollectorState</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -164,7 +164,7 @@
             </Node>
             <Node>
               <Title>CollectorProgress</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -179,7 +179,7 @@
         </Node>
         <Node>
           <Title>PROCESS_INFEED</Title>
-          <Expanded>False</Expanded>
+          <Expanded>True</Expanded>
           <FileName></FileName>
           <Children>
             <Node>
@@ -251,7 +251,7 @@
         </Node>
         <Node>
           <Title>CONTINUOUS_CLEAN</Title>
-          <Expanded>False</Expanded>
+          <Expanded>True</Expanded>
           <FileName></FileName>
           <Children>
             <Node>
@@ -331,8 +331,8 @@
     </Node>
     <Node>
       <Title>Instances</Title>
-      <Expanded>False</Expanded>
-      <FileName>C:\##HAUDX\XTS_TRANSPORT_EXAMPLES\drafts\TowerControl_InstanceHndshk\TowerControl_InstanceHndshk\Instances.svdx</FileName>
+      <Expanded>True</Expanded>
+      <FileName>C:\##HAUDX\XTS_TRANSPORT_EXAMPLES\XTS_DEMO_EXTERN_RECTANGLE_TRACK\TC_XTS_SCOPE\TowerControl_InstanceHndshk\TowerControl_InstanceHndshk\Instances.tcscopex</FileName>
       <Children>
         <Node>
           <Title>DataPool</Title>
@@ -433,12 +433,12 @@
         </Node>
         <Node>
           <Title>DISTRIBUTOR_INFEED</Title>
-          <Expanded>False</Expanded>
+          <Expanded>True</Expanded>
           <FileName></FileName>
           <Children>
             <Node>
               <Title>InstanceCtrl</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -451,7 +451,7 @@
             </Node>
             <Node>
               <Title>InstanceState</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -464,7 +464,7 @@
             </Node>
             <Node>
               <Title>InstanceProgress</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -477,7 +477,7 @@
             </Node>
             <Node>
               <Title>CollectorState</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -490,7 +490,7 @@
             </Node>
             <Node>
               <Title>CollectorProgress</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -505,12 +505,12 @@
         </Node>
         <Node>
           <Title>PROCESS_INFEED</Title>
-          <Expanded>False</Expanded>
+          <Expanded>True</Expanded>
           <FileName></FileName>
           <Children>
             <Node>
               <Title>InstanceCtrl (1)</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -523,7 +523,7 @@
             </Node>
             <Node>
               <Title>InstanceState (1)</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -536,7 +536,7 @@
             </Node>
             <Node>
               <Title>InstanceProgress (1)</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -549,7 +549,7 @@
             </Node>
             <Node>
               <Title>CollectorState (1)</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -562,7 +562,7 @@
             </Node>
             <Node>
               <Title>CollectorProgress (1)</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -577,12 +577,12 @@
         </Node>
         <Node>
           <Title>CONTINUOUS_CLEAN</Title>
-          <Expanded>False</Expanded>
+          <Expanded>True</Expanded>
           <FileName></FileName>
           <Children>
             <Node>
               <Title>InstanceCtrl (2)</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -595,7 +595,7 @@
             </Node>
             <Node>
               <Title>InstanceState (2)</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -608,7 +608,7 @@
             </Node>
             <Node>
               <Title>InstanceProgress (2)</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -621,7 +621,7 @@
             </Node>
             <Node>
               <Title>CollectorState (2)</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
@@ -634,7 +634,7 @@
             </Node>
             <Node>
               <Title>CollectorProgress (2)</Title>
-              <Expanded>False</Expanded>
+              <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
