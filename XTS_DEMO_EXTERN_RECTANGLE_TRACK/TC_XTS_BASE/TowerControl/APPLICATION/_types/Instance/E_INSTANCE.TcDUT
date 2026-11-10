@@ -17,11 +17,11 @@ TYPE E_INSTANCE : // placeholder for process identification
   CONTINUOUS_SCAN,            // (1 to 1) - scan  workpiece
   CONTINUOUS_CAMERA,          // (1 to 1) - take a picture
   DISTRIBUTOR_ASSEMBLY_01,    // (1 to m) - distributor to next
-  PROCESS_ASSEMBLY_01,        // (m to 1) - standstill process, writes ticket to next distributor
+  PROCESS_ASSEMBLY_01,        // (m to 1) - standstill process
   DISTRIBUTOR_ASSEMBLY_02,    // (1 to m) - distributor to next
-  PROCESS_ASSEMBLY_02,        // (m to 1) - standstill process, writes ticket to next distributor
+  PROCESS_ASSEMBLY_02,        // (m to 1) - standstill process
   DISTRIBUTOR_ASSEMBLY_TEST,  // (1 to m) - distributor to next
-  PROCESS_ASSEMBLY_TEST,      // (m to 1) - standstill process, writes ticket to next distributor
+  PROCESS_ASSEMBLY_TEST,      // (m to 1) - standstill process
   DISTRIBUTOR_CAMERA,         // (1 to 1) - change dyn constraint of mover on the fly
   CONTINUOUS_ASSEMBLY_CAMERA, // (1 to 1) - move through camera inspection
   DISTRIBUTOR_OUTFEED,        // (1 to m) - distributor to next
