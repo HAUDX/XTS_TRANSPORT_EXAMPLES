@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_APPLICATION" Id="{dc8f8ced-badd-4a9d-8f34-4afca7289e37}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+  MAX_PROCESS       : E_INSTANCE    := E_INSTANCE.PROCESS_EIGHT;
+END_VAR
+{attribute 'qualified_only'}
+VAR_GLOBAL
+  //-----------------------------------------------------------------------------------------------
+  // Tower Control Room
+  //
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  // YardMaster - the man in the middle
+  //-----------------------------------------------------------------------------------------------
+  YardControl                       : ST_YARD_CTRL;
+  YardState                         : ST_YARD_STATE;
+  //-----------------------------------------------------------------------------------------------
+  // Instances - transport primitives abstract traffic
+  //  - structs are used to command Instances during production
+  //
+  //  - [1 to m] DistributorByTicket is the inbox for your process (wTargetMask)
+  //    - [m to 1] ProcessByTicket is reacting to the ticket
+  //
+  //  - [1 to m] DistributorByTicket is your place of decision 
+  //      if the station mask is acting or reacting
+  //
+  //-----------------------------------------------------------------------------------------------
+  InstanceCtrl                      : ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_CTRL;
+  InstanceState                     : ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_STATE;
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  // cyclic linked lists - your outbox
+  //  - connected to ExternControl
+  //    - deploys tickets to Instances
+  //
+  //  - fb_LinkedListCtrl
+  //    - is controlled via Ctrl/State pair
+  //    - provides I_Process_LinkedList for use in conected class
+  //-----------------------------------------------------------------------------------------------
+  TicketConductorList           : fb_Process_LinkedList;
+  TicketConductor               : fb_TicketConductor;
+  TicketConductorCtrl           : ST_INSTANCE_CTRL;
+  TicketConductorState          : ST_INSTANCE_STATE;
+
+
+  TicketListControl                 : ST_LIST_CTRL;
+  TicketListState                   : ST_LIST_STATE;
+  TicketListDataInput               : ST_LIST_NODE_DATA;   // datafield for you to write(add) your data
+  TicketListDataOutput              : ST_LIST_NODE_DATA;   // datafield for you to read (get) your data
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

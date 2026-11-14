@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
-  <DUT Name="E_PROCESS_CTRL" Id="{104b6d53-82e0-43bb-822e-312fbaf3fe62}">
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_PROCESS_CTRL" Id="{714800c4-f91e-47ea-86f9-ef8babdc2be5}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 {attribute 'to_string'}

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <TextList Name="TL_E_CTRL_STATION" Id="{2a126329-0eae-4175-bcf6-a9a3d27db342}">
+<TcPlcObject Version="1.1.0.1">
+  <TextList Name="TL_E_CTRL_STATION" Id="{6fdc7293-8d83-4232-983c-0fe88aa09f8e}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="TextListObject">

@@ -1,0 +1,655 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN_APP" Id="{88c725a4-6c17-4e49-9688-89157c201df6}" SpecialFunc="None">
+    <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
+//
+//  HAUD 2026.11.02
+//
+//  - TowerControl
+//
+//    - this is the main application switchboard
+//
+//    - top level transport abstractions are handshaked here:
+//    --------------------------------------------
+//    - top level transport abstractions
+//      - Instances contain the required transport logic
+//      - Instances control their assigned ProcessCollector
+//      - Instances are controlled in timer based application
+//
+//
+//---------------------------------------------------------------------------------------------------------------
+PROGRAM MAIN_APP
+VAR
+  eInitExternControl  AT %I*    : E_PROGRESS;   // initialization from ExternControl PLC
+  eInitXtsTransport   AT %I*    : E_PROGRESS;   // initialization from XtsTransport PLC
+  eInit                         : E_PROGRESS;   // local startup
+
+  // message pipeline(s) handling
+  eMtrState,
+  eMsgState                     : E_MESSAGE_STATE;
+  eMtrProgress,
+  eMsgProgress                  : E_PROGRESS;
+  stMsg                         : ST_Message;
+  //-------------------------------------------------------------------------------------------------------------
+  tIdleWriteMotion              : TIME := T#5S;
+  tIdleWriteApplication         : TIME := T#5S;
+  tIdleWriteMetric              : TIME := T#5S;
+  tonIdleWriteMotion            : Tc2_Standard.TON;
+  tonIdleWriteApplication       : Tc2_Standard.TON;
+  tonIdleWriteMetric            : Tc2_Standard.TON;
+  //-------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------
+  // testing stuff
+  //-------------------------------------------------------------------------------------------------------------
+  bStart                        : BOOL;
+  Puppets                       : ARRAY[1..MAX_PROCESS] OF fb_DisposableHeros;
+
+  // this is still a subsystem for transport --> dwell time
+  {attribute 'displaymode':='bin'}
+  wActivateStation              : ARRAY[1..MAX_PROCESS] OF T_PROCESS;
+  tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
+  tonProcess                    : ARRAY[1..MAX_PROCESS] OF Tc2_Standard.TON;
+
+
+  nIdx                          : E_INSTANCE;
+
+  nState                        : UDINT;    // monolithic case with sequences to run this example
+
+  stWriteTargetInit             : ST_PROCESS_LIST_RESULT;
+  stProcessData                 : ST_PROCESS_DATA;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//#################################################################################################################
+// Local time; used for timestamps
+//#################################################################################################################
+GVL_MSG_XTS.fbLocalTime();
+GVL_MSG_XTS.sLocalTime                                            := GVL_MSG_XTS.fbLocalTime.LocalTimeString;
+GVL_MSG_XTS.dtLocalTime                                           := GVL_MSG_XTS.fbLocalTime.LocalTime;
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// check for Initialisation from ExternControl
+//  - wait for transport layers to be fully started up
+//-----------------------------------------------------------------------------------------------------------------
+IF NOT (eInitExternControl = E_PROGRESS.PROGRESS_DONE) THEN eInit  := E_PROGRESS.PROGRESS_INVALID; RETURN; END_IF
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+CASE eInit
+OF
+  //---------------------------------------------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_INVALID:
+    GVL_APPLICATION.TicketListControl.Cmd         := E_LIST_CTRL.LIST_CTRL_INIT;
+    GVL_APPLICATION.YardControl.Cmd               := E_INSTANCE_CMD.NULL;
+    eInit                                         := E_PROGRESS.PROGRESS_INIT;
+  //---------------------------------------------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_INIT:
+    IF (GVL_APPLICATION.TicketListState.State = E_LIST_STATE.LIST_STATE_INIT + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.TicketListControl.Cmd       := E_LIST_CTRL.LIST_CTRL_NULL;
+      GVL_APPLICATION.YardControl.Cmd             := E_INSTANCE_CMD.INIT;
+      eInit                                       := E_PROGRESS.PROGRESS_BUSY;
+    END_IF
+  //---------------------------------------------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_BUSY:
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.INIT + E_PROGRESS.PROGRESS_ERROR)
+    THEN
+      eInit                                       := E_PROGRESS.PROGRESS_ERROR;
+
+    ELSIF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.INIT + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.YardControl.Cmd             := E_INSTANCE_CMD.ENABLE;
+      eInit                                       := E_PROGRESS.PROGRESS_PREPARE;
+    END_IF
+  //---------------------------------------------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_PREPARE:
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.ENABLED + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      eInit                                       := E_PROGRESS.PROGRESS_OCCUPIED;
+    END_IF
+  //---------------------------------------------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_STARTUP:
+    GVL_APPLICATION.YardControl.Cmd               := E_INSTANCE_CMD.WORK;
+
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.WORKING + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      GVL_APPLICATION.YardControl.Cmd             := E_INSTANCE_CMD.WORK;
+      eInit                                       := E_PROGRESS.PROGRESS_DONE;
+    END_IF
+  //---------------------------------------------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_OCCUPIED:
+    tProcess[E_INSTANCE.PROCESS_ONE]                      := T#1000MS;
+    tProcess[E_INSTANCE.PROCESS_TWO]                      := T#1200MS;
+    tProcess[E_INSTANCE.PROCESS_THREE]                    := T#1500MS;
+    tProcess[E_INSTANCE.PROCESS_FOUR]                     := T#1250MS;
+    tProcess[E_INSTANCE.PROCESS_FIVE]                     := T#500MS;
+    tProcess[E_INSTANCE.PROCESS_SIX]                      := T#1500MS;
+    tProcess[E_INSTANCE.PROCESS_SEVEN]                    := T#1250MS;
+    tProcess[E_INSTANCE.PROCESS_EIGHT]                    := T#1500MS;
+
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_ONE]          := 2#_0000_0111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_TWO]          := 2#_0000_1111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_THREE]        := 2#_0001_1111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_FOUR]         := 2#_0011_1111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_FIVE]         := 2#_0000_0111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_SIX]          := 2#_0000_1111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_SEVEN]        := 2#_0001_1111;
+    wActivateStation[E_INSTANCE.DISTRIBUTOR_EIGHT]        := 2#_0011_1111;
+
+    // string up the puppets
+    Puppets[E_INSTANCE.DISTRIBUTOR_ONE].ProcessId                   := DISTRIBUTOR_ONE;
+    Puppets[E_INSTANCE.DISTRIBUTOR_ONE].ProcessId_Connect           := PROCESS_ONE;
+    Puppets[E_INSTANCE.DISTRIBUTOR_ONE].ProcessId_ConnectTarget     := DISTRIBUTOR_TWO;
+
+    Puppets[E_INSTANCE.DISTRIBUTOR_TWO].ProcessId                   := DISTRIBUTOR_TWO;
+    Puppets[E_INSTANCE.DISTRIBUTOR_TWO].ProcessId_Connect           := PROCESS_TWO;
+    Puppets[E_INSTANCE.DISTRIBUTOR_TWO].ProcessId_ConnectTarget     := DISTRIBUTOR_THREE;
+
+    Puppets[E_INSTANCE.DISTRIBUTOR_THREE].ProcessId                 := DISTRIBUTOR_THREE;
+    Puppets[E_INSTANCE.DISTRIBUTOR_THREE].ProcessId_Connect         := PROCESS_THREE;
+    Puppets[E_INSTANCE.DISTRIBUTOR_THREE].ProcessId_ConnectTarget   := DISTRIBUTOR_FOUR;
+
+    Puppets[E_INSTANCE.DISTRIBUTOR_FOUR].ProcessId                  := DISTRIBUTOR_FOUR;
+    Puppets[E_INSTANCE.DISTRIBUTOR_FOUR].ProcessId_Connect          := PROCESS_FOUR;
+    Puppets[E_INSTANCE.DISTRIBUTOR_FOUR].ProcessId_ConnectTarget    := DISTRIBUTOR_FIVE;
+
+    Puppets[E_INSTANCE.DISTRIBUTOR_FIVE].ProcessId                  := DISTRIBUTOR_FIVE;
+    Puppets[E_INSTANCE.DISTRIBUTOR_FIVE].ProcessId_Connect          := PROCESS_FIVE;
+    Puppets[E_INSTANCE.DISTRIBUTOR_FIVE].ProcessId_ConnectTarget    := DISTRIBUTOR_SIX;
+
+    Puppets[E_INSTANCE.DISTRIBUTOR_SIX].ProcessId                   := DISTRIBUTOR_SIX;
+    Puppets[E_INSTANCE.DISTRIBUTOR_SIX].ProcessId_Connect           := PROCESS_SIX;
+    Puppets[E_INSTANCE.DISTRIBUTOR_SIX].ProcessId_ConnectTarget     := DISTRIBUTOR_SEVEN;
+
+    Puppets[E_INSTANCE.DISTRIBUTOR_SEVEN].ProcessId                 := DISTRIBUTOR_SEVEN;
+    Puppets[E_INSTANCE.DISTRIBUTOR_SEVEN].ProcessId_Connect         := PROCESS_SEVEN;
+    Puppets[E_INSTANCE.DISTRIBUTOR_SEVEN].ProcessId_ConnectTarget   := DISTRIBUTOR_EIGHT;
+
+    Puppets[E_INSTANCE.DISTRIBUTOR_EIGHT].ProcessId                 := DISTRIBUTOR_EIGHT;
+    Puppets[E_INSTANCE.DISTRIBUTOR_EIGHT].ProcessId_Connect         := PROCESS_EIGHT;
+    Puppets[E_INSTANCE.DISTRIBUTOR_EIGHT].ProcessId_ConnectTarget   := DISTRIBUTOR_ONE;
+
+    eInit                                           := E_PROGRESS.PROGRESS_DONE;
+END_CASE
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+// /assign dataflow
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+CASE nState OF
+  0:
+    IF (eInit = E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 1;
+    END_IF
+
+  1:
+    // TicketConductor is self initializing after a power cycle
+    // DISABLED state is default after successful initialization
+    IF (GVL_APPLICATION.TicketConductorState.ProcessState = E_INSTANCE_STATE.DISABLED)
+    THEN
+      nState                                        := 10;
+    END_IF
+
+  10:
+    IF bStart
+    THEN
+      nState                                        := 11;
+      FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
+      DO
+        Puppets[nIdx](Start                         := FALSE, 
+                      DwellTime                     := tProcess[nIdx], 
+                      StationMask                   := wActivateStation[nIdx]);
+
+        GVL_APPLICATION.InstanceCtrl[nIdx].Cmd      := E_INSTANCE_CMD.ENABLE;
+      END_FOR
+    END_IF
+
+  11:
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.ENABLED + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 20;
+    ELSIF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.WORKING + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 100;
+    ELSE
+      GVL_APPLICATION.YardControl.Cmd               := E_INSTANCE_CMD.ENABLE;
+    END_IF
+
+  20:
+    GVL_APPLICATION.YardControl.Cmd                 := E_INSTANCE_CMD.WORK;
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.WORKING + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 100;
+    END_IF
+
+  100:
+    // the first round of tickets I write here, because the puppets only write tickets AFTER a mover lifecycle
+    // why two tickets? --> Master of Puppets (you) can only pull for movers (wActivateStation) in a process,
+    //                       if he commands a distributor to send them to him
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_ONE;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_ONE;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_ONE];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_ONE;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_TWO;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_ONE];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_TWO;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_TWO;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_TWO];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_TWO;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_THREE;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_TWO];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_THREE;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_THREE;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_THREE];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_THREE;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_FOUR;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_THREE];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_FOUR;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_FOUR;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_FOUR];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_FOUR;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_FIVE;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_FOUR];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_FIVE;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_FIVE;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_FIVE];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_FIVE;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_SIX;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_FIVE];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_SIX;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_SIX;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_SIX];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_SIX;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_SEVEN;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_SIX];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_SEVEN;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_SEVEN;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_SEVEN];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_SEVEN;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_EIGHT;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_SEVEN];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+    stProcessData.nProcessId                        := E_INSTANCE.DISTRIBUTOR_EIGHT;
+    stProcessData.nTargetId                         := E_INSTANCE.PROCESS_EIGHT;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_EIGHT];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+
+    stProcessData.nProcessId                        := E_INSTANCE.PROCESS_EIGHT;
+    stProcessData.nTargetId                         := E_INSTANCE.DISTRIBUTOR_ONE;
+    stProcessData.wTarget                           := wActivateStation[E_INSTANCE.DISTRIBUTOR_EIGHT];
+
+    stWriteTargetInit                               := GVL_APPLICATION.TicketConductorList.AddTailValue(stProcessData);
+    //-------------------------------------------------------------------------------------------------------------
+
+    GVL_APPLICATION.TicketConductorCtrl.Cmd         := E_INSTANCE_CMD.ENABLE;
+
+    nState                                          := 200;
+
+
+  200:
+    FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
+    DO
+      Puppets[nIdx](Start                           := bStart, 
+                    DwellTime                       := tProcess[nIdx], 
+                    StationMask                     := wActivateStation[nIdx]);
+    END_FOR
+
+    IF NOT bStart THEN nState := 300; END_IF
+
+
+
+  300:
+    FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
+    DO
+      GVL_APPLICATION.InstanceCtrl[nIdx].Cmd        := E_INSTANCE_CMD.INIT; 
+    END_FOR
+    nState                                          := 400;
+
+  400:
+    GVL_APPLICATION.TicketConductorCtrl.Cmd         := E_INSTANCE_CMD.DISABLE;
+    bStart                                          := FALSE;
+    nState                                          := 500;
+
+  500:
+    GVL_APPLICATION.YardControl.Cmd                 := E_INSTANCE_CMD.CLEAR;
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.CLEARED + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 600;
+    END_IF
+
+  600:
+    GVL_APPLICATION.YardControl.Cmd                 := E_INSTANCE_CMD.DISABLE;
+    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.DISABLED + E_PROGRESS.PROGRESS_DONE)
+    THEN
+      nState                                        := 0;
+    END_IF
+
+END_CASE
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
+DO
+  Puppets[nIdx].ProcessId                           :=   nIdx;
+  Puppets[nIdx].InstanceCtrl                        REF= GVL_APPLICATION.InstanceCtrl;
+  Puppets[nIdx].InstanceState                       REF= GVL_APPLICATION.InstanceState;
+  Puppets[nIdx].TicketLinkedList                    :=   GVL_APPLICATION.TicketConductorList;
+END_FOR
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+GVL_APPLICATION.TicketConductor.TicketLinkedList    :=   GVL_APPLICATION.TicketConductorList;
+GVL_APPLICATION.TicketConductor.Ctrl                REF= GVL_APPLICATION.TicketConductorCtrl;
+GVL_APPLICATION.TicketConductor.State               REF= GVL_APPLICATION.TicketConductorState;
+
+GVL_APPLICATION.TicketConductor.CyclicListCtrl      REF= GVL_APPLICATION.TicketListControl;
+GVL_APPLICATION.TicketConductor.CyclicListState     REF= GVL_APPLICATION.TicketListState;
+GVL_APPLICATION.TicketConductor.CyclicListData      REF= GVL_APPLICATION.TicketListDataInput;
+GVL_APPLICATION.TicketConductor();
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
+//#################################################################################################################
+//  /logging
+//    - all life is problem solving
+//#################################################################################################################
+GVL_MSG_XTS.TransportMessageData.Ctrl               REF= GVL_MSG_XTS.TransportMessageCtrl;
+GVL_MSG_XTS.TransportMessageData.State              REF= GVL_MSG_XTS.TransportMessageState;
+GVL_MSG_XTS.TransportMessageData.MessageIndex       REF= GVL_MSG_XTS.MessageTransportIndex;
+GVL_MSG_XTS.TransportMessageData.ErrorIndex         REF= GVL_MSG_XTS.MessageTransportError;
+GVL_MSG_XTS.TransportMessageData.DirRoot            :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.TransportMessageData.FileRoot           :=   ADR(GVL_MSG_XTS.LOG_FILE);
+GVL_MSG_XTS.TransportMessageData.MsgList            :=   ADR(GVL_MSG_XTS.TransportMessages);
+GVL_MSG_XTS.TransportMessageData.LocalTime          :=   ADR(GVL_MSG_XTS.dtLocalTime);
+GVL_MSG_XTS.TransportMessageData();
+eMsgState                                           :=   f_GetState   (GVL_MSG_XTS.TransportMessageState.State);
+eMsgProgress                                        :=   f_GetProgress(GVL_MSG_XTS.TransportMessageState.State);
+
+CASE eMsgState
+OF
+  E_MESSAGE_STATE.MSG_STATE_NULL:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_INVALID,
+      E_PROGRESS.PROGRESS_DONE:
+        IF (GVL_MSG_XTS.MessageTransportIndex > GVL_MSG_XTS.MAX_MESSAGE/101) OR
+           (GVL_MSG_XTS.MessageTransportError > 0)
+        THEN
+          GVL_MSG_XTS.TransportMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        ELSE
+          tonIdleWriteMotion(IN := TRUE, PT:= tIdleWriteMotion);
+          IF (tonIdleWriteMotion.Q)
+          THEN
+            GVL_MSG_XTS.TransportMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          END_IF
+        END_IF
+    END_CASE
+
+  E_MESSAGE_STATE.MSG_STATE_WRITE:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_ERROR,
+      E_PROGRESS.PROGRESS_DONE:
+          tonIdleWriteMotion(IN := FALSE, PT:= tIdleWriteMotion);
+        GVL_MSG_XTS.TransportMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+
+ELSE
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_DONE:
+          tonIdleWriteMotion(IN := FALSE, PT:= tIdleWriteMotion);
+        GVL_MSG_XTS.TransportMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+END_CASE
+//#################################################################################################################
+// /application logging
+//#################################################################################################################
+GVL_MSG_XTS.ApplicationMessageData.Ctrl             REF= GVL_MSG_XTS.ApplicationMessageCtrl;
+GVL_MSG_XTS.ApplicationMessageData.State            REF= GVL_MSG_XTS.ApplicationMessageState;
+
+GVL_MSG_XTS.ApplicationMessageData.MessageIndex     REF= GVL_MSG_XTS.MessageApplicationIndex;
+GVL_MSG_XTS.ApplicationMessageData.ErrorIndex       REF= GVL_MSG_XTS.MessageApplicationError;
+
+GVL_MSG_XTS.ApplicationMessageData.DirRoot          :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.ApplicationMessageData.FileRoot         :=   ADR(GVL_MSG_XTS.LOG_FILE_APP);
+GVL_MSG_XTS.ApplicationMessageData.MsgList          :=   ADR(GVL_MSG_XTS.ApplicationMessages);
+GVL_MSG_XTS.ApplicationMessageData.LocalTime        :=   ADR(GVL_MSG_XTS.dtLocalTime);
+
+GVL_MSG_XTS.ApplicationMessageData();
+
+eMsgState                                           := f_GetState   (GVL_MSG_XTS.ApplicationMessageState.State);
+eMsgProgress                                        := f_GetProgress(GVL_MSG_XTS.ApplicationMessageState.State);
+
+
+CASE eMsgState
+OF
+  E_MESSAGE_STATE.MSG_STATE_NULL:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_INVALID:
+        IF (GVL_MSG_XTS.MessageApplicationIndex > GVL_MSG_XTS.MAX_MESSAGE/13) OR
+           (GVL_MSG_XTS.MessageApplicationError > 0)
+        THEN
+          GVL_MSG_XTS.ApplicationMessageCtrl.Cmd    := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        ELSE
+          tonIdleWriteApplication(IN := TRUE, PT:= tIdleWriteApplication);
+          IF (tonIdleWriteApplication.Q)
+          THEN
+            GVL_MSG_XTS.ApplicationMessageCtrl.Cmd  := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          END_IF
+        END_IF
+    END_CASE
+
+  E_MESSAGE_STATE.MSG_STATE_WRITE:
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_ERROR,
+      E_PROGRESS.PROGRESS_DONE:
+        tonIdleWriteApplication(IN := FALSE, PT:= tIdleWriteApplication);
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+
+ELSE
+    CASE eMsgProgress
+    OF
+      E_PROGRESS.PROGRESS_DONE:
+        tonIdleWriteApplication(IN := FALSE, PT:= tIdleWriteApplication);
+        GVL_MSG_XTS.ApplicationMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+END_CASE
+//#################################################################################################################
+// logging/
+//#################################################################################################################
+//#################################################################################################################
+//  /Transport Metrics
+//#################################################################################################################
+GVL_MSG_XTS.MetricsMessageData.Ctrl                 REF= GVL_MSG_XTS.MetricsMessageCtrl;
+GVL_MSG_XTS.MetricsMessageData.State                REF= GVL_MSG_XTS.MetricsMessageState;
+
+GVL_MSG_XTS.MetricsMessageData.MessageIndex         REF= GVL_MSG_XTS.MessageMetricsIndex;
+GVL_MSG_XTS.MetricsMessageData.ErrorIndex           REF= GVL_MSG_XTS.MessageMetricsError;
+
+GVL_MSG_XTS.MetricsMessageData.DirRoot              :=   ADR(GVL_MSG_XTS.LOG_DIR);
+GVL_MSG_XTS.MetricsMessageData.FileRoot             :=   ADR(GVL_MSG_XTS.LOG_FILE_METRIC);
+GVL_MSG_XTS.MetricsMessageData.MsgList              :=   ADR(GVL_MSG_XTS.MetricsMessages);
+GVL_MSG_XTS.MetricsMessageData.LocalTime            :=   ADR(GVL_MSG_XTS.dtLocalTime);
+
+GVL_MSG_XTS.MetricsMessageData();
+
+eMtrState                                           := f_GetState   (GVL_MSG_XTS.MetricsMessageState.State);
+eMtrProgress                                        := f_GetProgress(GVL_MSG_XTS.MetricsMessageState.State);
+
+CASE eMtrState
+OF
+  E_MESSAGE_STATE.MSG_STATE_NULL:
+    CASE eMtrProgress
+    OF
+      E_PROGRESS.PROGRESS_INVALID:
+        IF (GVL_MSG_XTS.MessageMetricsIndex > GVL_MSG_XTS.MAX_MESSAGE/5) OR
+           (GVL_MSG_XTS.MessageMetricsError > 0)
+        THEN
+          GVL_MSG_XTS.MetricsMessageCtrl.Cmd        := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+        ELSE
+          tonIdleWriteMetric(IN := TRUE, PT:= tIdleWriteMetric);
+          IF (tonIdleWriteMetric.Q)
+          THEN
+            GVL_MSG_XTS.MetricsMessageCtrl.Cmd      := E_MESSAGE_CTRL.MSG_CTRL_WRITE;
+          END_IF
+        END_IF
+    END_CASE
+
+  E_MESSAGE_STATE.MSG_STATE_WRITE:
+    CASE eMtrProgress
+    OF
+      E_PROGRESS.PROGRESS_ERROR,
+      E_PROGRESS.PROGRESS_DONE:
+        tonIdleWriteMetric(IN := FALSE, PT:= tIdleWriteMetric);
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd          := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+ELSE
+    CASE eMtrProgress
+    OF
+      E_PROGRESS.PROGRESS_DONE:
+        tonIdleWriteMetric(IN := FALSE, PT:= tIdleWriteMetric);
+        GVL_MSG_XTS.MetricsMessageCtrl.Cmd          := E_MESSAGE_CTRL.MSG_CTRL_NULL;
+    END_CASE
+END_CASE
+//#################################################################################################################
+//  Transport Metrics/
+//#################################################################################################################
+//#################################################################################################################
+//#################################################################################################################
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN_APP">
+      <LineId Id="732" Count="62" />
+      <LineId Id="1276" Count="2" />
+      <LineId Id="1059" Count="0" />
+      <LineId Id="1062" Count="0" />
+      <LineId Id="1065" Count="0" />
+      <LineId Id="1068" Count="0" />
+      <LineId Id="1071" Count="0" />
+      <LineId Id="1074" Count="0" />
+      <LineId Id="1279" Count="0" />
+      <LineId Id="1102" Count="0" />
+      <LineId Id="1280" Count="1" />
+      <LineId Id="1096" Count="0" />
+      <LineId Id="1078" Count="1" />
+      <LineId Id="1097" Count="0" />
+      <LineId Id="1282" Count="27" />
+      <LineId Id="1091" Count="0" />
+      <LineId Id="1090" Count="0" />
+      <LineId Id="799" Count="13" />
+      <LineId Id="1157" Count="1" />
+      <LineId Id="1163" Count="1" />
+      <LineId Id="1159" Count="1" />
+      <LineId Id="1162" Count="0" />
+      <LineId Id="1161" Count="0" />
+      <LineId Id="1036" Count="0" />
+      <LineId Id="814" Count="3" />
+      <LineId Id="1185" Count="4" />
+      <LineId Id="1191" Count="1" />
+      <LineId Id="1190" Count="0" />
+      <LineId Id="818" Count="0" />
+      <LineId Id="1242" Count="3" />
+      <LineId Id="1247" Count="0" />
+      <LineId Id="1257" Count="4" />
+      <LineId Id="1246" Count="0" />
+      <LineId Id="1248" Count="6" />
+      <LineId Id="1148" Count="1" />
+      <LineId Id="1126" Count="3" />
+      <LineId Id="1112" Count="2" />
+      <LineId Id="1116" Count="0" />
+      <LineId Id="1115" Count="0" />
+      <LineId Id="1118" Count="5" />
+      <LineId Id="1194" Count="0" />
+      <LineId Id="1357" Count="83" />
+      <LineId Id="1255" Count="1" />
+      <LineId Id="1117" Count="0" />
+      <LineId Id="836" Count="9" />
+      <LineId Id="1180" Count="1" />
+      <LineId Id="1166" Count="0" />
+      <LineId Id="1182" Count="1" />
+      <LineId Id="1165" Count="0" />
+      <LineId Id="1168" Count="2" />
+      <LineId Id="1173" Count="1" />
+      <LineId Id="1176" Count="0" />
+      <LineId Id="1175" Count="0" />
+      <LineId Id="1177" Count="0" />
+      <LineId Id="1179" Count="0" />
+      <LineId Id="1193" Count="0" />
+      <LineId Id="1263" Count="0" />
+      <LineId Id="1262" Count="0" />
+      <LineId Id="1264" Count="11" />
+      <LineId Id="1178" Count="0" />
+      <LineId Id="846" Count="0" />
+      <LineId Id="1103" Count="1" />
+      <LineId Id="1106" Count="1" />
+      <LineId Id="1130" Count="0" />
+      <LineId Id="1110" Count="0" />
+      <LineId Id="1124" Count="1" />
+      <LineId Id="1111" Count="0" />
+      <LineId Id="1032" Count="1" />
+      <LineId Id="848" Count="0" />
+      <LineId Id="1024" Count="1" />
+      <LineId Id="1058" Count="0" />
+      <LineId Id="1026" Count="2" />
+      <LineId Id="1030" Count="0" />
+      <LineId Id="1034" Count="1" />
+      <LineId Id="1031" Count="0" />
+      <LineId Id="1029" Count="0" />
+      <LineId Id="849" Count="174" />
+      <LineId Id="143" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

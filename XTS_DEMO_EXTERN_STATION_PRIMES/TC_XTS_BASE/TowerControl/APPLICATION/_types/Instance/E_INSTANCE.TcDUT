@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_INSTANCE" Id="{92ddd8a8-330e-48b3-ad66-59d0e0284b5e}">
+    <Declaration><![CDATA[//{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+{info 'E_INSTANCE placeholder for process identification; ROCKER example'}
+TYPE E_INSTANCE : // placeholder for process identification
+(
+	INSTANCE_NULL,
+  //-----------------------------------
+  // STATION_PRIMES example processes:
+  DISTRIBUTOR_ONE,          // (1 to m) - incomming ticket data ST_PROCESS_DATA.wTarget sets target for mover
+  PROCESS_ONE,              // (m to 1) - LOADING
+  DISTRIBUTOR_TWO,          // (1 to m) - distributor to next
+  PROCESS_TWO,              // (m to 1) - standstill process
+  DISTRIBUTOR_THREE,        // (1 to m) - distributor to next
+  PROCESS_THREE,            // (m to 1) - standstill process
+  DISTRIBUTOR_FOUR,         // (1 to m) - distributor to next
+  PROCESS_FOUR,             // (m to 1) - standstill process
+  DISTRIBUTOR_FIVE,         // (1 to m) - distributor to next
+  PROCESS_FIVE,             // (m to 1) - standstill process
+  DISTRIBUTOR_SIX,          // (1 to m) - distributor to next
+  PROCESS_SIX,              // (m to 1) - standstill process
+  DISTRIBUTOR_SEVEN,        // (1 to m) - distributor to next
+  PROCESS_SEVEN,            // (m to 1) - standstill process
+  DISTRIBUTOR_EIGHT,        // (1 to m) - distributor to next
+  PROCESS_EIGHT,            // (m to 1) - UNLOADING
+  // STATION_PRIMES example processes.
+  //-----------------------------------
+  INSTANCE_MAX,
+  //-----------------------------------
+  //  off sequence but in the book
+  //-----------------------------------
+  INSTANCE_CONDUCTOR          := 707   // The normalization root 1\sqrt{2}
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

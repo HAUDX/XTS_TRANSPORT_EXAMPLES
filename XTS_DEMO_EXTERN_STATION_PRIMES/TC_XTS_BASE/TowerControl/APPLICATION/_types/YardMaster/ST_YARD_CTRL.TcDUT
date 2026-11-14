@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_YARD_CTRL" Id="{7c8a60dc-30c4-4cb2-aef7-b7d664aeb03a}">
+    <Declaration><![CDATA[TYPE ST_YARD_CTRL :
+STRUCT
+  Cmd                     : E_INSTANCE_CMD;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

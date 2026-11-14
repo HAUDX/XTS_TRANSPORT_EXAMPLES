@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="ST_LIST_CTRL" Id="{c0b5b920-d3b3-437a-862c-05e0c6120429}">
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_LIST_CTRL" Id="{3b76311a-fdc8-4e6b-8865-0378224d28cc}">
     <Declaration><![CDATA[TYPE ST_LIST_CTRL :
 STRUCT
   Cmd         : E_LIST_CTRL;

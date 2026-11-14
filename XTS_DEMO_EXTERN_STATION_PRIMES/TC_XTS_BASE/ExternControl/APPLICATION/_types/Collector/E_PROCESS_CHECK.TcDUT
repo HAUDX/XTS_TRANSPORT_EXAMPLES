@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="E_PROCESS_CHECK" Id="{b1b6ce0b-b251-49ca-afca-f7add1a2b088}">
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_PROCESS_CHECK" Id="{470d21e4-9978-4ca2-9091-70b89e65a212}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 {attribute 'to_string'}

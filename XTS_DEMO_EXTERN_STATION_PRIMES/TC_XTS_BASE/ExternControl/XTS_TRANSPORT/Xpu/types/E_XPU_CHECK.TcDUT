@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="E_XPU_CHECK" Id="{2e9fc066-c2c8-4470-89ed-fde41d545e52}">
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_XPU_CHECK" Id="{bda62b9c-2748-43fe-be18-2e3aa7c8f0c0}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'to_string'}
 TYPE E_XPU_CHECK :

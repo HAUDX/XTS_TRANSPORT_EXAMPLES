@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="fb_MessageData" Id="{faebf5c3-d884-4ca5-a7a8-36979bb65682}" SpecialFunc="None">
+  <POU Name="fb_MessageData" Id="{707994f3-2f10-4c8e-8b38-0ca1a2edaa3d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT fb_MessageData IMPLEMENTS I_MessageData
 VAR CONSTANT
 {attribute 'hide'}
@@ -41,9 +41,9 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Folder Name="methods" Id="{85733422-33e8-481d-ba8b-bef31f257b44}" />
-    <Folder Name="properties" Id="{dd373125-2a0c-4766-8e44-9fabe9bcb8ea}" />
-    <Method Name="Builder" Id="{221c5431-9eae-4803-9d87-9ce0744fedac}" FolderPath="methods\">
+    <Folder Name="methods" Id="{2f7f06e5-ded2-417a-bf9a-6a0418da1ad4}" />
+    <Folder Name="properties" Id="{52c29222-56ca-459b-a303-598c7071dab4}" />
+    <Method Name="Builder" Id="{22e5e748-adf9-4554-8357-aecd166eee4c}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Builder : BOOL // string concat for length > 255
 VAR_INPUT
   pInString   : POINTER TO STRING;
@@ -88,7 +88,7 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Check" Id="{f0c52a5a-b2dc-4df9-9776-84c846b6e110}" FolderPath="methods\">
+    <Method Name="Check" Id="{5eeb7465-c148-4e3a-ad4a-0f6e3be3f743}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Check : BOOL
 VAR_INPUT
 END_VAR
@@ -138,7 +138,7 @@ Check           := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Device_to_String" Id="{9432e0a8-6985-4fe6-9493-19d2fb5ca1a5}" FolderPath="methods\">
+    <Method Name="Device_to_String" Id="{e688be41-0e50-41e0-84dd-3a3b3ba8736f}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Device_to_String : string
 VAR_INPUT
   eMsgDevice    : e_Device;
@@ -172,6 +172,20 @@ ELSE
     sId := concat(sId, TO_STRING(nId));
  
     Device_to_String := concat(TO_STRING(e_Device.Application), sId);
+
+  ELSIF (eMsgDevice >= e_Device.YardMaster)
+  THEN
+    nId := eMsgDevice MOD e_Device.YardMaster;
+    sId := concat(sId, TO_STRING(nId));
+ 
+    Device_to_String := concat(TO_STRING(e_Device.YardMaster), sId);
+
+  ELSIF (eMsgDevice >= e_Device.Conductor)
+  THEN
+    nId := eMsgDevice MOD e_Device.Conductor;
+    sId := concat(sId, TO_STRING(nId));
+ 
+    Device_to_String := concat(TO_STRING(e_Device.Conductor), sId);
 
   ELSIF (eMsgDevice >= e_Device.TicketListCtrl)
   THEN
@@ -320,9 +334,9 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="DirRoot" Id="{75a0b2eb-847d-4c71-932b-f71f25ce8e69}" FolderPath="properties\">
+    <Property Name="DirRoot" Id="{1120f38d-2d7f-4ba7-9c67-a200e79cd783}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY DirRoot : POINTER to string(255)]]></Declaration>
-      <Set Name="Set" Id="{45484e04-2d4a-40a8-b777-75ab99a9df8b}">
+      <Set Name="Set" Id="{7844aff3-7dab-4dca-b17d-99612687d48d}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -332,9 +346,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="ErrorIndex" Id="{6bf82d91-5d64-430b-9a50-fa5fdab12962}" FolderPath="properties\">
+    <Property Name="ErrorIndex" Id="{ae300ba1-1e20-456c-ad00-9f8346883e50}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY ErrorIndex : reference to uint]]></Declaration>
-      <Set Name="Set" Id="{f37e977b-c270-499c-b8f3-d10fe07e85bc}">
+      <Set Name="Set" Id="{8414fa68-476d-432e-8a2c-f03205a3a89d}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -344,9 +358,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="FileRoot" Id="{dc3b9e5b-ec66-4f6b-bbc1-35fc9cbf90e0}" FolderPath="properties\">
+    <Property Name="FileRoot" Id="{d5ff28e1-99f9-4954-97f7-209c35e0ab4b}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY FileRoot : pointer to string(255)]]></Declaration>
-      <Set Name="Set" Id="{0538282a-6f13-41a1-b2eb-a4f1c881cd5d}">
+      <Set Name="Set" Id="{9d66b207-6b81-49c2-8af3-b7239eee493f}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -356,7 +370,7 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Method Name="FolderDate" Id="{30986efe-2bc9-4d08-87f0-a4ebfb819aec}" FolderPath="methods\">
+    <Method Name="FolderDate" Id="{26e96cbc-fe95-4b20-a0cf-aff965b42cf7}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD FolderDate : STRING
 VAR_INPUT
 	LocalTime   : POINTER TO DT;
@@ -386,9 +400,9 @@ FolderDate := sTmp;
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="LocalTime" Id="{47c5ae3b-2a10-4537-a988-ec39d2769d44}" FolderPath="properties\">
+    <Property Name="LocalTime" Id="{725f1d38-465a-4ff8-af46-79a0c6187fb0}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY LocalTime : pointer to DT]]></Declaration>
-      <Set Name="Set" Id="{ad79e0e7-e3e7-488e-be25-33bf7d722c12}">
+      <Set Name="Set" Id="{24bf7f8d-829b-4112-bc5e-4097048a164b}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -398,9 +412,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="MessageIndex" Id="{743ba284-e2bd-4722-9418-4664b352dc0f}" FolderPath="properties\">
+    <Property Name="MessageIndex" Id="{855670a1-ade3-4554-8327-922f11083191}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY MessageIndex : reference to uint]]></Declaration>
-      <Set Name="Set" Id="{abc705d8-e622-4956-a964-02cc72159a55}">
+      <Set Name="Set" Id="{9f87699b-b63c-49c9-9ce7-6f07f938b5ef}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -410,9 +424,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="MsgList" Id="{6ced4135-3b3d-4fc1-a9f1-5dad8411f365}" FolderPath="properties\">
+    <Property Name="MsgList" Id="{9ad5de4c-abee-4dbe-be6b-57eb1cc99dcf}" FolderPath="properties\">
       <Declaration><![CDATA[PROPERTY MsgList : pointer to ARRAY[1..GVL_MSG_XTS.MAX_MESSAGE] OF st_message]]></Declaration>
-      <Set Name="Set" Id="{29902451-5d91-4fc1-945a-1277c15cfedc}">
+      <Set Name="Set" Id="{89db19ab-572d-4845-9eb1-825225b3841a}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -422,7 +436,7 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Method Name="StringLen" Id="{98eaf1e7-2843-49dc-8632-e3fb2c577b2f}" FolderPath="methods\">
+    <Method Name="StringLen" Id="{b16fc032-aec2-4455-aaf0-568f34e8b406}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD StringLen : UINT // 	string length for len > 255
 VAR_INPUT
   pInString		: POINTER TO STRING(STR_LEN);
@@ -446,7 +460,7 @@ END_WHILE
 StringLen := Counter;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="WriteData" Id="{ccc36037-4678-432e-b964-b7f417c0ed9f}" FolderPath="methods\">
+    <Method Name="WriteData" Id="{db92d241-b79b-4033-a50e-83d8d6b51078}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD WriteData  : e_progress
 VAR_INPUT
   bExecute        : BOOL;
@@ -592,7 +606,12 @@ WriteData                     := _eState;
       <LineId Id="1" Count="41" />
     </LineIds>
     <LineIds Name="fb_MessageData.Device_to_String">
-      <LineId Id="1" Count="168" />
+      <LineId Id="1" Count="22" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="181" Count="5" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="172" Count="5" />
+      <LineId Id="24" Count="145" />
     </LineIds>
     <LineIds Name="fb_MessageData.DirRoot.Set">
       <LineId Id="1" Count="1" />

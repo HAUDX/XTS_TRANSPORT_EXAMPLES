@@ -19,30 +19,33 @@
     <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="APPLICATION\fb_Simulation.TcPOU">
+    <Compile Include="APPLICATION\fb_ProcessConductor.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\GVL_APPLICATION.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="APPLICATION\Instances\fb_DistributorByTicket.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Instances\fb_ProcessByTicket.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\Instances\fb_DistributorByQueue.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="APPLICATION\MAIN_APP.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APPLICATION\XTS_TRANSPORT_1.TcVIS">
+    <Compile Include="APPLICATION\MAIN_APPLICATION.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
-    <Compile Include="APPLICATION\_types\Application\E_APP_CHECK.TcDUT">
+    <Compile Include="APPLICATION\StationParameter_28000_1.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="APPLICATION\_types\Application\E_APP_VARIANT.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="APPLICATION\_types\Application\ST_APP_CTRL.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="APPLICATION\_types\Application\ST_APP_STATE.TcDUT">
+    <Compile Include="APPLICATION\VISU_POOL.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\Collector\E_PROCESS_CHECK.TcDUT">
@@ -67,12 +70,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\Collector\ST_PROCESS_STATE.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="APPLICATION\_types\Collector\T_PROCESS.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="APPLICATION\_types\fb_ProcessConductor.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="APPLICATION\_types\Instance\E_INSTANCE.TcDUT">
@@ -129,28 +126,68 @@
     <Compile Include="APPLICATION\_types\LinkedList\ST_PROCESS_LIST_RESULT.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="APPLICATION\_types\ST_PROCESS_PARAMETER.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\YardMaster\E_YARD_CHECK.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\YardMaster\fb_YardMaster.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\YardMaster\ST_YARD_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_types\YardMaster\ST_YARD_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="APPLICATION\_Visualization\MOVER_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\_Visualization\SELECTOR_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\_Visualization\STATION_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\_Visualization\TRANSPORT_VISU.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="APPLICATION\_Visualization\_types\ST_VISU_POOL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MAPPING\MAPPING_in.TcPOU">
+    <Compile Include="MAPPING\MAPPING_XTS_in.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MAPPING\MAPPING_out.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MAPPING\_types\U_APP_CTRL.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MAPPING\_types\U_APP_STATE.TcDUT">
+    <Compile Include="MAPPING\MAPPING_XTS_out.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_INSTANCE_CTRL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAPPING\_types\U_YARD_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MAPPING\_types\U_INSTANCE_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_YARD_STATE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MAPPING\_types\U_MOVER_SELECTOR_STATE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAPPING\_types\U_TICKET_LIST_CTRL.TcDUT">
@@ -198,6 +235,7 @@
     </Compile>
     <Compile Include="XTS_TRANSPORT\GVL_XTS.TcGVL">
       <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="XTS_TRANSPORT\GVL_XTS_CONSTANTS.TcGVL">
       <SubType>Code</SubType>
@@ -206,9 +244,6 @@
     <Compile Include="XTS_TRANSPORT\GVL_XTS_VERSION.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="XTS_TRANSPORT\MAIN_XTS.TcPOU">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="XTS_TRANSPORT\Mover\types\E_MOVER_CHECK.TcDUT">
       <SubType>Code</SubType>
@@ -319,18 +354,6 @@
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
-    <Compile Include="XTS_TRANSPORT\_Visualization\MOVER_VISU.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
-    </Compile>
-    <Compile Include="XTS_TRANSPORT\_Visualization\SELECTOR_VISU.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
-    </Compile>
-    <Compile Include="XTS_TRANSPORT\_Visualization\STATION_VISU.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
-    </Compile>
     <Compile Include="XTS_TRANSPORT\_Visualization\textlists\TL_E_CTRL_MOVER.TcTLO">
       <SubType>Code</SubType>
     </Compile>
@@ -351,10 +374,6 @@
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
     <Compile Include="XTS_TRANSPORT\_Visualization\XPU_VISU.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
-    </Compile>
-    <Compile Include="XTS_TRANSPORT\_Visualization\XTS_TRANSPORT.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
@@ -429,43 +448,7 @@
     <Compile Include="_types\f_GetState.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="_XML\Configuration\fb_Configuration.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\Configuration\I_Configuration_Station.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\Configuration\types\ST_Configuration.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\fb_XmlBase.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\PositionOffsets\fb_MoverPositionOffsetData.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\PositionOffsets\types\ST_MOVER_OFFSETS.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\types\E_DATA_CHECK.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\types\E_DATA_CTRL.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\types\E_DATA_STATE.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\types\fb_XmlRead.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\types\fb_XmlWrite.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\types\ST_DATA_CTRL.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="_XML\types\ST_DATA_STATE.TcDUT">
+    <Compile Include="_types\T_PROCESS.TcDUT">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -537,11 +520,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APPLICATION" />
+    <Folder Include="APPLICATION\Instances" />
+    <Folder Include="APPLICATION\_types\YardMaster" />
+    <Folder Include="APPLICATION\_Visualization" />
     <Folder Include="APPLICATION\_types" />
-    <Folder Include="APPLICATION\_types\Application" />
     <Folder Include="APPLICATION\_types\Collector" />
     <Folder Include="APPLICATION\_types\Instance" />
     <Folder Include="APPLICATION\_types\LinkedList" />
+    <Folder Include="APPLICATION\_Visualization\_types" />
     <Folder Include="MAPPING" />
     <Folder Include="MAPPING\_types" />
     <Folder Include="PLC_MOTION" />
@@ -564,12 +550,6 @@
     <Folder Include="_MSG\class" />
     <Folder Include="_MSG\types" />
     <Folder Include="_types" />
-    <Folder Include="_XML" />
-    <Folder Include="_XML\Configuration" />
-    <Folder Include="_XML\Configuration\types" />
-    <Folder Include="_XML\PositionOffsets" />
-    <Folder Include="_XML\PositionOffsets\types" />
-    <Folder Include="_XML\types" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ExternControl.tmc">
@@ -577,15 +557,20 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <SubObject Include="fb_ProcessCollector.Template">
+    <PlaceholderResolution Include="System_VisuElemBase">
+      <Resolution>VisuElemBase, * (System)</Resolution>
+    </PlaceholderResolution>
+  </ItemGroup>
+  <ItemGroup>
+    <SubObject Include="MAIN_APP.Init">
       <ExcludeFromBuild>true</ExcludeFromBuild>
     </SubObject>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -648,7 +633,7 @@
           <d n="SubKeys" t="Hashtable" />
           <d n="Values" t="Hashtable" ckt="String" cvt="String">
             <v>DisabledWarningIds</v>
-            <v>5410</v>
+            <v>410,5410</v>
           </d>
         </o>
         <v>{eeeeeeee-3909-4298-8022-501ac3238667}</v>
@@ -669,15 +654,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="Int32">System.Int32</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="Int32">System.Int32</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

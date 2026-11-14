@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="E_PROGRESS" Id="{811222a8-f08d-4c92-90d6-a5c25cf7aacf}">
+  <DUT Name="E_PROGRESS" Id="{e0a774ad-e6ef-4328-a10b-ed873440b180}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 //{attribute 'strict'}
 {attribute 'to_string'}

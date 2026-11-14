@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="fb_MessageDataCtrl" Id="{0743271c-310d-4448-b65e-7a0d6e860f31}" SpecialFunc="None">
+  <POU Name="fb_MessageDataCtrl" Id="{c48fcc92-d00c-45ae-aee3-2c2d3701ed5b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fb_MessageDataCtrl EXTENDS fb_MessageData
 VAR
   _stCtrl       : REFERENCE TO ST_MESSAGE_CTRL;
@@ -93,8 +93,8 @@ ELSE
 END_CASE
 ]]></ST>
     </Implementation>
-    <Folder Name="methods" Id="{a44c43a4-8fbd-485e-9796-e85fd7171aed}" />
-    <Method Name="BuildFileData" Id="{baea628d-8712-493e-8b9b-cf0a6c21ac4c}" FolderPath="methods\">
+    <Folder Name="methods" Id="{ecd83729-1ca2-4086-b365-4e8cd7092a84}" />
+    <Method Name="BuildFileData" Id="{cedc8dd9-297e-4667-8c7d-0b4006c3701b}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD BuildFileData : e_progress
 VAR_INPUT
   Execute     : BOOL;
@@ -260,7 +260,7 @@ BuildFileData                     := _eState;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="BuildFolder" Id="{d2fc5207-2312-4cc9-bdd3-037846d517e4}" FolderPath="methods\">
+    <Method Name="BuildFolder" Id="{d133b611-dca9-4c3f-8426-6ed8de1310c6}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD BuildFolder : e_progress
 VAR_INPUT
   Execute           : BOOL;
@@ -387,7 +387,7 @@ BuildFolder                     := _eState;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Check" Id="{ebffda1a-c846-4cb5-bad1-fb243254e655}" FolderPath="methods\">
+    <Method Name="Check" Id="{b9c02819-9d19-4233-aab9-c96e2481c05d}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Check : BOOL
 VAR_INPUT
 END_VAR
@@ -450,7 +450,7 @@ Check           := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Cmd" Id="{02a6aef2-19b5-46f2-a416-5dffe5edba59}" FolderPath="methods\">
+    <Method Name="Cmd" Id="{42fd5ef2-81a1-4d2c-805b-0a549d4b26fd}" FolderPath="methods\">
       <Declaration><![CDATA[METHOD Cmd : e_message_state
 VAR_INPUT
   Command     : e_message_ctrl;
@@ -488,10 +488,10 @@ END_CASE
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Ctrl" Id="{285c4e94-dba1-4a37-b8e1-2d43cb29bff2}">
+    <Property Name="Ctrl" Id="{a88bd79c-264a-4723-a717-2a338fcbf5f0}">
       <Declaration><![CDATA[PROPERTY Ctrl : REFERENCE to ST_MESSAGE_CTRL
 ]]></Declaration>
-      <Set Name="Set" Id="{9f649393-2ea9-4731-9aa9-4fc0dd52a988}">
+      <Set Name="Set" Id="{e23fdc5b-c4ed-48d9-8df1-c8f235b5d458}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -501,9 +501,9 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <Property Name="FileCreated" Id="{7d76a938-36c3-4546-b8ea-04d48d64e430}">
+    <Property Name="FileCreated" Id="{c368e5b4-4f7a-4ff1-907c-46d6b3a1f618}">
       <Declaration><![CDATA[PROPERTY FileCreated : bool]]></Declaration>
-      <Get Name="Get" Id="{15af0672-cdbb-49b5-8468-dbd1f3a8f48e}">
+      <Get Name="Get" Id="{e8b28c50-6aec-4bcf-a0f4-d1c524cc850c}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -512,10 +512,10 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="State" Id="{53de45ee-4087-498e-82ec-8d15134c5102}">
+    <Property Name="State" Id="{d6d34eec-6616-4af9-ac4c-ccfba18c22bb}">
       <Declaration><![CDATA[PROPERTY State : REFERENCE TO ST_MESSAGE_STATE
 ]]></Declaration>
-      <Set Name="Set" Id="{4849656c-f479-4926-b8c3-4222bb7c9dad}">
+      <Set Name="Set" Id="{db4565e9-1fc6-4b28-9061-5803e1bbb638}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>

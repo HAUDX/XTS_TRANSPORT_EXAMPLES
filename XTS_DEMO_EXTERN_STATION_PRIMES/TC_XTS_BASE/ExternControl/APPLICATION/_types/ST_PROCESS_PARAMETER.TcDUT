@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_PROCESS_PARAMETER" Id="{65454e10-2c57-4a9e-b630-c3ec59777442}">
+    <Declaration><![CDATA[TYPE ST_PROCESS_PARAMETER :
+STRUCT
+  ProcessId           : UINT;
+  ProcessTarget       : UINT;
+
+  StationFirst        : UINT;
+  StationLast         : UINT;
+
+  // position window of mover; for ProcessCollector to react to mover entering its domain
+  CheckLow            : LREAL;      // position the mover has to pass in order for the process to react to its presence   
+  CheckHigh           : LREAL;      // upper limit for reaction to mover position (e.g. a station WaitPos + x; see example config)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

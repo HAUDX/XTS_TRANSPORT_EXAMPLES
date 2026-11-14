@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <DUT Name="E_MOVER_STATE" Id="{83042212-aef5-4c28-8abe-201569e290ef}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="E_MOVER_STATE" Id="{32ac868c-5f53-4e2d-9cfd-e9991507a107}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'to_string'}
 TYPE E_MOVER_STATE :

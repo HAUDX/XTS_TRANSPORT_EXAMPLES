@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <GVL Name="GVL_XTS_VERSION" Id="{23a741b9-92ce-40fb-b7b8-619e5ad35be5}">
+  <GVL Name="GVL_XTS_VERSION" Id="{a9432c5f-6ec5-4218-9d8e-d8faacb815a1}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
 //-----------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ VAR_GLOBAL CONSTANT
 //    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //    SOFTWARE.
 //-----------------------------------------------------------------------------------
-  Version             : STRING  := '4.02.18';
+  Version             : STRING  := '4.02.20';
 //-----------------------------------------------------------------------------------
 END_VAR]]></Declaration>
   </GVL>

@@ -3,7 +3,7 @@
   <POU Name="MAIN_APP" Id="{589cd8b7-b619-4bed-ad7a-c17614b60e90}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
-//  HAUD 2026.04.30
+//  HAUD 2026.03.21
 //
 //  - MAIN_APPLICATION helper
 //    - example PRG for setting up your application startup
@@ -19,18 +19,19 @@
 //---------------------------------------------------------------------------------------------------------------
 PROGRAM MAIN_APP
 VAR
-  eInit       AT %Q*    : E_PROGRESS;   // startup state machine after MAIN is initialized
-  bXmlStartup           : BOOL;         // optional example switch for using xml configuration
+  eInit       AT %Q*    : E_PROGRESS;       // startup state machine after MAIN is initialized
+  bXmlStartup           : BOOL;             // optional example switch for using xml configuration
 
-  nStation        : UINT;
+  eInitForce  AT %I*    : E_INSTANCE_CMD;   // manual trigger for reinitialisation OnChange of E_INSTANCE_CMD.INIT
+  eInitForceOld         : E_INSTANCE_CMD;
 
-  rGap            : LREAL;        // default gap for everybody, of course you may adjust it to your needs during operation
-  rAcc            : LREAL;        // default acc/dec for straight motor modules, the stations in front of a curve are adjusted in StationPrimesExample()
-  rJerk           : LREAL;        // default jerk for everybody, 
-                                  // I TRY to manage the whole transport with one value, 
-                                  // because steep changes cause the slope of the acceleration to change
-                                  // and thus the velocity to adjust, 
-                                  // which leads to position adjustments so the mover may follow the setpoint generator.
+  nStationStartIndex AT %I* : UINT;
+
+
+  rDefaultGap,
+  rDefaultVeloMin,
+  rDefaultAccDec,
+  rDefaultJerk          : REAL;            // hardcoded dyn constraints for this example!
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -39,8 +40,28 @@ END_VAR
 //-----------------------------------------------------------------------------
 IF NOT (MAIN_XTS.eInit = E_PROGRESS.PROGRESS_DONE)
 THEN
-  eInit                                       := E_PROGRESS.PROGRESS_INIT;
+  eInit                                       := E_PROGRESS.PROGRESS_INVALID;
   RETURN;
+END_IF
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// OnChange detection for application initialisation
+//
+//  - mid level stuff, like reading the station config 
+//      (xts initialisation is done via ST_TRANSPORT_CTRL)
+//
+//  - in case you'd like to implement station configuration variation
+//    - this is the place to do it!
+//-----------------------------------------------------------------------------
+IF (eInitForce <> eInitForceOld)
+THEN
+  CASE eInitForce
+  OF
+    E_INSTANCE_CMD.INIT:
+      eInit                                   := E_PROGRESS.PROGRESS_INIT;
+  END_CASE
+
+  eInitForceOld                               := eInitForce;
 END_IF
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -49,10 +70,7 @@ END_IF
 CASE eInit
 OF
   //---------------------------------------------------------------------------
-  E_PROGRESS.PROGRESS_NOT_EXIST:
-    RETURN;       // you just bypassed the mapping
-                  // check if you require anything from the initialisation
-  //---------------------------------------------------------------------------
+  E_PROGRESS.PROGRESS_INVALID,
   E_PROGRESS.PROGRESS_INIT:
     GVL_APPLICATION.ConfigCtrl.Cmd            := E_DATA_CTRL.NULL;
     eInit                                     := E_PROGRESS.PROGRESS_BUSY;
@@ -61,32 +79,14 @@ OF
   E_PROGRESS.PROGRESS_BUSY:
     IF NOT bXmlStartup
     THEN
-      //---------------------------------------------------------------------------------------
-      // startup station parameters
-      //---------------------------------------------------------------------------------------
-      GVL_XTS.StationStartIndex                     := 37; // TRANSPORT_START enters all movers to GVL_XTS.StationList[index]
-      GVL_XTS.StationStart.rPosWait                 :=    7_500.0;  // modulo position after TRANSPORT_START
-      GVL_XTS.StationStart.rGap                     :=      105.0;  // gap for moving during TRANSPORT_START
-      GVL_XTS.StationStart.rVelo                    :=    1_000.0;
-      GVL_XTS.StationStart.rAccDec                  :=   17_500.0;  // it might be a good idea to move all movers a bit less stiff.
-      GVL_XTS.StationStart.rJerk                    :=  300_000.0;  // I TRY to keep the Jerk the same, you may chose differently
-      //---------------------------------------------------------------------------------------
-      // default values for this example
-      //---------------------------------------------------------------------------------------
-      rGap                                          :=       87.0;
-      rAcc                                          :=   20_000.0;
-      rJerk                                         :=  300_000.0;
+      rDefaultGap                             :=      78.0;
+      rDefaultVeloMin                         :=     750.0;
+      rDefaultAccDec                          :=   7_500.0;
+      rDefaultJerk                            := 300_000.0;
 
-      FOR nStation := 1 TO MAX_STATION
-      DO
-        GVL_XTS.StationParameter[nStation].rGap     :=     TO_REAL(rGap);
-        GVL_XTS.StationParameter[nStation].rAccDec  :=     TO_REAL(rAcc);
-        GVL_XTS.StationParameter[nStation].rJerk    :=     TO_REAL(rJerk);
-      END_FOR
-
-      // the prime the stations
+      // STATION_PRIMES example
       StationPrimesExample();
-      eInit                                   := E_PROGRESS.PROGRESS_WORKING;
+      eInit                                   := E_PROGRESS.PROGRESS_CHECK;
     ELSE
       GVL_APPLICATION.ConfigCtrl.Cmd          := E_DATA_CTRL.INIT;
       eInit                                   := E_PROGRESS.PROGRESS_PREPARE;
@@ -108,6 +108,14 @@ OF
     END_IF
 
   E_PROGRESS.PROGRESS_CHECK:
+    GVL_XTS.StationStartIndex                 :=      37;
+
+    GVL_XTS.StationStart.rPosWait             :=   7777.7;
+    GVL_XTS.StationStart.rGap                 :=    123.4;
+    GVL_XTS.StationStart.rVelo                :=    707.0;
+    GVL_XTS.StationStart.rAccDec              :=  14141.4;
+    GVL_XTS.StationStart.rJerk                := 141414.1;
+
     eInit                                     := E_PROGRESS.PROGRESS_OCCUPIED;
 
   E_PROGRESS.PROGRESS_OCCUPIED:
@@ -135,20 +143,26 @@ GVL_APPLICATION.StationConfig();        // call xml configuration
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN_APP">
-      <LineId Id="528" Count="26" />
-      <LineId Id="627" Count="2" />
-      <LineId Id="626" Count="0" />
-      <LineId Id="630" Count="1" />
-      <LineId Id="635" Count="0" />
-      <LineId Id="632" Count="1" />
-      <LineId Id="604" Count="0" />
-      <LineId Id="621" Count="0" />
-      <LineId Id="613" Count="0" />
-      <LineId Id="622" Count="3" />
-      <LineId Id="615" Count="5" />
-      <LineId Id="634" Count="0" />
-      <LineId Id="603" Count="0" />
-      <LineId Id="555" Count="3" />
+      <LineId Id="528" Count="7" />
+      <LineId Id="612" Count="2" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="622" Count="1" />
+      <LineId Id="625" Count="2" />
+      <LineId Id="615" Count="2" />
+      <LineId Id="628" Count="2" />
+      <LineId Id="618" Count="0" />
+      <LineId Id="631" Count="1" />
+      <LineId Id="620" Count="1" />
+      <LineId Id="608" Count="3" />
+      <LineId Id="540" Count="1" />
+      <LineId Id="546" Count="0" />
+      <LineId Id="643" Count="0" />
+      <LineId Id="547" Count="7" />
+      <LineId Id="639" Count="3" />
+      <LineId Id="638" Count="0" />
+      <LineId Id="644" Count="0" />
+      <LineId Id="637" Count="0" />
+      <LineId Id="556" Count="2" />
       <LineId Id="593" Count="0" />
       <LineId Id="559" Count="3" />
       <LineId Id="594" Count="2" />
@@ -156,7 +170,13 @@ GVL_APPLICATION.StationConfig();        // call xml configuration
       <LineId Id="597" Count="0" />
       <LineId Id="565" Count="0" />
       <LineId Id="598" Count="4" />
-      <LineId Id="567" Count="25" />
+      <LineId Id="567" Count="1" />
+      <LineId Id="647" Count="0" />
+      <LineId Id="652" Count="0" />
+      <LineId Id="648" Count="3" />
+      <LineId Id="653" Count="0" />
+      <LineId Id="646" Count="0" />
+      <LineId Id="569" Count="23" />
       <LineId Id="506" Count="0" />
     </LineIds>
   </POU>

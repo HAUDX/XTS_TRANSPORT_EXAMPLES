@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <DUT Name="ST_XTS_TRANSPORT_STATE" Id="{a93030b8-6a23-43d9-a118-9ab42af66f32}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="ST_XTS_TRANSPORT_STATE" Id="{d8d49b44-33ff-4ef9-ad46-5bab9406bf54}">
     <Declaration><![CDATA[{attribute 'pack_mode' := '2'}
 TYPE ST_XTS_TRANSPORT_STATE :
 STRUCT

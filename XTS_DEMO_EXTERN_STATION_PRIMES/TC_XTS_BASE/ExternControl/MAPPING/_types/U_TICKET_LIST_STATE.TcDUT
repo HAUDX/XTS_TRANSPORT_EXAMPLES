@@ -4,7 +4,7 @@
     <Declaration><![CDATA[TYPE U_TICKET_LIST_STATE :
 UNION
   stState             : ST_LIST_STATE;
-  byState   AT %I*    : ARRAY[1..SIZEOF(ST_LIST_STATE)] OF BYTE;
+  byState   AT %Q*    : ARRAY[1..SIZEOF(ST_LIST_STATE)] OF BYTE;
 END_UNION
 END_TYPE
 ]]></Declaration>

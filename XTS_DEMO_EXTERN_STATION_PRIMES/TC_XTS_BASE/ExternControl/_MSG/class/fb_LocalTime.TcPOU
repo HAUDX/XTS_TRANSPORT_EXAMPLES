@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="fb_LocalTime" Id="{a5849257-9653-453c-a9c8-131239b4ef11}" SpecialFunc="None">
+  <POU Name="fb_LocalTime" Id="{9e8901f1-87c0-4f6b-b6d9-74e642fd3886}" SpecialFunc="None">
     <Declaration><![CDATA[//-----------------------------------------------------------------------------------------------
 //
 //  As time goes by...
@@ -133,7 +133,7 @@ END_CASE
 
 ]]></ST>
     </Implementation>
-    <Method Name="FolderDate" Id="{22d05c53-b0fd-4603-a64e-7628e4e63277}">
+    <Method Name="FolderDate" Id="{e6e00d88-e50b-4351-b96c-649d8df45e84}">
       <Declaration><![CDATA[METHOD FolderDate : STRING
 VAR_INPUT
 	LocalTime   : POINTER TO DT;
@@ -163,9 +163,9 @@ FolderDate := sTmp;
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="LocalTime" Id="{456667bc-b9b6-4638-ba13-5fd06da6b617}">
+    <Property Name="LocalTime" Id="{01dac5eb-379c-4649-a7a8-6a4a0144ed19}">
       <Declaration><![CDATA[PROPERTY LocalTime : DT]]></Declaration>
-      <Get Name="Get" Id="{050dcbf3-936d-4f33-9583-68254c52c369}">
+      <Get Name="Get" Id="{76eab16e-cd5f-475b-8967-4f008d44b1e4}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -175,9 +175,9 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="LocalTimeString" Id="{e7b57902-7f3f-4539-819a-f63ee7c40ae0}">
+    <Property Name="LocalTimeString" Id="{d6e3301d-aa15-4869-8320-33aaad6fa5fd}">
       <Declaration><![CDATA[PROPERTY LocalTimeString : string]]></Declaration>
-      <Get Name="Get" Id="{da4d993a-7ef3-495d-abdc-be8550e121f3}">
+      <Get Name="Get" Id="{44a50bf3-0025-4d12-9583-6149e6966159}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -192,9 +192,9 @@ END_IF
         </Implementation>
       </Get>
     </Property>
-    <Property Name="State" Id="{1e803458-95f9-4c44-b640-c17f88a48fc4}">
+    <Property Name="State" Id="{b1807007-9d16-487d-a6d4-7e215f2eb5e4}">
       <Declaration><![CDATA[PROPERTY State : e_progress]]></Declaration>
-      <Get Name="Get" Id="{9bf71aa2-7b40-4d50-8a58-95bc37f6c8f6}">
+      <Get Name="Get" Id="{30e0a7ed-ea8c-49a2-986e-1bc3062063f6}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -204,9 +204,9 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="UtcTime" Id="{9d7700d0-d23f-4075-a439-ddf850d88f4c}">
+    <Property Name="UtcTime" Id="{a69a31b4-493c-447e-85c0-462b23259a96}">
       <Declaration><![CDATA[PROPERTY UtcTime : DT]]></Declaration>
-      <Get Name="Get" Id="{7571b6c5-914e-4f05-a5ac-c0d67b859e0a}">
+      <Get Name="Get" Id="{21b98c6a-b820-43f0-b01c-18c5c9c375cc}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -216,9 +216,9 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="UtcTimeString" Id="{f43af301-1b50-4d13-b065-24105cb7d26d}">
+    <Property Name="UtcTimeString" Id="{5afeed06-48b0-4ead-8175-ca83316b401f}">
       <Declaration><![CDATA[PROPERTY UtcTimeString : string]]></Declaration>
-      <Get Name="Get" Id="{936c9e99-1082-4613-b021-2a44cca1fa9e}">
+      <Get Name="Get" Id="{d93dbfb3-a158-4a52-89b5-9ad6f3384c9d}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>

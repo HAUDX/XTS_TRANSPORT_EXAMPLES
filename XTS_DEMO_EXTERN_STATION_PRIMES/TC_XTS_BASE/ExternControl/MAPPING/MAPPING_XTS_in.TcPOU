@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAPPING_XTS_in" Id="{cab2eef4-b243-4d10-adf5-ec5dc533ff13}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAPPING_XTS_in
+VAR
+  sMapping              : STRING;
+  bFirstCycle           : BOOL := TRUE;
+
+  bBypassTower          : BOOL;
+
+  YardControl           : U_YARD_CTRL;
+  InstanceControl       : U_INSTANCE_CTRL;
+  TicketListInput       : U_TICKET_LIST_DATA_INPUT;
+  TicketListControl     : U_TICKET_LIST_CTRL;
+
+  TransportState        : U_XTS_TRANSPORT_STATE;
+  StationState          : U_XTS_STATION_STATE;
+
+  szTransportState      : ARRAY[1..2] OF UDINT;
+  szStationState        : ARRAY[1..2] OF UDINT;
+  szMoverSelector       : ARRAY[1..2] OF UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF (bFirstCycle)
+THEN
+  bFirstCycle         := FALSE;
+  
+  szTransportState [1]:= SIZEOF(TransportState);
+  szTransportState [2]:= SIZEOF(GVL_XTS.XtsTransportState);
+
+  szStationState   [1]:= SIZEOF(StationState);
+  szStationState   [2]:= SIZEOF(GVL_XTS.StationState);
+
+//   szMoverSelector  [1]:= SIZEOF(MoverSelectorState);
+//   szMoverSelector  [1]:= SIZEOF(GVL_XTS.MoverSelectorState);
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TransportState) <> SIZEOF(GVL_XTS.XtsTransportState))
+THEN
+  sMapping  := 'TransportState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(StationState) <> SIZEOF(GVL_XTS.StationState))
+THEN
+  sMapping  := 'StationState sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(YardControl) <> SIZEOF(GVL_APPLICATION.YardControl))
+THEN
+  sMapping  := 'YardControl sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(InstanceControl) <> SIZEOF(GVL_APPLICATION.InstanceCtrl))
+THEN
+  sMapping  := 'InstanceControl sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TicketListInput) <> SIZEOF(GVL_APPLICATION.TicketListDataInput))
+THEN
+  sMapping  := 'TicketListInput sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+IF (SIZEOF(TicketListControl) <> SIZEOF(GVL_APPLICATION.TicketListControl))
+THEN
+  sMapping  := 'TicketListControl sizes DO NOT match';
+  RETURN;
+END_IF
+//---------------------------------------------------------------------
+sMapping    := 'MAPPING_XTS_IN ACTIVE';
+//-----------------------------------------------------------------------------------------
+//       destination,                               source,                size
+//-----------------------------------------------------------------------------------------
+IF NOT bBypassTower
+THEN
+  memcpy(ADR(GVL_APPLICATION.YardControl),         ADR(YardControl),       SIZEOF(YardControl));
+  memcpy(ADR(GVL_APPLICATION.InstanceCtrl),        ADR(InstanceControl),   SIZEOF(InstanceControl));
+  memcpy(ADR(GVL_APPLICATION.TicketListControl),   ADR(TicketListControl), SIZEOF(TicketListControl));
+  memcpy(ADR(GVL_APPLICATION.TicketListDataInput), ADR(TicketListInput),   SIZEOF(TicketListInput));
+end_if
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+//       destination,                          source,                size
+//-----------------------------------------------------------------------------------------
+  memcpy(ADR(GVL_XTS.XtsTransportState),      ADR(TransportState),    SIZEOF(TransportState));
+  memcpy(ADR(GVL_XTS.StationState),           ADR(StationState),      SIZEOF(StationState));
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAPPING_XTS_in">
+      <LineId Id="78" Count="0" />
+      <LineId Id="2" Count="5" />
+      <LineId Id="90" Count="2" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="48" Count="11" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="106" Count="4" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="111" Count="4" />
+      <LineId Id="123" Count="11" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="98" Count="2" />
+      <LineId Id="135" Count="1" />
+      <LineId Id="101" Count="1" />
+      <LineId Id="120" Count="1" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="103" Count="1" />
+      <LineId Id="61" Count="4" />
+      <LineId Id="73" Count="4" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

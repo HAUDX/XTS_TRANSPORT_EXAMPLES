@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <DUT Name="ST_XPU_STRINGS" Id="{957b3c22-44aa-40fc-91b9-9a18ac432a63}">
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_XPU_STRINGS" Id="{00a8e484-216a-405b-bed6-010ac38e618a}">
     <Declaration><![CDATA[TYPE ST_XPU_STRINGS :
 STRUCT
   sXpuState       ,

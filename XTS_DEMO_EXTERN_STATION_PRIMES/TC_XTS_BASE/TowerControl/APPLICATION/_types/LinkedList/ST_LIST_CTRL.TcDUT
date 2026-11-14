@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_LIST_CTRL" Id="{8a2ad890-a986-4946-93a1-b123832ab43f}">
+    <Declaration><![CDATA[TYPE ST_LIST_CTRL :
+STRUCT
+  Cmd         : E_LIST_CTRL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

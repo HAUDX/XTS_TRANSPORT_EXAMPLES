@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="f_MessageSet" Id="{f36f1377-67c9-4c98-b1a4-4817b0be7396}" SpecialFunc="None">
+  <POU Name="f_MessageSet" Id="{3d28c769-c90f-4903-a981-1dc1b4cec5fb}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION f_MessageSet : BOOL
 VAR_INPUT
   stMessage     : ST_Message;

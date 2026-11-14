@@ -2,11 +2,143 @@
 <TcPlcObject Version="1.1.0.1">
   <GVL Name="GVL_APPLICATION" Id="{ef5c8ee7-19c1-4689-9600-6bba8e125d3a}">
     <Declaration><![CDATA[VAR_GLOBAL CONSTANT
-  MAX_PROCESS       : UINT := 9;
+  MAX_PROCESS       : E_INSTANCE    := E_INSTANCE.PROCESS_EIGHT;
 END_VAR
 {attribute 'qualified_only'}
 VAR_GLOBAL
-  Simulation        : ARRAY[1..MAX_PROCESS] OF fb_Simulation;
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  YardMaster                        : fb_YardMaster;
+  YardControl                       : ST_YARD_CTRL;
+  YardState                         : ST_YARD_STATE;
+
+  // visualisation data helper
+  // collects data from all over the GVL_XTS and GVL_APPLICATION
+  VisuPoolData                      : ST_VISU_POOL;
+
+  //-----------------------------------------------------------------------------------------------
+  // Process instances
+  //  - processes are similar but also different, hence working with inheritance of fb_Instance
+  //  - change/check here if you need a process procedure that matches your use case
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------
+  // STATION_PRIMES example processes:
+  //   DISTRIBUTOR_ONE,          // (1 to m) - incomming ticket data ST_PROCESS_DATA.wTarget sets target for mover
+  //   PROCESS_ONE,              // (m to 1) - LOADING
+  //   DISTRIBUTOR_TWO,          // (1 to m) - distributor to next
+  //   PROCESS_TWO,              // (m to 1) - standstill process
+  //   DISTRIBUTOR_THREE,        // (1 to m) - distributor to next
+  //   PROCESS_THREE,            // (m to 1) - standstill process
+  //   DISTRIBUTOR_FOUR,         // (1 to m) - distributor to next
+  //   PROCESS_FOUR,             // (m to 1) - standstill process
+  //   DISTRIBUTOR_FIVE,         // (1 to m) - distributor to next
+  //   PROCESS_FIVE,             // (m to 1) - standstill process
+  //   DISTRIBUTOR_SIX,          // (1 to m) - distributor to next
+  //   PROCESS_SIX,              // (m to 1) - standstill process
+  //   DISTRIBUTOR_SEVEN,        // (1 to m) - distributor to next
+  //   PROCESS_SEVEN,            // (m to 1) - standstill process
+  //   DISTRIBUTOR_EIGHT,        // (1 to m) - distributor to next
+  //   PROCESS_EIGHT,            // (m to 1) - UNLOADING
+  // STATION_PRIMES example processes.
+  //-----------------------------------
+  //-----------------------------------------------------------------------------------------------
+  InstanceDistributorOne            : fb_DistributorByTicket;
+  InstanceProcessOne                : fb_ProcessByTicket;
+
+  InstanceDistributorTwo            : fb_DistributorByTicket;
+  InstanceProcessTwo                : fb_ProcessByTicket;
+
+  InstanceDistributorThree          : fb_DistributorByTicket;
+  InstanceProcessThree              : fb_ProcessByTicket;
+
+  InstanceDistributorFour           : fb_DistributorByTicket;
+  InstanceProcessFour               : fb_ProcessByTicket;
+
+  InstanceDistributorFive           : fb_DistributorByTicket;
+  InstanceProcessFive               : fb_ProcessByTicket;
+
+  InstanceDistributorSix            : fb_DistributorByTicket;
+  InstanceProcessSix                : fb_ProcessByTicket;
+
+  InstanceDistributorSeven          : fb_DistributorByTicket;
+  InstanceProcessSeven              : fb_ProcessByTicket;
+
+  InstanceDistributorEight          : fb_DistributorByTicket;
+  InstanceProcessEight              : fb_ProcessByTicket;
+
+  //-----------------------------------------------------------------------------------------------
+  // fb_Instance control and state
+  //  - structs are used to command Instances during production 
+  //-----------------------------------------------------------------------------------------------
+  InstanceCtrl                      : ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_CTRL;
+  InstanceState                     : ARRAY[1..MAX_PROCESS] OF ST_INSTANCE_STATE;
+
+
+  //-----------------------------------------------------------------------------------------------
+  // Linked List instances
+  //-----------------------------------------------------------------------------------------------
+  ProcessList                       : ARRAY[1..MAX_PROCESS] OF fb_Process_LinkedList; // information transfer between processes
+  ItfProcessList                    : ARRAY[1..MAX_PROCESS] OF I_Process_LinkedList;  // use this interface in your function blocks
+
+
+  //-----------------------------------------------------------------------------------------------
+  // Collector instances
+  //
+  //  - layer for grouping parallel XtsStations for process handshakes
+  //-----------------------------------------------------------------------------------------------
+  //  - fb_ProcessCollector:
+  //    - uses .ProcessCtrl and .ProcessState for handshakes with application
+  //
+  //    - .ActivateStation is evaluated after enabling infeed in state 
+  //      E_PROCESS_STATE.PROCESS_DISABLE:/E_PROGRESS.PROGRESS_BUSY:
+  //      
+  //    - ST_PROCESS_STATE:
+  //      - contains 3 enumerations for you to check
+  //      - State           : E_PROCESS_STATE;
+  //        - main state for handshakes
+  //
+  //      - Result          : E_PROGRESS;
+  //        - substate for checks during handshake; 
+  //          PROGRESS_BUSY --> handshakes are accepted (see fb_ProcessCollecotr.Cycle())
+  //
+  //      - Check           : E_PROCESS_CHECK;
+  //        - cyclic pointer check: use this on startup of your application
+  //
+  //    - inherits fb_StationCollector
+  //-----------------------------------------------------------------------------------------------
+  ProcessCollector      : ARRAY[1..MAX_PROCESS] OF fb_ProcessCollector;       // grouping of XtsStations
+  ItfProcessCollector   : ARRAY[1..MAX_PROCESS] OF I_ProcessCollector;        // interface for use in your function blocks like BufferInfeed etc.
+  // config of processes
+  ProcessParameter      : ARRAY[1..MAX_PROCESS] OF ST_PROCESS_PARAMETER;      // equivalent ST_STATION_PARAMETER, just for processes
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  // cyclic linked lists
+  //
+  //  - fb_LinkedListCtrl
+  //    - is controlled via Ctrl/State pair
+  //    - provides I_Process_LinkedList for use in conected class
+  //-----------------------------------------------------------------------------------------------
+  TicketControl         : fb_Process_LinkedListCtrl;
+  TicketList            : fb_Process_LinkedList;
+  TicketListControl     : ST_LIST_CTRL;
+  TicketListState       : ST_LIST_STATE;
+  TicketListDataInput   : ST_LIST_NODE_DATA;   // datafield for you to write(add) your data
+  TicketListDataOutput  : ST_LIST_NODE_DATA;   // datafield for you to read (get) your data
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+  // Distribution of LinkedList ticket
+  //
+  //  - fb_ProcessConductor extends fb_Instance
+  //    - is controlled via instance Ctrl/State pair
+  //    - consumes I_Process_LinkedList for moving 
+  //      the ticket from the cyclic list into the process list of ST_PROCESS_DATA.nProcessId
+  //-----------------------------------------------------------------------------------------------
+  ProcessConductor      : fb_ProcessConductor;
+  ConductorCtrl         : ST_INSTANCE_CTRL;
+  ConductorState        : ST_INSTANCE_STATE;
+  //-----------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
