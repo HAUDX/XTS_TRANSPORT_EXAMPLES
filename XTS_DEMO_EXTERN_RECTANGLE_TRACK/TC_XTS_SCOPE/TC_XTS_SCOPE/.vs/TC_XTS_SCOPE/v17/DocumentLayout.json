@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_2\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\",
+  "WorkspaceRootPath": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_TRACK\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A64BE845-70A1-47FC-99D2-F5902CFA7043}|TC_XTS_SCOPE\\TC_XTS_SCOPE.tcmproj|Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_2\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\InstanceScope.tcscopex||{F11FCA8C-C893-4F48-9045-99EE42AF6CA8}|Editor",
+      "AbsoluteMoniker": "D:0:0:{A64BE845-70A1-47FC-99D2-F5902CFA7043}|TC_XTS_SCOPE\\TC_XTS_SCOPE.tcmproj|Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_TRACK\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\InstanceScope.tcscopex||{F11FCA8C-C893-4F48-9045-99EE42AF6CA8}|Editor",
       "RelativeMoniker": "D:0:0:{A64BE845-70A1-47FC-99D2-F5902CFA7043}|TC_XTS_SCOPE\\TC_XTS_SCOPE.tcmproj|solutionrelative:TC_XTS_SCOPE\\InstanceScope.tcscopex||{F11FCA8C-C893-4F48-9045-99EE42AF6CA8}|Editor"
     }
   ],
@@ -42,9 +42,9 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "InstanceScope",
-              "DocumentMoniker": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_2\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\InstanceScope.tcscopex",
+              "DocumentMoniker": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_TRACK\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\InstanceScope.tcscopex",
               "RelativeDocumentMoniker": "TC_XTS_SCOPE\\InstanceScope.tcscopex",
-              "ToolTip": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_2\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\InstanceScope.tcscopex",
+              "ToolTip": "Z:\\##HAUDX\\XTS_TRANSPORT_EXAMPLES\\XTS_DEMO_EXTERN_RECTANGLE_TRACK\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\TC_XTS_SCOPE\\InstanceScope.tcscopex",
               "RelativeToolTip": "TC_XTS_SCOPE\\InstanceScope.tcscopex",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2026-11-09T06:37:25.796Z",
