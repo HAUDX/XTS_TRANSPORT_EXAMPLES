@@ -48,8 +48,6 @@ VAR
   {attribute 'displaymode':='bin'}
   wActivateStation              : ARRAY[1..MAX_PROCESS] OF T_PROCESS;
   tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
-  tonProcess                    : ARRAY[1..MAX_PROCESS] OF Tc2_Standard.TON;
-
 
   nIdx                          : E_INSTANCE;
 
@@ -108,15 +106,6 @@ OF
       eInit                                       := E_PROGRESS.PROGRESS_OCCUPIED;
     END_IF
   //---------------------------------------------------------------------------------------------------------------
-  E_PROGRESS.PROGRESS_STARTUP:
-    GVL_APPLICATION.YardControl.Cmd               := E_INSTANCE_CMD.WORK;
-
-    IF (GVL_APPLICATION.YardState.State = E_INSTANCE_STATE.WORKING + E_PROGRESS.PROGRESS_DONE)
-    THEN
-      GVL_APPLICATION.YardControl.Cmd             := E_INSTANCE_CMD.WORK;
-      eInit                                       := E_PROGRESS.PROGRESS_DONE;
-    END_IF
-  //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_OCCUPIED:
     tProcess[PROCESS_INFEED]                                := T#3200MS;
     tProcess[PROCESS_ASSEMBLY_01]                           := T#3000MS;
@@ -157,7 +146,7 @@ END_CASE
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
-// /assign dataflow
+// /example 
 //-----------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------
 CASE nState OF
@@ -517,7 +506,8 @@ END_CASE
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN_APP">
-      <LineId Id="732" Count="62" />
+      <LineId Id="732" Count="46" />
+      <LineId Id="788" Count="6" />
       <LineId Id="1059" Count="0" />
       <LineId Id="1062" Count="0" />
       <LineId Id="1065" Count="0" />

@@ -42,9 +42,6 @@
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
-    <Compile Include="APPLICATION\StationParameter_28000_1.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="APPLICATION\VISU_POOL.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -560,11 +557,6 @@
     <PlaceholderResolution Include="System_VisuElemBase">
       <Resolution>VisuElemBase, * (System)</Resolution>
     </PlaceholderResolution>
-  </ItemGroup>
-  <ItemGroup>
-    <SubObject Include="MAIN_APP.Init">
-      <ExcludeFromBuild>true</ExcludeFromBuild>
-    </SubObject>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
