@@ -352,7 +352,7 @@ GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   
 GVL_XTS.StationParameter[nStationParameter].rPosWait              :=   12900.0; // absolute modulo position
 GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
 GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     -10.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStationParameter].rVelo                 :=     275.0;
+GVL_XTS.StationParameter[nStationParameter].rVelo                 :=     1100.0;
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=     110.0;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -366,7 +366,7 @@ GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   
 GVL_XTS.StationParameter[nStationParameter].rPosWait              :=   14000.0; // absolute modulo position
 GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
 GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     -10.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStationParameter].rVelo                 :=     275.0;
+GVL_XTS.StationParameter[nStationParameter].rVelo                 :=     1100.0;
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=     110.0;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -380,7 +380,7 @@ GVL_XTS.StationParameter[nStationParameter].nConfiguredStopCount  :=       1;   
 GVL_XTS.StationParameter[nStationParameter].rPosWait              :=   14300.0; // absolute modulo position
 GVL_XTS.StationParameter[nStationParameter].rPosStop[1]           :=       0.0; // relative to rPosWait
 GVL_XTS.StationParameter[nStationParameter].rReleaseDistance      :=     -10.0; // relative to Mover.ActPos
-GVL_XTS.StationParameter[nStationParameter].rVelo                 :=     275.0;
+GVL_XTS.StationParameter[nStationParameter].rVelo                 :=     1100.0;
 GVL_XTS.StationParameter[nStationParameter].rGap                  :=     109.0;
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
