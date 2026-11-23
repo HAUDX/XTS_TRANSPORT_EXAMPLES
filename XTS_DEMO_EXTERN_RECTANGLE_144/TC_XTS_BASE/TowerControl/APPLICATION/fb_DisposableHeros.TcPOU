@@ -95,16 +95,6 @@ CASE _nState OF
           _nStationCount                      := _stInstanceState[_nProcessConnect].StationCount;
         END_IF
 
-      E_INSTANCE_STATE.DETECTION:
-        CASE _stInstanceState[_nProcess].ProcessProgress
-        OF
-          E_PROGRESS.PROGRESS_BUSY:       // waits for ticket
-            IF (_nProcessConnect > e_instance.INSTANCE_NULL)
-            THEN
-              ;//_nState                         := 30;    // go write ticket
-            END_IF
-        END_CASE
-
       E_INSTANCE_STATE.ENABLED:
         CASE _stInstanceState[_nProcess].ProcessProgress
         OF
@@ -150,7 +140,8 @@ CASE _nState OF
         END_CASE
     END_CASE
 END_CASE
-CASE _nState OF
+CASE _nState 
+OF
   20:
     _nState                                   :=  10;
     TruncMask();
@@ -165,8 +156,8 @@ CASE _nState OF
       _eResult                                := ListData(FALSE);
     END_IF
 END_CASE
-CASE _nState OF
-
+CASE _nState 
+OF
   90:
     _eResult                                  := ListData(TRUE);
     IF (_eResult = E_PROGRESS.PROGRESS_DONE)
@@ -175,9 +166,19 @@ CASE _nState OF
       TruncMask();
     END_IF
 END_CASE
-CASE _nState OF
-
-  100:
+CASE _nState 
+OF
+ 100:
+  IF NOT (_stProcessData.wTarget > 0)
+  THEN
+    _nState                                   := 30;
+  ELSE
+    _nState                                   := 101;
+  END_IF
+END_CASE
+CASE _nState 
+OF
+  101:
     //-----------------------------------------------------------------------------  
     // the tickets
     //-----------------------------------------------------------------------------
@@ -193,8 +194,8 @@ CASE _nState OF
     //-----------------------------------------------------------------------------
     _nState                               := 1000;
 END_CASE
-CASE _nState OF
-
+CASE _nState 
+OF
   1000:
     IF NOT (_nTicketCountLimit > 0)
     THEN
@@ -227,6 +228,27 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="BitmaskRandom" Id="{3a95f877-2a5e-4289-9742-41f0517274fd}">
+      <Declaration><![CDATA[PROPERTY BitmaskRandom : bool]]></Declaration>
+      <Get Name="Get" Id="{19607b5b-25da-455b-b418-a287b5c5ce3c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BitmaskRandom := _bRandomize;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{4dc908cd-b264-48d9-8bd4-e96a12042123}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bRandomize := BitmaskRandom;
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="BitSet" Id="{075d513b-2170-4aca-a2e9-2a16152dac6f}">
       <Declaration><![CDATA[METHOD PUBLIC BitSet : T_PROCESS
 VAR_INPUT
@@ -663,30 +685,42 @@ END_IF
       <LineId Id="132" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="133" Count="0" />
-      <LineId Id="135" Count="0" />
-      <LineId Id="138" Count="2" />
-      <LineId Id="144" Count="1" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="146" Count="0" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="136" Count="0" />
-      <LineId Id="29" Count="50" />
+      <LineId Id="29" Count="45" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="75" Count="4" />
       <LineId Id="116" Count="1" />
       <LineId Id="80" Count="1" />
       <LineId Id="119" Count="0" />
       <LineId Id="121" Count="0" />
       <LineId Id="120" Count="0" />
       <LineId Id="118" Count="0" />
-      <LineId Id="122" Count="3" />
+      <LineId Id="122" Count="1" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="125" Count="0" />
       <LineId Id="127" Count="0" />
       <LineId Id="126" Count="0" />
       <LineId Id="128" Count="1" />
       <LineId Id="147" Count="0" />
       <LineId Id="130" Count="0" />
-      <LineId Id="82" Count="32" />
+      <LineId Id="148" Count="1" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="151" Count="4" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="82" Count="1" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="85" Count="16" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="103" Count="11" />
     </LineIds>
     <LineIds Name="fb_DisposableHeros.BitGet">
       <LineId Id="1" Count="5" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.BitmaskRandom.Get">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="fb_DisposableHeros.BitmaskRandom.Set">
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="fb_DisposableHeros.BitSet">
       <LineId Id="1" Count="1" />

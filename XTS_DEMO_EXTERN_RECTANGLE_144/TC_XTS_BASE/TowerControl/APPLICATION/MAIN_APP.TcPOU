@@ -48,6 +48,7 @@ VAR
   {attribute 'displaymode':='bin'}
   wActivateStation              : ARRAY[1..MAX_PROCESS] OF T_PROCESS;
   tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
+  tonTester                     : Tc2_Standard.TON;
 
   nIdx                          : E_INSTANCE;
 
@@ -118,11 +119,11 @@ OF
     END_IF
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_OCCUPIED:
-    tProcess[PROCESS_INFEED]                                := T#3200MS;
-    tProcess[PROCESS_ASSEMBLY_01]                           := T#3000MS;
-    tProcess[PROCESS_ASSEMBLY_02]                           := T#3000MS;
-    tProcess[PROCESS_ASSEMBLY_TEST]                         := T#4300MS;
-    tProcess[PROCESS_OUTFEED]                               := T#2200MS;
+    tProcess[PROCESS_INFEED]                                := T#600MS;
+    tProcess[PROCESS_ASSEMBLY_01]                           := T#650MS;
+    tProcess[PROCESS_ASSEMBLY_02]                           := T#500MS;
+    tProcess[PROCESS_ASSEMBLY_TEST]                         := T#1100MS;
+    tProcess[PROCESS_OUTFEED]                               := T#500MS;
 
     wActivateStation[E_INSTANCE.DISTRIBUTOR_INFEED]         := 2#_1111_1111_1111_1111;
     wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01]    := 2#_0000_1111_1111_1111;
@@ -278,6 +279,12 @@ CASE nState OF
 
 
   200:
+    tonTester(IN:= TRUE, PT:= T#13S, Q=> , ET=> );
+    IF tonTester.Q
+    THEN
+      Puppets[2].BitmaskRandom                      := SEL(Puppets[2].BitmaskRandom, true, false);
+      tonTester(IN:= FALSE, PT:= T#13S, Q=> , ET=> );
+    END_IF
     FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
     DO
       Puppets[nIdx](Start                           := bStart, 
@@ -569,7 +576,13 @@ END_CASE
       <LineId Id="1194" Count="47" />
       <LineId Id="1255" Count="1" />
       <LineId Id="1117" Count="0" />
-      <LineId Id="836" Count="9" />
+      <LineId Id="836" Count="3" />
+      <LineId Id="1281" Count="0" />
+      <LineId Id="1277" Count="1" />
+      <LineId Id="1280" Count="0" />
+      <LineId Id="1282" Count="0" />
+      <LineId Id="1279" Count="0" />
+      <LineId Id="840" Count="5" />
       <LineId Id="1180" Count="1" />
       <LineId Id="1166" Count="0" />
       <LineId Id="1182" Count="1" />
