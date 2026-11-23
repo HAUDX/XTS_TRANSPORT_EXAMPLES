@@ -39,8 +39,9 @@ This repository serves as the blueprint for translating the XTS_TRANSPORT_LAYER 
 
 ## I. Encapsulation & Agnostic Routing
 These examples illustrate how to command the physical track from an abstracted, agnostic IT or Process layer.
-- **[XTS_DEMO_EXTERN_RECTANGLE_144]:** A triple-PLC case study of sending sparse bitmasks (tickets) via a central message broker into Instances with 160 stations grouped into 18 Collectors and Instances and 132 movers. 
-  This demo features example code in the top most layer, use it, misuse it, build from it. The tickets are serialized at the PLC boarder and added at the tail once the boarder is crossed.
+- **[XTS_DEMO_EXTERN_RECTANGLE_144]:** A triple-PLC case study of sending sparse bitmasks (tickets) via a central message broker into Instances with 160 stations grouped into 18 Collectors and Instances and 144 movers. 
+  This demo features example code in the top most layer, use it, misuse it, build from it. The tickets are serialized at the PLC border and added at the tail once the border is crossed.
+  The station placement and bitmask handling show lot size 1 functionality is available.
   The demo consists of standstill and continuous processes based on the different handshake routes a StationProcess offers. 
   The continuous processes do not require any axis synchronisation, hence this hybrid, station-based approach for continuous work (e.g., scanners, cameras, cleaners). 
   The project uses a **triple-PLC approach (XtsTransport, ExternControl, TowerControl)**, with higher levels of abstraction for grouping stations, which is implemented in the ExternControl PLC.
