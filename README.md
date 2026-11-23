@@ -9,7 +9,7 @@
 - The examples contained within this repository are not theoretical exercises.
 - Most examples provided here are derived from a physical, production-ready machine currently operating in the field.
 - Some examples are case studies from POC designs, which later were changed/adapted by users.
-- The examples shall illustrate the multi layered approach when dealing with complex transport logic and asynchronuous command issuing.
+- The examples shall illustrate the multi layered approach when dealing with complex transport logic and asynchronous command issuing.
 - All examples are built upon the same basic ctrl/state handshakes.
 - All examples are ready to run in simulation.
 
@@ -39,7 +39,7 @@ This repository serves as the blueprint for translating the XTS_TRANSPORT_LAYER 
 
 ## I. Encapsulation & Agnostic Routing
 These examples illustrate how to command the physical track from an abstracted, agnostic IT or Process layer.
-- **[XTS_DEMO_EXTERN_RECTANGLE_144]:** A triple-PLC case study of sending sparse bitmasks (tickets) via a central message broker into Instances with 160 stations grouped into 18 Collectors and Instances and 144 movers. 
+- **[XTS_DEMO_EXTERN_RECTANGLE_144]:** A triple-PLC case study of sending sparse bitmasks (tickets) via a central message broker into Instances with 160 stations grouped into 17 Collectors and Instances and 144 movers. 
   This demo features example code in the top most layer, use it, misuse it, build from it. The tickets are serialized at the PLC border and added at the tail once the border is crossed.
   The station placement and bitmask handling show lot size 1 functionality is available.
   The demo consists of standstill and continuous processes based on the different handshake routes a StationProcess offers. 
