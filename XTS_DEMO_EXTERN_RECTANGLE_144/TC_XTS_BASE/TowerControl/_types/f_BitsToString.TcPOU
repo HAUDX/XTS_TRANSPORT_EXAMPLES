@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="f_BitsToString" Id="{8b7d9aa2-08f9-436e-9ed6-308ca7f97f01}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION f_BitsToString : string
+VAR_INPUT
+  inVal       : T_PROCESS;
+END_VAR
+VAR
+  _nx         : DINT;
+  _str        : STRING(SIZEOF(T_PROCESS)*8);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FOR _nx := ((SIZEOF(inVal)*8)) TO 1 BY(-1)
+DO
+  IF (f_BitGet(inVal, _nx-1))
+  THEN
+    _str     := concat(_str, '1');
+  ELSE
+    _str     := concat(_str, '0');
+  END_IF
+END_FOR
+
+f_BitsToString := _str;
+]]></ST>
+    </Implementation>
+    <LineIds Name="f_BitsToString">
+      <LineId Id="1" Count="11" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

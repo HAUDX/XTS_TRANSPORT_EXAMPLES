@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="f_BitGet" Id="{3c157b64-3633-4258-9b88-91de4c663fea}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION f_BitGet : BOOL
+VAR_INPUT
+  inVal   : T_PROCESS;
+  bitNo   : DINT;
+END_VAR
+VAR
+  wConst : T_PROCESS := 1;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF ( inVal AND SHL( wConst,TO_SINT(bitNo) MOD TO_INT(SIZEOF(T_PROCESS)*8) ) ) > 0
+THEN
+  f_BitGet := TRUE;
+ELSE
+  f_BitGet := FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="f_BitGet">
+      <LineId Id="1" Count="5" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

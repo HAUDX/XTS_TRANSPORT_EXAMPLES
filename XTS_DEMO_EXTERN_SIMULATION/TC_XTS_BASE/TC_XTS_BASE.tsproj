@@ -6116,28 +6116,28 @@ and will return to Group State Standby when the situation permits.
 		<ImageData Id="1023">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c30e0000c30e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0901091706173f3f3f3f3f3fff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000008282828282823f3f3f000000303030ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000008282828282820000007e7e7e3f3f3f000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff000000828282494949000000828282656565000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000008282820000008282826161610b0b0b6666663f3f3f303030ff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000008282828282826666660b0b0b6161618282827e7e7e000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000008282828282828282826565658282820000001414143f3f3f3f3f3fff00ffff00ffff00ffff00ffff00ffff00ff0000008282828282828282828282821616164848488282828282823f3f3fff00ffff00ffff00ffff00ffff00ffff00ff000000828282828282828282828282828282828282828282828282170617ff00ffff00ffff00ffff00ffff00ffff00ff000000000000000000000000000000000000000000000000000000090109ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1024">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c30e0000c30e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0901091706173f3f3f3f3f3fff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff000000edc532edc5323f3f3f000000303030ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff000000edc532edc532000000edc5323f3f3f000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff000000edc532494949000000edc532c3a229000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff000000edc532000000edc532c3a2290b0b0bc3a2293f3f3f303030ff00ffff00ffff00ffff00ffff00ffff00ffff00ff000000edc532edc532c3a2290b0b0bc3a229edc532edc532000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ff000000edc532edc532edc532c3a229edc5320000001414143f3f3f3f3f3fff00ffff00ffff00ffff00ffff00ffff00ff000000edc532edc532edc532edc532161616484848edc532edc5323f3f3fff00ffff00ffff00ffff00ffff00ffff00ff000000edc532edc532edc532edc532edc532edc532edc532edc532170617ff00ffff00ffff00ffff00ffff00ffff00ff000000000000000000000000000000000000000000000000000000090109ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{0D33BF96-E768-4312-8E76-7F2D2635C2C0}" TargetNetId="10.201.25.110.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
+	<Project ProjectGUID="{0D33BF96-E768-4312-8E76-7F2D2635C2C0}" TargetNetId="5.163.199.237.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
 			<Settings MaxCpus="8" NonWinCpus="6" RouterMemory="134217728" MaxStackSize="2048">
 				<Cpu CpuId="2"/>
 				<Cpu CpuId="3" BaseTime="2500"/>
 				<Cpu CpuId="4" BaseTime="2500"/>
 				<Cpu CpuId="5" BaseTime="2500"/>
-				<Cpu CpuId="6"/>
+				<Cpu CpuId="6" BaseTime="2500"/>
 				<Cpu CpuId="7"/>
 				<IoIdleTask Affinity="#x00000008"/>
 			</Settings>
 			<Tasks>
-				<Task Id="6" Priority="13" CycleTime="10000" AmsPort="351" Affinity="#x00000004" AdtTasks="true">
+				<Task Id="6" Priority="13" CycleTime="10000" AmsPort="351" Affinity="#x00000020" AdtTasks="true">
 					<Name>PlcTask 1</Name>
 				</Task>
-				<Task Id="7" Priority="15" CycleTime="10000" AmsPort="352" Affinity="#x00000004" AdtTasks="true">
+				<Task Id="7" Priority="15" CycleTime="5000" AmsPort="352" Affinity="#x00000040" AdtTasks="true">
 					<Name>PlcTask 2</Name>
 				</Task>
 				<Task Id="3" Priority="1" CycleTime="2500" AmsPort="350" Affinity="#x00000010" AdtTasks="true">
 					<Name>XTS Task 1</Name>
 				</Task>
-				<Task Id="8" Priority="32" Affinity="#x00000004" AdtTasks="true" JobTask="true">
+				<Task Id="8" Priority="32" Affinity="#x00000008" AdtTasks="true" JobTask="true">
 					<Name>Job Task</Name>
 					<ImageId>327</ImageId>
 				</Task>
@@ -43104,8 +43104,8 @@ and will return to Group State Standby when the situation permits.
 			</NC>
 		</Motion>
 		<Plc>
-			<Project GUID="{C3B5B646-B91E-4061-A1AD-6B8809F76D51}" Name="TowerControl" PrjFilePath="TowerControl\TowerControl.plcproj" TmcFilePath="TowerControl\TowerControl.tmc" CompilerDefines="WIN" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{FADA32E2-43EE-8C13-2E98-D4B394E5EDE7}" TmcPath="TowerControl\TowerControl.tmc">
+			<Project GUID="{C3B5B646-B91E-4061-A1AD-6B8809F76D51}" Name="TowerControl" PrjFilePath="TowerControl\TowerControl.plcproj" TmcFilePath="TowerControl\TowerControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{67F903D0-B7FC-FEC2-3F5F-D24502A5CBBB}" TmcPath="TowerControl\TowerControl.tmc">
 					<Name>TowerControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -43179,7 +43179,7 @@ and will return to Group State Standby when the situation permits.
 								<OTCID>#x02010070</OTCID>
 							</ManualConfig>
 							<Priority>15</Priority>
-							<CycleTime>1000000</CycleTime>
+							<CycleTime>500000</CycleTime>
 						</Context>
 					</Contexts>
 					<JsonDynPous><![CDATA[null]]></JsonDynPous>
@@ -43188,8 +43188,8 @@ and will return to Group State Standby when the situation permits.
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<Project GUID="{00BE0468-0531-4D3C-A850-75BC3062D9F6}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="WIN" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{85806DFB-D504-2EAA-51B5-CB609B8FCAF7}" TmcPath="ExternControl\ExternControl.tmc">
+			<Project GUID="{00BE0468-0531-4D3C-A850-75BC3062D9F6}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{09473F8B-6A02-28BB-F795-92A022A05C6F}" TmcPath="ExternControl\ExternControl.tmc">
 					<Name>ExternControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -43276,7 +43276,7 @@ and will return to Group State Standby when the situation permits.
 								<OTCID>#x02010070</OTCID>
 							</ManualConfig>
 							<Priority>15</Priority>
-							<CycleTime>1000000</CycleTime>
+							<CycleTime>500000</CycleTime>
 						</Context>
 					</Contexts>
 					<JsonDynPous><![CDATA[null]]></JsonDynPous>
@@ -43285,8 +43285,8 @@ and will return to Group State Standby when the situation permits.
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, MOVER_SELECTOR, WIN" ReloadTmc="true" AmsPort="853" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502080" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{DD6B4865-95A0-2455-C7CA-32B96AC65DF5}" TmcPath="XtsTransport\XtsTransport.tmc">
+			<Project GUID="{6D569018-A503-40F6-AB32-DE4D6AD91487}" Name="XtsTransport" PrjFilePath="XtsTransport\XtsTransport.plcproj" TmcFilePath="XtsTransport\XtsTransport.tmc" CompilerDefines="STATION_MAP, MOVER_SELECTOR" ReloadTmc="true" AmsPort="853" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502080" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{44E9EB5A-2E79-FB69-AD3C-215686DC28D0}" TmcPath="XtsTransport\XtsTransport.tmc">
 					<Name>XtsTransport Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -44966,10 +44966,10 @@ and will return to Group State Standby when the situation permits.
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<PlcAuxTask Affinity="#x00000080"/>
+			<PlcAuxTask Affinity="#x00000010"/>
 		</Plc>
 		<Io>
-			<Device Id="1" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="10.201.25.110.2.1" RemoteName="Device 1" InfoImageId="2">
+			<Device Id="1" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="5.163.199.237.2.1" RemoteName="Device 1" InfoImageId="2">
 				<Name>Device 1</Name>
 				<AddressInfo>
 					<Pnp>
@@ -45985,7 +45985,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT ManualDcSelect="true" DcSyncMode="3"/>
 			</Device>
-			<Device Id="2" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="10.201.25.110.3.1" RemoteName="Device 3" InfoImageId="4">
+			<Device Id="2" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="5.163.199.237.3.1" RemoteName="Device 3" InfoImageId="4">
 				<Name>Device 3</Name>
 				<AddressInfo>
 					<Pnp>
@@ -47335,7 +47335,7 @@ and will return to Group State Standby when the situation permits.
 				</Box>
 				<EtherCAT ManualDcSelect="true" DcSyncMode="3"/>
 			</Device>
-			<Device Id="3" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28675" AmsNetId="10.201.25.110.4.1" RemoteName="Device 4" InfoImageId="6">
+			<Device Id="3" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28675" AmsNetId="5.163.199.237.4.1" RemoteName="Device 4" InfoImageId="6">
 				<Name>Device 4</Name>
 				<AddressInfo>
 					<Pnp>
@@ -49025,8 +49025,8 @@ and will return to Group State Standby when the situation permits.
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500840205008}" Id="#x02030040"/>
 		<MappingInfo Identifier="{05000010-2081-0850-1000-120580205008}" Id="#x02030020" Watchdog="08000000040000000400000004000000"/>
 		<MappingInfo Identifier="{05000010-2081-0850-7000-040380205008}" Id="#x02030010" Watchdog="08000000040000000400000004000000"/>
-		<MappingInfo Identifier="{08502081-2001-0850-8020-500800205008}" Id="#x02030050" Watchdog="04000000040000000400000004000000"/>
-		<MappingInfo Identifier="{08502081-2042-0850-8020-500840205008}" Id="#x02030030" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{08502081-2001-0850-8020-500800205008}" Id="#x02030030" Watchdog="04000000080000000400000004000000"/>
+		<MappingInfo Identifier="{08502081-2042-0850-8020-500840205008}" Id="#x02030050" Watchdog="04000000080000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1">
 			<OwnerB Name="TIRC^TcCOM Objects^XTS ProcessingUnit 1^Part 1^Module 1">
 				<Link VarA="Term 1 (AT2002-0250)^CC Inputs^Current actual value Ch.1" VarB="Data Pointer^CurrentActualValues[0]"/>

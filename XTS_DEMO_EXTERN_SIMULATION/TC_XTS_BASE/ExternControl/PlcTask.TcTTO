@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <Task Name="PlcTask" Id="{e0d83650-6e19-45dc-9aad-716d26ac4f8e}">
     <!--CycleTime in micro seconds.-->
-    <CycleTime>1000</CycleTime>
+    <CycleTime>500</CycleTime>
     <Priority>15</Priority>
     <PouCall>
       <Name>MAPPING_XTS_in</Name>

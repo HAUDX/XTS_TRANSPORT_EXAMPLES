@@ -39,12 +39,12 @@ This repository serves as the blueprint for translating the XTS_TRANSPORT_LAYER 
 
 ## I. Encapsulation & Agnostic Routing
 These examples illustrate how to command the physical track from an abstracted, agnostic IT or Process layer.
-- **[XTS_DEMO_EXTERN_RECTANGLE_TRACK]:** A triple-PLC case study of a central message broker into Instances with 160 stations grouped into 18 Collectors and Instances and 132 movers. 
-  This demo features inverted direction and track-based positioning. It serves as a feasibility study for flexible, station-based transport. 
+- **[XTS_DEMO_EXTERN_RECTANGLE_144]:** A triple-PLC case study of sending sparse bitmasks (tickets) via a central message broker into Instances with 160 stations grouped into 18 Collectors and Instances and 132 movers. 
+  This demo features example code in the top most layer, use it, misuse it, build from it. The tickets are serialized at the PLC boarder and added at the tail once the boarder is crossed.
   The demo consists of standstill and continuous processes based on the different handshake routes a StationProcess offers. 
   The continuous processes do not require any axis synchronisation, hence this hybrid, station-based approach for continuous work (e.g., scanners, cameras, cleaners). 
   The project uses a **triple-PLC approach (XtsTransport, ExternControl, TowerControl)**, with higher levels of abstraction for grouping stations, which is implemented in the ExternControl PLC.
-  
+
 - **[XTS_DEMO_EXTERN_108]:** The O(1) Linked-List Abstraction. This design is running multiple times in the field. A dual-PLC architecture demonstrating high-layer abstraction.
   The Application Layer (InstanceControl and AppCtrl) is fully decoupled from the Collector/Instance Layer and Station Layer (ProcessStation and Mover).
   Introduces the Linked-List structure with cyclic Ctrl/State wrappers, guaranteeing atomic, asynchronous communication across any communication medium.
@@ -58,10 +58,6 @@ These examples illustrate how to command the physical track from an abstracted, 
 
 - **[XTS_DEMO_EXTERN_STATION_PRIMES]:** A dual-PLC simulation study which handles processes consisting of a prime number station count. 
   This example shows how routing from parallel stations can be done.
-
-- **[XTS_DEMO_EXTERN_RECTANGLE_2]:** A dual-PLC simulation of distributed clusters of stations. This example shall illustrate flexibility towards station design. 
-  The ExternControl PLC carries the process definitions. XtsTransport PLC carries the station definitions. 
-  Parameter driiven approach for flexible transport solutions. The stations you design for a process must be in closed range, AND the modulo turn must NOT intersect the range of clusters. Those are the only prerequisites you have to follow.
 
 
 ## II. High-Throughput Mechatronics
