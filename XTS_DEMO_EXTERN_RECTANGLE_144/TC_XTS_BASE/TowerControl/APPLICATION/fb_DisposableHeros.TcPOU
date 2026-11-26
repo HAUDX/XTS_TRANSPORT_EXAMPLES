@@ -63,6 +63,9 @@ VAR
   _tdx                    : UINT;
   _bRandomize             : BOOL;   // irregular station bitmasks testing
   _eResult                : E_PROGRESS;
+
+  _nLoadCaseOld,
+  _nLoadCase              : UINT := 1;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -298,9 +301,6 @@ VAR_INST
   _nExp           : BYTE;
   _nMod           : UINT := 5;
 
-  _nLoadCaseOld,
-  _nLoadCase      : UINT := 2;
-
   _eStateProgress,
   _eRslt          : E_PROGRESS;
 
@@ -461,27 +461,27 @@ OF
       _nBit                   := 8;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nTicketCount MOD (20) = 0)
+    IF (_nTicketCount MOD (8) = 0)
     THEN
       _nBit                   := 9;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nTicketCount MOD (22) = 0)
+    IF (_nTicketCount MOD (6) = 0)
     THEN
       _nBit                   := 10;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nTicketCount MOD (24) = 0)
+    IF (_nTicketCount MOD (4) = 0)
     THEN
       _nBit                   := 11;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nTicketCount MOD (26) = 0)
+    IF (_nTicketCount MOD (10) = 0)
     THEN
       _nBit                   := 12;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);
     END_IF
-    IF (_nTicketCount MOD (28) = 0)
+    IF (_nTicketCount MOD (12) = 0)
     THEN
       _nBit                   := 13;
       _ProcessData.wTarget    := f_BitDel(_ProcessData.wTarget, _nBit);

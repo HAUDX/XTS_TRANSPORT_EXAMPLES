@@ -119,11 +119,11 @@ OF
     END_IF
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_OCCUPIED:
-    tProcess[PROCESS_INFEED]                                := T#600MS;
-    tProcess[PROCESS_ASSEMBLY_01]                           := T#650MS;
-    tProcess[PROCESS_ASSEMBLY_02]                           := T#500MS;
-    tProcess[PROCESS_ASSEMBLY_TEST]                         := T#1100MS;
-    tProcess[PROCESS_OUTFEED]                               := T#500MS;
+    tProcess[PROCESS_INFEED]                                := T#30MS;
+    tProcess[PROCESS_ASSEMBLY_01]                           := T#50MS;
+    tProcess[PROCESS_ASSEMBLY_02]                           := T#30MS;
+    tProcess[PROCESS_ASSEMBLY_TEST]                         := T#50MS;
+    tProcess[PROCESS_OUTFEED]                               := T#30MS;
 
     wActivateStation[E_INSTANCE.DISTRIBUTOR_INFEED]         := 2#_1111_1111_1111_1111;
     wActivateStation[E_INSTANCE.DISTRIBUTOR_ASSEMBLY_01]    := 2#_0000_1111_1111_1111;
@@ -279,12 +279,23 @@ CASE nState OF
 
 
   200:
-    tonTester(IN:= TRUE, PT:= T#13S, Q=> , ET=> );
-    IF tonTester.Q
-    THEN
-      Puppets[2].BitmaskRandom                      := SEL(Puppets[2].BitmaskRandom, true, false);
-      tonTester(IN:= FALSE, PT:= T#13S, Q=> , ET=> );
-    END_IF
+    Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := TRUE;
+    Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := TRUE;
+    Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := TRUE;
+    Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= TRUE;
+    Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := TRUE;
+
+//     tonTester(IN:= TRUE, PT:= T#3S, Q=> , ET=> );
+//     IF tonTester.Q
+//     THEN
+//       Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := SEL(Puppets[DISTRIBUTOR_INFEED].BitmaskRandom, TRUE, FALSE);
+//       Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom, TRUE, FALSE);
+//       Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom, TRUE, FALSE);
+//       Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= SEL(Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom, TRUE, FALSE);
+//       Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := SEL(Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom, TRUE, FALSE);
+// 
+//       tonTester(IN:= FALSE, PT:= T#3S, Q=> , ET=> );
+//     END_IF
     FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
     DO
       Puppets[nIdx](Start                           := bStart, 
@@ -577,9 +588,14 @@ END_CASE
       <LineId Id="1255" Count="1" />
       <LineId Id="1117" Count="0" />
       <LineId Id="836" Count="3" />
+      <LineId Id="1295" Count="4" />
+      <LineId Id="1294" Count="0" />
       <LineId Id="1281" Count="0" />
       <LineId Id="1277" Count="1" />
       <LineId Id="1280" Count="0" />
+      <LineId Id="1283" Count="1" />
+      <LineId Id="1292" Count="1" />
+      <LineId Id="1287" Count="0" />
       <LineId Id="1282" Count="0" />
       <LineId Id="1279" Count="0" />
       <LineId Id="840" Count="5" />
