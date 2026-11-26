@@ -413,7 +413,7 @@ DO
   OF
     //-----------------------------------------------------------------------------
     E_STATION_TYPE.STATION_PROCESS:
-      GVL_XTS.Station[nStation].MessageLevel    := GVL_MSG_XTS.MessageLevelStations[nStation];
+      GVL_XTS.Station[nStation].MessageLevel    := GVL_MSG_XTS.MessageLevelStations[nStation] := E_MessageType.eMessageError;
 
       GVL_XTS.Station[nStation].StationId       := nStation;  // Know Thyself!
 

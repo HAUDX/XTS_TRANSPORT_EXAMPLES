@@ -59,7 +59,7 @@ THEN
   _stMsg.iErrorNumber                 := 0;
   _stMsg.sText                        := TO_STRING(_eCmd);
 
-  IF (_eMessageLevel > E_MessageType.eMessageWarning)
+  IF (_eMessageLevel > E_MessageType.eMessageEmpty)
   THEN
     f_MessageSet(_stMsg);
   END_IF
@@ -417,7 +417,7 @@ END_CASE
 CASE _stState[_nStationId].State
 OF
   E_STATION_STATE.STATION_MOVER_IN_TARGET:
-    _ItfMover[_stMoverData.nMoverId].MessageLevel := SEL(_bMatchMessageLevel, E_MessageType.eMessageError, _eMessageLevel);
+    _ItfMover[_stMoverData.nMoverId].MessageLevel := E_MessageType.eMessageError;//:= SEL(_bMatchMessageLevel, E_MessageType.eMessageError, _eMessageLevel);
 
     _Result := _ItfMover[_stState[_nStationId].nMoverId].MoveToPosCa(TRUE, _stInfeed);
 
@@ -718,7 +718,7 @@ OF
     ELSE
     // I sent it through the grapevine
     // mover data successfully added to target station list
-      IF (_eMessageLevel > E_MessageType.eMessageError)
+      IF (_eMessageLevel > E_MessageType.eMessageEmpty)
       THEN
         _stMsg.eType                := E_MessageType.eMessageInfo;
         _stMsg.eSubdevice           := e_Subdevice.StationAddTail;

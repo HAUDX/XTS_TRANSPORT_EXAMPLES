@@ -586,7 +586,7 @@ IF _tonPartsperMinute.q
 THEN
   _tonPartsperMinute(IN:=FALSE);
 
-  IF (_MessageLevel > E_MessageType.eMessageError)
+  IF (_MessageLevel > E_MessageType.eMessageEmpty)
   THEN
     _stMsg.eType            := E_MessageType.eMessageBatch;
     _stMsg.eDevice          := e_Device.MetricsXts + TO_UINT(_nProcessId);
