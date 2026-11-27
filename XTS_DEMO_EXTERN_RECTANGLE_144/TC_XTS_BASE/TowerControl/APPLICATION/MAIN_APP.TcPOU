@@ -279,23 +279,24 @@ CASE nState OF
 
 
   200:
+(*
     Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := TRUE;
     Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := TRUE;
     Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := TRUE;
     Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= TRUE;
     Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := TRUE;
+*)
+    tonTester(IN:= TRUE, PT:= T#3S, Q=> , ET=> );
+    IF tonTester.Q
+    THEN
+      Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := SEL(Puppets[DISTRIBUTOR_INFEED].BitmaskRandom, TRUE, FALSE);
+      Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom, TRUE, FALSE);
+      Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom, TRUE, FALSE);
+      Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= SEL(Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom, TRUE, FALSE);
+      Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := SEL(Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom, TRUE, FALSE);
 
-//     tonTester(IN:= TRUE, PT:= T#3S, Q=> , ET=> );
-//     IF tonTester.Q
-//     THEN
-//       Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := SEL(Puppets[DISTRIBUTOR_INFEED].BitmaskRandom, TRUE, FALSE);
-//       Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom, TRUE, FALSE);
-//       Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom, TRUE, FALSE);
-//       Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= SEL(Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom, TRUE, FALSE);
-//       Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := SEL(Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom, TRUE, FALSE);
-// 
-//       tonTester(IN:= FALSE, PT:= T#3S, Q=> , ET=> );
-//     END_IF
+      tonTester(IN:= FALSE, PT:= T#3S, Q=> , ET=> );
+    END_IF
     FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
     DO
       Puppets[nIdx](Start                           := bStart, 
@@ -588,6 +589,7 @@ END_CASE
       <LineId Id="1255" Count="1" />
       <LineId Id="1117" Count="0" />
       <LineId Id="836" Count="3" />
+      <LineId Id="1301" Count="0" />
       <LineId Id="1295" Count="4" />
       <LineId Id="1294" Count="0" />
       <LineId Id="1281" Count="0" />
