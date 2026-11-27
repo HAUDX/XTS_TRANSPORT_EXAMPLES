@@ -71,7 +71,7 @@ VAR
   _nStationQueue              : ARRAY[1..SIZEOF(T_PROCESS)*8] OF UINT; // single queues from sub stations
   _nProcessQueue              : UINT; // sum of all sub station queues
 
-  _AllStationMoverPerMinute   : UINT;
+  _AllStationMoverPerMinute   : UDINT;
   _tonPartsPerMinute          : Tc2_Standard.TON;
 
   _nMoverCountTotal           : UDINT;
@@ -381,16 +381,16 @@ VAR_INST
 
   _nMoverPerMinute,
   _nMoverCount,
-  _nMoverCountOld       : ARRAY[1..MAX_STATION]  OF UINT;
+  _nMoverCountOld       : ARRAY[1..MAX_STATION]  OF UDINT;
 
   _nMoverCountEnter,
-  _nMoverCountEnterOld  : ARRAY[1..MAX_STATION]  OF UINT;
+  _nMoverCountEnterOld  : ARRAY[1..MAX_STATION]  OF UDINT;
 
   _nMoverCountStart,
-  _nMoverCountStartOld  : ARRAY[1..MAX_STATION]  OF UINT;
+  _nMoverCountStartOld  : ARRAY[1..MAX_STATION]  OF UDINT;
 
 
-  _interAllStationsCounter    : UINT;
+  _interAllStationsCounter    : UDINT;
 END_VAR
 ]]></Declaration>
       <Implementation>

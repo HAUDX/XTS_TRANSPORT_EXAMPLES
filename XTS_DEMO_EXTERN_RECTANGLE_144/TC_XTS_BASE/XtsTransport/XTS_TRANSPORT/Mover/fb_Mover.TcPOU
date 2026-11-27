@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <POU Name="fb_Mover" Id="{0329c584-f72c-48ef-81e9-d36f2b915502}" SpecialFunc="None">
     <Declaration><![CDATA[//---------------------------------------------------------------------------------------------------------------
 //
@@ -1353,8 +1353,8 @@ OF
 
       f_MessageSet(_stMsg);
 
-    ELSIF (_Mover.NcToPlc.ActPos > _fbMoveAbsCa.Position - _rDelta) AND
-          (_Mover.NcToPlc.ActPos < _fbMoveAbsCa.Position + _rDelta)
+    ELSIF (_Mover.NcToPlc.SetPos > _fbMoveAbsCa.Position - _rDelta) AND
+          (_Mover.NcToPlc.SetPos < _fbMoveAbsCa.Position + _rDelta)
     THEN
       IF NOT _Mover.Status.Moving
       THEN

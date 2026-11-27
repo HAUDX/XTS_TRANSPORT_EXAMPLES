@@ -286,7 +286,7 @@ CASE nState OF
       Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := TRUE;
       Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := TRUE;
       Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= TRUE;
-      Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := TRUE;
+      //Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := TRUE;
     ELSE
       Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := FALSE;
       Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := false;

@@ -66,6 +66,8 @@ VAR
 
   _nLoadCaseOld,
   _nLoadCase              : UINT := 1;
+
+  _nMaskZeroCount         : uint;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -174,6 +176,7 @@ OF
  100:
   IF NOT (_stProcessData.wTarget > 0)
   THEN
+    _nMaskZeroCount                           := _nMaskZeroCount + 1;
     _nTicketCount                             := _nTicketCount + 1;
     _nState                                   := 30;
   ELSE
@@ -709,6 +712,7 @@ END_IF
       <LineId Id="148" Count="1" />
       <LineId Id="158" Count="0" />
       <LineId Id="151" Count="2" />
+      <LineId Id="167" Count="0" />
       <LineId Id="166" Count="0" />
       <LineId Id="154" Count="1" />
       <LineId Id="163" Count="1" />
