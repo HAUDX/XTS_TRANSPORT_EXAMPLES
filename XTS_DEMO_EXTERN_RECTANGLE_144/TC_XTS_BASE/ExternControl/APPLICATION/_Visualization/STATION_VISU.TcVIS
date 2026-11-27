@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"54"</v>
+          <v n="UniqueIdGenerator">"57"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -3758,7 +3758,7 @@
                   <v>OnMouseClick</v>
                   <a cet="STSnippetInputAction">
                     <o>
-                      <v n="STSnippet">"GVL_XTS.StationCtrl[MAIN_XTS.nStationSelected].Cmd := E_STATION_CTRL.STATION_ENABLE;
+                      <v n="STSnippet">"GVL_XTS.StationCtrl[VISU_POOL.nMoverSelected].Cmd := E_STATION_CTRL.STATION_ENABLE;
 "</v>
                     </o>
                   </a>
@@ -3939,7 +3939,7 @@
                   <v>OnMouseClick</v>
                   <a cet="STSnippetInputAction">
                     <o>
-                      <v n="STSnippet">"GVL_XTS.StationCtrl[MAIN_XTS.nStationSelected].Cmd := E_STATION_CTRL.STATION_MOVER_ENTER;
+                      <v n="STSnippet">"GVL_XTS.StationCtrl[VISU_POOL.nMoverSelected].Cmd := E_STATION_CTRL.STATION_MOVER_ENTER;
 "</v>
                     </o>
                   </a>
@@ -4120,7 +4120,7 @@
                   <v>OnMouseClick</v>
                   <a cet="STSnippetInputAction">
                     <o>
-                      <v n="STSnippet">"GVL_XTS.StationCtrl[MAIN_XTS.nStationSelected].Cmd := E_STATION_CTRL.STATION_PROCESS_START;
+                      <v n="STSnippet">"GVL_XTS.StationCtrl[VISU_POOL.nMoverSelected].Cmd := E_STATION_CTRL.STATION_PROCESS_START;
 "</v>
                     </o>
                   </a>
@@ -4301,7 +4301,7 @@
                   <v>OnMouseClick</v>
                   <a cet="STSnippetInputAction">
                     <o>
-                      <v n="STSnippet">"GVL_XTS.StationCtrl[MAIN_XTS.nStationSelected].Cmd := E_STATION_CTRL.STATION_PROCESS_DONE;
+                      <v n="STSnippet">"GVL_XTS.StationCtrl[VISU_POOL.nMoverSelected].Cmd := E_STATION_CTRL.STATION_PROCESS_DONE;
 "</v>
                     </o>
                   </a>
@@ -4482,7 +4482,7 @@
                   <v>OnMouseClick</v>
                   <a cet="STSnippetInputAction">
                     <o>
-                      <v n="STSnippet">"GVL_XTS.StationCtrl[MAIN_XTS.nStationSelected].Cmd := E_STATION_CTRL.STATION_MOVER_OUT;
+                      <v n="STSnippet">"GVL_XTS.StationCtrl[VISU_POOL.nMoverSelected].Cmd := E_STATION_CTRL.STATION_MOVER_OUT;
 "</v>
                     </o>
                   </a>
@@ -4663,7 +4663,7 @@
                   <v>OnMouseClick</v>
                   <a cet="STSnippetInputAction">
                     <o>
-                      <v n="STSnippet">"GVL_XTS.StationCtrl[MAIN_XTS.nStationSelected].Cmd := E_STATION_CTRL.STATION_MOVER_GONE;
+                      <v n="STSnippet">"GVL_XTS.StationCtrl[VISU_POOL.nMoverSelected].Cmd := E_STATION_CTRL.STATION_MOVER_GONE;
 "</v>
                     </o>
                   </a>

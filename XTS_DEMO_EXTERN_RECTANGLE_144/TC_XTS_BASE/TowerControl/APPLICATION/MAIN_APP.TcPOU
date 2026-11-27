@@ -57,7 +57,7 @@ VAR
   stWriteTargetInit             : ST_PROCESS_LIST_RESULT;
   stProcessData                 : ST_PROCESS_DATA;
 
-
+  bDynBitmaskingOn              : Bool;        
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -80,6 +80,7 @@ CASE eInit
 OF
   //---------------------------------------------------------------------------------------------------------------
   E_PROGRESS.PROGRESS_INVALID:
+    nState                                        := 0;
     GVL_APPLICATION.TicketListControl.Cmd         := E_LIST_CTRL.LIST_CTRL_INIT;
     GVL_APPLICATION.YardControl.Cmd               := E_INSTANCE_CMD.NULL;
     eInit                                         := E_PROGRESS.PROGRESS_INIT;
@@ -279,24 +280,26 @@ CASE nState OF
 
 
   200:
-(*
-    Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := TRUE;
-    Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := TRUE;
-    Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := TRUE;
-    Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= TRUE;
-    Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := TRUE;
-*)
-    tonTester(IN:= TRUE, PT:= T#3S, Q=> , ET=> );
-    IF tonTester.Q
+    IF bDynBitmaskingOn
     THEN
-      Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := SEL(Puppets[DISTRIBUTOR_INFEED].BitmaskRandom, TRUE, FALSE);
-      Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom, TRUE, FALSE);
-      Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom, TRUE, FALSE);
-      Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= SEL(Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom, TRUE, FALSE);
-      Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := SEL(Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom, TRUE, FALSE);
-
-      tonTester(IN:= FALSE, PT:= T#3S, Q=> , ET=> );
+      Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := TRUE;
+      Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := TRUE;
+      Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := TRUE;
+      Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= TRUE;
+      Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := TRUE;
     END_IF
+
+//     tonTester(IN:= TRUE, PT:= T#3S, Q=> , ET=> );
+//     IF tonTester.Q
+//     THEN
+//       Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := SEL(Puppets[DISTRIBUTOR_INFEED].BitmaskRandom, TRUE, FALSE);
+//       Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom, TRUE, FALSE);
+//       Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom, TRUE, FALSE);
+//       Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= SEL(Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom, TRUE, FALSE);
+//       Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := SEL(Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom, TRUE, FALSE);
+// 
+//       tonTester(IN:= FALSE, PT:= T#3S, Q=> , ET=> );
+//     END_IF
     FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
     DO
       Puppets[nIdx](Start                           := bStart, 
@@ -536,7 +539,9 @@ END_CASE
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN_APP">
-      <LineId Id="732" Count="62" />
+      <LineId Id="732" Count="18" />
+      <LineId Id="1304" Count="0" />
+      <LineId Id="751" Count="43" />
       <LineId Id="1059" Count="0" />
       <LineId Id="1062" Count="0" />
       <LineId Id="1065" Count="0" />
@@ -589,9 +594,10 @@ END_CASE
       <LineId Id="1255" Count="1" />
       <LineId Id="1117" Count="0" />
       <LineId Id="836" Count="3" />
-      <LineId Id="1301" Count="0" />
+      <LineId Id="1301" Count="1" />
       <LineId Id="1295" Count="4" />
       <LineId Id="1294" Count="0" />
+      <LineId Id="1303" Count="0" />
       <LineId Id="1281" Count="0" />
       <LineId Id="1277" Count="1" />
       <LineId Id="1280" Count="0" />

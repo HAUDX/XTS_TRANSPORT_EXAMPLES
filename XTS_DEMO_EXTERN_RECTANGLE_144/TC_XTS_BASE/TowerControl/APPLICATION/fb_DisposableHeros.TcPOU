@@ -174,9 +174,13 @@ OF
  100:
   IF NOT (_stProcessData.wTarget > 0)
   THEN
+    _nTicketCount                             := _nTicketCount + 1;
     _nState                                   := 30;
   ELSE
-    _nState                                   := 101;
+    IF (_ItfTicketList.Free > 1)
+    THEN
+      _nState                                 := 101;
+    END_IF
   END_IF
 END_CASE
 CASE _nState 
@@ -193,7 +197,7 @@ OF
     // third send the ticket to the Process
     _WriteResult                          := _ItfTicketList.AddTailValue(_stProcessData);
     //-----------------------------------------------------------------------------
-    _nTicketCount                         := _nTicketCount + 1;;
+    _nTicketCount                         := _nTicketCount + 1;
     //-----------------------------------------------------------------------------
     _nState                               := 1000;
 END_CASE
@@ -704,8 +708,12 @@ END_IF
       <LineId Id="130" Count="0" />
       <LineId Id="148" Count="1" />
       <LineId Id="158" Count="0" />
-      <LineId Id="151" Count="4" />
+      <LineId Id="151" Count="2" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="154" Count="1" />
+      <LineId Id="163" Count="1" />
       <LineId Id="157" Count="0" />
+      <LineId Id="165" Count="0" />
       <LineId Id="156" Count="0" />
       <LineId Id="82" Count="1" />
       <LineId Id="161" Count="0" />
