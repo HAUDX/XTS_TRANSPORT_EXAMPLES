@@ -287,6 +287,12 @@ CASE nState OF
       Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := TRUE;
       Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= TRUE;
       Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := TRUE;
+    ELSE
+      Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := FALSE;
+      Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := false;
+      Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := false;
+      Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= false;
+      Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := false;
     END_IF
 
 //     tonTester(IN:= TRUE, PT:= T#3S, Q=> , ET=> );
@@ -596,6 +602,8 @@ END_CASE
       <LineId Id="836" Count="3" />
       <LineId Id="1301" Count="1" />
       <LineId Id="1295" Count="4" />
+      <LineId Id="1305" Count="0" />
+      <LineId Id="1307" Count="4" />
       <LineId Id="1294" Count="0" />
       <LineId Id="1303" Count="0" />
       <LineId Id="1281" Count="0" />
