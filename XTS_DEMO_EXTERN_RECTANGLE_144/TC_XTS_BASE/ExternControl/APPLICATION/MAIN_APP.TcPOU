@@ -69,6 +69,7 @@ IF NOT (eInitXtsTransport = E_PROGRESS.PROGRESS_DONE) THEN eInit  := E_PROGRESS.
 CASE eInit
 OF
   E_PROGRESS.PROGRESS_INVALID:
+    GVL_MSG_XTS.MetricsMessageCtrl.Cmd            := E_MESSAGE_CTRL.MSG_CTRL_INIT;
     eInit                                         := E_PROGRESS.PROGRESS_INIT;
 
   E_PROGRESS.PROGRESS_INIT:
@@ -90,6 +91,7 @@ OF
     GVL_APPLICATION.InstanceDistributorInfeed.ProcessLinkedLists              :=   GVL_APPLICATION.ItfProcessList;
     GVL_APPLICATION.InstanceDistributorInfeed.InstanceCtrl                    REF= GVL_APPLICATION.InstanceCtrl;
     GVL_APPLICATION.InstanceDistributorInfeed.InstanceState                   REF= GVL_APPLICATION.InstanceState;
+    GVL_APPLICATION.InstanceDistributorInfeed.MessageLevel                    :=   E_MessageType.eMessageError;
 
     //-----------------------------------------------------------------------------
     //#############################################################################
@@ -107,6 +109,7 @@ OF
     GVL_APPLICATION.InstanceInfeed.ProcessLinkedLists                         :=   GVL_APPLICATION.ItfProcessList;
     GVL_APPLICATION.InstanceInfeed.InstanceCtrl                               REF= GVL_APPLICATION.InstanceCtrl;
     GVL_APPLICATION.InstanceInfeed.InstanceState                              REF= GVL_APPLICATION.InstanceState;
+    GVL_APPLICATION.InstanceInfeed.MessageLevel                               :=   E_MessageType.eMessageError;
 
     //-----------------------------------------------------------------------------
     //#############################################################################
@@ -953,7 +956,9 @@ END_CASE
       <LineId Id="81" Count="6" />
       <LineId Id="319" Count="2" />
       <LineId Id="366" Count="0" />
-      <LineId Id="322" Count="5" />
+      <LineId Id="322" Count="4" />
+      <LineId Id="989" Count="0" />
+      <LineId Id="327" Count="0" />
       <LineId Id="336" Count="3" />
       <LineId Id="383" Count="0" />
       <LineId Id="456" Count="0" />
@@ -971,6 +976,7 @@ END_CASE
       <LineId Id="511" Count="0" />
       <LineId Id="452" Count="0" />
       <LineId Id="508" Count="0" />
+      <LineId Id="987" Count="0" />
       <LineId Id="832" Count="0" />
       <LineId Id="457" Count="2" />
       <LineId Id="385" Count="2" />
@@ -978,6 +984,7 @@ END_CASE
       <LineId Id="520" Count="0" />
       <LineId Id="540" Count="0" />
       <LineId Id="522" Count="6" />
+      <LineId Id="988" Count="0" />
       <LineId Id="519" Count="0" />
       <LineId Id="460" Count="2" />
       <LineId Id="388" Count="2" />

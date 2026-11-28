@@ -309574,7 +309574,7 @@ and will return to Group State Standby when the situation permits.
 				</Instance>
 			</Project>
 			<Project GUID="{00BE0468-0531-4D3C-A850-75BC3062D9F6}" Name="ExternControl" PrjFilePath="ExternControl\ExternControl.plcproj" TmcFilePath="ExternControl\ExternControl.tmc" CompilerDefines="WIN" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{B18BAE6B-CC92-5887-6D6A-5EAF38F673EA}" TmcPath="ExternControl\ExternControl.tmc">
+				<Instance Id="#x08502040" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{60C144FB-6B5E-342D-BC72-75731D3139CA}" TmcPath="ExternControl\ExternControl.tmc">
 					<Name>ExternControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">

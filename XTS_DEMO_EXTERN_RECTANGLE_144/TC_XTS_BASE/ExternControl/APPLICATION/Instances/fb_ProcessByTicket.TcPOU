@@ -377,7 +377,7 @@ OF
             _stMsg.eSubdevice                 := e_Subdevice.Instance_ProcessByTicket;
             _stMsg.iErrorNumber               := _stProcessData.nTargetId;
             _stMsg.sText                      := concat(TO_STRING(_stProcessData.nProcessId), ': _stProcessData.nTargetId: ');
-            _stMsg.sText                      := concat(_stMsg.sText, TO_STRING(_eStateProgress));
+            _stMsg.sText                      := concat(_stMsg.sText, TO_STRING(_stProcessData.nTargetId));
             f_MessageSet(_stMsg);
           END_IF
         END_IF
@@ -402,7 +402,7 @@ OF
               _eStateInstance                 := E_INSTANCE_STATE.ENABLED;      // go check if my process is switched on
               _eStateProgress                 := E_PROGRESS.PROGRESS_INIT;      // reset substate
 
-              IF (_MessageLevel = E_MessageType.eMessageVerbose)
+              IF (_MessageLevel > E_MessageType.eMessageInfo)
               THEN
                 _stMsg.eType                  := E_MessageType.eMessageVerbose;
                 _stMsg.eSubdevice             := e_Subdevice.Instance_ProcessByTicket;
@@ -709,9 +709,9 @@ OF
         ELSE
           _eStateProgress                     := E_PROGRESS.PROGRESS_CHECK; // job is done
 
-          IF (_MessageLevel > E_MessageType.eMessageInfo)
+          IF (_MessageLevel > E_MessageType.eMessageError)
           THEN
-            _stMsg.eType                      := E_MessageType.eMessageVerbose;
+            _stMsg.eType                      := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice                 := e_Subdevice.Process_LinkedList_RemoveHead;
             _stMsg.iErrorNumber               := 0;
             _stMsg.sText                      := concat(TO_STRING(_eStateInstance), ': ');

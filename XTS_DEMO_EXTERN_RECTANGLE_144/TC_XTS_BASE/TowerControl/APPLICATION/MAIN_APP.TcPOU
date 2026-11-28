@@ -23,7 +23,26 @@ VAR
   eInitExternControl  AT %I*    : E_PROGRESS;   // initialization from ExternControl PLC
   eInitXtsTransport   AT %I*    : E_PROGRESS;   // initialization from XtsTransport PLC
   eInit                         : E_PROGRESS;   // local startup
+  //-------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------
+  // testing stuff
+  //-------------------------------------------------------------------------------------------------------------
+  bStart                        : BOOL;
+  bDynBitmaskingOn              : BOOL;
+  Puppets                       : ARRAY[1..MAX_PROCESS] OF fb_DisposableHeros;
 
+  // this is still a subsystem for transport --> dwell time
+  {attribute 'displaymode':='bin'}
+  wActivateStation              : ARRAY[1..MAX_PROCESS] OF T_PROCESS;
+  tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
+
+  nIdx                          : E_INSTANCE;
+
+  nState                        : UDINT;    // case with sequences to run this example
+
+  stWriteTargetInit             : ST_PROCESS_LIST_RESULT;
+  stProcessData                 : ST_PROCESS_DATA;
+       
   // message pipeline(s) handling
   eMtrState,
   eMsgState                     : E_MESSAGE_STATE;
@@ -37,27 +56,6 @@ VAR
   tonIdleWriteMotion            : Tc2_Standard.TON;
   tonIdleWriteApplication       : Tc2_Standard.TON;
   tonIdleWriteMetric            : Tc2_Standard.TON;
-  //-------------------------------------------------------------------------------------------------------------
-  //-------------------------------------------------------------------------------------------------------------
-  // testing stuff
-  //-------------------------------------------------------------------------------------------------------------
-  bStart                        : BOOL;
-  Puppets                       : ARRAY[1..MAX_PROCESS] OF fb_DisposableHeros;
-
-  // this is still a subsystem for transport --> dwell time
-  {attribute 'displaymode':='bin'}
-  wActivateStation              : ARRAY[1..MAX_PROCESS] OF T_PROCESS;
-  tProcess                      : ARRAY[1..MAX_PROCESS] OF TIME;
-  tonTester                     : Tc2_Standard.TON;
-
-  nIdx                          : E_INSTANCE;
-
-  nState                        : UDINT;    // case with sequences to run this example
-
-  stWriteTargetInit             : ST_PROCESS_LIST_RESULT;
-  stProcessData                 : ST_PROCESS_DATA;
-
-  bDynBitmaskingOn              : Bool;        
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -276,10 +274,10 @@ CASE nState OF
 
     GVL_APPLICATION.TicketConductorCtrl.Cmd         := E_INSTANCE_CMD.ENABLE;
 
+    nState                                          := 199;
+
+  199:
     nState                                          := 200;
-
-
-  200:
     IF bDynBitmaskingOn
     THEN
       Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := TRUE;
@@ -295,17 +293,8 @@ CASE nState OF
       Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := false;
     END_IF
 
-//     tonTester(IN:= TRUE, PT:= T#3S, Q=> , ET=> );
-//     IF tonTester.Q
-//     THEN
-//       Puppets[DISTRIBUTOR_INFEED].BitmaskRandom       := SEL(Puppets[DISTRIBUTOR_INFEED].BitmaskRandom, TRUE, FALSE);
-//       Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_01].BitmaskRandom, TRUE, FALSE);
-//       Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom  := SEL(Puppets[DISTRIBUTOR_ASSEMBLY_02].BitmaskRandom, TRUE, FALSE);
-//       Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom:= SEL(Puppets[DISTRIBUTOR_ASSEMBLY_TEST].BitmaskRandom, TRUE, FALSE);
-//       Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom      := SEL(Puppets[DISTRIBUTOR_OUTFEED].BitmaskRandom, TRUE, FALSE);
-// 
-//       tonTester(IN:= FALSE, PT:= T#3S, Q=> , ET=> );
-//     END_IF
+
+  200:
     FOR nIdx := 1 TO GVL_APPLICATION.MAX_PROCESS
     DO
       Puppets[nIdx](Start                           := bStart, 
@@ -599,22 +588,11 @@ END_CASE
       <LineId Id="1194" Count="47" />
       <LineId Id="1255" Count="1" />
       <LineId Id="1117" Count="0" />
-      <LineId Id="836" Count="3" />
-      <LineId Id="1301" Count="1" />
-      <LineId Id="1295" Count="4" />
-      <LineId Id="1305" Count="0" />
-      <LineId Id="1307" Count="4" />
-      <LineId Id="1294" Count="0" />
-      <LineId Id="1303" Count="0" />
-      <LineId Id="1281" Count="0" />
-      <LineId Id="1277" Count="1" />
-      <LineId Id="1280" Count="0" />
-      <LineId Id="1283" Count="1" />
-      <LineId Id="1292" Count="1" />
-      <LineId Id="1287" Count="0" />
-      <LineId Id="1282" Count="0" />
-      <LineId Id="1279" Count="0" />
-      <LineId Id="840" Count="5" />
+      <LineId Id="836" Count="0" />
+      <LineId Id="1312" Count="1" />
+      <LineId Id="1328" Count="0" />
+      <LineId Id="1314" Count="13" />
+      <LineId Id="837" Count="8" />
       <LineId Id="1180" Count="1" />
       <LineId Id="1166" Count="0" />
       <LineId Id="1182" Count="1" />

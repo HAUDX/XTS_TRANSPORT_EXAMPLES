@@ -263,9 +263,9 @@ OF
           f_MessageSet(_stMsg);
   
         ELSE
-          IF (_MessageLevel > E_MessageType.eMessageError)
+          IF (_MessageLevel > E_MessageType.eMessageInfo)
           THEN
-            _stMsg.eType                      := E_MessageType.eMessageInfo;
+            _stMsg.eType                      := E_MessageType.eMessageVerbose;
             _stMsg.eSubdevice                 := e_Subdevice.Instance_ProcessConductor;
             _stMsg.iErrorNumber               := _stProcessData.nProcessId;
             _stMsg.sText                      := concat(TO_STRING(_eStateInstance), ': _stProcessData.nProcessId: ');
@@ -332,13 +332,14 @@ OF
           _eStateInstance                     := E_INSTANCE_STATE.FINISH;
           _eStateProgress                     := E_PROGRESS.PROGRESS_BUSY;
 
-          IF (_MessageLevel > E_MessageType.eMessageInfo)
+          IF (_MessageLevel > E_MessageType.eMessageError)
           THEN
-            _stMsg.eType                      := E_MessageType.eMessageVerbose;
+            _stMsg.eType                      := E_MessageType.eMessageInfo;
             _stMsg.eSubdevice                 := e_Subdevice.Process_LinkedList_AddTail;
             _stMsg.iErrorNumber               := _stProcessData.nProcessId;
-            _stMsg.sText                      := concat(TO_STRING(_eStateInstance), ': ');
-            _stMsg.sText                      := concat(_stMsg.sText, TO_STRING(E_PROGRESS.PROGRESS_DONE));
+            _stMsg.sText                      := concat(TO_STRING(_eStateInstance), ': _stProcessData.nProcessId: ');
+            _stMsg.sText                      := concat(_stMsg.sText, TO_STRING(_stProcessData.nProcessId));
+
             f_MessageSet(_stMsg);
           END_IF
         END_IF
@@ -597,7 +598,10 @@ END_VAR
       <LineId Id="382" Count="0" />
       <LineId Id="206" Count="21" />
       <LineId Id="367" Count="7" />
-      <LineId Id="228" Count="33" />
+      <LineId Id="228" Count="9" />
+      <LineId Id="386" Count="1" />
+      <LineId Id="385" Count="0" />
+      <LineId Id="240" Count="21" />
       <LineId Id="265" Count="6" />
       <LineId Id="377" Count="0" />
       <LineId Id="272" Count="1" />
